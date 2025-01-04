@@ -22,4 +22,23 @@ where
 ```
 
 We can tag the API with the following primitive safety property:
-- ValidInt(mul, count, sizeof(T), isize) 
+- Primitive SP template: ValidInt(binop, x, y, T), which means $\text{T::MAX} \geq \text{binop}(x, y) \geq \text{T::MIN} $; Specific primitive SP for the API: ValidInt(mul, count, sizeof(T), isize).
+
+This is a precondition for calling the unsafe API. When proving the soundness of [String::remove()](https://doc.rust-lang.org/beta/alloc/string/struct.String.html#method.remove) (see the code below), it is essential to verify that the primitive safety properties of its interior unsafe APIs [ptr.add()](https://doc.rust-lang.org/beta/core/primitive.pointer.html#method.add) and [ptr::copy()](https://doc.rust-lang.org/beta/core/ptr/fn.copy.html) are met in all cases.
+
+```rust
+pub fn remove(&mut self, idx: usize) -> char {
+        let ch = match self[idx..].chars().next() {
+            Some(ch) => ch,
+            None => panic!("cannot remove a char from the end of a string"),
+        };
+
+        let next = idx + ch.len_utf8();
+        let len = self.len();
+        unsafe {
+            ptr::copy(self.vec.as_ptr().add(next), self.vec.as_mut_ptr().add(idx), len - next);
+            self.vec.set_len(len - (next - idx));
+        }
+        ch
+    }
+```
