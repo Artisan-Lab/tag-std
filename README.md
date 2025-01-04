@@ -29,13 +29,13 @@ For another instance, the unsafe API [ptr::copy()](https://doc.rust-lang.org/bet
 ```rust
 pub const unsafe fn copy<T>(src: *const T, dst: *mut T, count: usize)
 
-\\\Safety
-\\\Behavior is undefined if any of the following conditions are violated:
-\\\-src must be valid for reads of count * size_of::<T>() bytes, and must remain valid even when dst is written for count * size_of::<T>() bytes. (This means if the memory ranges overlap, the two pointers must not be subject to aliasing restrictions relative to each other.)
-\\\-dst must be valid for writes of count * size_of::<T>() bytes, and must remain valid even when src is read for count * size_of::<T>() bytes.
-\\\-Both src and dst must be properly aligned.
-\\\Like read, copy creates a bitwise copy of T, regardless of whether T is Copy. If T is not Copy, using both the values in the region beginning at *src and the region beginning at *dst can violate memory safety.
-\\\Note that even if the effectively copied size (count * size_of::<T>()) is 0, the pointers must be properly aligned.
+///Safety
+///Behavior is undefined if any of the following conditions are violated:
+///-src must be valid for reads of count * size_of::<T>() bytes, and must remain valid even when dst is written for count * size_of::<T>() bytes. (This means if the memory ranges overlap, the two pointers must not be subject to aliasing restrictions relative to each other.)
+///-dst must be valid for writes of count * size_of::<T>() bytes, and must remain valid even when src is read for count * size_of::<T>() bytes.
+///-Both src and dst must be properly aligned.
+///Like read, copy creates a bitwise copy of T, regardless of whether T is Copy. If T is not Copy, using both the values in the region beginning at *src and the region beginning at *dst can violate memory safety.
+///Note that even if the effectively copied size (count * size_of::<T>()) is 0, the pointers must be properly aligned.
 ```
 
 We can tag the API with the following primitive safety property:
