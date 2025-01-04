@@ -22,7 +22,8 @@ where
 ```
 
 We can tag the API with the following primitive safety property:
-- Primitive SP template: `ValidInt(binop, x, y, T)`, which means $\text{T::MAX} \geq \text{binop}(x, y) \geq \text{T::MIN} $; Specific primitive SP for the API: `ValidInt(mul, count, sizeof(T), isize)`.
+- Primitive SP template: `ValidInt(binop, x, y, T)`, which means $\text{T::MAX} \geq \text{binop}(x, y) \geq \text{T::MIN} $;
+    - Specific primitive SP for the API: `ValidInt(mul, count, sizeof(T), isize)`.
 
 For another instance, the unsafe API [ptr::copy()](https://doc.rust-lang.org/beta/core/ptr/fn.copy.html) is described as follows:
 ```rust
@@ -38,13 +39,17 @@ pub const unsafe fn copy<T>(src: *const T, dst: *mut T, count: usize)
 ```
 
 We can tag the API with the following primitive safety property:
-- Primitive SP template: `Bounded(p, T, offset)`, which means $\text{typeof}(*(p + \text{sizeof}(T) * offset))  = T $; Specific primitive SP for the API: `Bounded(src, T, count)` and `Bounded(dst, T, count)`
-- Primitive SP template: `NonOverlap(dst, src, T)`, which means $|dst - src| > \text{sizeof}(T)$; Specific primitive SP for the API: `NonOverlap(dst, src, T)`
-- Primitive SP template: `Aligned(p, T)`, which means $p \\% \text{alignment}(T) = 0$; Specific primitive SP for the API: `Aligned(src, T)` and `Aligned(dst, T)`
+- Primitive SP template: `Bounded(p, T, offset)`, which means $\text{typeof}(*(p + \text{sizeof}(T) * offset))  = T $;
+    - Specific primitive SP for the API: `Bounded(src, T, count)` and `Bounded(dst, T, count)`
+- Primitive SP template: `NonOverlap(dst, src, T)`, which means $|dst - src| > \text{sizeof}(T)$;
+    - Specific primitive SP for the API: `NonOverlap(dst, src, T)`
+- Primitive SP template: `Aligned(p, T)`, which means $p \\% \text{alignment}(T) = 0$;
+    - Specific primitive SP for the API: `Aligned(src, T)` and `Aligned(dst, T)`
 
 These are the preconditions for calling the unsafe APIs. We need more properties to discribe the hazards when the content is not `Copy`.
 
-- Primitive SP template: `Alias(p1, p2)`, which means $*p1 = *p2$; Specific primitive SP for the API: `Alias(dst, src)`
+- Primitive SP template: `Alias(p1, p2)`, which means $*p1 = *p2$;
+    - Specific primitive SP for the API: `Alias(dst, src)`
 
 When proving the soundness of [String::remove()](https://doc.rust-lang.org/beta/alloc/string/struct.String.html#method.remove) (see the code below), it is essential to verify that the primitive safety properties of its interior unsafe APIs [ptr.add()](https://doc.rust-lang.org/beta/core/primitive.pointer.html#method.add) and [ptr::copy()](https://doc.rust-lang.org/beta/core/ptr/fn.copy.html) are met in all cases.
 
