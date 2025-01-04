@@ -22,9 +22,31 @@ where
 ```
 
 We can tag the API with the following primitive safety property:
-- Primitive SP template: ValidInt(binop, x, y, T), which means $\text{T::MAX} \geq \text{binop}(x, y) \geq \text{T::MIN} $; Specific primitive SP for the API: ValidInt(mul, count, sizeof(T), isize).
+- Primitive SP template: `ValidInt(binop, x, y, T)`, which means $\text{T::MAX} \geq \text{binop}(x, y) \geq \text{T::MIN} $; Specific primitive SP for the API: `ValidInt(mul, count, sizeof(T), isize)`.
 
-This is a precondition for calling the unsafe API. When proving the soundness of [String::remove()](https://doc.rust-lang.org/beta/alloc/string/struct.String.html#method.remove) (see the code below), it is essential to verify that the primitive safety properties of its interior unsafe APIs [ptr.add()](https://doc.rust-lang.org/beta/core/primitive.pointer.html#method.add) and [ptr::copy()](https://doc.rust-lang.org/beta/core/ptr/fn.copy.html) are met in all cases.
+For another instance, the unsafe API [ptr::copy()](https://doc.rust-lang.org/beta/core/ptr/fn.copy.html) is described as follows:
+```rust
+pub const unsafe fn copy<T>(src: *const T, dst: *mut T, count: usize)
+
+\\\Safety
+\\\Behavior is undefined if any of the following conditions are violated:
+\\\-src must be valid for reads of count * size_of::<T>() bytes, and must remain valid even when dst is written for count * size_of::<T>() bytes. (This means if the memory ranges overlap, the two pointers must not be subject to aliasing restrictions relative to each other.)
+\\\-dst must be valid for writes of count * size_of::<T>() bytes, and must remain valid even when src is read for count * size_of::<T>() bytes.
+\\\-Both src and dst must be properly aligned.
+\\\Like read, copy creates a bitwise copy of T, regardless of whether T is Copy. If T is not Copy, using both the values in the region beginning at *src and the region beginning at *dst can violate memory safety.
+\\\Note that even if the effectively copied size (count * size_of::<T>()) is 0, the pointers must be properly aligned.
+```
+
+We can tag the API with the following primitive safety property:
+- Primitive SP template: `Bounded(p, T, offset)`, which means $\text{typeof}(*(p + \text{sizeof}(T) * offset))  = T $; Specific primitive SP for the API: `Bounded(src, T, count)` and `Bounded(dst, T, count)`
+- Primitive SP template: `NonOverlap(dst, src, T)`, which means $|dst - src| > \text{sizeof}(T)$; Specific primitive SP for the API: `NonOverlap(dst, src, T)`
+- Primitive SP template: `Aligned(p, T)`, which means $p \\% \text{alignment}(T) = 0$; Specific primitive SP for the API: `Aligned(src, T)` and `Aligned(dst, T)`
+
+These are the preconditions for calling the unsafe APIs. We need more properties to discribe the hazards when the content is not `Copy`.
+
+- Primitive SP template: `Alias(p1, p2)`, which means $*p1 = *p2$; Specific primitive SP for the API: `Alias(dst, src)`
+
+When proving the soundness of [String::remove()](https://doc.rust-lang.org/beta/alloc/string/struct.String.html#method.remove) (see the code below), it is essential to verify that the primitive safety properties of its interior unsafe APIs [ptr.add()](https://doc.rust-lang.org/beta/core/primitive.pointer.html#method.add) and [ptr::copy()](https://doc.rust-lang.org/beta/core/ptr/fn.copy.html) are met in all cases.
 
 ```rust
 pub fn remove(&mut self, idx: usize) -> char {
