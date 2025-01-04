@@ -15,7 +15,7 @@ where
 
 ///Safety
 ///If any of the following conditions are violated, the result is Undefined Behavior:
-///-The offset in bytes, count * size_of::<T>(), computed on mathematical integers (without “wrapping around”), must fit in an isize.
+///-The offset in bytes, count * size_of::<T>(), computed on mathematical integers (without ``wrapping around''), must fit in an isize.
 ///-If the computed offset is non-zero, then self must be derived from a pointer to some allocated object, and the entire memory range between self and the result must be in bounds of that allocated object. In particular, this range must not “wrap around” the edge of the address space.
 ///Allocated objects can never be larger than isize::MAX bytes, so if the computed offset stays in bounds of the allocated object, it is guaranteed to satisfy the first requirement. This implies, for instance, that vec.as_ptr().add(vec.len()) (for vec: Vec<T>) is always safe.
 ///Consider using wrapping_add instead if these constraints are difficult to satisfy. The only advantage of this method is that it enables more aggressive compiler optimizations.
