@@ -54,7 +54,7 @@ In practice, a safety property may correspond to a precondition, optional precon
 | 15  | Unwrap(x, T)  | precond | [Option::unwrap_unchecked()](https://doc.rust-lang.org/std/option/enum.Option.html#method.unwrap_unchecked)  |
 | 16  | NonOwned(p)  | precond | [Box::from_raw()](https://doc.rust-lang.org/std/boxed/struct.Box.html#method.from_raw)  |
 | 17  | Owned(p)  | precond | [trait.FromRawFd::from_raw_fd()](https://doc.rust-lang.org/std/os/fd/trait.FromRawFd.html#tymethod.from_raw_fd)  |
-| 18  | Alias(\&x)  | hazard | [pointer.as_mut()](https://doc.rust-lang.org/std/primitive.pointer.html#method.as_mut) |
+| 18  | Alias(p1, p2)  | hazard | [pointer.as_mut()](https://doc.rust-lang.org/std/primitive.pointer.html#method.as_mut) |
 | 19  | Lifetime(p, 'a)  | precond | [AtomicPtr::from_ptr()](https://doc.rust-lang.org/std/sync/atomic/struct.AtomicPtr.html#method.from_ptr)  |
 | 20  | Trait(T)  | option | [ptr::read()](https://doc.rust-lang.org/std/ptr/fn.read.html)  |
 | 21  | Send(T, NoRc)  | option | [Send](https://doc.rust-lang.org/std/marker/trait.Send.html) |
@@ -307,17 +307,11 @@ Example APIs: [trait.FromRawFd::from_raw_fd()](https://doc.rust-lang.org/std/os/
 (TO FIX: there should be similar issues for other RAII resources, we may not need this because FFI memories cannot require owned.)
 
 #### 3.4.2 Alias
-There are six types of pointers to a value x, depending on the mutabality and ownership, i.e., owner, mutable owner, reference, mutable reference, raw pointer, mutable raw pointer 
+There are six types of pointers to a value x, depending on the mutabality and ownership, i.e., owner, mutable owner, reference, mutable reference, raw pointer, mutable raw pointer. The exclusive mutability principle of Rust requires that if a value has a mutable alias at one program point, it must not have other aliases at that program point. Otherwise, it may incur unsafe status. We need to track the particular unsafe status and avoid unsafe behaviors.
 
-**psp 18. Alias(\&x)**:
+**psp 18. Alias(p1, p2)**:
 
-$$\text{pointer}(x) = \bigcup p_i,\ p_i\in \lbrace \text{O, Om, R, Rm, P, Pm} \rbrace $$
-
-The exclusive mutability principle of Rust requires that if a value has a mutable alias at one program point, it must not have other aliases at that program point. Otherwise, it may incur unsafe status. We need to track the particular unsafe status and avoid unsafe behaviors. For example, the follow status are vulnerable:
-
-$$ \text{pointer}(x) = \lbrace p_1, p_2, p_3 | p_1 \in \text{Om}, p_2 \in \text{P}, \text{and}\ p_3 \in \text{R} \rbrace $$
-
-Because it violates the exclusive mutability principle, which requires that a mutable owner and any references to it must not coexist at the same program point.
+$$*p1 = *p2 $$
 
 Example APIs: [pointer.as_mut()](https://doc.rust-lang.org/std/primitive.pointer.html#method.as_mut), [pointer.as_ref()](https://doc.rust-lang.org/std/primitive.pointer.html#method.as_ref-1), [pointer.as_ref_unchecked()](https://doc.rust-lang.org/std/primitive.pointer.html#method.as_ref_unchecked-1)
 
