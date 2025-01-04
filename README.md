@@ -1,7 +1,7 @@
 # tag-std
 
 This project aims to standardize the safety property annotation of the Rust core and standard library. There are three steps:
-- Define the primitive safety properties to be used for describing the safety concerns of unsafe APIs.
+- Define the [primitive safety properties](primitive-sp.md) to be used for describing the safety concerns of unsafe APIs.
 - Label the unsafe APIs in Rust's core and standard library with primitive safety properties.
 - Detect and solve discripencies via program analysis.
 
@@ -22,4 +22,4 @@ where
 ```
 
 We can tag the API with the following primitive safety property:
-- [psp 10.2](primitive-sp.md/#L207): ValidInt(mul, count, sizeof(T), isize) 
+- ValidInt(mul, count, sizeof(T), isize) 
