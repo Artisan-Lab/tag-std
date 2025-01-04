@@ -63,6 +63,8 @@ In practice, a safety property may correspond to a precondition, optional precon
 | 24  | Opened(fd) | precond | [trait.FromRawFd::from_raw_fd()](https://doc.rust-lang.org/std/os/fd/trait.FromRawFd.html#tymethod.from_raw_fd)  |
 | 25  | NonVolatile(p) | precond | [ptr::read()](https://doc.rust-lang.org/std/ptr/fn.read.html) |
 
+**Note**: These primitives are not yet complete. New proposals are always welcome.
+
 ## 3 Safety Property Analysis
 
 ### 3.1 Layout
