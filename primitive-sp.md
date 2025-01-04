@@ -54,7 +54,7 @@ In practice, a safety property may correspond to a precondition, optional precon
 | 15  | Unwrap(x, T)  | precond | [Option::unwrap_unchecked()](https://doc.rust-lang.org/std/option/enum.Option.html#method.unwrap_unchecked)  |
 | 16  | NonOwned(p)  | precond | [Box::from_raw()](https://doc.rust-lang.org/std/boxed/struct.Box.html#method.from_raw)  |
 | 17  | Owned(p)  | precond | [trait.FromRawFd::from_raw_fd()](https://doc.rust-lang.org/std/os/fd/trait.FromRawFd.html#tymethod.from_raw_fd)  |
-| 18  | Alias(p)  | hazard | [pointer.as_mut()](https://doc.rust-lang.org/std/primitive.pointer.html#method.as_mut) |
+| 18  | Alias(\&x)  | hazard | [pointer.as_mut()](https://doc.rust-lang.org/std/primitive.pointer.html#method.as_mut) |
 | 19  | Lifetime(p, 'a)  | precond | [AtomicPtr::from_ptr()](https://doc.rust-lang.org/std/sync/atomic/struct.AtomicPtr.html#method.from_ptr)  |
 | 20  | Trait(T)  | option | [ptr::read()](https://doc.rust-lang.org/std/ptr/fn.read.html)  |
 | 21  | Send(T, NoRc)  | option | [Send](https://doc.rust-lang.org/std/marker/trait.Send.html) |
@@ -309,7 +309,7 @@ Example APIs: [trait.FromRawFd::from_raw_fd()](https://doc.rust-lang.org/std/os/
 #### 3.4.2 Alias
 There are six types of pointers to a value x, depending on the mutabality and ownership, i.e., owner, mutable owner, reference, mutable reference, raw pointer, mutable raw pointer 
 
-**psp 18. Alias(p)**:
+**psp 18. Alias(\&x)**:
 
 $$\text{pointer}(x) = \bigcup p_i,\ p_i\in \lbrace \text{O, Om, R, Rm, P, Pm} \rbrace $$
 
