@@ -2,7 +2,7 @@
 
 ### Module [ptr](https://doc.rust-lang.org/nightly/core/ptr/index.html)
 
-| Namespace | API | Tags of Primitive SP | Precondition | Hazard | Option | Status |
+| Namespace | API | Tag | Precondition | Hazard | Option | Status |
 |-----------|-----|-----|--------------|--------|--------------|--------|
 | core::ptr | [copy<T>(src: *const T, dst: *mut T, count: usize)](https://doc.rust-lang.org/nightly/core/ptr/fn.copy.html) | Aligned, Bounded, NonOverlap, +Alias, Trait- | Aligned(src, T), Aligned(dst, T), Bounded(src, T, count), Bounded(dst, T, count), NonOverlap(dst, src, T) | Alias(*src, *dst) | $Copy\in Trait(T)$ | |
 | core::ptr | [copy_nonoverlapping<T>(src: *const T, dst: *mut T, count: usize)](https://doc.rust-lang.org/nightly/core/ptr/fn.copy_nonoverlapping.html)  | Aligned, Bounded, NonOverlap, +Alias, Trait- | Aligned(src, T), Aligned(dst, T), Bounded(src, T, count), Bounded(dst, T, count), NonOverlap(dst, src, T, count)  | Alias(*src, *dst)  | $Copy\in Trait(T)$ |   |
@@ -20,7 +20,7 @@
 
 
 ### Module [num](https://doc.rust-lang.org/nightly/core/num/index.html)
-| Namespace | API | Tags of Primitive SP | Precondition | Hazard | Option | Status |
+| Namespace | API | Tag | Precondition | Hazard | Option | Status |
 |-----------|-----|-----|--------------|--------|--------------|--------|
 |[core::intrinsics]|[unchecked_add<T: Copy>(_x: T, _y: T) -> T](https://doc.rust-lang.org/nightly/core/intrinsics/fn.unchecked_add.html)||||||
 |[core::intrinsics]|[unchecked_sub<T: Copy>(_x: T, _y: T) -> T](https://doc.rust-lang.org/nightly/core/intrinsics/fn.unchecked_sub.html)||||||
