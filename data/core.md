@@ -1,6 +1,6 @@
 ## Core APIs (no-std)
 
-### [ptr](https://doc.rust-lang.org/nightly/core/ptr/index.html)
+### Module [ptr](https://doc.rust-lang.org/nightly/core/ptr/index.html)
 
 | Namespace | API | Tags of Primitive SP | Precondition | Hazard | Option | Status |
 |-----------|-----|-----|--------------|--------|--------------|--------|
@@ -17,3 +17,18 @@
 | core::ptr | [write_bytes<T>(dst: *mut T, val: u8, count: usize)](https://doc.rust-lang.org/nightly/core/ptr/fn.write_bytes.html) |  |              |        |             |        |
 | core::ptr | [write_unaligned<T>(dst: *mut T, src: T)](https://doc.rust-lang.org/nightly/core/ptr/fn.write_unaligned.html) |  |              |        |             |        |
 | core::ptr | [write_volatile<T>(dst: *mut T, src: T)](https://doc.rust-lang.org/nightly/core/ptr/fn.write_volatile.html) |  |              |        |             |        |
+
+
+### Module [num](https://doc.rust-lang.org/nightly/core/num/index.html)
+| Namespace | API | Tags of Primitive SP | Precondition | Hazard | Option | Status |
+|-----------|-----|-----|--------------|--------|--------------|--------|
+|[core::intrinsics]|[unchecked_add<T: Copy>(_x: T, _y: T) -> T](https://doc.rust-lang.org/nightly/core/intrinsics/fn.unchecked_add.html)||||||
+|[core::intrinsics]|[unchecked_sub<T: Copy>(_x: T, _y: T) -> T](https://doc.rust-lang.org/nightly/core/intrinsics/fn.unchecked_sub.html)||||||
+|[core::intrinsics]|[unchecked_mul<T: Copy>(_x: T, _y: T) -> T](https://doc.rust-lang.org/nightly/core/intrinsics/fn.unchecked_mul.html)||||||
+|[core::intrinsics]|[unchecked_rem<T: Copy>(_x: T, _y: T) -> T](https://doc.rust-lang.org/nightly/core/intrinsics/fn.unchecked_rem.html)||||||
+|[core::intrinsics]|[unchecked_shl<T: Copy>(_x: T, _y: T) -> T](https://doc.rust-lang.org/nightly/core/intrinsics/fn.unchecked_shl.html)||||||
+|[core::intrinsics]|[unchecked_shr<T: Copy>(_x: T, _y: T) -> T](https://doc.rust-lang.org/nightly/core/intrinsics/fn.unchecked_shr.html)||||||
+|[core::intrinsics]|[unchecked_neg<T: Copy>(_x: T, _y: T) -> T]()||||||
+
+
+
