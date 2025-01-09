@@ -51,7 +51,7 @@ We can tag the API with the following primitive safety property:
 These are the preconditions for calling the unsafe APIs. We need more properties to discribe the hazards when the content is not `Copy`.
 
 - Primitive SP template: `Alias(p1, p2)`, which means $*p1 = *p2$;
-    - Specific primitive SP for the API: `Alias(dst, src)`
+    - Specific primitive SP for the API: `Alias(*dst, *src)`
 
 When proving the soundness of [String::remove()](https://doc.rust-lang.org/beta/alloc/string/struct.String.html#method.remove) (see the code below), it is essential to verify that the primitive safety properties of its interior unsafe APIs [ptr.add()](https://doc.rust-lang.org/beta/core/primitive.pointer.html#method.add) and [ptr::copy()](https://doc.rust-lang.org/beta/core/ptr/fn.copy.html) are met in all cases.
 
