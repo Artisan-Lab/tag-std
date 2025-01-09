@@ -165,7 +165,7 @@ Example APIs: [ptr::read()](https://doc.rust-lang.org/beta/std/primitive.pointer
 #### 3.2.3 Derived Safety Properties
 There are two useful derived safety properties based on the previous components.
 
-The first one is bounded access, which requires that the pointer access with respet to an offset stays within the bound. This ensures that dereferencing the pointer results in a value of the expected type T.
+The first one is bounded access, which requires that the pointer access with respet to an offset stays within the bound. This ensures that dereferencing the pointer yields a value (which may not yet be initialized) of the expected type T. If initialization of the value is required, consider combining this property with psp 14. Init(p, T).
 
 **psp 8. Bounded(p, T, offset)**: 
 
