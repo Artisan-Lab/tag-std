@@ -39,11 +39,12 @@ In practice, a safety property may correspond to a precondition, optional precon
 | 7  | Pointee(p, T)  | precond  | [ptr::read()](https://doc.rust-lang.org/beta/std/primitive.pointer.html#method.read)  |
 | 8  | Bounded(p, T, offset)  | precond | [ptr::offset()](https://doc.rust-lang.org/std/primitive.pointer.html#method.offset)  |
 | 9.1  | NonOverlap(dst, src, T, count) | precond | [ptr::copy_nonoverlapping()](https://doc.rust-lang.org/std/ptr/fn.copy_nonoverlapping.html)  |
-| 9.2  | NonOverlap(dst, src, T) | precond | [ptr::copy()](https://doc.rust-lang.org/std/ptr/fn.copy.html)  |
-| 10.1  | ValidInt(x, T)  | precond | [f32.to_int_unchecked()](https://doc.rust-lang.org/std/primitive.f32.html#method.to_int_unchecked)  |
-| 10.2  | ValidInt(binop, x, y, T)  | precond | [usize.add()](https://doc.rust-lang.org/std/primitive.usize.html#method.unchecked_add)  |
-| 10.3  | ValidInt(uop, x, T)  | precond | [unchecked_neg()](https://doc.rust-lang.org/nightly/core/primitive.isize.html#method.unchecked_neg) |
-| 11  | NonZero(x)  | precond | [NonZero::from_mut_unchecked()](https://doc.rust-lang.org/beta/std/num/struct.NonZero.html#tymethod.from_mut_unchecked) |
+| 9.2  | NonOverlap(dst, src, T) | precond | [ptr::copy()](https://doc.rust-lang.org/std/ptr/fn.copy.html) |
+| 10.1  | ValidIntParam(x, T)  | precond | [f32.to_int_unchecked()](https://doc.rust-lang.org/std/primitive.f32.html#method.to_int_unchecked)  |
+| 10.2  | ValidIntParam(x, T, range)  | precond | [NonZero::from_mut_unchecked()](https://doc.rust-lang.org/beta/std/num/struct.NonZero.html#tymethod.from_mut_unchecked) |
+| 10.3  | ValidIntParam(x, rx, y, ry, T)  | precond | [isize.unchecked_div()](https://doc.rust-lang.org/nightly/core/intrinsics/fn.unchecked_div.html) |
+| 11.1  | ValidIntRes(binop, x, y, T)  | precond | [usize.add()](https://doc.rust-lang.org/std/primitive.usize.html#method.unchecked_add)  |
+| 11.2  | ValidIntRes(uop, x, T)  | precond | [unchecked_neg()](https://doc.rust-lang.org/nightly/core/primitive.isize.html#method.unchecked_neg) |
 | 12.1  | ValidString(v) | precond | [String::from_utf8_unchecked()](https://doc.rust-lang.org/std/string/struct.String.html#method.from_utf8_unchecked) |
 |     | ValidString(v) | hazard | [String.as_bytes_mut()](https://doc.rust-lang.org/std/string/struct.String.html#method.as_bytes_mut) |
 | 12.2  | ValidString(p, len) | precond | [String::from_raw_parts()](https://doc.rust-lang.org/std/string/struct.String.html#method.from_raw_parts) |
