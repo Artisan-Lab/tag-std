@@ -40,11 +40,10 @@ In practice, a safety property may correspond to a precondition, optional precon
 | 8  | Bounded(p, T, offset)  | precond | [ptr::offset()](https://doc.rust-lang.org/std/primitive.pointer.html#method.offset)  |
 | 9.1  | NonOverlap(dst, src, T, count) | precond | [ptr::copy_nonoverlapping()](https://doc.rust-lang.org/std/ptr/fn.copy_nonoverlapping.html)  |
 | 9.2  | NonOverlap(dst, src, T) | precond | [ptr::copy()](https://doc.rust-lang.org/std/ptr/fn.copy.html) |
-| 10.1  | ValidIntParam(x, T)  | precond | [f32.to_int_unchecked()](https://doc.rust-lang.org/std/primitive.f32.html#method.to_int_unchecked)  |
-| 10.2  | ValidIntParam(x, T, range)  | precond | [NonZero::from_mut_unchecked()](https://doc.rust-lang.org/beta/std/num/struct.NonZero.html#tymethod.from_mut_unchecked) |
-| 10.3  | ValidIntParam(x, rx, y, ry, T)  | precond | [isize.unchecked_div()](https://doc.rust-lang.org/nightly/core/intrinsics/fn.unchecked_div.html) |
-| 11.1  | ValidIntRes(binop, x, y, T)  | precond | [usize.add()](https://doc.rust-lang.org/std/primitive.usize.html#method.unchecked_add)  |
-| 11.2  | ValidIntRes(uop, x, T)  | precond | [unchecked_neg()](https://doc.rust-lang.org/nightly/core/primitive.isize.html#method.unchecked_neg) |
+| 11.1  | ValidInt(x, T)  | precond | [f32.to_int_unchecked()](https://doc.rust-lang.org/std/primitive.f32.html#method.to_int_unchecked)  |
+| 11.2  | ValidInt(x, T, range)  | precond | [NonZero::from_mut_unchecked()](https://doc.rust-lang.org/beta/std/num/struct.NonZero.html#tymethod.from_mut_unchecked) |
+| 11.4  | ValidInt(binop, x, y, T)  | precond | [usize.add()](https://doc.rust-lang.org/std/primitive.usize.html#method.unchecked_add)  |
+| 11.5  | ValidInt(uop, x, T)  | precond | [unchecked_neg()](https://doc.rust-lang.org/nightly/core/primitive.isize.html#method.unchecked_neg) |
 | 12.1  | ValidString(v) | precond | [String::from_utf8_unchecked()](https://doc.rust-lang.org/std/string/struct.String.html#method.from_utf8_unchecked) |
 |     | ValidString(v) | hazard | [String.as_bytes_mut()](https://doc.rust-lang.org/std/string/struct.String.html#method.as_bytes_mut) |
 | 12.2  | ValidString(p, len) | precond | [String::from_raw_parts()](https://doc.rust-lang.org/std/string/struct.String.html#method.from_raw_parts) |
@@ -197,7 +196,7 @@ Example APIs: [ptr::copy_nonoverlapping()](https://doc.rust-lang.org/std/ptr/fn.
 
 When converting a value `x` to an interger, the value should not be greater than the max or less the min value that can be represented by the integer type `T`.
 
-**psp 10.1. ValidInt(x, T)**: 
+**psp 11.1. ValidInt(x, T)**: 
 
 $$\text{T::MAX} \geq x \geq \text{T::MIN} $$
 
@@ -205,7 +204,11 @@ Example APIs: [f32.to_int_unchecked()](https://doc.rust-lang.org/std/primitive.f
 
 The result of interger arithmatic of two values `x` and `y` of type `T` should not overflow the max or the min value.
 
-**psp 10.2. ValidInt(binop, x, y, T)**:
+**psp 11.2. ValidInt(x, T, range)**: 
+
+Example APIs: [NonZero::from_mut_unchecked()](https://doc.rust-lang.org/beta/std/num/struct.NonZero.html#tymethod.from_mut_unchecked), [isize.unchecked_div()](https://doc.rust-lang.org/nightly/core/intrinsics/fn.unchecked_div.html) |
+
+**psp 11.3. ValidInt(binop, x, y, T)**:
 
 $$\text{T::MAX} \geq \text{binop}(x, y) \geq \text{T::MIN} $$
 
@@ -213,17 +216,13 @@ Example APIs: [isize.add()](https://doc.rust-lang.org/std/primitive.isize.html#m
 
 Unary arithmatic operations have similar requirements.
 
-**psp 10.3. ValidInt(uop, x, T)**:
+**psp 11.4. ValidInt(uop, x, T)**:
 
 $$\text{T::MAX} \geq \text{uop}(x) \geq \text{T::MIN} $$
 
 Some APIs may require the value `x` of an integer type should not be zero.
 
 Example API: [isize.unchecked_neg()](https://doc.rust-lang.org/nightly/core/primitive.isize.html#method.unchecked_neg)
-
-**psp 11. NonZero(x)** $$x != 0 $$:
-
-Example API: [NonZero::from_mut_unchecked()](https://doc.rust-lang.org/beta/std/num/struct.NonZero.html#tymethod.from_mut_unchecked)
 
 #### 3.3.2 String
 There are two types of string in Rust, [String](https://doc.rust-lang.org/std/string/struct.String.htm) which requires valid utf-8 format, and [CStr](https://doc.rust-lang.org/std/ffi/struct.CStr.html) for interacting with foreign functions.
