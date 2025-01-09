@@ -15,27 +15,27 @@
 ### Core Intrinsics with Raw pointers
 | Namespace | API | Precondition | Hazard | Option | Status |
 |-----------|-----|-----|--------------|--------|--------------|
-|core::intrinsics|[typed_swap_nonoverlapping<T>(x: *mut T, y: *mut T)](https://doc.rust-lang.org/nightly/core/intrinsics/fn.typed_swap_nonoverlapping.html)| PtrValid(x,T), PtrValid(y,T), NonOverlap(x, y, T), Aligned(x,T), Aligned(y,T), ||| To Be Confirmed|
-|core::intrinsics|[vtable_size(_ptr: *const ()) -> usize](https://doc.rust-lang.org/nightly/core/intrinsics/fn.vtable_size.html)|Bounded(ptr, vtable), Init(ptr,vtable)||| To Be Confirmed|
-|core::intrinsics|[vtable_align(_ptr: *const ()) -> usize](https://doc.rust-lang.org/nightly/core/intrinsics/fn.vtable_align.html)|Bounded(ptr, vtable), Init(ptr,vtable)||||
-|core::intrinsics|[copy<T>(src: *const T, dst: *mut T, count: usize)](https://doc.rust-lang.org/nightly/core/intrinsics/fn.copy.html)|PtrValid(src,T,count), PtrValid(dst,T,count), NonOverlap(x, y, T), Aligned(x,T), Aligned(y,T),| Alias(*src, *dst)  | $Copy\in Trait(T)$ ||
-|core::intrinsics|[copy_nonoverlapping<T>(src: *const T, dst: *mut T, count: usize)](https://doc.rust-lang.org/nightly/core/intrinsics/fn.copy_nonoverlapping.html)|PtrValid(src,T), PtrValid(dst,T), NonOverlap(x, y, T, count), Aligned(x,T), Aligned(y,T),| Alias(*src, *dst)  | $Copy\in Trait(T)$ |   |
-|core::intrinsics|[write_bytes<T>(dst: *mut T, val: u8, count: usize)](https://doc.rust-lang.org/nightly/core/intrinsics/fn.write_bytes.html)|PtrValid(dst,T,count), Aligned(dst,T),  ||||
+|core::intrinsics|[typed_swap_nonoverlapping<T>(x: *mut T, y: *mut T)](https://doc.rust-lang.org/nightly/core/intrinsics/fn.typed_swap_nonoverlapping.html)| PtrValid(x,T), PtrValid(y,T), NonOverlap(x, y, T), Aligned(x,T), Aligned(y,T), Init(x,T), Init(y,T),||||
+|core::intrinsics|[vtable_size(_ptr: *const ()) -> usize](https://doc.rust-lang.org/nightly/core/intrinsics/fn.vtable_size.html)|Bounded(_ptr, vtable), Init(_ptr,vtable)||| To Be Confirmed|
+|core::intrinsics|[vtable_align(_ptr: *const ()) -> usize](https://doc.rust-lang.org/nightly/core/intrinsics/fn.vtable_align.html)|Bounded(_ptr, vtable), Init(_ptr,vtable)||||
+|core::intrinsics|[copy<T>(src: *const T, dst: *mut T, count: usize)](https://doc.rust-lang.org/nightly/core/intrinsics/fn.copy.html)|PtrValid(src,T,count), PtrValid(dst,T,count), NonOverlap(src, dst, T), Aligned(src,T), Aligned(dst,T), NonVolatile(src), NonVolatile(dst)| Alias(*src, *dst)  | $Copy\in Trait(T)$ |To Be Confirmed(NonVolatile)|
+|core::intrinsics|[copy_nonoverlapping<T>(src: *const T, dst: *mut T, count: usize)](https://doc.rust-lang.org/nightly/core/intrinsics/fn.copy_nonoverlapping.html)|PtrValid(src,T,count), PtrValid(dst,T,count), NonOverlap(src, dst, T, count), Aligned(src,T), Aligned(dst,T), NonVolatile(src), NonVolatile(dst)| Alias(*src, *dst) | $Copy\in Trait(T)$ | To Be Confirmed(NonVolatile) |
+|core::intrinsics|[write_bytes<T>(dst: *mut T, val: u8, count: usize)](https://doc.rust-lang.org/nightly/core/intrinsics/fn.write_bytes.html)|PtrValid(dst,T,count), Aligned(dst,T), NonVolatile(dst) ||| To Be Confirmed(NonVolatile) |
 |core::intrinsics|[size_of_val<T: ?Sized>(_ptr: *const T) -> usize](https://doc.rust-lang.org/nightly/core/intrinsics/fn.size_of_val.html)|TO LABEL||||
 |core::intrinsics|[arith_offset<T>(_dst: *const T, _offset: isize) -> *const T](https://doc.rust-lang.org/nightly/core/intrinsics/fn.arith_offset.html)|TO LABEL(need a hazard label?)|||To Be Confirmed|
 |core::intrinsics|[volatile_copy_nonoverlapping_memory<T>(_dst: *mut T, _src: *const T, _count: usize)](https://doc.rust-lang.org/nightly/core/intrinsics/fn.volatile_copy_nonoverlapping_memory.html)|PtrValid(src,T), PtrValid(dst,T), NonOverlap(src, dst, T, count), Aligned(src,T), Aligned(dst,T),| Alias(*src, *dst)  | $Copy\in Trait(T)$ | To Be Confirmed |
 |core::intrinsics|[volatile_copy_memory<T>(_dst: *mut T, _src: *const T, _count: usize)](https://doc.rust-lang.org/nightly/core/intrinsics/fn.volatile_copy_memory.html)|PtrValid(_src,T), PtrValid(_dst,T), NonOverlap(_src, _dst, T), Aligned(_src,T), Aligned(_dst,T),| Alias(*_src, *_dst)  | $Copy\in Trait(T)$ | To Be Confirmed |
-|core::intrinsics|[volatile_set_memory<T>(_dst: *mut T, _val: u8, _count: usize)](https://doc.rust-lang.org/nightly/core/intrinsics/fn.volatile_set_memory.html)|No Safety|||To Be Confirmed|
+|core::intrinsics|[volatile_set_memory<T>(_dst: *mut T, _val: u8, _count: usize)](https://doc.rust-lang.org/nightly/core/intrinsics/fn.volatile_set_memory.html)|PtrValid(_dst,T,_count)|||To Be Confirmed|
 |core::intrinsics|[volatile_load<T>(_src: *const T) -> T](https://doc.rust-lang.org/nightly/core/intrinsics/fn.volatile_load.html)|PtrValid(_src,T), Aligned(_src,T), Init(_src, T) ||$Copy\in Trait(T)$ ||
 |core::intrinsics|[unaligned_volatile_load<T>(_src: *const T) -> T](https://doc.rust-lang.org/nightly/core/intrinsics/fn.unaligned_volatile_load.html)|PtrValid(_src,T), Init(_src, T) ||$Copy\in Trait(T)$ ||
-|core::intrinsics|[volatile_store<T>(_dst: *mut T, _val: T)](https://doc.rust-lang.org/nightly/core/intrinsics/fn.volatile_store.html)|PtrValid(_dst,T), Aligned(_dst,T), Init(_dst, T) ||$Copy\in Trait(T)$ ||
+|core::intrinsics|[volatile_store<T>(_dst: *mut T, _val: T)](https://doc.rust-lang.org/nightly/core/intrinsics/fn.volatile_store.html)|PtrValid(_dst,T), Aligned(_dst,T) ||$Copy\in Trait(T)$ ||
 |core::intrinsics|[unaligned_volatile_load<T>(_src: *const T) -> T](https://doc.rust-lang.org/nightly/core/intrinsics/fn.unaligned_volatile_load.html)|PtrValid(_dst,T), Init(_dst, T) ||$Copy\in Trait(T)$ ||
-|core::intrinsics|[compare_bytes(_left: *const u8, _right: *const u8, _bytes: usize) -> i32](https://doc.rust-lang.org/nightly/core/intrinsics/fn.compare_bytes.html)|PtrValid(_left,T), PtrValid(_right,T), TO LABEL||||
+|core::intrinsics|[compare_bytes(_left: *const u8, _right: *const u8, _bytes: usize) -> i32](https://doc.rust-lang.org/nightly/core/intrinsics/fn.compare_bytes.html)|PtrValid(_left,T), PtrValid(_right,T)||||
 |core::intrinsics|[min_align_of_val<T: ?Sized>(_ptr: *const T) -> usize](https://doc.rust-lang.org/nightly/core/intrinsics/fn.min_align_of_val.html)|TO LABEL||||
 |core::intrinsics|[ptr_offset_from<T>(_ptr: *const T, _base: *const T) -> isize](https://doc.rust-lang.org/nightly/core/intrinsics/fn.ptr_offset_from.html)|NonZst(T), |||To Be Confirmed)|
-|core::intrinsics|[ptr_offset_from_unsigned<T>(_ptr: *const T, _base: *const T) -> usize](https://doc.rust-lang.org/nightly/core/intrinsics/fn.unaligned_volatile_load.html)|NonZst(T),|||To Be Confirmed|
+|core::intrinsics|[ptr_offset_from_unsigned<T>(_ptr: *const T, _base: *const T) -> usize](https://doc.rust-lang.org/nightly/core/intrinsics/fn.ptr_offset_from_unsigned.html)|NonZst(T),|||To Be Confirmed|
 |core::intrinsics|[read_via_copy<T>(_ptr: *const T) -> T](https://doc.rust-lang.org/nightly/core/intrinsics/fn.read_via_copy.html)|PtrValid(_ptr,T), Aligned(_ptr,T), Init(_ptr, T), NonVolatile(_ptr)||$Copy\in Trait(T)$|To Be Confirmed|
-|core::intrinsics|[write_via_move<T>(_ptr: *mut T, _value: T)](https://doc.rust-lang.org/nightly/core/intrinsics/fn.write_via_move.html)|PtrValid(_ptr,T), Aligned(_ptr,T), Init(_ptr, T), NonVolatile(_ptr)||$Copy\in Trait(T)$|To Be Confirmed|
+|core::intrinsics|[write_via_move<T>(_ptr: *mut T, _value: T)](https://doc.rust-lang.org/nightly/core/intrinsics/fn.write_via_move.html)|PtrValid(_ptr,T), Aligned(_ptr,T), NonVolatile(_ptr)|||To Be Confirmed|
 
 ### Module [ptr](https://doc.rust-lang.org/nightly/core/ptr/index.html)
 
