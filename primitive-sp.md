@@ -41,19 +41,19 @@ In practice, a safety property may correspond to a precondition, optional precon
 | II.3.1  | NonOverlap(dst, src, T, count) | precond | [ptr::copy_nonoverlapping()](https://doc.rust-lang.org/std/ptr/fn.copy_nonoverlapping.html)  |
 | II.3.2  | NonOverlap(dst, src, T) | precond | [ptr::copy()](https://doc.rust-lang.org/std/ptr/fn.copy.html) |
 | III.1.1  | ValidInt(x, T)  | precond | [f32.to_int_unchecked()](https://doc.rust-lang.org/std/primitive.f32.html#method.to_int_unchecked)  |
-| III.2.2  | ValidInt(x, T, range)  | precond | [NonZero::from_mut_unchecked()](https://doc.rust-lang.org/beta/std/num/struct.NonZero.html#tymethod.from_mut_unchecked) |
-| III.2.3  | ValidInt(x, T, U, range)  | precond | [u32::unchecked_shl()](https://doc.rust-lang.org/nightly/core/intrinsics/fn.unchecked_shl.html) |
-| III.2.4  | ValidInt(uop, x, T)  | precond | [unchecked_neg()](https://doc.rust-lang.org/nightly/core/primitive.isize.html#method.unchecked_neg) |
-| III.2.5  | ValidInt(binop, x, y, T)  | precond | [usize.add()](https://doc.rust-lang.org/std/primitive.usize.html#method.unchecked_add)  |
-| III.3.1  | ValidString(v) | precond | [String::from_utf8_unchecked()](https://doc.rust-lang.org/std/string/struct.String.html#method.from_utf8_unchecked) |
+| III.1.2  | ValidInt(x, T, range)  | precond | [NonZero::from_mut_unchecked()](https://doc.rust-lang.org/beta/std/num/struct.NonZero.html#tymethod.from_mut_unchecked) |
+| III.1.3  | ValidInt(x, T, U, range)  | precond | [u32::unchecked_shl()](https://doc.rust-lang.org/nightly/core/intrinsics/fn.unchecked_shl.html) |
+| III.1.4  | ValidInt(uop, x, T)  | precond | [unchecked_neg()](https://doc.rust-lang.org/nightly/core/primitive.isize.html#method.unchecked_neg) |
+| III.1.5  | ValidInt(binop, x, y, T)  | precond | [usize.add()](https://doc.rust-lang.org/std/primitive.usize.html#method.unchecked_add)  |
+| III.2.1  | ValidString(v) | precond | [String::from_utf8_unchecked()](https://doc.rust-lang.org/std/string/struct.String.html#method.from_utf8_unchecked) |
 |     | ValidString(v) | hazard | [String.as_bytes_mut()](https://doc.rust-lang.org/std/string/struct.String.html#method.as_bytes_mut) |
-| III.3.2  | ValidString(p, len) | precond | [String::from_raw_parts()](https://doc.rust-lang.org/std/string/struct.String.html#method.from_raw_parts) |
-| III.3.3  | ValidString(s, I) | precond | [String.get_unchecked()](https://doc.rust-lang.org/std/string/struct.String.html#method.get_unchecked) |
-| III.3.4  | ValidString(s, begin, end) | precond | [String.slice_unchecked()](https://doc.rust-lang.org/std/string/struct.String.html#method.slice_unchecked) |
-| III.4  | ValidCStr(p, len) |  precond|  [CStr::from_bytes_with_nul_unchecked()](https://doc.rust-lang.org/std/ffi/struct.CStr.html#method.from_bytes_with_nul_unchecked)  |
-| III.5.1 | Init(p, T)  | precond | [Box::assume_init()](https://doc.rust-lang.org/std/boxed/struct.Box.html#method.assume_init)  |
-| III.5.2 | Init(p, T, range)  | precond | [ptr::copy()](https://doc.rust-lang.org/std/ptr/fn.copy.html) |
-| III.6  | Unwrap(x, T)  | precond | [Option::unwrap_unchecked()](https://doc.rust-lang.org/std/option/enum.Option.html#method.unwrap_unchecked)  |
+| III.2.2  | ValidString(p, len) | precond | [String::from_raw_parts()](https://doc.rust-lang.org/std/string/struct.String.html#method.from_raw_parts) |
+| III.2.3  | ValidString(s, I) | precond | [String.get_unchecked()](https://doc.rust-lang.org/std/string/struct.String.html#method.get_unchecked) |
+| III.2.4  | ValidString(s, begin, end) | precond | [String.slice_unchecked()](https://doc.rust-lang.org/std/string/struct.String.html#method.slice_unchecked) |
+| III.3  | ValidCStr(p, len) |  precond|  [CStr::from_bytes_with_nul_unchecked()](https://doc.rust-lang.org/std/ffi/struct.CStr.html#method.from_bytes_with_nul_unchecked)  |
+| III.4.1 | Init(p, T)  | precond | [Box::assume_init()](https://doc.rust-lang.org/std/boxed/struct.Box.html#method.assume_init)  |
+| III.4.2 | Init(p, T, range)  | precond | [ptr::copy()](https://doc.rust-lang.org/std/ptr/fn.copy.html) |
+| III.5  | Unwrap(x, T)  | precond | [Option::unwrap_unchecked()](https://doc.rust-lang.org/std/option/enum.Option.html#method.unwrap_unchecked)  |
 | IV.1  | NonOwned(p)  | precond | [Box::from_raw()](https://doc.rust-lang.org/std/boxed/struct.Box.html#method.from_raw)  |
 | IV.2  | Owned(p)  | precond | [trait.FromRawFd::from_raw_fd()](https://doc.rust-lang.org/std/os/fd/trait.FromRawFd.html#tymethod.from_raw_fd)  |
 | IV.3  | Alias(p1, p2)  | hazard | [pointer.as_mut()](https://doc.rust-lang.org/std/primitive.pointer.html#method.as_mut) |
