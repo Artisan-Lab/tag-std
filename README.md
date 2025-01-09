@@ -39,8 +39,10 @@ pub const unsafe fn copy<T>(src: *const T, dst: *mut T, count: usize)
 ```
 
 We can tag the API with the following primitive safety property:
-- Primitive SP template: `Bounded(p, T, offset)`, which means $\text{typeof}(*(p + \text{sizeof}(T) * offset))  = T $;
-    - Specific primitive SP for the API: `Bounded(src, T, count)` and `Bounded(dst, T, count)`
+- Primitive SP template: `Bounded(p, T, range)`, which means $\forall offset\in range, \text{typeof}(*(p + \text{sizeof}(T) * offset))  = T $;
+    - Specific primitive SP for the API: `Bounded(src, T, 0..count)` and `Bounded(dst, T, 0..count)`
+- Primitive SP template: `Init(p, T, range)`, which means $$\forall offset \in range, \text{init}(*(p + \text{sizeof}(T) * offset), T) = true $$;
+    - Specific primitive SP for the API: `Init(dst, T, count)`
 - Primitive SP template: `NonOverlap(dst, src, T)`, which means $|dst - src| > \text{sizeof}(T)$;
     - Specific primitive SP for the API: `NonOverlap(dst, src, T)`
 - Primitive SP template: `Aligned(p, T)`, which means $p \\% \text{alignment}(T) = 0$;
