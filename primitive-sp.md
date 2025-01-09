@@ -51,7 +51,8 @@ In practice, a safety property may correspond to a precondition, optional precon
 | 12.3  | ValidString(s, I) | precond | [String.get_unchecked()](https://doc.rust-lang.org/std/string/struct.String.html#method.get_unchecked) |
 | 12.4  | ValidString(s, begin, end) | precond | [String.slice_unchecked()](https://doc.rust-lang.org/std/string/struct.String.html#method.slice_unchecked) |
 | 13  | ValidCStr(p, len) |  precond|  [CStr::from_bytes_with_nul_unchecked()](https://doc.rust-lang.org/std/ffi/struct.CStr.html#method.from_bytes_with_nul_unchecked)  |
-| 14  | Init(p, T)  | precond | [Box::assume_init()](https://doc.rust-lang.org/std/boxed/struct.Box.html#method.assume_init)  |
+| 14.1 | Init(p, T)  | precond | [Box::assume_init()](https://doc.rust-lang.org/std/boxed/struct.Box.html#method.assume_init)  |
+| 14.2 | Init(p, T, len)  | precond | [ptr::copy()](https://doc.rust-lang.org/std/ptr/fn.copy.html) |
 | 15  | Unwrap(x, T)  | precond | [Option::unwrap_unchecked()](https://doc.rust-lang.org/std/option/enum.Option.html#method.unwrap_unchecked)  |
 | 16  | NonOwned(p)  | precond | [Box::from_raw()](https://doc.rust-lang.org/std/boxed/struct.Box.html#method.from_raw)  |
 | 17  | Owned(p)  | precond | [trait.FromRawFd::from_raw_fd()](https://doc.rust-lang.org/std/os/fd/trait.FromRawFd.html#tymethod.from_raw_fd)  |
@@ -167,9 +168,9 @@ There are two useful derived safety properties based on the previous components.
 
 The first one is bounded access, which requires that the pointer access with respet to an offset stays within the bound. This ensures that dereferencing the pointer yields a value (which may not yet be initialized) of the expected type T. If initialization of the value is required, consider combining this property with psp 14. Init(p, T).
 
-**psp 8. Bounded(p, T, offset)**: 
+**psp 8. Bounded(p, T, range)**: 
 
-$$\text{typeof}(*(p + \text{sizeof}(T) * offset))  = T $$
+$$\forall offset \in range, \text{typeof}(*(p + \text{sizeof}(T) * range))  = T $$
 
 Example APIs: [ptr::offset()](https://doc.rust-lang.org/std/primitive.pointer.html#method.offset), [ptr::copy()](https://doc.rust-lang.org/std/ptr/fn.copy.html) 
 
@@ -281,11 +282,17 @@ Example APIs: [CStr::from_bytes_with_nul_unchecked()](https://doc.rust-lang.org/
 #### 3.3.3 Initialization
 A safety property may require the memory of type `T` pointed by a pointer `p` is initialized.
 
-**psp 14. Init(p, T)**:
+**psp 14.1 Init(p, T)**:
 
 $$\text{init}(*p, T) = true $$
 
 Example APIs: [MaybeUninit.assume_init()](https://doc.rust-lang.org/std/mem/union.MaybeUninit.html#method.assume_init), [Box::assume_init()](https://doc.rust-lang.org/std/boxed/struct.Box.html#method.assume_init)
+
+**psp 14.2 Init(p, T, range)**:
+
+$$\forall offset \in range, \text{init}(*(p + \text{sizeof}(T) * offset), T) = true $$
+
+Example APIs: [ptr::copy()](https://doc.rust-lang.org/std/ptr/fn.copy.html) |
 
 #### 3.3.4 Unwrap
 
