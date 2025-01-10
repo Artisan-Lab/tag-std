@@ -55,5 +55,10 @@
 | core::ptr | [write_bytes<T>(dst: *mut T, val: u8, count: usize)](https://doc.rust-lang.org/nightly/core/ptr/fn.write_bytes.html) |            |        |             |        |
 | core::ptr | [write_unaligned<T>(dst: *mut T, src: T)](https://doc.rust-lang.org/nightly/core/ptr/fn.write_unaligned.html) |             |        |             |        |
 | core::ptr | [write_volatile<T>(dst: *mut T, src: T)](https://doc.rust-lang.org/nightly/core/ptr/fn.write_volatile.html) |              |        |             |        |
-| core::ptr::NonNull | [ as_uninit_ref<'a>(self)](https://doc.rust-lang.org/nightly/std/ptr/struct.NonNull.html#method.as_uninit_ref) |              |        |             |        |
-
+| core::ptr::NonNull | [ as_uninit_ref<'a>(self)](https://doc.rust-lang.org/nightly/std/ptr/struct.NonNull.html#method.as_uninit_ref) |  Convertible2Ref(self, T)     |        |             |        |
+| core::ptr::NonNull | [ as_uninit_mut<'a>(self)](https://doc.rust-lang.org/nightly/std/ptr/struct.NonNull.html#method.as_uninit_mut) |  Convertible2Ref(self, T)     |        |             |        |
+| core::ptr::NonNull | [ new_unchecked(ptr: *mut T)](https://doc.rust-lang.org/nightly/std/ptr/struct.NonNull.html#method.new_unchecked) |  NonNull(ptr)    |        |             |        |
+| core::ptr::NonNull | [ as_ref<'a>(&self))](https://doc.rust-lang.org/nightly/std/ptr/struct.NonNull.html#method.as_ref) |  Convertible2Ref(self, T)     |        |             |        |
+| core::ptr::NonNull | [ as_mut<'a>(&self))](https://doc.rust-lang.org/nightly/std/ptr/struct.NonNull.html#method.as_mut) |  Convertible2Ref(self, T)     |        |             |        |
+| core::ptr::NonNull | [ offset(self, count: isize)](https://doc.rust-lang.org/nightly/std/ptr/struct.NonNull.html#method.offset) |  Validint(mul, count, sizeof(T), isize), Bounded(self, T, count)     |        |             |        |
+| core::ptr::NonNull | [ add(self, count: isize)](https://doc.rust-lang.org/nightly/std/ptr/struct.NonNull.html#method.add) |  Validint(mul, count, sizeof(T), isize), Bounded(self, T, count)     |        |             | |
