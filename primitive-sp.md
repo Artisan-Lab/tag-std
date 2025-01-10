@@ -53,8 +53,9 @@ In practice, a safety property may correspond to a precondition, optional precon
 | III.2.3  | ValidString(s, I) | precond | [String.get_unchecked()](https://doc.rust-lang.org/std/string/struct.String.html#method.get_unchecked) |
 | III.2.4  | ValidString(s, begin, end) | precond | [String.slice_unchecked()](https://doc.rust-lang.org/std/string/struct.String.html#method.slice_unchecked) |
 | III.3  | ValidCStr(p, len) |  precond|  [CStr::from_bytes_with_nul_unchecked()](https://doc.rust-lang.org/std/ffi/struct.CStr.html#method.from_bytes_with_nul_unchecked)  |
-| III.4.1 | Init(p, T)  | precond | [Box::assume_init()](https://doc.rust-lang.org/std/boxed/struct.Box.html#method.assume_init)  |
-| III.4.2 | Init(p, T, range)  | precond | [ptr::copy()](https://doc.rust-lang.org/std/ptr/fn.copy.html) |
+| III.4.1 | Init(p, range)  | precond | [BorrowedBuf::set_init()](https://doc.rust-lang.org/nightly/std/io/struct.BorrowedBuf.html#method.set_init)  |
+| III.4.2 | Init(p, T)  | precond | [Box::assume_init()](https://doc.rust-lang.org/std/boxed/struct.Box.html#method.assume_init)  |
+| III.4.3 | Init(p, T, range)  | precond | [ptr::copy()](https://doc.rust-lang.org/std/ptr/fn.copy.html) |
 | III.5  | Unwrap(x, T)  | precond | [Option::unwrap_unchecked()](https://doc.rust-lang.org/std/option/enum.Option.html#method.unwrap_unchecked)  |
 | IV.1  | NonOwned(p)  | precond | [Box::from_raw()](https://doc.rust-lang.org/std/boxed/struct.Box.html#method.from_raw)  |
 | IV.2  | Owned(p)  | precond | [trait.FromRawFd::from_raw_fd()](https://doc.rust-lang.org/std/os/fd/trait.FromRawFd.html#tymethod.from_raw_fd)  |
@@ -290,15 +291,22 @@ $$\exists offset,\ s.t., *(p+offset) = \text{null}\ \\&\\&\ \text{ValidInt}(offs
 Example APIs: [CStr::from_bytes_with_nul_unchecked()](https://doc.rust-lang.org/std/ffi/struct.CStr.html#method.from_bytes_with_nul_unchecked), [CStr::from_ptr()](https://doc.rust-lang.org/std/ffi/struct.CStr.html#method.from_ptr)
 
 #### 3.3.3 Initialization
-A safety property may require the memory of type `T` pointed by a pointer `p` is initialized.
+A safety property may require a range of memory pointed by a pointer `p` is initialized. This range of memory can be independent of type T.
+**psp III.4.1 Init(p, range)**:
 
-**psp III.4.1 Init(p, T)**:
+$$\text{init}(*p, range) = true $$
+
+Example APIs: [BorrowedBuf::set_init()](https://doc.rust-lang.org/nightly/std/io/struct.BorrowedBuf.html#method.set_init)
+
+Besides, a safety property may require the memory pointed by a pointer `p` is initialized with specified type `T`.
+
+**psp III.4.2 Init(p, T)**:
 
 $$\text{init}(*p, T) = true $$
 
 Example APIs: [MaybeUninit.assume_init()](https://doc.rust-lang.org/std/mem/union.MaybeUninit.html#method.assume_init), [Box::assume_init()](https://doc.rust-lang.org/std/boxed/struct.Box.html#method.assume_init)
 
-**psp III.4.2 Init(p, T, range)**:
+**psp III.4.3 Init(p, T, range)**:
 
 $$\forall offset \in range, \text{init}(*(p + \text{sizeof}(T) * offset), T) = true $$
 
