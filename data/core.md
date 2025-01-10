@@ -33,7 +33,7 @@
 |core::intrinsics|[compare_bytes(_left: *const u8, _right: *const u8, _bytes: usize) -> i32](https://doc.rust-lang.org/nightly/core/intrinsics/fn.compare_bytes.html)| $\text{ValidPtr}(\\_left,T)$, $\text{ValidPtr}(\\_right,T)$ ||||
 |core::intrinsics|[min_align_of_val<T: ?Sized>(_ptr: *const T) -> usize](https://doc.rust-lang.org/nightly/core/intrinsics/fn.min_align_of_val.html)|TO LABEL||||
 |core::intrinsics|[ptr_offset_from<T>(_ptr: *const T, _base: *const T) -> isize](https://doc.rust-lang.org/nightly/core/intrinsics/fn.ptr_offset_from.html)| $\text{NonZst}(T)$ ||| ? |
-|core::intrinsics|[ptr_offset_from_unsigned<T>(_ptr: *const T, _base: *const T) -> usize](https://doc.rust-lang.org/nightly/core/intrinsics/fn.ptr_offset_from_unsigned.html)| $\text{NonZst}(T) ||| ? |
+|core::intrinsics|[ptr_offset_from_unsigned<T>(_ptr: *const T, _base: *const T) -> usize](https://doc.rust-lang.org/nightly/core/intrinsics/fn.ptr_offset_from_unsigned.html)| $\text{NonZst}(T)$ ||| ? |
 |core::intrinsics|[read_via_copy<T>(_ptr: *const T) -> T](https://doc.rust-lang.org/nightly/core/intrinsics/fn.read_via_copy.html)| $\text{ValidPtr}(\\_ptr,T)$, $\text{Aligned}(\\_ptr,T)$, $\text{Init}(\\_ptr, T)$, $\text{NonVolatile}(\\_ptr)$||$Copy\in Trait(T)$|To Be Confirmed|
 |core::intrinsics|[write_via_move<T>(_ptr: *mut T, _value: T)](https://doc.rust-lang.org/nightly/core/intrinsics/fn.write_via_move.html)|$\text{ValidPtr}(\\_ptr,T)$, $\text{Aligned}(\\_ptr,T)$, $\text{NonVolatile}(\\_ptr)$|||? |
 
