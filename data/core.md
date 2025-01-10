@@ -3,7 +3,7 @@
 ### Module [num](https://doc.rust-lang.org/nightly/core/num/index.html)
 | Namespace | API | Precondition | Hazard | Option | Status |
 |-----------|-----|--------------|--------|--------------|--------|
-|core::intrinsics|[unchecked_add<T: Copy>(_x: T, _y: T) -> T](https://doc.rust-lang.org/nightly/core/intrinsics/fn.unchecked_add.html)| $\text{ValidInt}(add, \_x, \_y, T)$ ||||
+|core::intrinsics|[unchecked_add<T: Copy>(_x: T, _y: T) -> T](https://doc.rust-lang.org/nightly/core/intrinsics/fn.unchecked_add.html)| $\text{ValidInt}(add, \\_x, \_y, T)$ ||||
 |core::intrinsics|[unchecked_sub<T: Copy>(_x: T, _y: T) -> T](https://doc.rust-lang.org/nightly/core/intrinsics/fn.unchecked_sub.html)| $\text{ValidInt}(sub, \_x, \_y, T)$ ||||
 |core::intrinsics|[unchecked_mul<T: Copy>(_x: T, _y: T) -> T](https://doc.rust-lang.org/nightly/core/intrinsics/fn.unchecked_mul.html)|ValidInt(mul, _x, _y, T)||||
 |core::intrinsics|[unchecked_div<T: Copy>(_x: T, _y: T) -> T](https://doc.rust-lang.org/nightly/core/intrinsics/fn.unchecked_div.html)|ValidInt(_y, T, !=0), !(ValidInt(_x, T, =T::MIN) && ValidInt(_y, T, =-1))||||
