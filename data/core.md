@@ -29,7 +29,7 @@
 |core::intrinsics|[volatile_load<T>(_src: *const T) -> T](https://doc.rust-lang.org/nightly/core/intrinsics/fn.volatile_load.html)| $\text{ValidPtr}(\\_src,T)$, $\text{Aligned}(\\_src,T)$, $\text{Init}(\\_src, T)$ ||$Copy\in Trait(T)$ ||
 |core::intrinsics|[unaligned_volatile_load<T>(_src: *const T) -> T](https://doc.rust-lang.org/nightly/core/intrinsics/fn.unaligned_volatile_load.html)| $\text{ValidPtr}(\\_src,T)$, $\text{Init}(\\_src, T)$ || $Copy\in Trait(T)$ ||
 |core::intrinsics|[volatile_store<T>(_dst: *mut T, _val: T)](https://doc.rust-lang.org/nightly/core/intrinsics/fn.volatile_store.html)| $\text{ValidPtr}(\\_dst,T)$, $\text{Aligned}(\\_dst,T)$ ||$Copy\in Trait(T)$ ||
-|core::intrinsics|[unaligned_volatile_store<T>(_dst: *mut T, _val: T)](https://doc.rust-lang.org/nightly/core/intrinsics/fn.unaligned_volatile_store.html)|$\text{ValidPtr}(\\_dst,T)$, $\text{Init(\\_dst, T)$ ||$Copy\in Trait(T)$ ||
+|core::intrinsics|[unaligned_volatile_store<T>(_dst: *mut T, _val: T)](https://doc.rust-lang.org/nightly/core/intrinsics/fn.unaligned_volatile_store.html)|$\text{ValidPtr}(\\_dst,T)$, $\text{Init}(\\_dst, T)$ ||$Copy\in Trait(T)$ ||
 |core::intrinsics|[compare_bytes(_left: *const u8, _right: *const u8, _bytes: usize) -> i32](https://doc.rust-lang.org/nightly/core/intrinsics/fn.compare_bytes.html)| $\text{ValidPtr}(\\_left,T)$, $\text{ValidPtr}(\\_right,T)$ ||||
 |core::intrinsics|[min_align_of_val<T: ?Sized>(_ptr: *const T) -> usize](https://doc.rust-lang.org/nightly/core/intrinsics/fn.min_align_of_val.html)|TO LABEL||||
 |core::intrinsics|[ptr_offset_from<T>(_ptr: *const T, _base: *const T) -> isize](https://doc.rust-lang.org/nightly/core/intrinsics/fn.ptr_offset_from.html)| $\text{NonZst}(T)$ ||| ? |
