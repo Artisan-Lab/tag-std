@@ -134,9 +134,13 @@ Example APIs: [NonNull::new_unchecked()](https://doc.rust-lang.org/std/ptr/struc
 #### 3.2.1 Allocation
 To determine whether the memory address referenced by a pointer is available for use or has been allocated by the system (either on the heap or the stack), we consider the related safety requirement: non-dangling. This means the pointer must refer to a valid memory address that has not been deallocated on the heap or remains valid on the stack.
 
-In practice, an API may enforce that a pointer `p` to a type `T` must satisfy the non-dangling property.
+In practice, an API may require that a pointer `p` to a type `T` must satisfy the non-dangling property.
 
-**psp II.2 NonDangling(p, T)**: 
+**psp II.2.1 NonDangling(p)**: 
+
+$$\text{allocator}(p) = x, s.t. \ x \in \lbrace \text{GlobalAllocator}, \text{OtherAllocator}, \text{stack} \rbrace\ $$ 
+
+**psp II.2.2 NonDangling(p, T)**: 
 
 $$\text{allocator}(p) = x, s.t. \ x \in \lbrace \text{GlobalAllocator}, \text{OtherAllocator}, \text{stack} \rbrace\ ||\ \text{sizeof}(T) = 0 $$ 
 
@@ -160,26 +164,12 @@ $$\text{allocator}(p) = \text{GlobalAllocator} $$
 
 Example APIs: [Arc::from_raw()](https://doc.rust-lang.org/std/sync/struct.Arc.html#method.from_raw), [Box::from_raw()](https://doc.rust-lang.org/std/boxed/struct.Box.html#method.from_raw)
 
-#### 3.2.2 Pointee
-
-A safety property may require that a pointer `p` refers to a value of a specific type `T`. This property can be formalized as:
-
-**psp II.4.1 Bounded(p, T)**: 
-
-$$\text{typeof}(*p) = T $$
-
-We use bounded instead of point-to to be consistent with psp II.4.2 Bounded(p, T, range). Note that if initialization of the value is required, consider combining this property with psp III.4.1 Init(p, T).
-
-**Proposition 2** (NOT SURE): Bounded(p, T) implies NonDangling(p, T) and  NonNull(p).
-
-Example APIs: [ptr::read()](https://doc.rust-lang.org/beta/std/primitive.pointer.html#method.read), [ptr::offset()](https://doc.rust-lang.org/beta/std/primitive.pointer.html#method.offset)
-
 #### 3.2.3 Derived Safety Properties
 There are two useful derived safety properties based on the previous components.
 
 The first one is bounded access, which requires that the pointer access with respet to an offset stays within the bound. This ensures that dereferencing the pointer yields a value (which may not yet be initialized) of the expected type T. 
 
-**psp II.4.2 Bounded(p, T, range)**: 
+**psp II.4 Bounded(p, T, range)**: 
 
 $$\forall offset \in range, \text{typeof}(*(p + \text{sizeof}(T) * range))  = T $$
 
