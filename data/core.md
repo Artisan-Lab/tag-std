@@ -37,6 +37,7 @@
 |core::intrinsics|[read_via_copy<T>(_ptr: *const T) -> T](https://doc.rust-lang.org/nightly/core/intrinsics/fn.read_via_copy.html)| $\text{ValidPtr}(\\_ptr,T)$, $\text{Aligned}(\\_ptr,T)$, $\text{Init}(\\_ptr, T)$, $\text{NonVolatile}(\\_ptr)$||$Copy\in Trait(T)$| ? |
 |core::intrinsics|[write_via_move<T>(_ptr: *mut T, _value: T)](https://doc.rust-lang.org/nightly/core/intrinsics/fn.write_via_move.html)|$\text{ValidPtr}(\\_ptr,T)$, $\text{Aligned}(\\_ptr,T)$, $\text{NonVolatile}(\\_ptr)$|||? |
 
+
 ### Module [ptr](https://doc.rust-lang.org/nightly/core/ptr/index.html)
 
 | Namespace | API | Precondition | Hazard | Option | Status |
@@ -54,3 +55,5 @@
 | core::ptr | [write_bytes<T>(dst: *mut T, val: u8, count: usize)](https://doc.rust-lang.org/nightly/core/ptr/fn.write_bytes.html) |            |        |             |        |
 | core::ptr | [write_unaligned<T>(dst: *mut T, src: T)](https://doc.rust-lang.org/nightly/core/ptr/fn.write_unaligned.html) |             |        |             |        |
 | core::ptr | [write_volatile<T>(dst: *mut T, src: T)](https://doc.rust-lang.org/nightly/core/ptr/fn.write_volatile.html) |              |        |             |        |
+| core::ptr::NonNull | [ as_uninit_ref<'a>(self)](https://doc.rust-lang.org/nightly/std/ptr/struct.NonNull.html#method.as_uninit_ref) |              |        |             |        |
+

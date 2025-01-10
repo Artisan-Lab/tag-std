@@ -75,6 +75,7 @@ In order to simplify the usage, we define the following compound SPs.
 |---|---|---|---|   
 | ValidPtr(p, T) |!NonZST(T) \|\| ( NonZST(T) && NonDangling(p, T) ) | precond | [read<T>(src: *const T)](https://doc.rust-lang.org/nightly/std/ptr/fn.read.html)  |       
 | ValidPtr(p, T, range) |!NonZST(T) \|\| ( NonZST(T) && Bounded(p, T, range) ) | precond | [copy<T>(src: *const T, dst: *mut T, count: usize)](https://doc.rust-lang.org/nightly/core/intrinsics/fn.copy.html) |   
+| Convertible2Ref(p, T) | Aligned(p,T) && NonDangling(p,T) && Init(p,T) && Aliased(p, otherp) | precond, hazard | [as_uninit_ref(self)](https://doc.rust-lang.org/nightly/std/ptr/struct.NonNull.html#method.as_uninit_ref) |   
 
 ### 2.3 Consistency with RustDoc
 | Expressions in RustDoc | Primitive SPs |
