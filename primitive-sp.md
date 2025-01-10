@@ -25,7 +25,9 @@ In practice, a safety property may correspond to a precondition, optional precon
 
 <span style="color: red;"> **In short, while preconditions must be satisfied, optional preconditions are not mandatory. Hazards highlight vulnerabilities that deviate from Rust's safety principles. Meeting optional preconditions can help avoid certain types of hazards.** </span>
 
-## 2 Summary of Primitive SPs
+## 2 Summary 
+
+### 2.1 Summary of Primitive SPs
 
 | ID  | Primitive SP | Usage | Example API |
 |---|---|---|---|
@@ -66,6 +68,12 @@ In practice, a safety property may correspond to a precondition, optional precon
 | V.6  | NonVolatile(p) | precond | [ptr::read()](https://doc.rust-lang.org/std/ptr/fn.read.html) |
 
 **Note**: These primitives are not yet complete. New proposals are always welcome.
+
+### 2.2 Summary of Compound SPs （TODO）
+In order to simplify the usage, we define the following compound SPs.
+| Compound SP | Primitive SPs | Usage | Example API |
+|---|---|---|---|   
+| ValidPtr(p, T, NonDangling, Aligned) | | precond | |       
 
 ## 3 Safety Property Analysis
 
