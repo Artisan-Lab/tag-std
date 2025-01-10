@@ -73,8 +73,14 @@ In practice, a safety property may correspond to a precondition, optional precon
 In order to simplify the usage, we define the following compound SPs.
 | Compound SP | Primitive SPs | Usage | Example API |
 |---|---|---|---|   
-| ValidPtr(p, T) |!NonZST(T) \|\| ( NonZST(T) && NonNull(p) && Bounded(p, T, 1) ) | precond | [read<T>(src: *const T)](https://doc.rust-lang.org/nightly/std/ptr/fn.read.html)  |       
-| ValidPtr(p, T, range) |!NonZST(T) \|\| ( NonZST(T) && NonNull(p) && Bounded(p, T, range) ) | precond | [copy<T>(src: *const T, dst: *mut T, count: usize)](https://doc.rust-lang.org/nightly/core/intrinsics/fn.copy.html) |   
+| ValidPtr(p, T) |!NonZST(T) \|\| ( NonZST(T) && NonDangling(p, T) ) | precond | [read<T>(src: *const T)](https://doc.rust-lang.org/nightly/std/ptr/fn.read.html)  |       
+| ValidPtr(p, T, range) |!NonZST(T) \|\| ( NonZST(T) && Bounded(p, T, range) ) | precond | [copy<T>(src: *const T, dst: *mut T, count: usize)](https://doc.rust-lang.org/nightly/core/intrinsics/fn.copy.html) |   
+
+### 2.3 Consistency with RustDoc
+| Expressions in RustDoc | Primitive SPs |
+|---|---|
+|Dereferencable| NonDangling(p, T) |
+|Typed| Init(p, T)|
 
 ## 3 Safety Property Analysis
 
@@ -174,6 +180,8 @@ The first one is bounded access, which requires that the pointer access with res
 $$\forall offset \in range, \text{typeof}(*(p + \text{sizeof}(T) * range))  = T $$
 
 Example APIs: [ptr::offset()](https://doc.rust-lang.org/std/primitive.pointer.html#method.offset), [ptr::copy()](https://doc.rust-lang.org/std/ptr/fn.copy.html) 
+
+**Proposition 2** (NOT SURE): Every pointer (p + sizeof(T) * offset) for offset in range implies NonDangling(p, T).
 
 A safety property may require the two pointers do not overlap with respect to `T`: 
 
