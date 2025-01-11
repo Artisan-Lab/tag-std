@@ -55,7 +55,7 @@ In practice, a safety property may correspond to a precondition, optional precon
 | III.3  | ValidCStr(p, len) |  precond|  [CStr::from_bytes_with_nul_unchecked()](https://doc.rust-lang.org/std/ffi/struct.CStr.html#method.from_bytes_with_nul_unchecked)  |
 | III.4.1 | Init(p, range)  | precond | [BorrowedBuf::set_init()](https://doc.rust-lang.org/nightly/std/io/struct.BorrowedBuf.html#method.set_init)  |
 | III.4.2 | Init(p, T)  | precond | [Box::assume_init()](https://doc.rust-lang.org/std/boxed/struct.Box.html#method.assume_init)  |
-| III.4.3 | Init(p, T, range)  | precond | [ptr::copy()](https://doc.rust-lang.org/std/mem/union.MaybeUninit.html#method.slice_assume_init_mut) |
+| III.4.3 | Init(p, T, range)  | precond | [MaybeUninit::slice_assume_init_mut()](https://doc.rust-lang.org/std/mem/union.MaybeUninit.html#method.slice_assume_init_mut) |
 |         | Init(p, T, range)  | hazard | [ptr::copy()](https://doc.rust-lang.org/std/ptr/fn.copy.html) |
 |         | Init(p, T, range)  | option | [ptr::copy()](https://doc.rust-lang.org/std/ptr/fn.copy.html) |
 | III.5  | Unwrap(x, T)  | precond | [Option::unwrap_unchecked()](https://doc.rust-lang.org/std/option/enum.Option.html#method.unwrap_unchecked)  |
