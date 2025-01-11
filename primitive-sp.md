@@ -83,7 +83,7 @@ The term valid pointer is widely used for safety descriptions in Rustdoc. Based 
 
 Besides, 
 - [Dereferenceable](https://doc.rust-lang.org/nightly/std/ptr/index.html): The property is equivalent to $\text{NonDangling}(p, T)$.
-- [Typed](https://doc.rust-lang.org/std/ptr/fn.copy.html): The property is equivalent to $\text{Init}(p, T)$, or $\text{Init}(p, T, range)$.
+- [Typed](https://doc.rust-lang.org/std/ptr/fn.copy.html): The property is equivalent to $\text{Init}(p, T)$ or $\text{Init}(p, T, range)$.
 
 ## 3 Safety Property Analysis
 
