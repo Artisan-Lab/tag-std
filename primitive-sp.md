@@ -1,6 +1,6 @@
 # Privimitive Safety Properties for Rust Contract Design (Draft)
 
-This document presents a draft outlining the fundamental safety properties essential for contract definition. The current documentation on API safety descriptions in the standard library remains ad hoc. For example, the term `valid pointer' is frequently used, but the validity of a pointer depends on the context. In practice, a valid pointer may need to satisfy one or more fundamental conditions, such as being non-null, not dangling, and pointing to memory properly aligned and initialized for type T. It is worth noting that the Rust community is making progress toward standardizing contract design, as highlighted in the links below. We believe this proposal will contribute to the development and refinement of contract specifications.
+This document presents a draft outlining the fundamental safety properties essential for contract definition. The current documentation on API safety descriptions in the standard library remains ad hoc. For example, the term `valid pointer` is frequently used, but the validity of a pointer depends on the context. In practice, a valid pointer may need to satisfy several fundamental conditions, such as being non-null, not dangling, and pointing to memory properly aligned and initialized for type T. It is worth noting that the Rust community is making progress toward standardizing contract design, as highlighted in the links below. We believe this proposal will contribute to the development and refinement of contract specifications.
 
 [Rust Contracts RFC (draft)](https://github.com/rust-lang/lang-team/blob/master/design-meeting-minutes/2022-11-25-contracts.md)  
 [MCP759](https://github.com/rust-lang/compiler-team/issues/759)  
@@ -311,7 +311,9 @@ Example APIs: [MaybeUninit.assume_init()](https://doc.rust-lang.org/std/mem/unio
 
 $$\forall offset \in range, \text{init}(*(p + \text{sizeof}(T) * offset), T) = true $$
 
-Example APIs: [ptr::copy()](https://doc.rust-lang.org/std/ptr/fn.copy.html) |
+Note that this property may serve as either preconditions (e.g., [MaybeUninit::slice_assume_init_mut()](https://doc.rust-lang.org/std/mem/union.MaybeUninit.html#method.slice_assume_init_mut)) or optional requirements and hazards (e.g., [ptr::copy()](https://doc.rust-lang.org/std/ptr/fn.copy.html).
+
+Example APIs: [MaybeUninit::slice_assume_init_mut()](https://doc.rust-lang.org/std/mem/union.MaybeUninit.html#method.slice_assume_init_mut), [ptr::copy()](https://doc.rust-lang.org/std/ptr/fn.copy.html), [ptr::copy_nonoverlapping](https://doc.rust-lang.org/std/ptr/fn.copy_nonoverlapping.html), [NonNull.copy_from](https://doc.rust-lang.org/std/ptr/struct.NonNull.html#method.copy_from)
 
 #### 3.3.4 Unwrap
 
