@@ -55,7 +55,9 @@ In practice, a safety property may correspond to a precondition, optional precon
 | III.3  | ValidCStr(p, len) |  precond|  [CStr::from_bytes_with_nul_unchecked()](https://doc.rust-lang.org/std/ffi/struct.CStr.html#method.from_bytes_with_nul_unchecked)  |
 | III.4.1 | Init(p, range)  | precond | [BorrowedBuf::set_init()](https://doc.rust-lang.org/nightly/std/io/struct.BorrowedBuf.html#method.set_init)  |
 | III.4.2 | Init(p, T)  | precond | [Box::assume_init()](https://doc.rust-lang.org/std/boxed/struct.Box.html#method.assume_init)  |
-| III.4.3 | Init(p, T, range)  | precond | [ptr::copy()](https://doc.rust-lang.org/std/ptr/fn.copy.html) |
+| III.4.3 | Init(p, T, range)  | precond | [ptr::copy()](https://doc.rust-lang.org/std/mem/union.MaybeUninit.html#method.slice_assume_init_mut) |
+|         | Init(p, T, range)  | hazard | [ptr::copy()](https://doc.rust-lang.org/std/ptr/fn.copy.html) |
+|         | Init(p, T, range)  | option | [ptr::copy()](https://doc.rust-lang.org/std/ptr/fn.copy.html) |
 | III.5  | Unwrap(x, T)  | precond | [Option::unwrap_unchecked()](https://doc.rust-lang.org/std/option/enum.Option.html#method.unwrap_unchecked)  |
 | IV.1  | NonOwned(p)  | precond | [Box::from_raw()](https://doc.rust-lang.org/std/boxed/struct.Box.html#method.from_raw)  |
 | IV.2  | Owned(p)  | precond | [trait.FromRawFd::from_raw_fd()](https://doc.rust-lang.org/std/os/fd/trait.FromRawFd.html#tymethod.from_raw_fd)  |
@@ -68,21 +70,20 @@ In practice, a safety property may correspond to a precondition, optional precon
 | V.5  | Opened(fd) | precond | [trait.FromRawFd::from_raw_fd()](https://doc.rust-lang.org/std/os/fd/trait.FromRawFd.html#tymethod.from_raw_fd)  |
 | V.6  | NonVolatile(p) | precond | [ptr::read()](https://doc.rust-lang.org/std/ptr/fn.read.html) |
 
-**Note**: These primitives are not yet complete. New proposals are always welcome.
+**Note**: These primitives are not yet complete. New proposals are always welcome. 
 
-### 2.2 Summary of Compound SPs （TODO）
-In order to simplify the usage, we define the following compound SPs.
+### 2.2 Consistency with RustDoc
+The term valid pointer is widely used for safety descriptions in Rustdoc. Based on the [official document](https://doc.rust-lang.org/nightly/std/ptr/index.html), we define the following compound safety properties for valid pointers. 
+
 | Compound SP | Primitive SPs | Usage | Example API |
 |---|---|---|---|   
 | ValidPtr(p, T) |!NonZST(T) \|\| ( NonZST(T) && NonDangling(p, T) ) | precond | [read<T>(src: *const T)](https://doc.rust-lang.org/nightly/std/ptr/fn.read.html)  |       
 | ValidPtr(p, T, range) |!NonZST(T) \|\| ( NonZST(T) && Bounded(p, T, range) ) | precond | [copy<T>(src: *const T, dst: *mut T, count: usize)](https://doc.rust-lang.org/nightly/core/intrinsics/fn.copy.html) |   
-| Convertible2Ref(p, T) | Aligned(p,T) && NonDangling(p,T) && Init(p,T) && Aliased(p, otherp) | precond, hazard | [as_uninit_ref(self)](https://doc.rust-lang.org/nightly/std/ptr/struct.NonNull.html#method.as_uninit_ref) |   
+| ValidPtr2Ref(p, T) | Aligned(p,T) && NonDangling(p,T) && Init(p,T) && Aliased(p, otherp) | precond, hazard | [as_uninit_ref(self)](https://doc.rust-lang.org/nightly/std/ptr/struct.NonNull.html#method.as_uninit_ref) | 
 
-### 2.3 Consistency with RustDoc
-| Expressions in RustDoc | Primitive SPs |
-|---|---|
-|Dereferencable| NonDangling(p, T) |
-|Typed| Init(p, T)|
+Besides, 
+- [Dereferenceable](https://doc.rust-lang.org/nightly/std/ptr/index.html): The property is equivalent to $\text{NonDangling}(p, T)$.
+- [Typed](https://doc.rust-lang.org/std/ptr/fn.copy.html): The property is equivalent to $\text{Init}(p, T)$, or $\text{Init}(p, T, range)$.
 
 ## 3 Safety Property Analysis
 
