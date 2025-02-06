@@ -31,7 +31,7 @@ In practice, a safety property may correspond to a precondition, optional precon
 
 | ID  | Primitive SP | Usage | Example API |
 |---|---|---|---|
-| I.1  | Aligned(p, T) | precond  | [ptr::read()](https://doc.rust-lang.org/nightly/std/ptr/fn.read.html) | 
+| I.1  | Align(p, T) | precond  | [ptr::read()](https://doc.rust-lang.org/nightly/std/ptr/fn.read.html) | 
 | I.2  | NonZST(T) | precond | [NonNull.offset_from](https://doc.rust-lang.org/core/ptr/struct.NonNull.html#method.offset_from)  | 
 | I.3  | NoPadding(T)  | precond  | [raw_eq()](https://doc.rust-lang.org/std/intrinsics/fn.raw_eq.html) |
 | I.4  | NonNull(p) | precond  | [NonNull::new_unchecked()](https://doc.rust-lang.org/std/ptr/struct.NonNull.html#method.new_unchecked) |
@@ -79,7 +79,7 @@ The term valid pointer is widely used for safety descriptions in Rustdoc. Based 
 |---|---|---|---|   
 | ValidPtr(p, T) |!NonZST(T) \|\| ( NonZST(T) && NonDangling(p, T) ) | precond | [read<T>(src: *const T)](https://doc.rust-lang.org/nightly/std/ptr/fn.read.html)  |       
 | ValidPtr(p, T, range) |!NonZST(T) \|\| ( NonZST(T) && Bounded(p, T, range) ) | precond | [copy<T>(src: *const T, dst: *mut T, count: usize)](https://doc.rust-lang.org/nightly/core/intrinsics/fn.copy.html) |   
-| ValidPtr2Ref(p, T) | Aligned(p,T) && NonDangling(p,T) && Init(p,T) && Aliased(p, otherp) | precond, hazard | [as_uninit_ref(self)](https://doc.rust-lang.org/nightly/std/ptr/struct.NonNull.html#method.as_uninit_ref) | 
+| ValidPtr2Ref(p, T) | Align(p,T) && NonDangling(p,T) && Init(p,T) && Aliased(p, otherp) | precond, hazard | [as_uninit_ref(self)](https://doc.rust-lang.org/nightly/std/ptr/struct.NonNull.html#method.as_uninit_ref) | 
 
 Besides, 
 - [Dereferenceable](https://doc.rust-lang.org/nightly/std/ptr/index.html): The property is equivalent to $\text{NonDangling}(p, T)$.
@@ -95,7 +95,7 @@ Alignment is measured in bytes. It must be at least 1 and is always a power of 2
 
 In practice, we generally require a pointer `p` of type `*T` to be aligned. This property can be formalized as:
 
-**psp I.1 Aligned(p, T)**: 
+**psp I.1 Align(p, T)**: 
 
 $$p \\% \text{alignment}(T) = 0$$ 
 
