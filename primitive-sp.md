@@ -42,11 +42,12 @@ In practice, a safety property may correspond to a precondition, optional precon
 | II.2  | Bounded(p, T, range)  | precond | [ptr::offset()](https://doc.rust-lang.org/std/primitive.pointer.html#method.offset)  |
 | II.3.1  | NonOverlap(dst, src, T, count) | precond | [ptr::copy_nonoverlapping()](https://doc.rust-lang.org/std/ptr/fn.copy_nonoverlapping.html)  |
 | II.3.2  | NonOverlap(dst, src, T) | precond | [ptr::copy()](https://doc.rust-lang.org/std/ptr/fn.copy.html) |
-| III.1.1  | ValidInt(x, T)  | precond | [f32.to_int_unchecked()](https://doc.rust-lang.org/std/primitive.f32.html#method.to_int_unchecked)  |
-| III.1.2  | ValidInt(x, T, range)  | precond | [NonZero::from_mut_unchecked()](https://doc.rust-lang.org/beta/std/num/struct.NonZero.html#tymethod.from_mut_unchecked) |
-| III.1.3  | ValidInt(x, T, U, range)  | precond | [u32::unchecked_shl()](https://doc.rust-lang.org/nightly/core/intrinsics/fn.unchecked_shl.html) |
-| III.1.4  | ValidInt(uop, x, T)  | precond | [unchecked_neg()](https://doc.rust-lang.org/nightly/core/primitive.isize.html#method.unchecked_neg) |
-| III.1.5  | ValidInt(binop, x, y, T)  | precond | [usize.add()](https://doc.rust-lang.org/std/primitive.usize.html#method.unchecked_add)  |
+| III.1.1  | ValidInt(T, x)  | precond | [f32.to_int_unchecked()](https://doc.rust-lang.org/std/primitive.f32.html#method.to_int_unchecked)  |
+| III.1.2  | ValidInt(range(T), x)  | precond | [NonZero::from_mut_unchecked()](https://doc.rust-lang.org/beta/std/num/struct.NonZero.html#tymethod.from_mut_unchecked) |
+| III.1.3  | ValidInt(range(T,U), x)  | precond | [u32::unchecked_shl()](https://doc.rust-lang.org/nightly/core/intrinsics/fn.unchecked_shl.html) |
+| III.1.4  | ValidInt(T, uop, x)  | precond | [unchecked_neg()](https://doc.rust-lang.org/nightly/core/primitive.isize.html#method.unchecked_neg) |
+| III.1.5  | ValidInt(T, binop, x, y)  | precond | [usize.add()](https://doc.rust-lang.org/std/primitive.usize.html#method.unchecked_add)  |
+| III.1.6  | ValidInt(T, binop1, x, binop2, y, z)  | precond | [slice::from_raw_parts()](https://doc.rust-lang.org/nightly/std/slice/fn.from_raw_parts.html)  |
 | III.2.1  | ValidString(v) | precond | [String::from_utf8_unchecked()](https://doc.rust-lang.org/std/string/struct.String.html#method.from_utf8_unchecked) |
 |     | ValidString(v) | hazard | [String.as_bytes_mut()](https://doc.rust-lang.org/std/string/struct.String.html#method.as_bytes_mut) |
 | III.2.2  | ValidString(p, len) | precond | [String::from_raw_parts()](https://doc.rust-lang.org/std/string/struct.String.html#method.from_raw_parts) |
@@ -210,29 +211,29 @@ Example APIs: [ptr::copy_nonoverlapping()](https://doc.rust-lang.org/std/ptr/fn.
 
 When converting a value `x` to an interger, the value should not be greater than the max or less the min value that can be represented by the integer type `T`.
 
-**psp III.1.1 ValidInt(x, T)**: 
+**psp III.1.1 ValidInt(T, x)**: 
 
 $$\text{T::MAX} \geq x \geq \text{T::MIN} $$
 
 Example APIs: [f32.to_int_unchecked()](https://doc.rust-lang.org/std/primitive.f32.html#method.to_int_unchecked), [SimdFloat.to_int_unchecked()](https://doc.rust-lang.org/std/simd/num/trait.SimdFloat.html#tymethod.to_int_unchecked)
 
-The value `X` of type `T` should be within a specific range to be valid. 
+The value `x` of type `T` should be within a specific range to be valid. 
 
-**psp III.1.2 ValidInt(x, T, range)**: 
+**psp III.1.2 ValidInt(range(T), x)**: 
 
-$$x \in range(T), s.t. range is defined with T$$
+$$x \in range(T)$$, where range(T) is a specif range defined with T.
 
 Example APIs: [NonZero::from_mut_unchecked()](https://doc.rust-lang.org/beta/std/num/struct.NonZero.html#tymethod.from_mut_unchecked), [isize.unchecked_div()](https://doc.rust-lang.org/nightly/core/intrinsics/fn.unchecked_div.html) |
 
-**psp III.1.3 ValidInt(x, T, U, range)**:
+**psp III.1.3 ValidInt(range(T, U), x)**:
 
-$$x \in range(T, U), s.t. range is defined with T and U$$
+$$x \in range(T, U)$$, where range(T) is a specif range defined with T and U.
 
 Example APIs: [u32::unchecked_shl()](https://doc.rust-lang.org/nightly/core/intrinsics/fn.unchecked_shl.html), [u32::unchecked_shr()](https://doc.rust-lang.org/nightly/core/intrinsics/fn.unchecked_shr.html)
 
 The result of unary arithmatic operations should not overflow the max or the min value.
 
-**psp III.1.4 ValidInt(uop, x, T)**:
+**psp III.1.4 ValidInt(T, uop, x)**:
 
 $$\text{T::MAX} \geq \text{uop}(x) \geq \text{T::MIN} $$
 
@@ -240,11 +241,17 @@ Example API: [isize.unchecked_neg()](https://doc.rust-lang.org/nightly/core/prim
 
 The result of interger arithmatic of two values `x` and `y` of type `T` should not overflow the max or the min value.
 
-**psp III.1.5 ValidInt(binop, x, T, y, U)**:
+**psp III.1.5 ValidInt(T, binop, x, y)**:
 
 $$\text{T::MAX} \geq \text{binop}(x, y) \geq \text{T::MIN} $$
 
 Example APIs: [isize.add()](https://doc.rust-lang.org/std/primitive.isize.html#method.unchecked_add), [usize.add()](https://doc.rust-lang.org/std/primitive.usize.html#method.unchecked_add), [pointer.add(usize.add())](https://doc.rust-lang.org/std/primitive.pointer.html#method.add)
+
+**psp III.1.6 ValidInt(T, binop1, x, binop2, y, z)**:
+
+$$\text{T::MAX} \geq \text{binop1}(x, binop1(y, z)) \geq \text{T::MIN} $$
+
+Example APIs: [slice::from_raw_parts()](https://doc.rust-lang.org/nightly/std/slice/fn.from_raw_parts.html) 
 
 #### 3.3.2 String
 There are two types of string in Rust, [String](https://doc.rust-lang.org/std/string/struct.String.htm) which requires valid utf-8 format, and [CStr](https://doc.rust-lang.org/std/ffi/struct.CStr.html) for interacting with foreign functions.
