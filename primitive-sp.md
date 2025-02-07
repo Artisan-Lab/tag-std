@@ -122,7 +122,7 @@ mem::size_of::<MyStruct>(); // size: 4
 
 A safety property may require the type `T` has no padding. We can formulate the requirement as 
 
-**psp I.3 Padding(T)**:
+**psp I.3 NoPadding(T)**:
 
 $$\text{padding}(T)=0$$
 
