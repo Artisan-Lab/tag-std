@@ -80,7 +80,7 @@ The term valid pointer is widely used for safety descriptions in Rustdoc. Based 
 |---|---|---|---|   
 | ValidPtr(p, T) |!NonZST(T) \|\| ( NonZST(T) && NonDangling(p, T) ) | precond | [read<T>(src: *const T)](https://doc.rust-lang.org/nightly/std/ptr/fn.read.html)  |       
 | ValidPtr(p, T, range) |!NonZST(T) \|\| ( NonZST(T) && Bounded(p, T, range) ) | precond | [copy<T>(src: *const T, dst: *mut T, count: usize)](https://doc.rust-lang.org/nightly/core/intrinsics/fn.copy.html) |   
-| ValidPtr2Ref(p, T) | Align(p,T) && NonDangling(p,T) && Init(p,T) && Aliased(p, otherp) | precond, hazard | [as_uninit_ref(self)](https://doc.rust-lang.org/nightly/std/ptr/struct.NonNull.html#method.as_uninit_ref) | 
+| ValidPtr2Ref(p, T) | Align(p,T) && NonDangling(p,T) && Init(p,T) && Alias(p, otherp) | precond, hazard | [as_uninit_ref(self)](https://doc.rust-lang.org/nightly/std/ptr/struct.NonNull.html#method.as_uninit_ref) | 
 
 Besides, 
 - [Dereferenceable](https://doc.rust-lang.org/nightly/std/ptr/index.html): The property is equivalent to $\text{NonDangling}(p, T)$.
@@ -332,7 +332,7 @@ $$\text{unwrap}(r) = x,\ s.t., \text{typeof}(x) \in \lbrace \text{Ok}, \text{Err
 
 Example APIs: [Option::unwrap_unchecked()](https://doc.rust-lang.org/std/option/enum.Option.html#method.unwrap_unchecked), [Result::unwrap_unchecked()](https://doc.rust-lang.org/core/result/enum.Result.html#method.unwrap_unchecked), [Result::unwrap_err_unchecked()](https://doc.rust-lang.org/core/result/enum.Result.html#method.unwrap_err_unchecked)
 
-### 3.4 Aliases
+### 3.4 Alias
 This category relates to the core mechanism of Rust which aims to avoid shared mutable aliases and achieve automated memory deallocation. 
 
 #### 3.4.1 Onwership
