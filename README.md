@@ -41,7 +41,7 @@ pub const unsafe fn copy<T>(src: *const T, dst: *mut T, count: usize)
 We can tag the API with the following primitive safety property:
 - Primitive SP template: `Allocated(addrrange, A)`, which means $\forall p\in addrrange, allocator = A $;
     - Specific primitive SP for the API: `Allocated((src, T, len), any)` and `Bounded((dst, T, len), any)`
-- Primitive SP template: `Init(p, T, len)`, which means $\forall i\in len, mem(p + \text{sizeof}(T) * i, p + \text{sizeof}(T) * (i+1)) = validobj(T) $$;
+- Primitive SP template: `Init(p, T, len)`, which means $\forall i\in len, mem(p + \text{sizeof}(T) * i, p + \text{sizeof}(T) * (i+1)) = validobj(T) $;
     - Specific primitive SP for the API: `Init(dst, T, count)`
 - Primitive SP template: `NonOverlap(dst, src, T, len)`, which means $|dst - src| > \text{sizeof}(T)*len$;
     - Specific primitive SP for the API: `NonOverlap(dst, src, T, 1)`
