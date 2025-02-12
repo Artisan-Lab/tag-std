@@ -23,7 +23,7 @@ where
 
 We can tag the API with the following primitive safety property:
 - Primitive SP template: `ValidInt(ariexpr, valrange)`, which means $ariexpr \in range$;
-    - Specific primitive SP for the API: `ValidInt((mul, count, sizeof(T)), [\text{T::MIN}, \text{T::MAX}] )`.
+    - Specific primitive SP for the API: `ValidInt((mul, count, sizeof(T)), [T::MIN, T::MAX] )`.
 
 For another instance, the unsafe API [ptr::copy()](https://doc.rust-lang.org/beta/core/ptr/fn.copy.html) is described as follows:
 ```rust
