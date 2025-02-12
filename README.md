@@ -57,17 +57,16 @@ When proving the soundness of [String::remove()](https://doc.rust-lang.org/beta/
 
 ```rust
 pub fn remove(&mut self, idx: usize) -> char {
-        let ch = match self[idx..].chars().next() {
-            Some(ch) => ch,
-            None => panic!("cannot remove a char from the end of a string"),
-        };
-
-        let next = idx + ch.len_utf8();
-        let len = self.len();
-        unsafe {
-            ptr::copy(self.vec.as_ptr().add(next), self.vec.as_mut_ptr().add(idx), len - next);
-            self.vec.set_len(len - (next - idx));
-        }
-        ch
+    let ch = match self[idx..].chars().next() {
+    Some(ch) => ch,
+        None => panic!("cannot remove a char from the end of a string"),
+    };
+    let next = idx + ch.len_utf8();
+    let len = self.len();
+    unsafe {
+        ptr::copy(self.vec.as_ptr().add(next), self.vec.as_mut_ptr().add(idx), len - next);
+        self.vec.set_len(len - (next - idx));
     }
+    ch
+}
 ```
