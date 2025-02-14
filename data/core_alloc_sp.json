@@ -1,0 +1,1415 @@
+{
+    "core::alloc::global::GlobalAlloc::alloc": {
+      "sp": [
+        "ValidInt",
+        "Init"
+      ]
+    },
+    "core::alloc::global::GlobalAlloc::realloc": {
+      "sp": [
+        "AllocatorConsistency",
+        "LayoutConsistency",
+        "ValidInt"
+      ]
+    },
+    "core::alloc::global::GlobalAlloc::alloc_zeroed": {
+      "sp": [
+        "ValidInt"
+      ]
+    },
+    "core::alloc::layout::from_size_align_unchecked": {
+      "sp": [
+        "ValidInt"
+      ]
+    },
+    "core::alloc::layout::for_value_raw": {
+      "sp": [
+        "Sized",
+        "!Sized && ValidSlice",
+        "!Sized && ValidTraitObj"
+      ]
+    },
+    "core::alloc::Allocator::grow": {
+      "sp": [
+        "AllocatorConsistency",
+        "LayoutConsistency",
+        "ValidInt"
+      ]
+    },
+    "core::alloc::Allocator::grow_zeroed": {
+      "sp": [
+        "AllocatorConsistency",
+        "LayoutConsistency",
+        "ValidInt"
+      ]
+    },
+    "core::alloc::Allocator::shrink": {
+        "sp": [
+            "AllocatorConsistency",
+            "LayoutConsistency",
+            "ValidInt"
+        ]
+    },
+    "core::alloc::deallocate": {
+        "sp": [
+            "AllocatorConsistency",
+            "LayoutConsistency"
+        ]
+    },
+    "core::alloc::grow": {
+        "sp": [
+            "AllocatorConsistency",
+            "LayoutConsistency",
+            "ValidInt"
+        ]
+    },
+    "core::alloc::grow_zeroed": {
+        "sp": [
+            "AllocatorConsistency",
+            "LayoutConsistency",
+            "ValidInt"
+        ]
+    },
+    "core::alloc::shrink": {
+        "sp": [
+            "AllocatorConsistency",
+            "LayoutConsistency",
+            "ValidInt"
+        ]
+    },
+    "core::any::downcast_ref_unchecked": {
+        "sp": [
+            "Init"
+        ]
+    },
+    "core::any::downcast_mut_unchecked": {
+        "sp": [
+            "Init"
+        ]
+    },
+    "core::array::iter::new_unchecked": {
+        "sp": [
+            "ValidInt",
+            "Init"
+        ]
+    },
+    "core::array::ascii::as_ascii_unchecked": {
+        "sp": [
+            "ValidInt"
+        ]
+    },
+    "core::ascii::ascii_char::digit_unchecked": {
+        "sp": [
+            "ValidInt"
+        ]
+    },
+    "core::ascii::ascii_char::from_u8_unchecked": {
+        "sp": [
+            "ValidInt"
+        ]
+    },
+    "core::cell::try_borrow_unguarded": {
+        "sp": [
+            "Alias"
+        ]
+    },
+    "core::char::from_u32_unchecked": {
+        "sp": [
+            "ValidString"
+        ]
+    },
+    "core::f128::to_int_unchecked": {
+        "sp": [
+            "ValidInt"
+        ]
+    },
+    "core::f64::to_int_unchecked": {
+        "sp": [
+            "ValidInt"
+        ]
+    },
+    "core::f32::to_int_unchecked": {
+        "sp": [
+            "ValidInt"
+        ]
+    },
+    "core::f16::to_int_unchecked": {
+        "sp": [
+            "ValidInt"
+        ]
+    },
+    "core::ffi::c_str::from_ptr": {
+        "sp": [
+            "ValidCStr",
+            "ValidPtr",
+            "NonNull",
+            "Alias",
+            "ValidInt"
+        ]
+    },
+    "core::ffi::c_str::from_bytes_with_nul_unchecked": {
+        "sp": [
+            "ValidCStr"
+        ]
+    },
+    "core::future::async_drop::async_drop_in_place": {
+        "sp": [
+            "ValidPtr",
+            "Aligned"
+        ]
+    },
+    "core::iter::range::forward_unchecked": {
+        "sp": [
+            "Allocated"
+        ]
+    },
+    "core::iter::range::backward_unchecked": {
+        "sp": [
+            "Allocated"
+        ]
+    },
+    "core::iter::range::Step::forward_unchecked": {
+        "sp": [
+            "Allocated"
+        ]
+    },
+    "core::iter::range::Step::backward_unchecked": {
+        "sp": [
+            "Allocated"
+        ]
+    },
+    "core::mem::manually_drop::take": {
+        "sp": [
+            "NonOwned"
+        ]
+    },
+    "core::mem::manually_drop::drop": {
+        "sp": [
+            "Dangling"
+        ]
+    },
+    "core::mem::maybe_uninit::assume_init": {
+        "sp": [
+            "Init"
+        ]
+    },
+    "core::mem::maybe_uninit::assume_init_read": {
+        "sp": [
+            "Init",
+            "CopyTrait"
+        ]
+    },
+    "core::mem::maybe_uninit::assume_init_drop": {
+        "sp": [
+            "Init",
+            "Dangling"
+        ]
+    },
+    "core::mem::maybe_uninit::assume_init_ref": {
+        "sp": [
+            "Init"
+        ]
+    },
+    "core::mem::maybe_uninit::assume_init_mut": {
+        "sp": [
+            "Init"
+        ]
+    },
+    "core::mem::maybe_uninit::array_assume_init": {
+        "sp": [
+            "Init"
+        ]
+    },
+    "core::mem::maybe_uninit::slice_assume_init_ref": {
+        "sp": [
+            "Init"
+        ]
+    },
+    "core::mem::maybe_uninit::slice_assume_init_mut": {
+        "sp": [
+            "Init"
+        ]
+    },
+    "core::mem::size_of_val_raw": {
+        "sp": [
+            "Sized",
+            "!Sized && ValidSlice",
+            "!Sized && ValidTraitObj"
+        ]
+    },
+    "core::mem::align_of_val_raw": {
+        "sp": [
+            "Sized",
+            "!Sized && ValidSlice",
+            "!Sized && ValidTraitObj"
+        ]
+    },
+    "core::mem::zeroed": {
+        "sp": [
+            "ValidInt"
+        ]
+    },
+    "core::mem::uninitialized": {
+        "sp": [
+            "ValidInt"
+        ]
+    },
+    "core::mem::transmute_copy": {
+        "sp": [
+            "ValidInt"
+        ]
+    },
+    "core::num::nonzero::unchecked_add": {
+        "sp": [
+            "ValidInt"
+        ]
+    },
+    "core::num::nonzero::unchecked_mul": {
+        "sp": [
+            "ValidInt"
+        ]
+    },
+    "core::num::nonzero::new_unchecked": {
+        "sp": [
+            "ValidInt"
+        ]
+    },
+    "core::num::nonzero::from_mut_unchecked": {
+        "sp": [
+            "ValidInt"
+        ]
+    },
+    "core::num::unchecked_sub": {
+        "sp": [
+            "ValidInt"
+        ]
+    },
+    "core::num::unchecked_mul": {
+        "sp": [
+            "ValidInt"
+        ]
+    },
+    "core::num::unchecked_neg": {
+        "sp": [
+            "ValidInt"
+        ]
+    },
+    "core::num::unchecked_shl": {
+        "sp": [
+            "ValidInt"
+        ]
+    },
+    "core::num::unchecked_shr": {
+        "sp": [
+            "ValidInt"
+        ]
+    },
+    "core::num::unchecked_add": {
+        "sp": [
+            "ValidInt"
+        ]
+    },
+    "core::hint::unreachable_unchecked": {
+        "sp": [
+            "ValidInt"
+        ]
+    },
+    "core::hint::assert_unchecked": {
+        "sp": [
+            "Unreachable"
+        ]
+    },
+    "core::pin::map_unchecked": {
+        "sp": [
+            "Pinned"
+        ]
+    },
+    "core::pin::map_unchecked_mut": {
+        "sp": [
+            "Pinned"
+        ]
+    },
+    "core::pin::new_unchecked": {
+        "sp": [
+            "Pinned"
+        ]
+    },
+    "core::pin::into_inner_unchecked": {
+        "sp": [
+            "Pinned"
+        ]
+    },
+    "core::pin::get_unchecked_mut": {
+        "sp": [
+            "Pinned"
+        ]
+    },
+    "core::sync::atomic::from_ptr": {
+        "sp": [
+            "ValidPtr",
+            "Aligned",
+            "Alias",
+            "Lifetime"
+        ]
+    },
+    "core::ptr::alignment::new_unchecked": {
+        "sp": [
+            "ValidInt"
+        ]
+    },
+    "core::ptr::non_null::as_uninit_ref": {
+        "sp": [
+            "!NonNull | ",
+            "ValidPtr2Ref"
+        ]
+    },
+    "core::ptr::non_null::as_uninit_mut": {
+        "sp": [
+            "!NonNull | ",
+            "ValidPtr2Ref"
+        ]
+    },
+    "core::ptr::non_null::new_unchecked": {
+        "sp": [
+            "NonNull"
+        ]
+    },
+    "core::ptr::non_null::as_ref": {
+        "sp": [
+            "!NonNull | ",
+            "ValidPtr2Ref"
+        ]
+    },
+    "core::ptr::non_null::as_mut": {
+        "sp": [
+            "ValidPtr2Ref"
+        ]
+    },
+    "core::ptr::non_null::offset": {
+        "sp": [
+            "Allocated",
+            "ValidInt"
+        ]
+    },
+    "core::ptr::non_null::add": {
+        "sp": [
+            "Allocated",
+            "ValidInt"
+        ]
+    },
+    "core::ptr::non_null::byte_offset": {
+        "sp": [
+            "Allocated",
+            "ValidInt"
+        ]
+    },
+    "core::ptr::non_null::byte_add": {
+        "sp": [
+            "Allocated",
+            "ValidInt"
+        ]
+    },
+    "core::ptr::non_null::sub": {
+        "sp": [
+            "Allocated",
+            "ValidInt"
+        ]
+    },
+    "core::ptr::non_null::read": {
+        "sp": [
+            "ValidPtr",
+            "Aligned",
+            "Init"
+        ]
+    },
+    "core::ptr::non_null::read_volatile": {
+        "sp": [
+            "ValidPtr",
+            "Aligned",
+            "Init"
+        ]
+    },
+    "core::ptr::non_null::read_unaligned": {
+        "sp": [
+            "ValidPtr",
+            "Init"
+        ]
+    },
+    "core::ptr::non_null::copy_to": {
+        "sp": [
+            "ValidPtr",
+            "Aligned"
+        ]
+    },
+    "core::ptr::non_null::copy_to_nonoverlapping": {
+        "sp": [
+            "ValidPtr",
+            "Aligned",
+            "NonOverlap"
+        ]
+    },
+    "core::ptr::non_null::copy_from": {
+        "sp": [
+            "ValidPtr",
+            "Aligned"
+        ]
+    },
+    "core::ptr::non_null::copy_from_nonoverlapping": {
+        "sp": [
+            "ValidPtr",
+            "Aligned",
+            "NonOverlap"
+        ]
+    },
+    "core::ptr::non_null::drop_in_place": {
+        "sp": [
+            "ValidPtr",
+            "Aligned",
+            "NonNull"
+        ]
+    },
+    "core::ptr::non_null::write": {
+        "sp": [
+            "ValidPtr",
+            "Aligned"
+        ]
+    },
+    "core::ptr::non_null::write_bytes": {
+        "sp": [
+            "ValidPtr",
+            "Aligned",
+            "Init"
+        ]
+    },
+    "core::ptr::non_null::write_volatile": {
+        "sp": [
+            "ValidPtr",
+            "Aligned",
+            "Init"
+        ]
+    },
+    "core::ptr::non_null::write_unaligned": {
+        "sp": [
+            "ValidPtr",
+            "Init"
+        ]
+    },
+    "core::ptr::non_null::replace": {
+        "sp": [
+            "ValidPtr",
+            "Aligned",
+            "Init"
+        ]
+    },
+    "core::ptr::non_null::swap": {
+        "sp": [
+            "ValidPtr",
+            "Aligned"
+        ]
+    },
+    "core::ptr::non_null::as_uninit_slice": {
+        "sp": [
+            "!NonNull ||",
+            "NonNull",
+            "ValidPtr",
+            "Init",
+            "Lifetime",
+            "Alias",
+            "ValidInt",
+            "Aligned"
+        ]
+    },
+    "core::ptr::non_null::as_uninit_slice_mut": {
+        "sp": [
+            "!NonNull ||",
+            "NonNull",
+            "ValidPtr",
+            "Init",
+            "Lifetime",
+            "Alias",
+            "ValidInt",
+            "Aligned"
+        ]
+    },
+    "core::ptr::non_null::get_unchecked_mut": {
+        "sp": [
+            "ValidInt",
+            "Dangling"
+        ]
+    },
+
+    "core::ptr::const_ptr::as_ref": {
+        "sp": [
+            "!NonNull | ",
+            "ValidPtr2Ref"
+        ]
+    },
+    "core::ptr::const_ptr::as_ref_unchecked": {
+        "sp": [
+            "ValidPtr2Ref"
+        ]
+    },
+    "core::ptr::const_ptr::as_uninit_ref": {
+        "sp": [
+            "!NonNull | ",
+            "ValidPtr2Ref"
+        ]
+    },
+    "core::ptr::const_ptr::offset": {
+        "sp": [
+            "Allocated",
+            "ValidInt"
+        ]
+    },
+    "core::ptr::const_ptr::add": {
+        "sp": [
+            "Allocated",
+            "ValidInt"
+        ]
+    },
+    "core::ptr::const_ptr::sub": {
+        "sp": [
+            "Allocated",
+            "ValidInt"
+        ]
+    },
+    "core::ptr::const_ptr::byte_offset": {
+        "sp": [
+            "Allocated",
+            "ValidInt"
+        ]
+    },
+    "core::ptr::const_ptr::offset_from": {
+        "sp": [
+            "Allocated",
+            "ValidInt"
+        ]
+    },
+    "core::ptr::const_ptr::byte_offset_from": {
+        "sp": [
+            "Allocated",
+            "ValidInt"
+        ]
+    },
+    "core::ptr::const_ptr::non_null::sub_ptr": {
+        "sp": [
+            "ValidInt"
+        ]
+    },
+    "core::ptr::const_ptr::byte_add": {
+        "sp": [
+            "Allocated",
+            "ValidInt"
+        ]
+    },
+    "core::ptr::const_ptr::byte_sub": {
+        "sp": [
+            "Allocated",
+            "ValidInt"
+        ]
+    },
+    "core::ptr::const_ptr::read": {
+        "sp": [
+            "ValidPtr",
+            "Aligned",
+            "Init"
+        ]
+    },
+    "core::ptr::const_ptr::read_volatile": {
+        "sp": [
+            "ValidPtr",
+            "Aligned",
+            "Init"
+        ]
+    },
+    "core::ptr::const_ptr::read_unaligned": {
+        "sp": [
+            "ValidPtr",
+            "Init"
+        ]
+    },
+    "core::ptr::const_ptr::copy_to": {
+        "sp": [
+            "ValidPtr",
+            "Aligned"
+        ]
+    },
+    "core::ptr::const_ptr::copy_to_nonoverlapping": {
+        "sp": [
+            "ValidPtr",
+            "Aligned",
+            "NonOverlap"
+        ]
+    },
+    "core::ptr::const_ptr::as_uninit_slice": {
+        "sp": [
+            "!NonNull ||",
+            "NonNull",
+            "ValidPtr",
+            "Init",
+            "Lifetime",
+            "Alias",
+            "ValidInt",
+            "Aligned"
+        ]
+    },
+    "core::ptr::const_ptr::get_unchecked": {
+        "sp": [
+            "ValidInt",
+            "Dangling"
+        ]
+    },
+
+
+
+    "core::ptr::mut_ptr::as_ref": {
+        "sp": [
+            "!NonNull | ",
+            "ValidPtr2Ref"
+        ]
+    },
+    "core::ptr::mut_ptr::as_ref_unchecked": {
+        "sp": [
+            "ValidPtr2Ref"
+        ]
+    },
+    "core::ptr::mut_ptr::as_uninit_ref": {
+        "sp": [
+            "!NonNull | ",
+            "ValidPtr2Ref"
+        ]
+    },
+    "core::ptr::mut_ptr::offset": {
+        "sp": [
+            "Allocated",
+            "ValidInt"
+        ]
+    },
+    "core::ptr::mut_ptr::as_mut": {
+        "sp": [
+            "ValidPtr2Ref"
+        ]
+    },
+    "core::ptr::mut_ptr::as_mut_unchecked": {
+        "sp": [
+            "ValidPtr2Ref"
+        ]
+    },
+    "core::ptr::mut_ptr::as_uninit_mut": {
+        "sp": [
+            "!NonNull | ",
+            "ValidPtr2Ref"
+        ]
+    },
+    "core::ptr::mut_ptr::add": {
+        "sp": [
+            "Allocated",
+            "ValidInt"
+        ]
+    },
+    "core::ptr::mut_ptr::sub": {
+        "sp": [
+            "Allocated",
+            "ValidInt"
+        ]
+    },
+    "core::ptr::mut_ptr::byte_offset": {
+        "sp": [
+            "Allocated",
+            "ValidInt"
+        ]
+    },
+    "core::ptr::mut_ptr::offset_from": {
+        "sp": [
+            "Allocated",
+            "ValidInt"
+        ]
+    },
+    "core::ptr::mut_ptr::byte_offset_from": {
+        "sp": [
+            "Allocated",
+            "ValidInt"
+        ]
+    },
+    "core::ptr::mut_ptr::sub_ptr": {
+        "sp": [
+            "ValidInt"
+        ]
+    },
+    "core::ptr::mut_ptr::byte_add": {
+        "sp": [
+            "Allocated",
+            "ValidInt"
+        ]
+    },
+    "core::ptr::mut_ptr::byte_sub": {
+        "sp": [
+            "Allocated",
+            "ValidInt"
+        ]
+    },
+    "core::ptr::mut_ptr::read": {
+        "sp": [
+            "ValidPtr",
+            "Aligned",
+            "Init"
+        ]
+    },
+    "core::ptr::mut_ptr::read_volatile": {
+        "sp": [
+            "ValidPtr",
+            "Aligned",
+            "Init"
+        ]
+    },
+    "core::ptr::mut_ptr::read_unaligned": {
+        "sp": [
+            "ValidPtr",
+            "Init"
+        ]
+    },
+    "core::ptr::mut_ptr::copy_to": {
+        "sp": [
+            "ValidPtr",
+            "Aligned"
+        ]
+    },
+    "core::ptr::mut_ptr::copy_to_nonoverlapping": {
+        "sp": [
+            "ValidPtr",
+            "Aligned",
+            "NonOverlap"
+        ]
+    },
+    "core::ptr::mut_ptr::copy_from": {
+        "sp": [
+            "ValidPtr",
+            "Aligned"
+        ]
+    },
+    "core::ptr::mut_ptr::copy_from_nonoverlapping": {
+        "sp": [
+            "ValidPtr",
+            "Aligned",
+            "NonOverlap"
+        ]
+    },
+    "core::ptr::mut_ptr::drop_in_place": {
+        "sp": [
+            "ValidPtr",
+            "Aligned",
+            "NonNull"
+        ]
+    },
+    "core::ptr::mut_ptr::write": {
+        "sp": [
+            "ValidPtr",
+            "Aligned"
+        ]
+    },
+    "core::ptr::mut_ptr::write_bytes": {
+        "sp": [
+            "ValidPtr",
+            "Aligned",
+            "Init"
+        ]
+    },
+    "core::ptr::mut_ptr::write_volatile": {
+        "sp": [
+            "ValidPtr",
+            "Aligned",
+            "Init"
+        ]
+    },
+    "core::ptr::mut_ptr::write_unaligned": {
+        "sp": [
+            "ValidPtr",
+            "Init"
+        ]
+    },
+    "core::ptr::mut_ptr::replace": {
+        "sp": [
+            "ValidPtr",
+            "Aligned",
+            "Init"
+        ]
+    },
+    "core::ptr::mut_ptr::swap": {
+        "sp": [
+            "ValidPtr",
+            "Aligned"
+        ]
+    },
+    "core::ptr::mut_ptr::split_at_mut": {
+        "sp": [
+            "ValidInt",
+            "Dangling"
+        ]
+    },
+    "core::ptr::mut_ptr::split_at_mut_unchecked": {
+        "sp": [
+            "ValidInt",
+            "Dangling"
+        ]
+    },
+    "core::ptr::mut_ptr::as_uninit_slice": {
+        "sp": [
+            "!NonNull ||",
+            "NonNull",
+            "ValidPtr",
+            "Init",
+            "Lifetime",
+            "Alias",
+            "ValidInt",
+            "Aligned"
+        ]
+    },
+    "core::ptr::mut_ptr::as_uninit_slice_mut": {
+        "sp": [
+            "!NonNull ||",
+            "NonNull",
+            "ValidPtr",
+            "Init",
+            "Lifetime",
+            "Alias",
+            "ValidInt",
+            "Aligned"
+        ]
+    },
+    "core::ptr::mut_ptr::get_unchecked_mut": {
+        "sp": [
+            "ValidInt",
+            "Dangling"
+        ]
+    },
+
+    "core::ptr::drop_in_place": {
+        "sp": [
+            "ValidPtr",
+            "Aligned",
+            "NonNull"
+        ]
+    },
+    "core::ptr::replace": {
+        "sp": [
+            "ValidPtr",
+            "Aligned",
+            "Init"
+        ]
+    },
+    "core::ptr::read": {
+        "sp": [
+            "ValidPtr",
+            "Aligned",
+            "Init"
+        ]
+    },
+    "core::ptr::write": {
+        "sp": [
+            "ValidPtr",
+            "Aligned"
+        ]
+    },
+    "core::ptr::swap": {
+        "sp": [
+            "ValidPtr",
+            "Aligned"
+        ]
+    },
+    "core::ptr::swap_nonoverlapping": {
+        "sp": [
+            "ValidPtr",
+            "Aligned",
+            "NonOverlap"
+        ]
+    },
+    "core::ptr::read_unaligned": {
+        "sp": [
+            "ValidPtr",
+            "Init"
+        ]
+    },
+    "core::ptr::write_unaligned": {
+        "sp": [
+            "ValidPtr",
+            "Init"
+        ]
+    },
+    "core::ptr::read_volatile": {
+        "sp": [
+            "ValidPtr",
+            "Init",
+            "Aligned"
+        ]
+    },
+    "core::ptr::write_volatile": {
+        "sp": [
+            "ValidPtr",
+            "Init",
+            "Aligned"
+        ]
+    },
+    "core::clone::clone_to_uninit": {
+        "sp": [
+            "ValidPtr",
+            "Aligned"
+        ]
+    },
+
+    "core::result::unwrap_unchecked": {
+        "sp": [
+            "ValidInt"
+        ]
+    },
+    "core::result::unwrap_err_unchecked": {
+        "sp": [
+            "ValidInt"
+        ]
+    },
+    "core::slice::ascii::as_ascii_unchecked": {
+        "sp": [
+            "ValidInt"
+        ]
+    },
+    "core::slice::raw::from_raw_parts": {
+        "sp": [
+            "NonNull",
+            "ValidPtr",
+            "Init",
+            "Lifetime",
+            "Alias",
+            "ValidInt",
+            "Aligned"
+        ]
+    },
+    "core::slice::raw::from_raw_parts_mut": {
+        "sp": [
+            "NonNull",
+            "ValidPtr",
+            "Init",
+            "Lifetime",
+            "Alias",
+            "ValidInt",
+            "Aligned"
+        ]
+    },
+    "core::slice::index::get_unchecked": {
+        "sp": [
+            "Dangling",
+            "Allocated"
+        ]
+    },
+    "core::slice::index::get_unchecked_mut": {
+        "sp": [
+            "Dangling",
+            "Allocated"
+        ]
+    },
+    "core::slice::raw::from_ptr_range": {
+        "sp": [
+            "NonNull",
+            "ValidPtr",
+            "Init",
+            "Lifetime",
+            "Alias",
+            "ValidInt",
+            "Aligned"
+        ]
+    },
+    "core::slice::raw::from_mut_ptr_range": {
+        "sp": [
+            "NonNull",
+            "ValidPtr",
+            "Init",
+            "Lifetime",
+            "Alias",
+            "ValidInt",
+            "Aligned"
+        ]
+    },
+    "core::str::get_unchecked": {
+        "sp": [
+            "ValidString"
+        ]
+    },
+    "core::str::get_unchecked_mut": {
+        "sp": [
+            "ValidString"
+        ]
+    },
+    "core::str::slice_unchecked": {
+        "sp": [
+            "ValidString"
+        ]
+    },
+    "core::str::slice_mut_unchecked": {
+        "sp": [
+            "ValidString"
+        ]
+    },
+    "core::str::as_bytes_mut": {
+        "sp": [
+            "ValidString"
+        ]
+    },
+    "core::str::converts::from_utf8_unchecked": {
+        "sp": [
+            "ValidString"
+        ]
+    },
+    "core::str::converts::from_utf8_unchecked_mut": {
+        "sp": [
+            "ValidString"
+        ]
+    },
+    "core::str::converts::from_raw_parts": {
+        "sp": [
+            "NonNull",
+            "ValidPtr",
+            "Init",
+            "Lifetime",
+            "Alias",
+            "ValidInt",
+            "Aligned"
+        ]
+    },
+    "core::str::converts::from_raw_parts_mut": {
+        "sp": [
+            "NonNull",
+            "ValidPtr",
+            "Init",
+            "Lifetime",
+            "Alias",
+            "ValidInt",
+            "Aligned"
+        ]
+    },
+    "core::str::traits::get_unchecked": {
+        "sp": [
+            "ValidString"
+        ]
+    },
+    "core::str::traits::get_unchecked_mut": {
+        "sp": [
+            "ValidString"
+        ]
+    },
+    "core::io::borrowed_buf::set_init": {
+        "sp": [
+            "Init"
+        ]
+    },
+    "core::io::borrowed_buf::advance_unchecked": {
+        "sp": [
+            "Init"
+        ]
+    },
+    "core::task::wake::from_raw": {
+        "sp": [
+            "AllocatorConsistency",
+            "Dangling"
+        ]
+    },
+
+    "alloc::vec::from_raw_parts": {
+        "sp": [
+            "AllocatorConsistency",
+            "Aligned",
+            "Allocated",
+            "ValidInt",
+            "LayoutConsistency"
+        ]
+    },
+    "alloc::vec::from_parts": {
+        "sp": [
+            "AllocatorConsistency",
+            "Aligned",
+            "Allocated",
+            "ValidInt",
+            "LayoutConsistency"
+        ]
+    },
+    "alloc::vec::from_raw_parts_in": {
+        "sp": [
+            "AllocatorConsistency",
+            "Aligned",
+            "Allocated",
+            "ValidInt",
+            "LayoutConsistency"
+        ]
+    },
+    "alloc::vec::from_parts_in": {
+        "sp": [
+            "AllocatorConsistency",
+            "Aligned",
+            "Allocated",
+            "ValidInt",
+            "LayoutConsistency"
+        ]
+    },
+    "alloc::vec::set_len": {
+        "sp": [
+            "Allocated",
+            "ValidInt"
+        ]
+    },
+    "alloc::alloc::alloc": {
+        "sp": [
+            "ValidInt",
+            "Init"
+        ]
+    },
+    "alloc::alloc::dealloc": {
+        "sp": [
+            "AllocatorConsistency",
+            "LayoutConsistency"
+        ]
+    },
+    "alloc::alloc::realloc": {
+        "sp": [
+            "AllocatorConsistency",
+            "LayoutConsistency",
+            "ValidInt"
+        ]
+    },
+    "alloc::alloc::alloc_zeroed": {
+        "sp": [
+            "ValidInt"
+        ]
+    },
+    "alloc::alloc::deallocate": {
+        "sp": [
+            "AllocatorConsistency",
+            "LayoutConsistency"
+        ]
+    },
+    "alloc::alloc::grow": {
+        "sp": [
+            "AllocatorConsistency",
+            "LayoutConsistency",
+            "ValidInt"
+        ]
+    },
+    "alloc::alloc::grow_zeroed": {
+        "sp": [
+            "AllocatorConsistency",
+            "LayoutConsistency",
+            "ValidInt"
+        ]
+    },
+    "alloc::alloc::shrink": {
+        "sp": [
+            "AllocatorConsistency",
+            "LayoutConsistency",
+            "ValidInt"
+        ]
+    },
+    "alloc::boxed::assume_init": {
+        "sp": [
+            "Init"
+        ]
+    },
+    "alloc::boxed::from_raw": {
+        "sp": [
+            "AllocatorConsistency",
+            "Alias"
+        ]
+    },
+    "alloc::boxed::from_non_null": {
+        "sp": [
+            "AllocatorConsistency",
+            "Alias"
+        ]
+    },
+    "alloc::boxed::from_raw_in": {
+        "sp": [
+            "AllocatorConsistency",
+            "Alias"
+        ]
+    },
+    "alloc::boxed::from_non_null_in": {
+        "sp": [
+            "AllocatorConsistency",
+            "Alias"
+        ]
+    },
+    "alloc::boxed::downcast_unchecked": {
+        "sp": [
+            "Typed"
+        ]
+    },
+    "alloc::collections::btree::map::insert_after_unchecked": {
+        "sp": [
+            "",
+            ""
+        ]
+    },
+    "alloc::collections::btree::map::insert_before_unchecked": {
+        "sp": [
+            "",
+            ""
+        ]
+    },
+    "alloc::collections::btree::set::insert_after_unchecked": {
+        "sp": [
+            "",
+            ""
+        ]
+    },
+    "alloc::collections::btree::set::insert_before_unchecked": {
+        "sp": [
+            "",
+            ""
+        ]
+    },
+    "alloc::ffi::c_str::from_vec_unchecked": {
+        "sp": [
+            "ValidString"
+        ]
+    },
+    "alloc::ffi::c_str::from_raw": {
+        "sp": [
+            "AllocatorConsistency",
+            "Alias"
+        ]
+    },
+    "alloc::ffi::c_str::from_vec_with_nul_unchecked": {
+        "sp": [
+            "ValidCStr"
+        ]
+    },
+    "alloc::rc::assume_init": {
+        "sp": [
+            "Init"
+        ]
+    },
+    "alloc::rc::from_raw": {
+        "sp": [
+            "AllocatorConsistency",
+            "Aligned"
+        ]
+    },
+    "alloc::rc::increment_strong_count": {
+        "sp": [
+            "AllocatorConsistency",
+            "Dangling"
+        ]
+    },
+    "alloc::rc::decrement_strong_count": {
+        "sp": [
+            "AllocatorConsistency",
+            "Dangling"
+        ]
+    },
+    "alloc::rc::from_raw_in": {
+        "sp": [
+            "AllocatorConsistency",
+            "Aligned"
+        ]
+    },
+    "alloc::rc::increment_strong_count_in": {
+        "sp": [
+            "AllocatorConsistency",
+            "Dangling"
+        ]
+    },
+    "alloc::rc::decrement_strong_count_in": {
+        "sp": [
+            "AllocatorConsistency",
+            "Dangling"
+        ]
+    },
+    "alloc::rc::downcast_unchecked": {
+        "sp": [
+            "Typed"
+        ]
+    },
+    "alloc::rc::get_mut_unchecked": {
+        "sp": [
+            "Typed",
+            "Alias"
+        ]
+    },
+    "alloc::collections::btree::map::with_mutable_key": {
+        "sp": [
+            "",
+            ""
+        ]
+    },
+    "alloc::collections::btree::set::upper_bound_mut": {
+        "sp": [
+            "",
+            ""
+        ]
+    },
+    "alloc::str::from_boxed_utf8_unchecked": {
+        "sp": [
+            "ValidString"
+        ]
+    },
+    "alloc::string::from_raw_parts": {
+        "sp": [
+            "AllocatorConsistency",
+            "Aligned",
+            "ValidInt",
+            "ValidString"
+        ]
+    },
+    "alloc::string::from_utf8_unchecked": {
+        "sp": [
+            "ValidString"
+        ]
+    },
+    "alloc::string::as_mut_vec": {
+        "sp": [
+            "ValidString"
+        ]
+    },
+    "alloc::sync::get_mut_unchecked": {
+        "sp": [
+            "Typed",
+            "Alias"
+        ]
+    },
+    "alloc::sync::from_raw": {
+        "sp": [
+            "AllocatorConsistency",
+            "Aligned"
+        ]
+    },
+    "alloc::sync::increment_strong_count": {
+        "sp": [
+            "AllocatorConsistency",
+            "Dangling"
+        ]
+    },
+    "alloc::sync::decrement_strong_count": {
+        "sp": [
+            "AllocatorConsistency",
+            "Dangling"
+        ]
+    },
+    "alloc::sync::from_raw_in": {
+        "sp": [
+            "AllocatorConsistency",
+            "Aligned"
+        ]
+    },
+    "alloc::sync::increment_strong_count_in": {
+        "sp": [
+            "AllocatorConsistency",
+            "Dangling"
+        ]
+    },
+    "alloc::sync::decrement_strong_count_in": {
+        "sp": [
+            "AllocatorConsistency",
+            "Dangling"
+        ]
+    },
+    "alloc::sync::downcast_unchecked": {
+        "sp": [
+            "Typed"
+        ]
+    }
+}
