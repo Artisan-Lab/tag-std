@@ -33,13 +33,13 @@ In practice, a safety property may correspond to a precondition, optional precon
 |---|---|---|---|
 | I.1  | Align(p, T) | precond  | [ptr::read()](https://doc.rust-lang.org/nightly/std/ptr/fn.read.html) | 
 | I.2  | Sized(T) | option | [Layout::for_value_raw()](https://doc.rust-lang.org/nightly/std/alloc/struct.Layout.html#method.for_value_raw)  | 
-| I.3  | ZST(T, false) | precond | [NonNull.offset_from](https://doc.rust-lang.org/core/ptr/struct.NonNull.html#method.offset_from)  | 
-| I.4  | Padding(T, false)  | precond  | [raw_eq()](https://doc.rust-lang.org/std/intrinsics/fn.raw_eq.html) |
-| II.1  | Null(p, false) | precond  | [NonNull::new_unchecked()](https://doc.rust-lang.org/std/ptr/struct.NonNull.html#method.new_unchecked) |
-| II.2  | Dangling(p, false) | precond| [ptr::offset()](https://doc.rust-lang.org/beta/std/primitive.pointer.html#method.offset) |
+| I.3  | !ZST(T) | precond | [NonNull.offset_from](https://doc.rust-lang.org/core/ptr/struct.NonNull.html#method.offset_from)  | 
+| I.4  | !Padding(T)  | precond  | [raw_eq()](https://doc.rust-lang.org/std/intrinsics/fn.raw_eq.html) |
+| II.1  | !Null(p) | precond  | [NonNull::new_unchecked()](https://doc.rust-lang.org/std/ptr/struct.NonNull.html#method.new_unchecked) |
+| II.2  | !Dangling(p) | precond| [ptr::offset()](https://doc.rust-lang.org/beta/std/primitive.pointer.html#method.offset) |
 | II.3 | Allocated(p, T, len, A) | precond | [Box::from_raw_in()](https://doc.rust-lang.org/std/boxed/struct.Box.html#method.from_raw_in) |
 | II.4  | InBound(p, T, len, arange) | precond | [ptr::offset()](https://doc.rust-lang.org/std/primitive.pointer.html#method.offset)  |
-| II.5  | NonOverlap(dst, src, T, len) | precond | [ptr::copy_nonoverlapping()](https://doc.rust-lang.org/std/ptr/fn.copy_nonoverlapping.html)  |
+| II.5  | !Overlap(dst, src, T, len) | precond | [ptr::copy_nonoverlapping()](https://doc.rust-lang.org/std/ptr/fn.copy_nonoverlapping.html)  |
 | III.1  | Init(p, T, range)  | precond | [MaybeUninit::slice_assume_init_mut()](https://doc.rust-lang.org/std/mem/union.MaybeUninit.html#method.slice_assume_init_mut) |
 |         | Init(p, T, range)  | hazard | [ptr::copy()](https://doc.rust-lang.org/std/ptr/fn.copy.html) |
 |         | Init(p, T, range)  | option | [ptr::copy()](https://doc.rust-lang.org/std/ptr/fn.copy.html) |
@@ -51,8 +51,8 @@ In practice, a safety property may correspond to a precondition, optional precon
 | IV.1  | Ownning(p)  | precond | [Box::from_raw()](https://doc.rust-lang.org/std/boxed/struct.Box.html#method.from_raw)  |
 | IV.2  | Alias(p1, p2)  | hazard | [pointer.as_mut()](https://doc.rust-lang.org/std/primitive.pointer.html#method.as_mut) |
 | IV.3  | Lifetime(p, l)  | precond | [AtomicPtr::from_ptr()](https://doc.rust-lang.org/std/sync/atomic/struct.AtomicPtr.html#method.from_ptr)  |
-| V.1  | Pinned(p)  | hazard | [Pin::new_unchecked()](https://doc.rust-lang.org/std/pin/struct.Pin.html#method.new_unchecked)  |
-| V.2  | Volatile(p, false) | precond | [ptr::read()](https://doc.rust-lang.org/std/ptr/fn.read.html) |
+| V.1  | Pinned(p) | hazard | [Pin::new_unchecked()](https://doc.rust-lang.org/std/pin/struct.Pin.html#method.new_unchecked)  |
+| V.2  | !Volatile(p) | precond | [ptr::read()](https://doc.rust-lang.org/std/ptr/fn.read.html) |
 | V.3  | Opened(fd) | precond | [trait.FromRawFd::from_raw_fd()](https://doc.rust-lang.org/std/os/fd/trait.FromRawFd.html#tymethod.from_raw_fd)  |
 | V.4  | Trait(T, trait)  | option | [ptr::read()](https://doc.rust-lang.org/std/ptr/fn.read.html)  |
 
@@ -63,11 +63,11 @@ The term valid pointer is widely used for safety descriptions in Rustdoc. Based 
 
 | Compound SP | Primitive SPs | Usage | Example API |
 |---|---|---|---|   
-| ValidPtr(p, T) |ZST(T, true) \|\| (ZST(T, false) && Dangling(p, false) ) | precond | [read<T>(src: *const T)](https://doc.rust-lang.org/nightly/std/ptr/fn.read.html)  |       
-| ValidPtr2Ref(p, T) | Align(p,T) && Dangling(p, false) && Init(p,T, 1) && Alias(p, other) | precond, hazard | [as_uninit_ref(self)](https://doc.rust-lang.org/nightly/std/ptr/struct.NonNull.html#method.as_uninit_ref) | 
+| ValidPtr(p, T) |ZST(T) \|\| (!ZST(T) && !Dangling(p) ) | precond | [read<T>(src: *const T)](https://doc.rust-lang.org/nightly/std/ptr/fn.read.html)  |       
+| ValidPtr2Ref(p, T) | !Dangling(p) && Init(p,T, 1) && Align(p,T) && Alias(p, other) | precond, hazard | [as_uninit_ref(self)](https://doc.rust-lang.org/nightly/std/ptr/struct.NonNull.html#method.as_uninit_ref) | 
 
 Besides, 
-- [Dereferenceable](https://doc.rust-lang.org/nightly/std/ptr/index.html): The property is equivalent to $\text{Dangling}(p, false), \text{Allocated}(p, T, len, A)$, and $\text{InBound}(p, T, len, arange) $.
+- [Dereferenceable](https://doc.rust-lang.org/nightly/std/ptr/index.html): The property is equivalent to $\text{!Dangling}(p), \text{Allocated}(p, T, len, A)$, and $\text{InBound}(p, T, len, arange) $.
 - [Typed](https://doc.rust-lang.org/std/ptr/fn.copy.html): The property is equivalent to $\text{Init}(p, T, len)$.
 
 ## 3 Safety Property Analysis
@@ -99,7 +99,7 @@ Example API: [Layout::for_value_raw()](https://doc.rust-lang.org/nightly/std/all
 
 A safety property may require the size of a type `T` cannot be zero. We can formulate the requirement as 
 
-**psp I.3 ZST(T, false)**:
+**psp I.3 !ZST(T)**:
 
 $$\text{sizeof}(T) > 0$$
 
@@ -127,9 +127,9 @@ Referring to the [pointer validity](https://doc.rust-lang.org/std/ptr/index.html
 #### Address
 The memory address that the pointer refers to is critical. A safety property may require the pointer `p` to be non-null, as the behavior of dereferencing a null pointer is undefined. This property can be formalized as:
 
-**psp II.1 Null(p, false)**:
+**psp II.1 !Null(p)**:
 
-$$p != \text{null}$$
+$$p != 0$$
 
 Example APIs: [NonNull::new_unchecked()](https://doc.rust-lang.org/std/ptr/struct.NonNull.html#method.new_unchecked), [Box::from_non_null()](https://doc.rust-lang.org/std/boxed/struct.Box.html#method.from_non_null)
 
@@ -171,7 +171,7 @@ Example APIs: [ptr::offset()](https://doc.rust-lang.org/std/primitive.pointer.ht
 
 A safety property may require the two pointers do not overlap with respect to `T` or  $T*count$:
 
-**psp II.5 Overlap(dst, src, T, len, false)**: 
+**psp II.5 !Overlap(dst, src, T, len)**: 
 
 $$|dst - src| > \text{sizeof}(T) * count $$
 
@@ -276,7 +276,7 @@ Example APIs: [Pin::new_unchecked()](https://doc.rust-lang.org/std/pin/struct.Pi
 
 There are specific APIs for volatile memory access in std-lib, like [ptr::read_volatile()](https://doc.rust-lang.org/std/ptr/fn.read_volatile.html) and [ptr::write_volatile()](https://doc.rust-lang.org/std/ptr/fn.write_volatile.html). Other memory operations should require non-volatile by default.
 
-**psp V.6 Volatile(p, false)**:
+**psp V.6 !Volatile(p)**:
 
 $$\text{volatile}(*p) = false$$
 
