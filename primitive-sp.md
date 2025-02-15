@@ -38,7 +38,7 @@ In practice, a safety property may correspond to a precondition, optional precon
 | II.1  | Null(p, false) | precond  | [NonNull::new_unchecked()](https://doc.rust-lang.org/std/ptr/struct.NonNull.html#method.new_unchecked) |
 | II.2  | Dangling(p, false) | precond| [ptr::offset()](https://doc.rust-lang.org/beta/std/primitive.pointer.html#method.offset) |
 | II.3 | Allocated(p, T, len, A) | precond | [Box::from_raw_in()](https://doc.rust-lang.org/std/boxed/struct.Box.html#method.from_raw_in) |
-| II.4  | InBounded(p, T, len, arange) | precond | [ptr::offset()](https://doc.rust-lang.org/std/primitive.pointer.html#method.offset)  |
+| II.4  | InBound(p, T, len, arange) | precond | [ptr::offset()](https://doc.rust-lang.org/std/primitive.pointer.html#method.offset)  |
 | II.5  | NonOverlap(dst, src, T, len) | precond | [ptr::copy_nonoverlapping()](https://doc.rust-lang.org/std/ptr/fn.copy_nonoverlapping.html)  |
 | III.1  | Init(p, T, range)  | precond | [MaybeUninit::slice_assume_init_mut()](https://doc.rust-lang.org/std/mem/union.MaybeUninit.html#method.slice_assume_init_mut) |
 |         | Init(p, T, range)  | hazard | [ptr::copy()](https://doc.rust-lang.org/std/ptr/fn.copy.html) |
@@ -164,7 +164,7 @@ Example APIs: [Arc::from_raw()](https://doc.rust-lang.org/std/sync/struct.Arc.ht
 
 Bounded access requires that the pointer access with respet to an offset stays within the bound. This ensures that dereferencing the pointer yields a value (which may not yet be initialized) of the expected type T. 
 
-**psp II.4 InBounded(p, T, len, arange)**: 
+**psp II.4 InBound(p, T, len, arange)**: 
 
 $$[p, p+ sizeof(T) * (len+1)) \in arrange $$
 
