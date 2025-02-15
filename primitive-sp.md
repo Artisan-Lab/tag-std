@@ -217,7 +217,7 @@ We have to label the hazard of the APIs [String.as_bytes_mut()](https://doc.rust
 
 **psp III.4 ValidCStr(p, len)**:
 
-$$mem(p+lem) = \text{null} $$ 
+$$mem(p+len, p+len+1) = \text{null} $$ 
 
 Example APIs: [CStr::from_bytes_with_nul_unchecked()](https://doc.rust-lang.org/std/ffi/struct.CStr.html#method.from_bytes_with_nul_unchecked), [CStr::from_ptr()](https://doc.rust-lang.org/std/ffi/struct.CStr.html#method.from_ptr)
 
