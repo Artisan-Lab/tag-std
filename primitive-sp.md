@@ -50,7 +50,7 @@ In practice, a safety property may correspond to a precondition, optional precon
 | III.5  | Unwrap(x, T)  | precond | [Option::unwrap_unchecked()](https://doc.rust-lang.org/std/option/enum.Option.html#method.unwrap_unchecked)  |
 | IV.1  | Ownning(p)  | precond | [Box::from_raw()](https://doc.rust-lang.org/std/boxed/struct.Box.html#method.from_raw)  |
 | IV.2  | Alias(p1, p2)  | hazard | [pointer.as_mut()](https://doc.rust-lang.org/std/primitive.pointer.html#method.as_mut) |
-| IV.3  | Lifetime(p, l)  | precond | [AtomicPtr::from_ptr()](https://doc.rust-lang.org/std/sync/atomic/struct.AtomicPtr.html#method.from_ptr)  |
+| IV.3  | Alive(p, l)  | precond | [AtomicPtr::from_ptr()](https://doc.rust-lang.org/std/sync/atomic/struct.AtomicPtr.html#method.from_ptr)  |
 | V.1  | Pinned(p) | hazard | [Pin::new_unchecked()](https://doc.rust-lang.org/std/pin/struct.Pin.html#method.new_unchecked)  |
 | V.2  | !Volatile(p) | precond | [ptr::read()](https://doc.rust-lang.org/std/ptr/fn.read.html) |
 | V.3  | Opened(fd) | precond | [trait.FromRawFd::from_raw_fd()](https://doc.rust-lang.org/std/os/fd/trait.FromRawFd.html#tymethod.from_raw_fd)  |
@@ -255,7 +255,7 @@ Example APIs: [pointer.as_mut()](https://doc.rust-lang.org/std/primitive.pointer
 
 The property generally requires the lifetime of a raw pointer `p` must be valid for both reads and writes for the whole lifetime 'a.
 
-**psp IV.3 Lifetime(p, l)**:
+**psp IV.3 Alive(p, l)**:
 
 $$\text{lifetime}(*p) > l$$
 
