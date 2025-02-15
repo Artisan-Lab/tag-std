@@ -67,7 +67,7 @@ The term valid pointer is widely used for safety descriptions in Rustdoc. Based 
 | ValidPtr2Ref(p, T) | Align(p,T) && Dangling(p, false) && Init(p,T, 1) && Alias(p, other) | precond, hazard | [as_uninit_ref(self)](https://doc.rust-lang.org/nightly/std/ptr/struct.NonNull.html#method.as_uninit_ref) | 
 
 Besides, 
-- [Dereferenceable](https://doc.rust-lang.org/nightly/std/ptr/index.html): The property is equivalent to $\text{Dangling}(p, false), \text{Allocated}(p, T, len, A), and \text{InBound}(p, T, len, arange) $.
+- [Dereferenceable](https://doc.rust-lang.org/nightly/std/ptr/index.html): The property is equivalent to $\text{Dangling}(p, false), \text{Allocated}(p, T, len, A)$, and $\text{InBound}(p, T, len, arange) $.
 - [Typed](https://doc.rust-lang.org/std/ptr/fn.copy.html): The property is equivalent to $\text{Init}(p, T, len)$.
 
 ## 3 Safety Property Analysis
@@ -93,7 +93,7 @@ Not all types are statically sized, such as slices and trait objects. Therefore,
 
 **psp I.2 Sized(T)**:
 
-$$sizeof(T) = const \&\& const >= 0$$
+$$sizeof(T) = const\ \\&\\&\ const >= 0$$
 
 Example API: [Layout::for_value_raw()](https://doc.rust-lang.org/nightly/std/alloc/struct.Layout.html#method.for_value_raw)
 
