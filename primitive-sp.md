@@ -47,7 +47,6 @@ In practice, a safety property may correspond to a precondition, optional precon
 | III.3  | ValidString(arange) | precond | [String::from_utf8_unchecked()](https://doc.rust-lang.org/std/string/struct.String.html#method.from_utf8_unchecked) |
 |     | ValidString(arange) | hazard | [String.as_bytes_mut()](https://doc.rust-lang.org/std/string/struct.String.html#method.as_bytes_mut) |
 | III.4  | ValidCStr(p, len) |  precond|  [CStr::from_bytes_with_nul_unchecked()](https://doc.rust-lang.org/std/ffi/struct.CStr.html#method.from_bytes_with_nul_unchecked)  |
-
 | III.5  | Unwrap(x, T)  | precond | [Option::unwrap_unchecked()](https://doc.rust-lang.org/std/option/enum.Option.html#method.unwrap_unchecked)  |
 | IV.1  | Ownning(p)  | precond | [Box::from_raw()](https://doc.rust-lang.org/std/boxed/struct.Box.html#method.from_raw)  |
 | IV.2  | Alias(p1, p2)  | hazard | [pointer.as_mut()](https://doc.rust-lang.org/std/primitive.pointer.html#method.as_mut) |
@@ -194,10 +193,11 @@ Example APIs: [BorrowedBuf::set_init()](https://doc.rust-lang.org/nightly/std/io
 
 #### 3.3.2 Integer
 
-When converting a value `x` to an interger, the value should not be greater than the max or less the min value that can be represented by the integer type `T`.
+When converting a value `x` to an interger or performing integer arithmetic, the result should not be greater than the max or less the min value that can be represented by the integer type `T`.
 
-**psp III.1 ValidInt(exp, vrange)**: 
+**psp III.2 ValidInt(exp, vrange)**: 
 
+The first parameter `exp' stands for an arithmetic expression in the form of (binOperator, operand1, operand2) or (unaryOperator, operand), where the operand can also an expression. The second parameter specifies the range of valid values, such as [isize::MIN, isize::MAX].
 
 Example APIs: [f32.to_int_unchecked()](https://doc.rust-lang.org/std/primitive.f32.html#method.to_int_unchecked), [SimdFloat.to_int_unchecked()](https://doc.rust-lang.org/std/simd/num/trait.SimdFloat.html#tymethod.to_int_unchecked), [NonZero::from_mut_unchecked()](https://doc.rust-lang.org/beta/std/num/struct.NonZero.html#tymethod.from_mut_unchecked), [isize.unchecked_div()](https://doc.rust-lang.org/nightly/core/intrinsics/fn.unchecked_div.html), [u32::unchecked_shl()](https://doc.rust-lang.org/nightly/core/intrinsics/fn.unchecked_shl.html), [u32::unchecked_shr()](https://doc.rust-lang.org/nightly/core/intrinsics/fn.unchecked_shr.html), [isize.unchecked_neg()](https://doc.rust-lang.org/nightly/core/primitive.isize.html#method.unchecked_neg), [isize.add()](https://doc.rust-lang.org/std/primitive.isize.html#method.unchecked_add), [usize.add()](https://doc.rust-lang.org/std/primitive.usize.html#method.unchecked_add), [pointer.add(usize.add())](https://doc.rust-lang.org/std/primitive.pointer.html#method.add), [slice::from_raw_parts()](https://doc.rust-lang.org/nightly/std/slice/fn.from_raw_parts.html) 
 
@@ -206,9 +206,10 @@ There are two types of string in Rust, [String](https://doc.rust-lang.org/std/st
 
 The safety properties of String requires the bytes contained in a vector `v` should be a valid utf-8.
 
-**psp III.3 ValidString(v)**:
+**psp III.3 ValidString(arange)**:
 
-$$v\in \text{utf-8}$$
+The parameter `arange' specifies an address range. For different APIs, the address range can be specified with `(pointer, T, length)' or a vector `v', etc.
+$$mem(arange)\in \text{utf-8}$$
 
 Example APIs: [String::from_utf8_unchecked()](https://doc.rust-lang.org/std/string/struct.String.html#method.from_utf8_unchecked), [String.as_bytes_mut()](https://doc.rust-lang.org/std/string/struct.String.html#method.as_bytes_mut), [String.as_mut_vec()](https://doc.rust-lang.org/std/string/struct.String.html#method.as_mut_vec), [String::from_raw_parts()](https://doc.rust-lang.org/std/string/struct.String.html#method.from_raw_parts), [String.get_unchecked()](https://doc.rust-lang.org/std/string/struct.String.html#method.get_unchecked), [String.get_unchecked_mut()](https://doc.rust-lang.org/std/string/struct.String.html#method.get_unchecked_mut), [String.slice_unchecked()](https://doc.rust-lang.org/std/string/struct.String.html#method.slice_unchecked), [String.slice_mut_unchecked()](https://doc.rust-lang.org/std/string/struct.String.html#method.slice_mut_unchecked)
 
@@ -216,7 +217,7 @@ We have to label the hazard of the APIs [String.as_bytes_mut()](https://doc.rust
 
 **psp III.4 ValidCStr(p, len)**:
 
-$$\exists offset,\ s.t., *(p+offset) = \text{null}\ \\&\\&\ \text{ValidInt}(offset, isize) $$ 
+$$mem(p+lem) = \text{null} $$ 
 
 Example APIs: [CStr::from_bytes_with_nul_unchecked()](https://doc.rust-lang.org/std/ffi/struct.CStr.html#method.from_bytes_with_nul_unchecked), [CStr::from_ptr()](https://doc.rust-lang.org/std/ffi/struct.CStr.html#method.from_ptr)
 
@@ -224,9 +225,9 @@ Example APIs: [CStr::from_bytes_with_nul_unchecked()](https://doc.rust-lang.org/
 
 Such safety properties relate to the monadic types, including [Option](https://doc.rust-lang.org/std/option/enum.Option.html) and [Result](https://doc.rust-lang.org/std/result/enum.Result.html), and they require the value after unwarpping should be of a particular type.
 
-**psp III.5 Unwrap(x, T)**:
+**psp III.5 Unwrap(x, T, target)**:
 
-$$\text{unwrap}(r) = x,\ s.t., \text{typeof}(x) \in \lbrace \text{Ok}, \text{Err}, \text{Some}, \text{None} \rbrace $$
+$$\text{unwrap}(x) = target,\ s.t., \text{typeof}(target) \in \lbrace \text{Ok(T)}, \text{Err}, \text{Some(T)}, \text{None} \rbrace $$
 
 Example APIs: [Option::unwrap_unchecked()](https://doc.rust-lang.org/std/option/enum.Option.html#method.unwrap_unchecked), [Result::unwrap_unchecked()](https://doc.rust-lang.org/core/result/enum.Result.html#method.unwrap_unchecked), [Result::unwrap_err_unchecked()](https://doc.rust-lang.org/core/result/enum.Result.html#method.unwrap_err_unchecked)
 
@@ -236,24 +237,16 @@ This category relates to the core mechanism of Rust which aims to avoid shared m
 #### 3.4.1 Onwership
 Let one value has two owners at the same program point is vulnerable to double free. Refer to the traidional vulnerbility of [mem::forget()](https://doc.rust-lang.org/std/mem/fn.forget.html) compared to [ManuallyDrop](https://doc.rust-lang.org/std/mem/struct.ManuallyDrop.html). The property generally relates to convert a raw pointer to an ownership, and it can be represented as:
 
-**psp IV.1 NonOwned(p)**:
+**psp IV.1 Ownning(p)**:
 
-$$\text{hasowner}(*p) = false $$
+$$\text{ownership}(*p) = none $$
 
-Example APIs: [Box::from_raw()](https://doc.rust-lang.org/std/boxed/struct.Box.html#method.from_raw), [ptr::read()](https://doc.rust-lang.org/std/ptr/fn.read.html), [ptr::read_volatile()](https://doc.rust-lang.org/std/ptr/fn.read_volatile.html),
-
-**psp IV.2 Owned(p)**:
-
-$$\text{hasowner}(*p) = true $$
-
-Example APIs: [trait.FromRawFd::from_raw_fd()](https://doc.rust-lang.org/std/os/fd/trait.FromRawFd.html#tymethod.from_raw_fd), [UdpSocket::from_raw_socket()](https://doc.rust-lang.org/std/net/struct.UdpSocket.html#method.from_raw_socket)
-
-(TO FIX: there should be similar issues for other RAII resources, we may not need this because FFI memories cannot require owned.)
+Example APIs: [Box::from_raw()](https://doc.rust-lang.org/std/boxed/struct.Box.html#method.from_raw), [ptr::read()](https://doc.rust-lang.org/std/ptr/fn.read.html), [ptr::read_volatile()](https://doc.rust-lang.org/std/ptr/fn.read_volatile.html), [trait.FromRawFd::from_raw_fd()](https://doc.rust-lang.org/std/os/fd/trait.FromRawFd.html#tymethod.from_raw_fd), [UdpSocket::from_raw_socket()](https://doc.rust-lang.org/std/net/struct.UdpSocket.html#method.from_raw_socket)
 
 #### 3.4.2 Alias
 There are six types of pointers to a value x, depending on the mutabality and ownership, i.e., owner, mutable owner, reference, mutable reference, raw pointer, mutable raw pointer. The exclusive mutability principle of Rust requires that if a value has a mutable alias at one program point, it must not have other aliases at that program point. Otherwise, it may incur unsafe status. We need to track the particular unsafe status and avoid unsafe behaviors.
 
-**psp IV.3 Alias(p1, p2)**:
+**psp IV.2 Alias(p1, p2)**:
 
 $$*p1 = *p2 $$
 
@@ -263,83 +256,57 @@ Example APIs: [pointer.as_mut()](https://doc.rust-lang.org/std/primitive.pointer
 
 The property generally requires the lifetime of a raw pointer `p` must be valid for both reads and writes for the whole lifetime 'a.
 
-**psp IV.4 Lifetime(p, 'a)**:
+**psp IV.3 Lifetime(p, l)**:
 
-$$\text{lifetime}(*p)>\'a$$
+$$\text{lifetime}(*p) > l$$
 
 Example APIs: [AtomicPtr::from_ptr()](https://doc.rust-lang.org/std/sync/atomic/struct.AtomicPtr.html#method.from_ptr), [AtomicBool::from_ptr()](https://doc.rust-lang.org/std/sync/atomic/struct.AtomicBool.html#method.from_ptr), [CStr::from_ptr()](https://doc.rust-lang.org/std/ffi/struct.CStr.html#method.from_ptr)
 
-### 3.5 More
+### 3.5 Misc
 
-#### 3.5.1 Trait
-
-If a parameter type `T` implements certain traits, it can guarantee safety or mitigate specific hazards
-
-**psp V.1 Trait(T)**:
-
-$$t \in \text{trait}(T),\ t \in \lbrace \text{Copy}, \text{Unpin} \rbrace $$
-
-In particular, $\text{Copy} \in \text{trait}(T)$ ensures that alias issues or Alias(p) are mitigated, and $\text{Unpin} \in \text{trait}(T)$ avoids the hazard associated with pinned data or Pinned(p).
-
-Example APIs: [ptr::read()](https://doc.rust-lang.org/std/ptr/fn.read.html), [ptr::read_volatile()](https://doc.rust-lang.org/std/ptr/fn.read_volatile.html), [Pin::new_unchecked()](https://doc.rust-lang.org/std/pin/struct.Pin.html#method.new_unchecked)
-
-
-#### 3.5.2 Thread-Safe (Atomicity)
-Refer to the [Rustnomicon](https://doc.rust-lang.org/nomicon/send-and-sync.html), it generally relates to the implementation of the Send/Sync attribute that requires update operations of a critical memory to be exclusive. 
-
-Automatically verifying the correctness of the Send trait implementation for any type T is difficult. However, implementing the Send trait can be considered safe if T has no field of `Rc` type.
-
-**psp V.2 Send(T, NoRc)**:
-
-$$\forall field \in T,\ \text{hasrefcound}(field) = false$$
-
-The function `hasrefcount(field)` evaluates to true if the type of the field is `Rc`. If the field is also a compound type, we should recursively evaluate each sub-field.
-
-(TO FIX: This can be defined in a recursive form.)
-
-This is a conditional precondition for implementing the Send trait (NOT SURE: Is it sufficient?). Since implementations of Send trait must not introduce concurrency issues, we do not define corresponding hazards.
-
-Similar to Send(T), we can define the followin optional precondition for Sync(T):
-
-**psp V.3 Sync(T, NoInteriorMut)**:
-
-$$\forall field \in T,\ \text{interiormut}(field) = false$$
-
-The function interiormut(field) evaluates to trues if the type of the field is `Cell`, `RefCell`, or `UnsafeCell`. If the field is also a compound type, we should recursively evaluate each sub-field.
-
-(TO FIX: This should be changed to a recursive form.)
-
-Example APIs: Auto trait [Send](https://doc.rust-lang.org/std/marker/trait.Send.html), [Sync](https://doc.rust-lang.org/std/marker/trait.Sync.html)
-
-#### 3.5.3 Pin
+#### 3.5.1 Pin
 Implementing `Pin` for `!Unpin` is also valid in Rust, developers should not move the pinned object pointed by `p` after created.
 
-**psp V.4 Pinned(p)**:
+**psp V.1 Pinned(p)**:
 
-$$\forall t > \text{timeofpin},\text{addressof}(*p) = p $$
+$$\text{addressof}(*p) = p $$
 
 Example APIs: [Pin::new_unchecked()](https://doc.rust-lang.org/std/pin/struct.Pin.html#method.new_unchecked),[Pin.into_inner_unchecked()](https://doc.rust-lang.org/std/pin/struct.Pin.html#method.into_inner_unchecked), [Pin.map_unchecked()](https://doc.rust-lang.org/std/pin/struct.Pin.html#method.map_unchecked), [Pin.get_unchecked_mut()](https://doc.rust-lang.org/std/pin/struct.Pin.html#method.get_unchecked_mut), [Pin.map_unchecked_mut](https://doc.rust-lang.org/std/pin/struct.Pin.html#method.map_unchecked_mut())
 
-#### 3.5.4 File Read/Write
-
-The file discripter `fd` must be opened.
-
-**psp V.5 Opened(fd)**:
-
-$$\text{opened}(fd) = true$$
-
-Example APIs: [trait.FromRawFd::from_raw_fd()](https://doc.rust-lang.org/std/os/fd/trait.FromRawFd.html#tymethod.from_raw_fd), [UdpSocket::from_raw_socket()](https://doc.rust-lang.org/std/net/struct.UdpSocket.html#method.from_raw_socket)
-
-#### 3.5.5 Volatility
+#### 3.5.2 Volatility
 
 There are specific APIs for volatile memory access in std-lib, like [ptr::read_volatile()](https://doc.rust-lang.org/std/ptr/fn.read_volatile.html) and [ptr::write_volatile()](https://doc.rust-lang.org/std/ptr/fn.write_volatile.html). Other memory operations should require non-volatile by default.
 
-**psp V.6 NonVolatile(p)**:
+**psp V.6 Volatile(p, false)**:
 
 $$\text{volatile}(*p) = false$$
 
 Example APIs: [ptr::read()](https://doc.rust-lang.org/std/ptr/fn.read.html), [ptr::write()](https://doc.rust-lang.org/std/ptr/fn.write.html)
 
+#### 3.5.3 File Read/Write
+
+The file discripter `fd` must be opened.
+
+**psp V.3 Opened(fd)**:
+
+$$\text{opened}(fd) = true$$
+
+Example APIs: [trait.FromRawFd::from_raw_fd()](https://doc.rust-lang.org/std/os/fd/trait.FromRawFd.html#tymethod.from_raw_fd), [UdpSocket::from_raw_socket()](https://doc.rust-lang.org/std/net/struct.UdpSocket.html#method.from_raw_socket)
+
+#### 3.5.4 Trait
+
+If a parameter type `T` implements certain traits, it can guarantee safety or mitigate specific hazards
+
+**psp V.4 Trait(T, t)**:
+
+$$t \in \text{trait}(T) $$
+
+In particular, $\text{Copy} \in \text{trait}(T)$ ensures that alias issues or Alias(p) are mitigated, and $\text{Unpin} \in \text{trait}(T)$ avoids the hazard associated with pinned data or Pinned(p).
+
+Example APIs: [ptr::read()](https://doc.rust-lang.org/std/ptr/fn.read.html), [ptr::read_volatile()](https://doc.rust-lang.org/std/ptr/fn.read_volatile.html), [Pin::new_unchecked()](https://doc.rust-lang.org/std/pin/struct.Pin.html#method.new_unchecked)
+
 ### 4 Primitive Properties Yet to Be Considered
 
+- Unsafe Trait
 - [GlobalAlloc](https://doc.rust-lang.org/std/alloc/trait.GlobalAlloc.html)
+- DSTs like slice and dynamic trait objects
