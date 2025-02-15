@@ -63,13 +63,12 @@ The term valid pointer is widely used for safety descriptions in Rustdoc. Based 
 
 | Compound SP | Primitive SPs | Usage | Example API |
 |---|---|---|---|   
-| ValidPtr(p, T) |!NonZST(T) \|\| ( NonZST(T) && NonDangling(p, T) ) | precond | [read<T>(src: *const T)](https://doc.rust-lang.org/nightly/std/ptr/fn.read.html)  |       
-| ValidPtr(p, T, range) |!NonZST(T) \|\| ( NonZST(T) && Bounded(p, T, range) ) | precond | [copy<T>(src: *const T, dst: *mut T, count: usize)](https://doc.rust-lang.org/nightly/core/intrinsics/fn.copy.html) |   
-| ValidPtr2Ref(p, T) | Align(p,T) && NonDangling(p,T) && Init(p,T) && Alias(p, otherp) | precond, hazard | [as_uninit_ref(self)](https://doc.rust-lang.org/nightly/std/ptr/struct.NonNull.html#method.as_uninit_ref) | 
+| ValidPtr(p, T) |ZST(T, true) \|\| (ZST(T, false) && Dangling(p, false) ) | precond | [read<T>(src: *const T)](https://doc.rust-lang.org/nightly/std/ptr/fn.read.html)  |       
+| ValidPtr2Ref(p, T) | Align(p,T) && Dangling(p, false) && Init(p,T, 1) && Alias(p, other) | precond, hazard | [as_uninit_ref(self)](https://doc.rust-lang.org/nightly/std/ptr/struct.NonNull.html#method.as_uninit_ref) | 
 
 Besides, 
-- [Dereferenceable](https://doc.rust-lang.org/nightly/std/ptr/index.html): The property is equivalent to $\text{NonDangling}(p, T)$.
-- [Typed](https://doc.rust-lang.org/std/ptr/fn.copy.html): The property is equivalent to $\text{Init}(p, T)$ or $\text{Init}(p, T, range)$.
+- [Dereferenceable](https://doc.rust-lang.org/nightly/std/ptr/index.html): The property is equivalent to $\text{Dangling}(p, false), \text{Allocated}(p, T, len, A), and \text{InBound}(p, T, len, arange) $.
+- [Typed](https://doc.rust-lang.org/std/ptr/fn.copy.html): The property is equivalent to $\text{Init}(p, T, len)$.
 
 ## 3 Safety Property Analysis
 
