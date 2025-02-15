@@ -196,7 +196,7 @@ When converting a value `x` to an interger or performing integer arithmetic, the
 
 **psp III.2 ValidInt(exp, vrange)**: 
 
-The first parameter `exp' stands for an arithmetic expression in the form of (binOperator, operand1, operand2) or (unaryOperator, operand), where the operand can also an expression. The second parameter specifies the range of valid values, such as [isize::MIN, isize::MAX].
+The first parameter `exp` stands for an arithmetic expression in the form of `(binOperator, operand1, operand2)` or `(unaryOperator, operand)`, where the `operand` can also an `expression`. The second parameter `vrange` specifies the range of valid values, such as `[isize::MIN, isize::MAX]`.
 
 Example APIs: [f32.to_int_unchecked()](https://doc.rust-lang.org/std/primitive.f32.html#method.to_int_unchecked), [SimdFloat.to_int_unchecked()](https://doc.rust-lang.org/std/simd/num/trait.SimdFloat.html#tymethod.to_int_unchecked), [NonZero::from_mut_unchecked()](https://doc.rust-lang.org/beta/std/num/struct.NonZero.html#tymethod.from_mut_unchecked), [isize.unchecked_div()](https://doc.rust-lang.org/nightly/core/intrinsics/fn.unchecked_div.html), [u32::unchecked_shl()](https://doc.rust-lang.org/nightly/core/intrinsics/fn.unchecked_shl.html), [u32::unchecked_shr()](https://doc.rust-lang.org/nightly/core/intrinsics/fn.unchecked_shr.html), [isize.unchecked_neg()](https://doc.rust-lang.org/nightly/core/primitive.isize.html#method.unchecked_neg), [isize.add()](https://doc.rust-lang.org/std/primitive.isize.html#method.unchecked_add), [usize.add()](https://doc.rust-lang.org/std/primitive.usize.html#method.unchecked_add), [pointer.add(usize.add())](https://doc.rust-lang.org/std/primitive.pointer.html#method.add), [slice::from_raw_parts()](https://doc.rust-lang.org/nightly/std/slice/fn.from_raw_parts.html) 
 
@@ -207,8 +207,9 @@ The safety properties of String requires the bytes contained in a vector `v` sho
 
 **psp III.3 ValidString(arange)**:
 
-The parameter `arange' specifies an address range. For different APIs, the address range can be specified with `(pointer, T, length)' or a vector `v', etc.
 $$mem(arange)\in \text{utf-8}$$
+
+The parameter `arange` specifies an address range. For different APIs, the address range can be specified with `(pointer, T, length)' or a vector `v`, etc.
 
 Example APIs: [String::from_utf8_unchecked()](https://doc.rust-lang.org/std/string/struct.String.html#method.from_utf8_unchecked), [String.as_bytes_mut()](https://doc.rust-lang.org/std/string/struct.String.html#method.as_bytes_mut), [String.as_mut_vec()](https://doc.rust-lang.org/std/string/struct.String.html#method.as_mut_vec), [String::from_raw_parts()](https://doc.rust-lang.org/std/string/struct.String.html#method.from_raw_parts), [String.get_unchecked()](https://doc.rust-lang.org/std/string/struct.String.html#method.get_unchecked), [String.get_unchecked_mut()](https://doc.rust-lang.org/std/string/struct.String.html#method.get_unchecked_mut), [String.slice_unchecked()](https://doc.rust-lang.org/std/string/struct.String.html#method.slice_unchecked), [String.slice_mut_unchecked()](https://doc.rust-lang.org/std/string/struct.String.html#method.slice_mut_unchecked)
 
