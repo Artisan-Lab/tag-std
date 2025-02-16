@@ -12,6 +12,12 @@
         "ValidInt"
       ]
     },
+    "core::alloc::global::GlobalAlloc::dealloc": {
+      "sp": [
+        "AllocatorConsistency",
+        "LayoutConsistency"
+      ]
+    },
     "core::alloc::global::GlobalAlloc::alloc_zeroed": {
       "sp": [
         "ValidInt"
@@ -23,12 +29,12 @@
       ]
     },
     "core::alloc::layout::for_value_raw": {
-      "sp": [
-        "Sized",
-        "!Sized && ValidSlice",
-        "!Sized && ValidTraitObj"
-      ]
-    },
+        "sp": [
+          "Sized",
+          "!Sized && ValidSlice",
+          "!Sized && ValidTraitObj"
+        ]
+      },
     "core::alloc::Allocator::grow": {
       "sp": [
         "AllocatorConsistency",
@@ -48,6 +54,12 @@
             "AllocatorConsistency",
             "LayoutConsistency",
             "ValidInt"
+        ]
+    },
+    "core::alloc::Allocator::deallocate": {
+        "sp": [
+            "AllocatorConsistency",
+            "LayoutConsistency"
         ]
     },
     "core::alloc::deallocate": {
@@ -352,6 +364,34 @@
             "Lifetime"
         ]
     },
+    "core::intrinsics::copy": {
+        "sp": [
+            "ValidPtr",
+            "Aligned",
+            "NonVolatile",
+            "Alias",
+            "CopyTrait"
+        ]
+    },
+    "core::intrinsics::copy::copy": {
+        "sp": [
+            "ValidPtr",
+            "Aligned",
+            "NonVolatile",
+            "Alias",
+            "CopyTrait"
+        ]
+    },
+    "core::intrinsics::copy_nonoverlapping": {
+        "sp": [
+            "ValidPtr",
+            "Aligned",
+            "NonOverlap",
+            "NonVolatile",
+            "Alias",
+            "CopyTrait"
+        ]
+    },
     "core::ptr::alignment::new_unchecked": {
         "sp": [
             "ValidInt"
@@ -592,6 +632,11 @@
         ]
     },
     "core::ptr::const_ptr::non_null::sub_ptr": {
+        "sp": [
+            "ValidInt"
+        ]
+    },
+    "core::ptr::const_ptr::sub_ptr": {
         "sp": [
             "ValidInt"
         ]
@@ -1412,4 +1457,4 @@
             "Typed"
         ]
     }
-}
+}  
