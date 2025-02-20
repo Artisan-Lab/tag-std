@@ -150,6 +150,11 @@
             "ValidInt"
         ]
     },
+    "core::convert::num::FloatToInt::to_int_unchecked": {
+        "sp": [
+            "ValidInt"
+        ]
+    },
     "core::ffi::c_str::from_ptr": {
         "sp": [
             "ValidCStr",
@@ -364,6 +369,12 @@
             "Lifetime"
         ]
     },
+    "core::intrinsics::typed_swap": {
+        "sp": [
+            "ValidPtr",
+            "NonOverlap"
+        ]
+    },
     "core::intrinsics::copy": {
         "sp": [
             "ValidPtr",
@@ -411,7 +422,7 @@
     },
     "core::ptr::non_null::new_unchecked": {
         "sp": [
-            "NonNull"
+            "!Null"
         ]
     },
     "core::ptr::non_null::as_ref": {
@@ -459,6 +470,7 @@
         "sp": [
             "ValidPtr",
             "Aligned",
+            "CopyTrait",
             "Init"
         ]
     },
@@ -466,12 +478,14 @@
         "sp": [
             "ValidPtr",
             "Aligned",
+            "CopyTrait",
             "Init"
         ]
     },
     "core::ptr::non_null::read_unaligned": {
         "sp": [
             "ValidPtr",
+            "CopyTrait",
             "Init"
         ]
     },
@@ -622,13 +636,15 @@
     "core::ptr::const_ptr::offset_from": {
         "sp": [
             "Allocated",
-            "ValidInt"
+            "ValidInt",
+            "!ZST"
         ]
     },
     "core::ptr::const_ptr::byte_offset_from": {
         "sp": [
             "Allocated",
-            "ValidInt"
+            "ValidInt",
+            "!ZST"
         ]
     },
     "core::ptr::const_ptr::non_null::sub_ptr": {
@@ -767,13 +783,15 @@
     "core::ptr::mut_ptr::offset_from": {
         "sp": [
             "Allocated",
-            "ValidInt"
+            "ValidInt",
+            "!ZST"
         ]
     },
     "core::ptr::mut_ptr::byte_offset_from": {
         "sp": [
             "Allocated",
-            "ValidInt"
+            "ValidInt",
+            "!ZST"
         ]
     },
     "core::ptr::mut_ptr::sub_ptr": {
@@ -994,6 +1012,12 @@
             "Aligned"
         ]
     },
+    "core::ptr::offset": {
+        "sp": [
+            "Allocated",
+            "ValidInt"
+        ]
+    },
     "core::clone::clone_to_uninit": {
         "sp": [
             "ValidPtr",
@@ -1003,12 +1027,12 @@
 
     "core::result::unwrap_unchecked": {
         "sp": [
-            "ValidInt"
+            "Unwrap"
         ]
     },
     "core::result::unwrap_err_unchecked": {
         "sp": [
-            "ValidInt"
+            "Unwrap"
         ]
     },
     "core::slice::ascii::as_ascii_unchecked": {
@@ -1257,7 +1281,7 @@
     "alloc::boxed::from_raw": {
         "sp": [
             "AllocatorConsistency",
-            "Alias"
+            "Ownning"
         ]
     },
     "alloc::boxed::from_non_null": {
@@ -1315,7 +1339,7 @@
     "alloc::ffi::c_str::from_raw": {
         "sp": [
             "AllocatorConsistency",
-            "Alias"
+            "Ownning"
         ]
     },
     "alloc::ffi::c_str::from_vec_with_nul_unchecked": {
@@ -1455,6 +1479,187 @@
     "alloc::sync::downcast_unchecked": {
         "sp": [
             "Typed"
+        ]
+    },
+    "std::thread::from_raw": {
+        "sp": [
+            "Ownning",
+            "AllocatorConsistency"
+        ]
+    },
+    "std::collections::hash::map::get_many_unchecked_mut": {
+        "sp": [
+            "NonOverlap"
+        ]
+    },
+    "std::env::set_var": {
+        "sp": [
+            ""
+        ]
+    },
+    "std::env::remove_var": {
+        "sp": [
+            ""
+        ]
+    },
+    "std::ffi::os_str::from_encoded_bytes_unchecked": {
+        "sp": [
+            "ValidString"
+        ]
+    },
+    "std::ffi::os_str::clone_to_uninit": {
+        "sp": [
+            "ValidPtr",
+            "Aligned"
+        ]
+    },
+    "std::os::unix::net::datagram::from_raw_fd": {
+        "sp": [
+            "Opened"
+        ]
+    },
+    "std::os::unix::net::listener::from_raw_fd": {
+        "sp": [
+            "Opened"
+        ]
+    },
+    "std::os::unix::net::stream::from_raw_fd": {
+        "sp": [
+            "Opened"
+        ]
+    },
+    "std::os::unix::process::CommandExt::before_exec": {
+        "sp": [
+            ""
+        ]
+    },
+    "std::os::unix::process::pre_exec": {
+        "sp": [
+            ""
+        ]
+    },
+    "std::os::unix::process::from_raw_fd": {
+        "sp": [
+            "Opened"
+        ]
+    },
+    "std::os::linux::process::from_raw_fd": {
+        "sp": [
+            "Opened"
+        ]
+    },
+    "std::os::fd::raw::from_raw_fd": {
+        "sp": [
+            "Opened"
+        ]
+    },
+    "std::os::fd::owned::borrow_raw": {
+        "sp": [
+            "Opened",
+            "ValidInt"
+        ]
+    },
+    "std::os::fd::owned::from_raw_fd": {
+        "sp": [
+            "Opened"
+        ]
+    },
+    "std::os::fd::net::from_raw_fd": {
+        "sp": [
+            "Opened"
+        ]
+    },
+    "std::path::clone_to_uninit": {
+        "sp": [
+            "ValidPtr",
+            "Aligned"
+        ]
+    },
+    "std::sys::pal::unix::fd::from_raw_fd": {
+        "sp": [
+            "Opened"
+        ]
+    },
+    "std::sys::pal::unix::fs::from_raw_fd": {
+        "sp": [
+            "Opened"
+        ]
+    },
+    "std::sys::pal::unix::linux::pidfd::from_raw_fd": {
+        "sp": [
+            "Opened"
+        ]
+    },
+    "std::sys::pal::unix::net::from_raw_fd": {
+        "sp": [
+            "Opened"
+        ]
+    },
+    "std::sys::pal::unix::pipe::from_raw_fd": {
+        "sp": [
+            "Opened"
+        ]
+    },
+    "std::sys::pal::unix::process::process_common::pre_exec": {
+        "sp": [
+            ""
+        ]
+    },
+    "std::sys::anonymous_pipe::unix::from_raw_fd": {
+        "sp": [
+            "Opened"
+        ]
+    },
+    "std::sys::os_str::bytes::clone_to_uninit": {
+        "sp": [
+            "ValidPtr",
+            "Aligned"
+        ]
+    },
+    "std::alloc::System::deallocate": {
+        "sp": [
+            "AllocatorConsistency",
+            "LayoutConsistency"
+        ]
+    },
+    "std::alloc::System::grow": {
+        "sp": [
+            "AllocatorConsistency",
+            "LayoutConsistency",
+            "ValidInt"
+        ]
+    },
+    "std::alloc::System::grow_zeroed": {
+        "sp": [
+            "AllocatorConsistency",
+            "LayoutConsistency",
+            "ValidInt"
+        ]
+    },
+    "std::alloc::System::shrink": {
+        "sp": [
+            "AllocatorConsistency",
+            "LayoutConsistency",
+            "ValidInt"
+        ]
+    },
+    "std::raw_attribute": {
+        "sp": [
+            "Lifetime",
+            "ValidInt"
+        ]
+    },
+    "std::from_raw_handle": {
+        "sp": [
+            "Opened",
+            "ValidFreed"
+        ]
+    },
+    "std::builder::spawn_unchecked": {
+        "sp": [
+            "Lifetime",
+            "Init",
+            ""
         ]
     }
 }  
