@@ -1,3 +1,5 @@
+#![allow(unused_imports)]
+
 use proc_macro::TokenStream; 
 use quote::quote;
 use syn::{parse_macro_input, ItemFn, Meta, Lit, Expr, punctuated::Punctuated, token::Comma};
@@ -6,7 +8,7 @@ use syn::{parse_macro_input, ItemFn, Meta, Lit, Expr, punctuated::Punctuated, to
 pub fn contract(attr: TokenStream, item: TokenStream) -> TokenStream {
     let function = parse_macro_input!(item as ItemFn);
     let name = &function.sig.ident;
-    let block = &function.block; // 现有函数的代码块
+    let block = &function.block;
     let signature = &function.sig;
     let contract_content: String = attr.to_string(); 
     let output = quote! {

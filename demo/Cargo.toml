@@ -3,5 +3,9 @@ name = "demo"
 version = "0.1.0"
 edition = "2021"
 
+[features]
+default = ["contract"]
+contract = []
+
 [dependencies]
 contract = { path = "contract" }
