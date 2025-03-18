@@ -6,16 +6,16 @@ version = 4
 name = "contract"
 version = "0.1.0"
 dependencies = [
- "my_macro",
-]
-
-[[package]]
-name = "my_macro"
-version = "0.1.0"
-dependencies = [
  "proc-macro2",
  "quote",
  "syn",
+]
+
+[[package]]
+name = "demo"
+version = "0.1.0"
+dependencies = [
+ "contract",
 ]
 
 [[package]]

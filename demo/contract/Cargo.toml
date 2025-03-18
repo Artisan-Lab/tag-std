@@ -2,7 +2,7 @@
 proc-macro = true
 
 [package]
-name = "my_macro"
+name = "contract"
 version = "0.1.0"
 edition = "2021"
 
