@@ -63,9 +63,9 @@ In practice, a safety property may correspond to a precondition, an optional pre
 
 | SP in Rustdoc | Compound SP | Meaning | Usage | Example API |
 |---|---|---|---|---|   
-| [Valid Pointer](https://doc.rust-lang.org/nightly/std/ptr/index.html) | ValidPtr(p, T) | ZST(T) \|\| (!ZST(T) && !Dangling(p) ) | precond | [read<T>(src: *const T)](https://doc.rust-lang.org/nightly/std/ptr/fn.read.html)  |       
-| Dereferenceable(p, T, len, arange) | !Dangling(p) && Allocated(p, T, len, *) && InBound(p, T, len, arange) | precond | |
-| | ValidPtr2Ref(p, T) | !Dangling(p) && Init(p, T, 1) && Align(p, T) && Alias(p, *) | precond, hazard | [as_uninit_ref(self)](https://doc.rust-lang.org/nightly/std/ptr/struct.NonNull.html#method.as_uninit_ref) |
+| [Valid pointer](https://doc.rust-lang.org/nightly/std/ptr/index.html) | ValidPtr(p, T) | ZST(T) \|\| (!ZST(T) && !Dangling(p) ) | precond | [read<T>(src: *const T)](https://doc.rust-lang.org/nightly/std/ptr/fn.read.html)  |       
+| Dereferenceable | Deref(p, T, len, arange) | !Dangling(p) && Allocated(p, T, len, *) && InBound(p, T, len, arange) | precond | |
+| Valid pointer to reference conversion | Ptr2Ref(p, T) | !Dangling(p) && Init(p, T, 1) && Align(p, T) && Alias(p, *) | precond, hazard | [as_uninit_ref(self)](https://doc.rust-lang.org/nightly/std/ptr/struct.NonNull.html#method.as_uninit_ref) |
 
 ### 2.3 Synonymous SPs used in Rustdoc
 
