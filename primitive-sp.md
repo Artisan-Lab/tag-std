@@ -32,7 +32,7 @@ In practice, a safety property may correspond to a precondition, an optional pre
 
 | ID  | Primitive SP | Meaning | Usage | Example API |
 |---|---|---|---|---|
-| I.1  | Align(p, T) | p \% alignment}(T) = 0 | precond | [ptr::read()](https://doc.rust-lang.org/nightly/std/ptr/fn.read.html) | 
+| I.1  | Align(p, T) | p \% alignment(T) = 0 | precond | [ptr::read()](https://doc.rust-lang.org/nightly/std/ptr/fn.read.html) | 
 | I.2  | Sized(T) | sizeof(T) = const \&\& const >= 0 | option | [Layout::for_value_raw()](https://doc.rust-lang.org/nightly/std/alloc/struct.Layout.html#method.for_value_raw)  | 
 | I.3  | ZST(T) | sizeof(T) = 0 | precond | [NonNull.offset_from](https://doc.rust-lang.org/core/ptr/struct.NonNull.html#method.offset_from)  | 
 | I.4  | !Padding(T)  | padding(T) = 0 | precond  | [raw_eq()](https://doc.rust-lang.org/std/intrinsics/fn.raw_eq.html) |
