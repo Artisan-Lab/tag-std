@@ -45,9 +45,9 @@ In practice, a safety property may correspond to a precondition, an optional pre
 | III.2  | ValidString(arange) | mem(arange) $\in$ utf-8 |  precond | [String::from_utf8_unchecked()](https://doc.rust-lang.org/std/string/struct.String.html#method.from_utf8_unchecked) |
 |        | ValidString(arange) | - | hazard | [String.as_bytes_mut()](https://doc.rust-lang.org/std/string/struct.String.html#method.as_bytes_mut) |
 | III.3  | ValidCStr(p, len) | mem(p+len, p+len+1) = '\0' | precond|  [CStr::from_bytes_with_nul_unchecked()](https://doc.rust-lang.org/std/ffi/struct.CStr.html#method.from_bytes_with_nul_unchecked)  |
-| III.4  | Init(p, T, range)  | $\forall$ i $\in$ 0..len, mem(p + sizeof(T) * i, p + sizeof(T) * (i+1)) = valid(T) | precond | [MaybeUninit::slice_assume_init_mut()](https://doc.rust-lang.org/std/mem/union.MaybeUninit.html#method.slice_assume_init_mut) |
-|         | Init(p, T, range)  | - | hazard | [ptr::copy()](https://doc.rust-lang.org/std/ptr/fn.copy.html) |
-|         | Init(p, T, range)  | - | option | [ptr::copy()](https://doc.rust-lang.org/std/ptr/fn.copy.html) |
+| III.4  | Init(p, T, len)  | $\forall$ i $\in$ 0..len, mem(p + sizeof(T) * i, p + sizeof(T) * (i+1)) = valid(T) | precond | [MaybeUninit::slice_assume_init_mut()](https://doc.rust-lang.org/std/mem/union.MaybeUninit.html#method.slice_assume_init_mut) |
+|         | Init(p, T, len)  | - | hazard | [ptr::copy()](https://doc.rust-lang.org/std/ptr/fn.copy.html) |
+|         | Init(p, T, len)  | - | option | [ptr::copy()](https://doc.rust-lang.org/std/ptr/fn.copy.html) |
 | III.5  | Unwrap(x, T) | unwrap(x) = T | precond | [Option::unwrap_unchecked()](https://doc.rust-lang.org/std/option/enum.Option.html#method.unwrap_unchecked)  |
 | IV.1  | Ownning(p) | ownership(*p) = none | precond | [Box::from_raw()](https://doc.rust-lang.org/std/boxed/struct.Box.html#method.from_raw)  |
 | IV.2  | Alias(p1, p2) | p1 = p2 | hazard | [pointer.as_mut()](https://doc.rust-lang.org/std/primitive.pointer.html#method.as_mut) |
@@ -59,17 +59,19 @@ In practice, a safety property may correspond to a precondition, an optional pre
 
 **Note**: These primitives are not yet complete. New proposals are always welcome. 
 
-### 2.2 Consistency with RustDoc
-The term valid pointer is widely used for safety descriptions in Rustdoc. Based on the [official document](https://doc.rust-lang.org/nightly/std/ptr/index.html), we define the following compound safety properties for valid pointers. 
+### 2.2 Compound SPs used in Rustdoc
 
-| Compound SP | Primitive SPs | Usage | Example API |
-|---|---|---|---|   
-| ValidPtr(p, T) |ZST(T) \|\| (!ZST(T) && !Dangling(p) ) | precond | [read<T>(src: *const T)](https://doc.rust-lang.org/nightly/std/ptr/fn.read.html)  |       
-| ValidPtr2Ref(p, T) | !Dangling(p) && Init(p,T, 1) && Align(p,T) && Alias(p, other) | precond, hazard | [as_uninit_ref(self)](https://doc.rust-lang.org/nightly/std/ptr/struct.NonNull.html#method.as_uninit_ref) | 
+| SP in Rustdoc | Compound SP | Meaning | Usage | Example API |
+|---|---|---|---|---|   
+| [Valid Pointer](https://doc.rust-lang.org/nightly/std/ptr/index.html) | ValidPtr(p, T) | ZST(T) \|\| (!ZST(T) && !Dangling(p) ) | precond | [read<T>(src: *const T)](https://doc.rust-lang.org/nightly/std/ptr/fn.read.html)  |       
+| Dereferenceable(p, T, len, arange) | !Dangling(p) && Allocated(p, T, len, *) && InBound(p, T, len, arange) | precond | |
+| | ValidPtr2Ref(p, T) | !Dangling(p) && Init(p, T, 1) && Align(p, T) && Alias(p, *) | precond, hazard | [as_uninit_ref(self)](https://doc.rust-lang.org/nightly/std/ptr/struct.NonNull.html#method.as_uninit_ref) |
 
-Besides, 
-- [Dereferenceable](https://doc.rust-lang.org/nightly/std/ptr/index.html): The property is equivalent to $\text{!Dangling}(p), \text{Allocated}(p, T, len, A)$, and $\text{InBound}(p, T, len, arange) $.
-- [Typed](https://doc.rust-lang.org/std/ptr/fn.copy.html): The property is equivalent to $\text{Init}(p, T, len)$.
+### 2.3 Synonymous SPs used in Rustdoc
+
+| SP in Rustdoc | Primitive SP | 
+|---|---|
+| [Typed](https://doc.rust-lang.org/std/ptr/fn.copy.html) | Init(p, T, len) |
 
 ## 3 Safety Property Details
 
