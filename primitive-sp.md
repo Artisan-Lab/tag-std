@@ -37,10 +37,9 @@ In practice, a safety property may correspond to a precondition, an optional pre
 | I.3  | ZST(T) | sizeof(T) = 0 | precond | [NonNull::offset_from](https://doc.rust-lang.org/core/ptr/struct.NonNull.html#method.offset_from)  | 
 | I.4  | !Padding(T)  | padding(T) = 0 | precond  | [intrinsics::raw_eq()](https://doc.rust-lang.org/std/intrinsics/fn.raw_eq.html) |
 | II.1  | !Null(p) | p!= 0 | precond  | [NonNull::new_unchecked()](https://doc.rust-lang.org/std/ptr/struct.NonNull.html#method.new_unchecked) |
-| II.2  | !Dangling(p) | allocator(p) != none | precond | [ptr::offset()](https://doc.rust-lang.org/beta/std/primitive.pointer.html#method.offset) |
-| II.3 | Allocated(p, T, len, A) | $\forall$ i $\in$ 0..sizeof(T)*len, allocator(p+i) = A | precond | [Box::from_raw_in()](https://doc.rust-lang.org/std/boxed/struct.Box.html#method.from_raw_in) |
-| II.4  | InBound(p, T, len, arange) | [p, p+ sizeof(T) * len) $\in$ arrange  | precond | [ptr::offset()](https://doc.rust-lang.org/std/primitive.pointer.html#method.offset)  |
-| II.5  | !Overlap(dst, src, T, len) | \|dst - src\| $\ge$ sizeof(T) * len | precond | [ptr::copy_nonoverlapping()](https://doc.rust-lang.org/std/ptr/fn.copy_nonoverlapping.html)  |
+| II.2 | Allocated(p, T, len, A) | $\forall$ i $\in$ 0..sizeof(T)*len, allocator(p+i) = A | precond | [Box::from_raw_in()](https://doc.rust-lang.org/std/boxed/struct.Box.html#method.from_raw_in) |
+| II.3  | InBound(p, T, len, arange) | [p, p+ sizeof(T) * len) $\in$ arrange  | precond | [ptr::offset()](https://doc.rust-lang.org/std/primitive.pointer.html#method.offset)  |
+| II.4  | !Overlap(dst, src, T, len) | \|dst - src\| $\ge$ sizeof(T) * len | precond | [ptr::copy_nonoverlapping()](https://doc.rust-lang.org/std/ptr/fn.copy_nonoverlapping.html)  |
 | III.1  | ValidInt(exp, vrange)  | exp $\in$ vrange | precond | [usize::add()](https://doc.rust-lang.org/std/primitive.usize.html#method.unchecked_add)  |
 | III.2  | ValidString(arange) | mem(arange) $\in$ utf-8 |  precond | [String::from_utf8_unchecked()](https://doc.rust-lang.org/std/string/struct.String.html#method.from_utf8_unchecked) |
 |        | ValidString(arange) | - | hazard | [String::as_bytes_mut()](https://doc.rust-lang.org/std/string/struct.String.html#method.as_bytes_mut) |
@@ -63,15 +62,16 @@ In practice, a safety property may correspond to a precondition, an optional pre
 
 | SP in Rustdoc | Compound SP | Meaning | Usage | Example API |
 |---|---|---|---|---|   
-| [Valid pointer](https://doc.rust-lang.org/nightly/std/ptr/index.html) | ValidPtr(p, T) | ZST(T) \|\| (!ZST(T) && !Dangling(p) ) | precond | [ptr::read<T>()](https://doc.rust-lang.org/nightly/std/ptr/fn.read.html)  |       
-| Dereferenceable | Deref(p, T, len, arange) | !Dangling(p) && Allocated(p, T, len, *) && InBound(p, T, len, arange) | precond | |
-| Valid pointer to reference conversion | Ptr2Ref(p, T) | !Dangling(p) && Init(p, T, 1) && Align(p, T) && Alias(p, *) | precond, hazard | [ptr::as_uninit_ref()](https://doc.rust-lang.org/nightly/std/ptr/struct.NonNull.html#method.as_uninit_ref) |
+| [Valid pointer](https://doc.rust-lang.org/nightly/std/ptr/index.html) | ValidPtr(p, T, len, arange) | ZST(T) \|\| (!ZST(T) && Deref(p, T, len, arange) ) | precond | [ptr::read<T>()](https://doc.rust-lang.org/nightly/std/ptr/fn.read.html)  |       
+| Dereferenceable | Deref(p, T, len, arange) | Allocated(p, T, len, *) && InBound(p, T, len, arange) | precond | |
+| Valid pointer to reference conversion | Ptr2Ref(p, T) | Allocated(p, T, 1, *) && Init(p, T, 1) && Align(p, T) && Alias(p, *) | precond, hazard | [ptr::as_uninit_ref()](https://doc.rust-lang.org/nightly/std/ptr/struct.NonNull.html#method.as_uninit_ref) |
 
 ### 2.3 Synonymous SPs used in Rustdoc
 
 | SP in Rustdoc | Primitive SP | 
 |---|---|
 | [Typed](https://doc.rust-lang.org/std/ptr/fn.copy.html) | Init(p, T, len) |
+| Non-Dangling | Allocated(p, T, len, A) |
 
 ## 3 Safety Property Details
 
@@ -137,21 +137,9 @@ $$p != 0$$
 Example APIs: [NonNull::new_unchecked()](https://doc.rust-lang.org/std/ptr/struct.NonNull.html#method.new_unchecked), [Box::from_non_null()](https://doc.rust-lang.org/std/boxed/struct.Box.html#method.from_non_null)
 
 #### 3.2.1 Allocation
-To determine whether the memory address referenced by a pointer is available for use or has been allocated by the system (either on the heap or the stack), we consider the related safety requirement: non-dangling. This means the pointer must refer to a valid memory address that has not been deallocated on the heap or remains valid on the stack.
+To determine whether the memory address referenced by a pointer is available for use or has been allocated by the system (either on the heap or the stack), we consider the related safety requirement: non-dangling or allocated. This means the pointer must refer to a valid memory address that has not been deallocated on the heap or remains valid on the stack. In practice, an API may require that the entire memory region of length `len` for type `T`, as pointed to by `p` of type `*mut T`, be allocated. Besides, some APIs may require the allocator to be consistent, i.e., the memory address pointed by the pointer `p` should be allocated by a specific allocator `A`.
 
-In practice, an API may require that a pointer `p` to a type `T` must satisfy the non-dangling property.
-
-**psp II.2 Dangling(p, false)**: 
-
-$$\text{allocator}(p) \neq null $$ 
-
-**Proposition 1**: Dangling(p, false) implies NonNull(p, false).
-
-Example APIs: [ptr::offset()](https://doc.rust-lang.org/beta/std/primitive.pointer.html#method.offset), [Box::from_raw()](https://doc.rust-lang.org/beta/std/boxed/struct.Box.html#method.from_raw)
-
-Besides, some properties may require the allocator to be consistent, i.e., the memory address pointed by the pointer `p` should be allocated by a specific allocator `A`.
-
-**psp II.3 Allocated(p, T, len, A)**: 
+**psp II.2 Allocated(p, T, len, A)**: 
 
 $$\forall i \in 0..sizeof(T)*len, allocator(p+i) = A $$
 
@@ -159,14 +147,11 @@ Example APIs: [Arc::from_raw_in()](https://doc.rust-lang.org/std/sync/struct.Arc
 
 If the allocator `A` is unspecified, it typically defaults to the global allocator.
 
-Example APIs: [Arc::from_raw()](https://doc.rust-lang.org/std/sync/struct.Arc.html#method.from_raw), [Box::from_raw()](https://doc.rust-lang.org/std/boxed/struct.Box.html#method.from_raw)
-
-
-**Proposition 2** Allocated(p, T, len, A) implies Dangling(p, false).
+Example APIs: [Arc::from_raw()](https://doc.rust-lang.org/std/sync/struct.Arc.html#method.from_raw), [Box::from_raw()](https://doc.rust-lang.org/std/boxed/struct.Box.html#method.from_raw), [ptr::offset()](https://doc.rust-lang.org/beta/std/primitive.pointer.html#method.offset), [Box::from_raw()](https://doc.rust-lang.org/beta/std/boxed/struct.Box.html#method.from_raw)
 
 Bounded access requires that the pointer access with respet to an offset stays within the bound. This ensures that dereferencing the pointer yields a value (which may not yet be initialized) of the expected type T. 
 
-**psp II.4 InBound(p, T, len, arange)**: 
+**psp II.3 InBound(p, T, len, arange)**: 
 
 $$[p, p+ sizeof(T) * len) \in arrange $$
 
@@ -174,7 +159,7 @@ Example APIs: [ptr::offset()](https://doc.rust-lang.org/std/primitive.pointer.ht
 
 A safety property may require the two pointers do not overlap with respect to `T` or  $T*count$:
 
-**psp II.5 !Overlap(dst, src, T, len)**: 
+**psp II.4 !Overlap(dst, src, T, len)**: 
 
 $$|dst - src| > \text{sizeof}(T) * len $$
 
