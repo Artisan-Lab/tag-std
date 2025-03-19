@@ -1,10 +1,11 @@
 # Privimitive Safety Properties for Rust Contract Design (Draft)
 
-This document presents a draft outlining the fundamental safety properties essential for contract definition. The current documentation on API safety descriptions in the standard library remains ad hoc. For example, the term `valid pointer` is frequently used, but the validity of a pointer depends on the context. In practice, a valid pointer may need to satisfy several fundamental conditions, such as being non-null, not dangling, and pointing to memory properly aligned and initialized for type T. It is worth noting that the Rust community is making progress toward standardizing contract design, as highlighted in the links below. We believe this proposal will contribute to the development and refinement of contract specifications.
+This document presents a draft outlining the fundamental safety properties essential for contract definition. The current documentation on API safety descriptions in the standard library remains ad hoc. For example, the term `valid pointer` is frequently used, but the validity of a pointer depends on the context, as explained in [Rustdoc](https://doc.rust-lang.org/std/ptr/index.html). It might be difficult for developers to interpret the exact safety requirements of an API if they are not familiar with it. We hope to provide clearer and non-ambiguous safety descriptions for developers. Using pointer validity as an example, a pointer may need to satisfy several fundamental requirements (which cannot be further broken down) to be valid, such as being non-null, not dangling, and pointing to memory that is properly aligned and initialized for type T. It is worth noting that the Rust community is making progress toward standardizing contract design, as highlighted in the links below. We believe this proposal will contribute to the development and refinement of contract specifications.
 
-[Rust Contracts RFC (draft)](https://github.com/rust-lang/lang-team/blob/master/design-meeting-minutes/2022-11-25-contracts.md)  
-[MCP759](https://github.com/rust-lang/compiler-team/issues/759)  
 [std-contracts-2025h1](https://rust-lang.github.io/rust-project-goals/2025h1/std-contracts.html)  
+[MCP759](https://github.com/rust-lang/compiler-team/issues/759)  
+[Rust Contracts RFC (draft)](https://github.com/rust-lang/lang-team/blob/master/design-meeting-minutes/2022-11-25-contracts.md)  
+
 
 ## 1 Overall Idea
 In contract design, safety properties can be categorized into two types:
