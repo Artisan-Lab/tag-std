@@ -30,32 +30,33 @@ In practice, a safety property may correspond to a precondition, an optional pre
 
 ### 2.1 Summary of Primitive SPs
 
-| ID  | Primitive SP | Usage | Example API |
-|---|---|---|---|
-| I.1  | Align(p, T) | precond  | [ptr::read()](https://doc.rust-lang.org/nightly/std/ptr/fn.read.html) | 
-| I.2  | Sized(T) | option | [Layout::for_value_raw()](https://doc.rust-lang.org/nightly/std/alloc/struct.Layout.html#method.for_value_raw)  | 
-| I.3  | !ZST(T) | precond | [NonNull.offset_from](https://doc.rust-lang.org/core/ptr/struct.NonNull.html#method.offset_from)  | 
-| I.4  | !Padding(T)  | precond  | [raw_eq()](https://doc.rust-lang.org/std/intrinsics/fn.raw_eq.html) |
-| II.1  | !Null(p) | precond  | [NonNull::new_unchecked()](https://doc.rust-lang.org/std/ptr/struct.NonNull.html#method.new_unchecked) |
-| II.2  | !Dangling(p) | precond| [ptr::offset()](https://doc.rust-lang.org/beta/std/primitive.pointer.html#method.offset) |
-| II.3 | Allocated(p, T, len, A) | precond | [Box::from_raw_in()](https://doc.rust-lang.org/std/boxed/struct.Box.html#method.from_raw_in) |
-| II.4  | InBound(p, T, len, arange) | precond | [ptr::offset()](https://doc.rust-lang.org/std/primitive.pointer.html#method.offset)  |
-| II.5  | !Overlap(dst, src, T, len) | precond | [ptr::copy_nonoverlapping()](https://doc.rust-lang.org/std/ptr/fn.copy_nonoverlapping.html)  |
-| III.1  | Init(p, T, range)  | precond | [MaybeUninit::slice_assume_init_mut()](https://doc.rust-lang.org/std/mem/union.MaybeUninit.html#method.slice_assume_init_mut) |
-|         | Init(p, T, range)  | hazard | [ptr::copy()](https://doc.rust-lang.org/std/ptr/fn.copy.html) |
-|         | Init(p, T, range)  | option | [ptr::copy()](https://doc.rust-lang.org/std/ptr/fn.copy.html) |
-| III.2  | ValidInt(exp, vrange)  | precond | [usize.add()](https://doc.rust-lang.org/std/primitive.usize.html#method.unchecked_add)  |
-| III.3  | ValidString(arange) | precond | [String::from_utf8_unchecked()](https://doc.rust-lang.org/std/string/struct.String.html#method.from_utf8_unchecked) |
-|     | ValidString(arange) | hazard | [String.as_bytes_mut()](https://doc.rust-lang.org/std/string/struct.String.html#method.as_bytes_mut) |
-| III.4  | ValidCStr(p, len) |  precond|  [CStr::from_bytes_with_nul_unchecked()](https://doc.rust-lang.org/std/ffi/struct.CStr.html#method.from_bytes_with_nul_unchecked)  |
-| III.5  | Unwrap(x, T)  | precond | [Option::unwrap_unchecked()](https://doc.rust-lang.org/std/option/enum.Option.html#method.unwrap_unchecked)  |
-| IV.1  | Ownning(p)  | precond | [Box::from_raw()](https://doc.rust-lang.org/std/boxed/struct.Box.html#method.from_raw)  |
-| IV.2  | Alias(p1, p2)  | hazard | [pointer.as_mut()](https://doc.rust-lang.org/std/primitive.pointer.html#method.as_mut) |
-| IV.3  | Alive(p, l)  | precond | [AtomicPtr::from_ptr()](https://doc.rust-lang.org/std/sync/atomic/struct.AtomicPtr.html#method.from_ptr)  |
-| V.1  | Pinned(p) | hazard | [Pin::new_unchecked()](https://doc.rust-lang.org/std/pin/struct.Pin.html#method.new_unchecked)  |
-| V.2  | !Volatile(p) | precond | [ptr::read()](https://doc.rust-lang.org/std/ptr/fn.read.html) |
-| V.3  | Opened(fd) | precond | [trait.FromRawFd::from_raw_fd()](https://doc.rust-lang.org/std/os/fd/trait.FromRawFd.html#tymethod.from_raw_fd)  |
-| V.4  | Trait(T, trait)  | option | [ptr::read()](https://doc.rust-lang.org/std/ptr/fn.read.html)  |
+| ID  | Primitive SP | Meaning | Usage | Example API |
+|---|---|---|---|---|
+| I.1  | Align(p, T) | $$p \\% \text{alignment}(T) = 0$$ | precond | [ptr::read()](https://doc.rust-lang.org/nightly/std/ptr/fn.read.html) | 
+| I.2  | Sized(T) | $$\text{sizeof}(T) = const\ \\&\\&\ const >= 0$$ | option | [Layout::for_value_raw()](https://doc.rust-lang.org/nightly/std/alloc/struct.Layout.html#method.for_value_raw)  | 
+| I.3  | ZST(T) | $$\text{sizeof}(T) = 0$$ | precond | [NonNull.offset_from](https://doc.rust-lang.org/core/ptr/struct.NonNull.html#method.offset_from)  | 
+| I.4  | !Padding(T)  | $$\text{padding}(T) = 0$$ | precond  | [raw_eq()](https://doc.rust-lang.org/std/intrinsics/fn.raw_eq.html) |
+| II.1  | !Null(p) | $$p!= 0$$ | precond  | [NonNull::new_unchecked()](https://doc.rust-lang.org/std/ptr/struct.NonNull.html#method.new_unchecked) |
+| II.2  | !Dangling(p) | $$allocator(p) != none$$ | precond | [ptr::offset()](https://doc.rust-lang.org/beta/std/primitive.pointer.html#method.offset) |
+| II.3 | Allocated(p, T, len, A) | $$\forall i \in 0..sizeof(T)*len, allocator(p+i) = A $$ | precond | [Box::from_raw_in()](https://doc.rust-lang.org/std/boxed/struct.Box.html#method.from_raw_in) |
+| II.4  | InBound(p, T, len, arange) | $$[p, p+ \text{sizeof}(T) * len) \in arrange $$ | precond | [ptr::offset()](https://doc.rust-lang.org/std/primitive.pointer.html#method.offset)  |
+| II.5  | !Overlap(dst, src, T, len) | $$|dst - src| > \text{sizeof}(T) * len $$ | precond | [ptr::copy_nonoverlapping()](https://doc.rust-lang.org/std/ptr/fn.copy_nonoverlapping.html)  |
+| III.1  | ValidInt(exp, vrange)  | $$exp \in vrange$$| precond | [usize.add()](https://doc.rust-lang.org/std/primitive.usize.html#method.unchecked_add)  |
+| III.2  | ValidString(arange) | $$\text{mem}(arange)\in \text{utf-8}$$ |  precond | [String::from_utf8_unchecked()](https://doc.rust-lang.org/std/string/struct.String.html#method.from_utf8_unchecked) |
+|        | ValidString(arange) | - | hazard | [String.as_bytes_mut()](https://doc.rust-lang.org/std/string/struct.String.html#method.as_bytes_mut) |
+| III.3  | ValidCStr(p, len) | $$\text{mem}(p+len, p+len+1) = '\0' $$ | precond|  [CStr::from_bytes_with_nul_unchecked()](https://doc.rust-lang.org/std/ffi/struct.CStr.html#method.from_bytes_with_nul_unchecked)  |
+| III.4  | Init(p, T, range)  | $$\forall i \in 0..len, \text{mem}(p + \text{sizeof}(T) * i, p + \text{sizeof}(T) * (i+1)) = ValidObj(T) $$ | precond | [MaybeUninit::slice_assume_init_mut()](https://doc.rust-lang.org/std/mem/union.MaybeUninit.html#method.slice_assume_init_mut) |
+|         | Init(p, T, range)  | - | hazard | [ptr::copy()](https://doc.rust-lang.org/std/ptr/fn.copy.html) |
+|         | Init(p, T, range)  | - | option | [ptr::copy()](https://doc.rust-lang.org/std/ptr/fn.copy.html) |
+| III.5  | Unwrap(x, T) | $$\text{unwrap}(x) = target,\ s.t., \text{typeof}(target) \in \lbrace \text{Ok(T)}, \text{Err(E)}, \text{Some(T)}, \text{None} \rbrace $$ | precond | [Option::unwrap_unchecked()](https://doc.rust-lang.org/std/option/enum.Option.html#method.unwrap_unchecked)  |
+| IV.1  | Ownning(p) | $$\text{ownership}(*p) = none $$
+| precond | [Box::from_raw()](https://doc.rust-lang.org/std/boxed/struct.Box.html#method.from_raw)  |
+| IV.2  | Alias(p1, p2) | $$p1 = p2 $$ | hazard | [pointer.as_mut()](https://doc.rust-lang.org/std/primitive.pointer.html#method.as_mut) |
+| IV.3  | Alive(p, l) | $$\text{lifetime}(*p) \ge l$$ | precond | [AtomicPtr::from_ptr()](https://doc.rust-lang.org/std/sync/atomic/struct.AtomicPtr.html#method.from_ptr)  |
+| V.1  | Pinned(p) | $$ &*p = p $$ | hazard | [Pin::new_unchecked()](https://doc.rust-lang.org/std/pin/struct.Pin.html#method.new_unchecked)  |
+| V.2  | !Volatile(p) | $$\text{volatile}(*p) = false$$ | precond | [ptr::read()](https://doc.rust-lang.org/std/ptr/fn.read.html) |
+| V.3  | Opened(fd) | $$\text{opened}(fd) = true$$ | precond | [trait.FromRawFd::from_raw_fd()](https://doc.rust-lang.org/std/os/fd/trait.FromRawFd.html#tymethod.from_raw_fd)  |
+| V.4  | Trait(T, trait) | $$trait \in \text{trait}(T) $$ | option | [ptr::read()](https://doc.rust-lang.org/std/ptr/fn.read.html)  |
 
 **Note**: These primitives are not yet complete. New proposals are always welcome. 
 
@@ -71,7 +72,7 @@ Besides,
 - [Dereferenceable](https://doc.rust-lang.org/nightly/std/ptr/index.html): The property is equivalent to $\text{!Dangling}(p), \text{Allocated}(p, T, len, A)$, and $\text{InBound}(p, T, len, arange) $.
 - [Typed](https://doc.rust-lang.org/std/ptr/fn.copy.html): The property is equivalent to $\text{Init}(p, T, len)$.
 
-## 3 Safety Property Analysis
+## 3 Safety Property Details
 
 ### 3.1 Layout
 Refer to the document of [type-layout](https://doc.rust-lang.org/reference/type-layout.html), there are three components related to layout: alignment, size, and padding.
@@ -83,7 +84,7 @@ In practice, we generally require a pointer `p` of type `*T` to be aligned. This
 
 **psp I.1 Align(p, T)**: 
 
-$$p \\% \text{alignment}(T) = 0$$ 
+$$p \\% \text{alignment}(T) = 0$$
 
 Example APIs: [ptr::read()](https://doc.rust-lang.org/nightly/std/ptr/fn.read.html), [ptr::write()](https://doc.rust-lang.org/std/ptr/fn.write.html), [Vec::from_raw_parts()](https://doc.rust-lang.org/beta/std/vec/struct.Vec.html#method.from_raw_parts)
 
@@ -151,7 +152,7 @@ Besides, some properties may require the allocator to be consistent, i.e., the m
 
 **psp II.3 Allocated(p, T, len, A)**: 
 
-$$\forall i \in 0..len, \text{allocator}(p+sizeof(T)*i) = A $$
+$$\forall i \in 0..sizeof(T)*len, allocator(p+i) = A $$
 
 Example APIs: [Arc::from_raw_in()](https://doc.rust-lang.org/std/sync/struct.Arc.html#method.from_raw_in), [Box::from_raw_in()](https://doc.rust-lang.org/std/boxed/struct.Box.html#method.from_raw_in)
 
@@ -166,7 +167,7 @@ Bounded access requires that the pointer access with respet to an offset stays w
 
 **psp II.4 InBound(p, T, len, arange)**: 
 
-$$[p, p+ sizeof(T) * (len+1)) \in arrange $$
+$$[p, p+ sizeof(T) * len) \in arrange $$
 
 Example APIs: [ptr::offset()](https://doc.rust-lang.org/std/primitive.pointer.html#method.offset), [ptr::copy()](https://doc.rust-lang.org/std/ptr/fn.copy.html) 
 
@@ -174,39 +175,28 @@ A safety property may require the two pointers do not overlap with respect to `T
 
 **psp II.5 !Overlap(dst, src, T, len)**: 
 
-$$|dst - src| > \text{sizeof}(T) * count $$
+$$|dst - src| > \text{sizeof}(T) * len $$
 
 Example APIs: [ptr::copy_from()](https://doc.rust-lang.org/std/ptr/fn.copy.html), [ptr.copy()](https://doc.rust-lang.org/std/ptr/fn.copy_from.html), [ptr::copy_nonoverlapping()](https://doc.rust-lang.org/std/ptr/fn.copy_nonoverlapping.html), [ptr.copy_from_nonoverlapping](https://doc.rust-lang.org/core/primitive.pointer.html#method.copy_from_nonoverlapping)
  
 ### 3.3. Content
 
-#### 3.3.1 Initialization
-A safety property may require a range of memory pointed by a pointer `p` is initialized. This range of memory can be independent of type T.
-
-**psp III.1 Init(p, T, len)**:
-
-$$\forall i \in 0..len, \text{men}(p + \text{sizeof}(T) * i, p + \text{sizeof}(T) * (i+1)) = ValidObj(T) $$
-
-Note that this property may serve as either preconditions (e.g., [MaybeUninit::slice_assume_init_mut()](https://doc.rust-lang.org/std/mem/union.MaybeUninit.html#method.slice_assume_init_mut)) or optional requirements and hazards (e.g., [ptr::copy()](https://doc.rust-lang.org/std/ptr/fn.copy.html).
-
-Example APIs: [BorrowedBuf::set_init()](https://doc.rust-lang.org/nightly/std/io/struct.BorrowedBuf.html#method.set_init), [MaybeUninit.assume_init()](https://doc.rust-lang.org/std/mem/union.MaybeUninit.html#method.assume_init), [Box::assume_init()](https://doc.rust-lang.org/std/boxed/struct.Box.html#method.assume_init)[MaybeUninit::slice_assume_init_mut()](https://doc.rust-lang.org/std/mem/union.MaybeUninit.html#method.slice_assume_init_mut), [ptr::copy()](https://doc.rust-lang.org/std/ptr/fn.copy.html), [ptr::copy_nonoverlapping](https://doc.rust-lang.org/std/ptr/fn.copy_nonoverlapping.html), [NonNull.copy_from](https://doc.rust-lang.org/std/ptr/struct.NonNull.html#method.copy_from)
-
-#### 3.3.2 Integer
+#### 3.3.1 Integer
 
 When converting a value `x` to an interger or performing integer arithmetic, the result should not be greater than the max or less the min value that can be represented by the integer type `T`.
 
-**psp III.2 ValidInt(exp, vrange)**: 
+**psp III.1 ValidInt(exp, vrange)**: 
 
 The first parameter `exp` stands for an arithmetic expression in the form of `(binOperator, operand1, operand2)` or `(unaryOperator, operand)`, where the `operand` can also an `expression`. The second parameter `vrange` specifies the range of valid values, such as `[isize::MIN, isize::MAX]`.
 
 Example APIs: [f32.to_int_unchecked()](https://doc.rust-lang.org/std/primitive.f32.html#method.to_int_unchecked), [SimdFloat.to_int_unchecked()](https://doc.rust-lang.org/std/simd/num/trait.SimdFloat.html#tymethod.to_int_unchecked), [NonZero::from_mut_unchecked()](https://doc.rust-lang.org/beta/std/num/struct.NonZero.html#tymethod.from_mut_unchecked), [isize.unchecked_div()](https://doc.rust-lang.org/nightly/core/intrinsics/fn.unchecked_div.html), [u32::unchecked_shl()](https://doc.rust-lang.org/nightly/core/intrinsics/fn.unchecked_shl.html), [u32::unchecked_shr()](https://doc.rust-lang.org/nightly/core/intrinsics/fn.unchecked_shr.html), [isize.unchecked_neg()](https://doc.rust-lang.org/nightly/core/primitive.isize.html#method.unchecked_neg), [isize.add()](https://doc.rust-lang.org/std/primitive.isize.html#method.unchecked_add), [usize.add()](https://doc.rust-lang.org/std/primitive.usize.html#method.unchecked_add), [pointer.add(usize.add())](https://doc.rust-lang.org/std/primitive.pointer.html#method.add), [slice::from_raw_parts()](https://doc.rust-lang.org/nightly/std/slice/fn.from_raw_parts.html) 
 
-#### 3.3.3 String
+#### 3.3.2 String
 There are two types of string in Rust, [String](https://doc.rust-lang.org/std/string/struct.String.htm) which requires valid utf-8 format, and [CStr](https://doc.rust-lang.org/std/ffi/struct.CStr.html) for interacting with foreign functions.
 
 The safety properties of String requires the bytes contained in a vector `v` should be a valid utf-8.
 
-**psp III.3 ValidString(arange)**:
+**psp III.2 ValidString(arange)**:
 
 $$mem(arange)\in \text{utf-8}$$
 
@@ -216,11 +206,22 @@ Example APIs: [String::from_utf8_unchecked()](https://doc.rust-lang.org/std/stri
 
 We have to label the hazard of the APIs [String.as_bytes_mut()](https://doc.rust-lang.org/std/string/struct.String.html#method.as_bytes_mut) and [String.as_mut_vec()](https://doc.rust-lang.org/std/string/struct.String.html#method.as_mut_vec) with ValidString(v) because mutating the resulting bytes or vector may lead to invalid utf-8.
 
-**psp III.4 ValidCStr(p, len)**:
+**psp III.3 ValidCStr(p, len)**:
 
-$$mem(p+len, p+len+1) = \text{null} $$ 
+$$mem(p+len, p+len+1) = '\0' $$ 
 
 Example APIs: [CStr::from_bytes_with_nul_unchecked()](https://doc.rust-lang.org/std/ffi/struct.CStr.html#method.from_bytes_with_nul_unchecked), [CStr::from_ptr()](https://doc.rust-lang.org/std/ffi/struct.CStr.html#method.from_ptr)
+
+#### 3.3.3 Initialization
+A safety property may require a range of memory pointed by a pointer `p` is initialized. This range of memory can be independent of type T.
+
+**psp III.4 Init(p, T, len)**:
+
+$$\forall i \in 0..len, \text{men}(p + \text{sizeof}(T) * i, p + \text{sizeof}(T) * (i+1)) = ValidObj(T) $$
+
+Note that this property may serve as either preconditions (e.g., [MaybeUninit::slice_assume_init_mut()](https://doc.rust-lang.org/std/mem/union.MaybeUninit.html#method.slice_assume_init_mut)) or optional requirements and hazards (e.g., [ptr::copy()](https://doc.rust-lang.org/std/ptr/fn.copy.html).
+
+Example APIs: [BorrowedBuf::set_init()](https://doc.rust-lang.org/nightly/std/io/struct.BorrowedBuf.html#method.set_init), [MaybeUninit.assume_init()](https://doc.rust-lang.org/std/mem/union.MaybeUninit.html#method.assume_init), [Box::assume_init()](https://doc.rust-lang.org/std/boxed/struct.Box.html#method.assume_init)[MaybeUninit::slice_assume_init_mut()](https://doc.rust-lang.org/std/mem/union.MaybeUninit.html#method.slice_assume_init_mut), [ptr::copy()](https://doc.rust-lang.org/std/ptr/fn.copy.html), [ptr::copy_nonoverlapping](https://doc.rust-lang.org/std/ptr/fn.copy_nonoverlapping.html), [NonNull.copy_from](https://doc.rust-lang.org/std/ptr/struct.NonNull.html#method.copy_from)
 
 #### 3.3.4 Unwrap
 
@@ -228,7 +229,7 @@ Such safety properties relate to the monadic types, including [Option](https://d
 
 **psp III.5 Unwrap(x, T, target)**:
 
-$$\text{unwrap}(x) = target,\ s.t., \text{typeof}(target) \in \lbrace \text{Ok(T)}, \text{Err}, \text{Some(T)}, \text{None} \rbrace $$
+$$\text{unwrap}(x) = target,\ s.t., \text{typeof}(target) \in \lbrace \text{Ok(T)}, \text{Err(E)}, \text{Some(T)}, \text{None} \rbrace $$
 
 Example APIs: [Option::unwrap_unchecked()](https://doc.rust-lang.org/std/option/enum.Option.html#method.unwrap_unchecked), [Result::unwrap_unchecked()](https://doc.rust-lang.org/core/result/enum.Result.html#method.unwrap_unchecked), [Result::unwrap_err_unchecked()](https://doc.rust-lang.org/core/result/enum.Result.html#method.unwrap_err_unchecked)
 
@@ -249,7 +250,7 @@ There are six types of pointers to a value x, depending on the mutabality and ow
 
 **psp IV.2 Alias(p1, p2)**:
 
-$$*p1 = *p2 $$
+$$p1 = p2 $$
 
 Example APIs: [pointer.as_mut()](https://doc.rust-lang.org/std/primitive.pointer.html#method.as_mut), [pointer.as_ref()](https://doc.rust-lang.org/std/primitive.pointer.html#method.as_ref-1), [pointer.as_ref_unchecked()](https://doc.rust-lang.org/std/primitive.pointer.html#method.as_ref_unchecked-1)
 
@@ -259,7 +260,7 @@ The property generally requires the lifetime of a raw pointer `p` must be valid 
 
 **psp IV.3 Alive(p, l)**:
 
-$$\text{lifetime}(*p) > l$$
+$$\text{lifetime}(*p) \ge l$$
 
 Example APIs: [AtomicPtr::from_ptr()](https://doc.rust-lang.org/std/sync/atomic/struct.AtomicPtr.html#method.from_ptr), [AtomicBool::from_ptr()](https://doc.rust-lang.org/std/sync/atomic/struct.AtomicBool.html#method.from_ptr), [CStr::from_ptr()](https://doc.rust-lang.org/std/ffi/struct.CStr.html#method.from_ptr)
 
@@ -270,7 +271,7 @@ Implementing `Pin` for `!Unpin` is also valid in Rust, developers should not mov
 
 **psp V.1 Pinned(p)**:
 
-$$\text{addressof}(*p) = p $$
+$$ &*p = p $$
 
 Example APIs: [Pin::new_unchecked()](https://doc.rust-lang.org/std/pin/struct.Pin.html#method.new_unchecked),[Pin.into_inner_unchecked()](https://doc.rust-lang.org/std/pin/struct.Pin.html#method.into_inner_unchecked), [Pin.map_unchecked()](https://doc.rust-lang.org/std/pin/struct.Pin.html#method.map_unchecked), [Pin.get_unchecked_mut()](https://doc.rust-lang.org/std/pin/struct.Pin.html#method.get_unchecked_mut), [Pin.map_unchecked_mut](https://doc.rust-lang.org/std/pin/struct.Pin.html#method.map_unchecked_mut())
 
@@ -298,9 +299,9 @@ Example APIs: [trait.FromRawFd::from_raw_fd()](https://doc.rust-lang.org/std/os/
 
 If a parameter type `T` implements certain traits, it can guarantee safety or mitigate specific hazards
 
-**psp V.4 Trait(T, t)**:
+**psp V.4 Trait(T, trait)**:
 
-$$t \in \text{trait}(T) $$
+$$trait \in \text{trait}(T) $$
 
 In particular, $\text{Copy} \in \text{trait}(T)$ ensures that alias issues or Alias(p) are mitigated, and $\text{Unpin} \in \text{trait}(T)$ avoids the hazard associated with pinned data or Pinned(p).
 
