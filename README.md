@@ -22,8 +22,8 @@ where
 ```
 
 We can tag the API with the following primitive safety property:
-- Primitive SP template: `ValidInt(ariexpr, valrange)`, which means $ariexpr \in range$;
-    - Specific primitive SP for the API: `ValidInt((mul, count, sizeof(T)), [T::MIN, T::MAX] )`.
+- Primitive SP template: `ValidInt(expr, vrange)`, which means $expr \in vrange$;
+    - Specific primitive SP for the API: `ValidInt((sizeof(T) * count), [isize::MIN, isize::MAX] )`.
 
 For another instance, the unsafe API [ptr::copy()](https://doc.rust-lang.org/beta/core/ptr/fn.copy.html) is described as follows:
 ```rust
@@ -39,14 +39,16 @@ pub const unsafe fn copy<T>(src: *const T, dst: *mut T, count: usize)
 ```
 
 We can tag the API with the following primitive safety property:
-- Primitive SP template: `Allocated(addrrange, A)`, which means $\forall p\in addrrange, allocator = A $;
-    - Specific primitive SP for the API: `Allocated((src, T, len), any)` and `Bounded((dst, T, len), any)`
-- Primitive SP template: `Init(p, T, len)`, which means $\forall i\in len, mem(p + \text{sizeof}(T) * i, p + \text{sizeof}(T) * (i+1)) = validobj(T) $;
+- Primitive SP template: `Allocated(p, T, len, A)`, which means $\forall$ i $\in$ 0..sizeof(T)*len, allocator(p+i) = A;
+    - Specific primitive SP for the API: `Allocated(src, T, len, any)`
+- Primitive SP template: `InBound(p, T, len, arange)`, which means [p, p+ sizeof(T) * len) $\in$ arrange;
+   - Specific primitive SP for the API: `InBound(src, T, len, -)`
+- Primitive SP template: `Init(p, T, len)`, which means $\forall$ i $\in$ 0..len, mem(p + sizeof(T) * i, p + sizeof(T) * (i+1)) = valid(T);
     - Specific primitive SP for the API: `Init(dst, T, count)`
-- Primitive SP template: `NonOverlap(dst, src, T, len)`, which means $|dst - src| > \text{sizeof}(T)*len$;
-    - Specific primitive SP for the API: `NonOverlap(dst, src, T, 1)`
-- Primitive SP template: `Aligned(p, T)`, which means $p \\% \text{alignment}(T) = 0$ && $sizeof(T) \\% \text{alignment}(T) = 0$;
-    - Specific primitive SP for the API: `Aligned(src, T)` and `Aligned(dst, T)`
+- Primitive SP template: `!Overlap(dst, src, T, len)`, which means \|dst - src\| $\ge$ sizeof(T) * len;
+    - Specific primitive SP for the API: `!Overlap(dst, src, T, 1)`
+- Primitive SP template: `Align(p, T)`, which means  p \% alignment(T) = 0;
+    - Specific primitive SP for the API: `Align(src, T)` and `Align(dst, T)`
 
 These are the preconditions for calling the unsafe APIs. We need more properties to discribe the hazards when the content is not `Copy`.
 
