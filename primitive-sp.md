@@ -38,7 +38,7 @@ In practice, a safety property may correspond to a precondition, an optional pre
 | I.4  | !Padding(T)  | padding(T) = 0 | precond  | [intrinsics::raw_eq()](https://doc.rust-lang.org/std/intrinsics/fn.raw_eq.html) |
 | II.1  | !Null(p) | p!= 0 | precond  | [NonNull::new_unchecked()](https://doc.rust-lang.org/std/ptr/struct.NonNull.html#method.new_unchecked) |
 | II.2 | Allocated(p, T, len, A) | $\forall$ i $\in$ 0..sizeof(T)*len, allocator(p+i) = A | precond | [Box::from_raw_in()](https://doc.rust-lang.org/std/boxed/struct.Box.html#method.from_raw_in) |
-| II.3  | InBound(p, T, len, arange) | [p, p+ sizeof(T) * len) $\in$ arrange  | precond | [ptr::offset()](https://doc.rust-lang.org/std/primitive.pointer.html#method.offset)  |
+| II.3  | InBound(p, T, len, arange) | [p, p+ sizeof(T) * len) $\in$ arange  | precond | [ptr::offset()](https://doc.rust-lang.org/std/primitive.pointer.html#method.offset)  |
 | II.4  | !Overlap(dst, src, T, len) | \|dst - src\| $\ge$ sizeof(T) * len | precond | [ptr::copy_nonoverlapping()](https://doc.rust-lang.org/std/ptr/fn.copy_nonoverlapping.html)  |
 | III.1  | ValidInt(exp, vrange)  | exp $\in$ vrange | precond | [usize::add()](https://doc.rust-lang.org/std/primitive.usize.html#method.unchecked_add)  |
 | III.2  | ValidString(arange) | mem(arange) $\in$ utf-8 |  precond | [String::from_utf8_unchecked()](https://doc.rust-lang.org/std/string/struct.String.html#method.from_utf8_unchecked) |
@@ -149,11 +149,11 @@ If the allocator `A` is unspecified, it typically defaults to the global allocat
 
 Example APIs: [Arc::from_raw()](https://doc.rust-lang.org/std/sync/struct.Arc.html#method.from_raw), [Box::from_raw()](https://doc.rust-lang.org/std/boxed/struct.Box.html#method.from_raw), [ptr::offset()](https://doc.rust-lang.org/beta/std/primitive.pointer.html#method.offset), [Box::from_raw()](https://doc.rust-lang.org/beta/std/boxed/struct.Box.html#method.from_raw)
 
-Bounded access requires that the pointer access with respet to an offset stays within the bound. This ensures that dereferencing the pointer yields a value (which may not yet be initialized) of the expected type T. 
+Bounded access requires that the pointer access with respet to an offset stays within the bound of the same allocated object. This ensures that dereferencing the pointer yields a value (which may not yet be initialized) of the expected type T. 
 
 **psp II.3 InBound(p, T, len, arange)**: 
 
-$$[p, p+ sizeof(T) * len) \in arrange $$
+$$[p, p+ sizeof(T) * len) \in arange $$
 
 Example APIs: [ptr::offset()](https://doc.rust-lang.org/std/primitive.pointer.html#method.offset), [ptr::copy()](https://doc.rust-lang.org/std/ptr/fn.copy.html) 
 
