@@ -40,6 +40,7 @@ In practice, a safety property may correspond to a precondition, an optional pre
 | II.2 | Allocated(p, T, len, A) | $\forall$ i $\in$ 0..sizeof(T)*len, allocator(p+i) = A | precond | [Box::from_raw_in()](https://doc.rust-lang.org/std/boxed/struct.Box.html#method.from_raw_in) |
 | II.3  | InBound(p, T, len, arange) | [p, p+ sizeof(T) * len) $\in$ arange  | precond | [ptr::offset()](https://doc.rust-lang.org/std/primitive.pointer.html#method.offset)  |
 | II.4  | !Overlap(dst, src, T, len) | \|dst - src\| $\ge$ sizeof(T) * len | precond | [ptr::copy_nonoverlapping()](https://doc.rust-lang.org/std/ptr/fn.copy_nonoverlapping.html)  |
+| II.5  | Typed(p, T) | $typeof(*p)$ = T | precond | [Rc::from_raw()](https://doc.rust-lang.org/beta/std/rc/struct.Rc.html#method.from_raw) |
 | III.1  | ValidInt(exp, vrange)  | exp $\in$ vrange | precond | [usize::add()](https://doc.rust-lang.org/std/primitive.usize.html#method.unchecked_add)  |
 | III.2  | ValidString(arange) | mem(arange) $\in$ utf-8 |  precond | [String::from_utf8_unchecked()](https://doc.rust-lang.org/std/string/struct.String.html#method.from_utf8_unchecked) |
 |        | ValidString(arange) | - | hazard | [String::as_bytes_mut()](https://doc.rust-lang.org/std/string/struct.String.html#method.as_bytes_mut) |
