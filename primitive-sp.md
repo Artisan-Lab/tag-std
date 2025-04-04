@@ -71,7 +71,6 @@ In practice, a safety property may correspond to a precondition, an optional pre
 
 | SP in Rustdoc | Primitive SP | 
 |---|---|
-| [Typed](https://doc.rust-lang.org/std/ptr/fn.copy.html) | Init(p, T, len) |
 | Non-Dangling | Allocated(p, T, len, A) |
 
 ## 3 Safety Property Details
