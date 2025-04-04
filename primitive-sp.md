@@ -40,7 +40,7 @@ In practice, a safety property may correspond to a precondition, an optional pre
 | II.2 | Allocated(p, T, len, A) | $\forall$ i $\in$ 0..sizeof(T)*len, allocator(p+i) = A | precond | [Box::from_raw_in()](https://doc.rust-lang.org/std/boxed/struct.Box.html#method.from_raw_in) |
 | II.3  | InBound(p, T, len, arange) | [p, p+ sizeof(T) * len) $\in$ arange  | precond | [ptr::offset()](https://doc.rust-lang.org/std/primitive.pointer.html#method.offset)  |
 | II.4  | !Overlap(dst, src, T, len) | \|dst - src\| $\ge$ sizeof(T) * len | precond | [ptr::copy_nonoverlapping()](https://doc.rust-lang.org/std/ptr/fn.copy_nonoverlapping.html)  |
-| II.5  | Typed(p, T) | $typeof(*p)$ = T | precond | [Rc::from_raw()](https://doc.rust-lang.org/beta/std/rc/struct.Rc.html#method.from_raw) |
+| II.5  | Typed(p, T) | typeof(*p) = T | precond | [Rc::from_raw()](https://doc.rust-lang.org/beta/std/rc/struct.Rc.html#method.from_raw) |
 | III.1  | ValidInt(exp, vrange)  | exp $\in$ vrange | precond | [usize::add()](https://doc.rust-lang.org/std/primitive.usize.html#method.unchecked_add)  |
 | III.2  | ValidString(arange) | mem(arange) $\in$ utf-8 |  precond | [String::from_utf8_unchecked()](https://doc.rust-lang.org/std/string/struct.String.html#method.from_utf8_unchecked) |
 |        | ValidString(arange) | - | hazard | [String::as_bytes_mut()](https://doc.rust-lang.org/std/string/struct.String.html#method.as_bytes_mut) |
@@ -118,7 +118,7 @@ mem::size_of::<MyStruct>(); // size: 4
 
 A safety property may require the type `T` has no padding. We can formulate the requirement as 
 
-**psp I.3 Padding(T, false)**:
+**psp I.4 Padding(T, false)**:
 
 $$\text{padding}(T) = 0$$
 
@@ -165,7 +165,17 @@ A safety property may require the two pointers do not overlap with respect to `T
 $$|dst - src| > \text{sizeof}(T) * len $$
 
 Example APIs: [ptr::copy_from()](https://doc.rust-lang.org/std/ptr/fn.copy.html), [ptr::copy()](https://doc.rust-lang.org/std/ptr/fn.copy_from.html), [ptr::copy_nonoverlapping()](https://doc.rust-lang.org/std/ptr/fn.copy_nonoverlapping.html), [ptr::copy_from_nonoverlapping](https://doc.rust-lang.org/core/primitive.pointer.html#method.copy_from_nonoverlapping)
- 
+
+Besides, some APIs accepts a raw pointer as the input and requires the raw pointer must have been previously returned by a call of `into_raw` from the same module.
+
+**psp II.5 Typed(p, T)**: 
+
+$$\text{sizeof}(*p) = T $$
+
+Note that this may also concern the memory space ahead of p.
+
+Example APIs: [Rc::from_raw()](https://doc.rust-lang.org/beta/std/rc/struct.Rc.html#method.from_raw), [Arc::from_raw()](https://doc.rust-lang.org/beta/std/sync/struct.Arc.html#method.from_raw), [Weak::from_raw()](https://doc.rust-lang.org/beta/std/sync/struct.Weak.html#method.from_raw),[Thread::from_raw()](https://doc.rust-lang.org/beta/std/thread/struct.Thread.html#method.from_raw)
+
 ### 3.3. Content
 
 #### 3.3.1 Integer
