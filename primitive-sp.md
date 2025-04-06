@@ -56,6 +56,7 @@ In practice, a safety property may correspond to a precondition, an optional pre
 | V.2  | !Volatile(p) | volatile(*p) = false | precond | [ptr::read()](https://doc.rust-lang.org/std/ptr/fn.read.html) |
 | V.3  | Opened(fd) | opened(fd) = true | precond | [trait::FromRawFd::from_raw_fd()](https://doc.rust-lang.org/std/os/fd/trait.FromRawFd.html#tymethod.from_raw_fd)  |
 | V.4  | Trait(T, trait) | trait $\in$ traitimpl(T) | option | [ptr::read()](https://doc.rust-lang.org/std/ptr/fn.read.html)  |
+| V.5  | !Reachable(I) | sat(cond(I)) = false | precondition | [intrinsics::read()](https://doc.rust-lang.org/nightly/std/intrinsics/fn.unreachable.html) |
 
 **Note**: These primitives are not yet complete. New proposals are always welcome. 
 
@@ -114,7 +115,7 @@ mem::size_of::<MyStruct>(); // size: 4
 
 A safety property may require the type `T` has no padding. We can formulate the requirement as 
 
-**psp I.4 Padding(T, false)**:
+**psp I.3 Padding(T, false)**:
 
 $$\text{padding}(T) = 0$$
 
@@ -299,6 +300,16 @@ $$trait \in \text{trait}(T) $$
 In particular, $\text{Copy} \in \text{trait}(T)$ ensures that alias issues or Alias(p) are mitigated, and $\text{Unpin} \in \text{trait}(T)$ avoids the hazard associated with pinned data or Pinned(p).
 
 Example APIs: [ptr::read()](https://doc.rust-lang.org/std/ptr/fn.read.html), [ptr::read_volatile()](https://doc.rust-lang.org/std/ptr/fn.read_volatile.html), [Pin::new_unchecked()](https://doc.rust-lang.org/std/pin/struct.Pin.html#method.new_unchecked)
+
+#### 3.5.5 Unreachable
+
+The current program point should not be reachable during execution.
+
+**psp V.5 !Reachable(I)**:
+
+$$sat(cond(I)) = false$$
+
+Example APIs: [intrinsics::unreachable()](https://doc.rust-lang.org/nightly/std/intrinsics/fn.unreachable.html), [hint::unreachable_unchecked()](https://doc.rust-lang.org/nightly/std/hint/fn.unreachable_unchecked.html)
 
 ### 4 Primitive Properties Yet to Be Considered
 
