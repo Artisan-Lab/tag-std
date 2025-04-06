@@ -33,21 +33,21 @@ In practice, a safety property may correspond to a precondition, an optional pre
 | ID  | Primitive SP | Meaning | Usage | Example API |
 |---|---|---|---|---|
 | I.1  | Align(p, T) | p \% alignment(T) = 0 | precond | [ptr::read()](https://doc.rust-lang.org/nightly/std/ptr/fn.read.html) | 
-| I.2  | Sized(T) | sizeof(T) = const \&\& const >= 0 | option | [Layout::for_value_raw()](https://doc.rust-lang.org/nightly/std/alloc/struct.Layout.html#method.for_value_raw)  | 
-| I.3  | ZST(T) | sizeof(T) = 0 | precond | [NonNull::offset_from](https://doc.rust-lang.org/core/ptr/struct.NonNull.html#method.offset_from)  | 
-| I.4  | !Padding(T)  | padding(T) = 0 | precond  | [intrinsics::raw_eq()](https://doc.rust-lang.org/std/intrinsics/fn.raw_eq.html) |
+| I.2  | Size(T, c) | sizeof(T) = c, c $\in$ \{num, unknown, any\} | option | [Layout::for_value_raw()](https://doc.rust-lang.org/nightly/std/alloc/struct.Layout.html#method.for_value_raw)  | 
+|      | - | - | precond | [NonNull::offset_from](https://doc.rust-lang.org/core/ptr/struct.NonNull.html#method.offset_from)  | 
+| I.3  | !Padding(T)  | padding(T) = 0 | precond  | [intrinsics::raw_eq()](https://doc.rust-lang.org/std/intrinsics/fn.raw_eq.html) |
 | II.1  | !Null(p) | p!= 0 | precond  | [NonNull::new_unchecked()](https://doc.rust-lang.org/std/ptr/struct.NonNull.html#method.new_unchecked) |
 | II.2 | Allocated(p, T, len, A) | $\forall$ i $\in$ 0..sizeof(T)*len, allocator(p+i) = A | precond | [Box::from_raw_in()](https://doc.rust-lang.org/std/boxed/struct.Box.html#method.from_raw_in) |
 | II.3  | InBound(p, T, len, arange) | [p, p+ sizeof(T) * len) $\in$ arange  | precond | [ptr::offset()](https://doc.rust-lang.org/std/primitive.pointer.html#method.offset)  |
 | II.4  | !Overlap(dst, src, T, len) | \|dst - src\| $\ge$ sizeof(T) * len | precond | [ptr::copy_nonoverlapping()](https://doc.rust-lang.org/std/ptr/fn.copy_nonoverlapping.html)  |
 | II.5  | Typed(p, T) | typeof(*p) = T | precond | [Rc::from_raw()](https://doc.rust-lang.org/beta/std/rc/struct.Rc.html#method.from_raw) |
-| III.1  | ValidInt(exp, vrange)  | exp $\in$ vrange | precond | [usize::add()](https://doc.rust-lang.org/std/primitive.usize.html#method.unchecked_add)  |
+| III.1  | ValidNum(exp, vrange)  | exp $\in$ vrange | precond | [usize::add()](https://doc.rust-lang.org/std/primitive.usize.html#method.unchecked_add)  |
 | III.2  | ValidString(arange) | mem(arange) $\in$ utf-8 |  precond | [String::from_utf8_unchecked()](https://doc.rust-lang.org/std/string/struct.String.html#method.from_utf8_unchecked) |
 |        | ValidString(arange) | - | hazard | [String::as_bytes_mut()](https://doc.rust-lang.org/std/string/struct.String.html#method.as_bytes_mut) |
 | III.3  | ValidCStr(p, len) | mem(p+len, p+len+1) = '\0' | precond|  [CStr::from_bytes_with_nul_unchecked()](https://doc.rust-lang.org/std/ffi/struct.CStr.html#method.from_bytes_with_nul_unchecked)  |
 | III.4  | Init(p, T, len)  | $\forall$ i $\in$ 0..len, mem(p + sizeof(T) * i, p + sizeof(T) * (i+1)) = valid(T) | precond | [MaybeUninit::slice_assume_init_mut()](https://doc.rust-lang.org/std/mem/union.MaybeUninit.html#method.slice_assume_init_mut) |
-|         | Init(p, T, len)  | - | hazard | [ptr::copy()](https://doc.rust-lang.org/std/ptr/fn.copy.html) |
-|         | Init(p, T, len)  | - | option | [ptr::copy()](https://doc.rust-lang.org/std/ptr/fn.copy.html) |
+|         | -  | - | hazard | [ptr::copy()](https://doc.rust-lang.org/std/ptr/fn.copy.html) |
+|         | -  | - | option | [ptr::copy()](https://doc.rust-lang.org/std/ptr/fn.copy.html) |
 | III.5  | Unwrap(x, T) | unwrap(x) = T | precond | [Option::unwrap_unchecked()](https://doc.rust-lang.org/std/option/enum.Option.html#method.unwrap_unchecked)  |
 | IV.1  | Ownning(p) | ownership(*p) = none | precond | [Box::from_raw()](https://doc.rust-lang.org/std/boxed/struct.Box.html#method.from_raw)  |
 | IV.2  | Alias(p1, p2) | p1 = p2 | hazard | [pointer::as_mut()](https://doc.rust-lang.org/std/primitive.pointer.html#method.as_mut) |
@@ -63,9 +63,10 @@ In practice, a safety property may correspond to a precondition, an optional pre
 
 | SP in Rustdoc | Compound SP | Meaning | Usage | Example API |
 |---|---|---|---|---|   
-| [Valid pointer](https://doc.rust-lang.org/nightly/std/ptr/index.html) | ValidPtr(p, T, len, arange) | ZST(T) \|\| (!ZST(T) && Deref(p, T, len, arange) ) | precond | [ptr::read<T>()](https://doc.rust-lang.org/nightly/std/ptr/fn.read.html)  |       
+| [Valid pointer](https://doc.rust-lang.org/nightly/std/ptr/index.html) | ValidPtr(p, T, len, arange) | Size(T, 0) \|\| (!Size(T,0) && Deref(p, T, len, arange) ) | precond | [ptr::read<T>()](https://doc.rust-lang.org/nightly/std/ptr/fn.read.html)  |       
 | Dereferenceable | Deref(p, T, len, arange) | Allocated(p, T, len, *) && InBound(p, T, len, arange) | precond | only used to define valid pointers |
 | Valid pointer to reference conversion | Ptr2Ref(p, T) | Allocated(p, T, 1, *) && Init(p, T, 1) && Align(p, T) && Alias(p, *) | precond, hazard | [ptr::as_uninit_ref()](https://doc.rust-lang.org/nightly/std/ptr/struct.NonNull.html#method.as_uninit_ref) |
+| Layout(https://doc.rust-lang.org/nightly/std/alloc/trait.GlobalAlloc.html#method.realloc) | (p, layout) | Align(p, layout.align) && Allocated(p, layout.size) |
 
 ### 2.3 Synonymous SPs used in Rustdoc
 
@@ -90,21 +91,17 @@ $$p \\% \text{alignment}(T) = 0$$
 Example APIs: [ptr::read()](https://doc.rust-lang.org/nightly/std/ptr/fn.read.html), [ptr::write()](https://doc.rust-lang.org/std/ptr/fn.write.html), [Vec::from_raw_parts()](https://doc.rust-lang.org/beta/std/vec/struct.Vec.html#method.from_raw_parts)
 
 #### 3.1.2 Size 
-The size of a value is the offset in bytes between successive elements in an array with that item type including alignment padding. It is always a multiple of its alignment (including 0), i.e., $\text{sizeof}(T) \\% \text{alignment}(T)=0$. 
+The size of a value is the offset in bytes between successive elements in an array with that item type including alignment padding. It is always a multiple of its alignment (including 0), i.e., $\text{sizeof}(T) \\% \text{alignment}(T)=0$. We can represent the size-related properties as below:
 
-Not all types are statically sized, such as slices and trait objects. Therefore, a safety property may require the size of a type `T` can be determined during compiling time. We can formulate the requirement as 
+**psp I.2 Size(T, c)**:
 
-**psp I.2 Sized(T)**:
+$$sizeof(T) = c\ \\&\\&\ c \in \{num, unknown, any\}$$
 
-$$sizeof(T) = const\ \\&\\&\ const >= 0$$
+For example, not all types are statically sized, such as slices and trait objects. Therefore, a safety property may require the size of a type `T` can be determined during compiling time. We can represent the property as `Size(T, any)`. This is generally emplopyed as an optional property.
 
 Example API: [Layout::for_value_raw()](https://doc.rust-lang.org/nightly/std/alloc/struct.Layout.html#method.for_value_raw)
 
-A safety property may require the size of a type `T` cannot be zero. We can formulate the requirement as 
-
-**psp I.3 !ZST(T)**:
-
-$$\text{sizeof}(T) > 0$$
+Besides, a safety property may require the size of a type `T` cannot be zero. We can formulate the requirement as `Size(T, 0)`.
 
 Example APIs: [NonNull::offset_from()](https://doc.rust-lang.org/core/ptr/struct.NonNull.html#method.offset_from), [pointer::sub_ptr()](https://doc.rust-lang.org/beta/std/primitive.pointer.html#method.sub_ptr)
 
@@ -181,7 +178,7 @@ Example APIs: [Rc::from_raw()](https://doc.rust-lang.org/beta/std/rc/struct.Rc.h
 
 When converting a value `x` to an interger or performing integer arithmetic, the result should not be greater than the max or less the min value that can be represented by the integer type `T`.
 
-**psp III.1 ValidInt(exp, vrange)**: 
+**psp III.1 ValidNum(exp, vrange)**: 
 
 The first parameter `exp` stands for an arithmetic expression in the form of `(binOperator, operand1, operand2)` or `(unaryOperator, operand)`, where the `operand` can also an `expression`. The second parameter `vrange` specifies the range of valid values, such as `[isize::MIN, isize::MAX]`.
 
