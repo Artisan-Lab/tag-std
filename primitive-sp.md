@@ -307,7 +307,7 @@ The current program point should not be reachable during execution.
 
 **psp V.5 !Reachable(I)**:
 
-$$sat(cond(I)) = false$$
+$$\text{sat(cond}(I)\text{)} = false$$
 
 Example APIs: [intrinsics::unreachable()](https://doc.rust-lang.org/nightly/std/intrinsics/fn.unreachable.html), [hint::unreachable_unchecked()](https://doc.rust-lang.org/nightly/std/hint/fn.unreachable_unchecked.html)
 
