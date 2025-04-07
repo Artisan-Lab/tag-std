@@ -54,9 +54,8 @@ In practice, a safety property may correspond to a precondition, an optional pre
 | IV.3  | Alive(p, l) | lifetime(*p) $\ge$ l | precond | [AtomicPtr::from_ptr()](https://doc.rust-lang.org/std/sync/atomic/struct.AtomicPtr.html#method.from_ptr)  |
 | V.1  | Pinned(p, l) | $$\forall t \in 0..l, \\&(*p)_0 = p_t$$ | hazard | [Pin::new_unchecked()](https://doc.rust-lang.org/std/pin/struct.Pin.html#method.new_unchecked)  |
 | V.2  | !Volatile(p) | volatile(*p) = false | precond | [ptr::read()](https://doc.rust-lang.org/std/ptr/fn.read.html) |
-| V.3  | Opened(fd) | opened(fd) = true | precond | [trait::FromRawFd::from_raw_fd()](https://doc.rust-lang.org/std/os/fd/trait.FromRawFd.html#tymethod.from_raw_fd)  |
-| V.4  | Trait(T, trait) | trait $\in$ traitimpl(T) | option | [ptr::read()](https://doc.rust-lang.org/std/ptr/fn.read.html)  |
-| V.5  | !Reachable(I) | sat(cond(I)) = false | precondition | [intrinsics::read()](https://doc.rust-lang.org/nightly/std/intrinsics/fn.unreachable.html) |
+| V.3  | Trait(T, trait) | trait $\in$ traitimpl(T) | option | [ptr::read()](https://doc.rust-lang.org/std/ptr/fn.read.html)  |
+| V.4  | !Reachable(I) | sat(cond(I)) = false | precondition | [intrinsics::read()](https://doc.rust-lang.org/nightly/std/intrinsics/fn.unreachable.html) |
 
 **Note**: These primitives are not yet complete. New proposals are always welcome. 
 
@@ -273,23 +272,13 @@ Example APIs: [Pin::new_unchecked()](https://doc.rust-lang.org/std/pin/struct.Pi
 
 There are specific APIs for volatile memory access in std-lib, like [ptr::read_volatile()](https://doc.rust-lang.org/std/ptr/fn.read_volatile.html) and [ptr::write_volatile()](https://doc.rust-lang.org/std/ptr/fn.write_volatile.html). Other memory operations should require non-volatile by default.
 
-**psp V.6 !Volatile(p)**:
+**psp V.2 !Volatile(p)**:
 
 $$\text{volatile}(*p) = false$$
 
 Example APIs: [ptr::read()](https://doc.rust-lang.org/std/ptr/fn.read.html), [ptr::write()](https://doc.rust-lang.org/std/ptr/fn.write.html)
 
-#### 3.5.3 File Read/Write
-
-The file discripter `fd` must be opened.
-
-**psp V.3 Opened(fd)**:
-
-$$\text{opened}(fd) = true$$
-
-Example APIs: [FromRawFd::from_raw_fd()](https://doc.rust-lang.org/std/os/fd/trait.FromRawFd.html#tymethod.from_raw_fd), [UdpSocket::from_raw_socket()](https://doc.rust-lang.org/std/net/struct.UdpSocket.html#method.from_raw_socket)
-
-#### 3.5.4 Trait
+#### 3.5.3 Trait
 
 If a parameter type `T` implements certain traits, it can guarantee safety or mitigate specific hazards
 
@@ -301,7 +290,7 @@ In particular, $\text{Copy} \in \text{trait}(T)$ ensures that alias issues or Al
 
 Example APIs: [ptr::read()](https://doc.rust-lang.org/std/ptr/fn.read.html), [ptr::read_volatile()](https://doc.rust-lang.org/std/ptr/fn.read_volatile.html), [Pin::new_unchecked()](https://doc.rust-lang.org/std/pin/struct.Pin.html#method.new_unchecked)
 
-#### 3.5.5 Unreachable
+#### 3.5.4 Unreachable
 
 The current program point should not be reachable during execution.
 
@@ -321,4 +310,4 @@ Example APIs: [intrinsics::unreachable()](https://doc.rust-lang.org/nightly/std/
     
 - Non-language UB
   - Function correctness, e.g., [CursorMut::insert_after_unchecked()](https://doc.rust-lang.org/nightly/alloc/collections/btree_set/struct.CursorMut.html#method.insert_after_unchecked)
-  - System environment, e.g., [env::set_var()](https://doc.rust-lang.org/nightly/std/env/fn.set_var.html)
+  - System environment, e.g., [env::set_var()](https://doc.rust-lang.org/nightly/std/env/fn.set_var.html), [FromRawFd::from_raw_fd()](https://doc.rust-lang.org/std/os/fd/trait.FromRawFd.html#tymethod.from_raw_fd), [UdpSocket::from_raw_socket()](https://doc.rust-lang.org/std/net/struct.UdpSocket.html#method.from_raw_socket)
