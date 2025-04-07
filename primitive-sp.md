@@ -311,8 +311,14 @@ $$\text{sat(cond}(I)\text{)} = false$$
 
 Example APIs: [intrinsics::unreachable()](https://doc.rust-lang.org/nightly/std/intrinsics/fn.unreachable.html), [hint::unreachable_unchecked()](https://doc.rust-lang.org/nightly/std/hint/fn.unreachable_unchecked.html)
 
-### 4 Primitive Properties Yet to Be Considered
+### 4 Safety Properties Not Supported
 
 - Unsafe Trait
-- [GlobalAlloc](https://doc.rust-lang.org/std/alloc/trait.GlobalAlloc.html)
-- DSTs like slice and dynamic trait objects
+  - [Allocator](https://doc.rust-lang.org/alloc/alloc/trait.Allocator.html), [GlobalAlloc](https://doc.rust-lang.org/std/alloc/trait.GlobalAlloc.html)
+  - [Send/Sync](https://doc.rust-lang.org/nomicon/send-and-sync.html)
+  - [CloneToUninit](https://doc.rust-lang.org/core/clone/trait.CloneToUninit.html)
+  - [TransmuteFrom](https://doc.rust-lang.org/core/mem/trait.TransmuteFrom.html)
+    
+- Non-language UB
+  - Function correctness, e.g., [CursorMut::insert_after_unchecked()](https://doc.rust-lang.org/nightly/alloc/collections/btree_set/struct.CursorMut.html#method.insert_after_unchecked)
+  - System environment, e.g., [env::set_var()](https://doc.rust-lang.org/nightly/std/env/fn.set_var.html)
