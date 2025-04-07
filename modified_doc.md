@@ -24,3 +24,13 @@
 |22| Rc::decrement_strong_count | Typed | 8 | [ PR_138303](https://github.com/rust-lang/rust/pull/138303) | Merged |
 |23| Rc::increment_strong_count_in | Typed | 8 | [ PR_138303](https://github.com/rust-lang/rust/pull/138303) | Merged |
 |24| Rc::decrement_strong_count_in | Typed | 8 | [ PR_138303](https://github.com/rust-lang/rust/pull/138303) | Merged |
+|25| pointer::as_mut | Init / Alias | 9 | [ PR_138919](https://github.com/rust-lang/rust/pull/138919) | Pending |
+|26| pointer::as_ref | Init / Alias | 9 | [ PR_138919](https://github.com/rust-lang/rust/pull/138919) | Pending |
+|27| pointer::as_mut_unchecked | Init / Alias | 9 | [ PR_138919](https://github.com/rust-lang/rust/pull/138919) | Pending |
+|28| pointer::as_ref_unchecked | Init / Alias | 9 | [ PR_138919](https://github.com/rust-lang/rust/pull/138919) | Pending |
+|29| pointer::as_uninit_mut | Alias | 9 | [ PR_138919](https://github.com/rust-lang/rust/pull/138919) | Pending |
+|30| pointer::as_uninit_ref | Alias | 9 | [ PR_138919](https://github.com/rust-lang/rust/pull/138919) | Pending |
+|31| NonNull::as_mut | Init / Alias | 9 | [ PR_138919](https://github.com/rust-lang/rust/pull/138919) | Pending |
+|32| NonNull::as_ref | Init / Alias | 9 | [ PR_138919](https://github.com/rust-lang/rust/pull/138919) | Pending |
+|33| NonNull::as_uninit_mut | Alias | 9 | [ PR_138919](https://github.com/rust-lang/rust/pull/138919) | Pending |
+|34| NonNull::as_uninit_ref | Alias | 9 | [ PR_138919](https://github.com/rust-lang/rust/pull/138919) | Pending |
