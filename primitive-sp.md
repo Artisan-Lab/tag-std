@@ -55,7 +55,7 @@ In practice, a safety property may correspond to a precondition, an optional pre
 | V.1  | Pinned(p, l) | $$\forall t \in 0..l, \\&(*p)_0 = p_t$$ | hazard | [Pin::new_unchecked()](https://doc.rust-lang.org/std/pin/struct.Pin.html#method.new_unchecked)  |
 | V.2  | !Volatile(p) | volatile(*p) = false | precond | [ptr::read()](https://doc.rust-lang.org/std/ptr/fn.read.html) |
 | V.3  | Trait(T, trait) | trait $\in$ traitimpl(T) | option | [ptr::read()](https://doc.rust-lang.org/std/ptr/fn.read.html)  |
-| V.4  | !Reachable(I) | sat(cond(I)) = false | precondition | [intrinsics::read()](https://doc.rust-lang.org/nightly/std/intrinsics/fn.unreachable.html) |
+| V.4  | !Reachable() | sat(cond()) = false | precondition | [intrinsics::read()](https://doc.rust-lang.org/nightly/std/intrinsics/fn.unreachable.html) |
 
 **Note**: These primitives are not yet complete. New proposals are always welcome. 
 
@@ -294,9 +294,9 @@ Example APIs: [ptr::read()](https://doc.rust-lang.org/std/ptr/fn.read.html), [pt
 
 The current program point should not be reachable during execution.
 
-**psp V.5 !Reachable(I)**:
+**psp V.5 !Reachable()**:
 
-$$\text{sat(cond}(I)\text{)} = false$$
+$$\text{sat(cond}()\text{)} = false$$
 
 Example APIs: [intrinsics::unreachable()](https://doc.rust-lang.org/nightly/std/intrinsics/fn.unreachable.html), [hint::unreachable_unchecked()](https://doc.rust-lang.org/nightly/std/hint/fn.unreachable_unchecked.html)
 
