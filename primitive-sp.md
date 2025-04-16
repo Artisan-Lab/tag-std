@@ -38,7 +38,7 @@ In practice, a safety property may correspond to a precondition, an optional pre
 | I.3  | !Padding(T)  | padding(T) = 0 | precond  | [intrinsics::raw_eq()](https://doc.rust-lang.org/std/intrinsics/fn.raw_eq.html) |
 | II.1  | !Null(p) | p!= 0 | precond  | [NonNull::new_unchecked()](https://doc.rust-lang.org/std/ptr/struct.NonNull.html#method.new_unchecked) |
 | II.2 | Allocated(p, T, len, A) | $\forall$ i $\in$ 0..sizeof(T)*len, allocator(p+i) = A | precond | [Box::from_raw_in()](https://doc.rust-lang.org/std/boxed/struct.Box.html#method.from_raw_in) |
-| II.3  | InBound(p, T, len, arange) | [p, p+ sizeof(T) * len) $\in$ arange  | precond | [ptr::offset()](https://doc.rust-lang.org/std/primitive.pointer.html#method.offset)  |
+| II.3  | InBound(p, T, len) | [p, p+ sizeof(T) * len) $\in$ single allocated object  | precond | [ptr::offset()](https://doc.rust-lang.org/std/primitive.pointer.html#method.offset)  |
 | II.4  | !Overlap(dst, src, T, len) | \|dst - src\| $\ge$ sizeof(T) * len | precond | [ptr::copy_nonoverlapping()](https://doc.rust-lang.org/std/ptr/fn.copy_nonoverlapping.html)  |
 | II.5  | Typed(p, T) | typeof(*p) = T | precond | [Rc::from_raw()](https://doc.rust-lang.org/beta/std/rc/struct.Rc.html#method.from_raw) |
 | III.1  | ValidNum(exp, vrange)  | exp $\in$ vrange | precond | [usize::add()](https://doc.rust-lang.org/std/primitive.usize.html#method.unchecked_add)  |
@@ -64,7 +64,7 @@ In practice, a safety property may correspond to a precondition, an optional pre
 | SP in Rustdoc | Compound SP | Meaning | Usage | Example API |
 |---|---|---|---|---|   
 | [Valid pointer](https://doc.rust-lang.org/nightly/std/ptr/index.html) | ValidPtr(p, T, len, arange) | Size(T, 0) \|\| (!Size(T,0) && Deref(p, T, len, arange) ) | precond | [ptr::read<T>()](https://doc.rust-lang.org/nightly/std/ptr/fn.read.html)  |       
-| Dereferenceable | Deref(p, T, len, arange) | Allocated(p, T, len, *) && InBound(p, T, len, arange) | precond | only used to define valid pointers |
+| Dereferenceable | Deref(p, T, len) | Allocated(p, T, len, *) && InBound(p, T, len) | precond | only used to define valid pointers |
 | Valid pointer to reference conversion | Ptr2Ref(p, T) | Allocated(p, T, 1, *) && Init(p, T, 1) && Align(p, T) && Alias(p, *) | precond, hazard | [ptr::as_uninit_ref()](https://doc.rust-lang.org/nightly/std/ptr/struct.NonNull.html#method.as_uninit_ref) |
 | Layout Consistency | Layout(p, layout) | Align(p, layout.align) && Allocated(p, layout.size, any) | precond | [GlobalAlloc::realloc()](https://doc.rust-lang.org/nightly/std/alloc/trait.GlobalAlloc.html#method.realloc) | 
 
@@ -150,7 +150,7 @@ Bounded access requires that the pointer access with respet to an offset stays w
 
 **psp II.3 InBound(p, T, len, arange)**: 
 
-$$[p, p+ sizeof(T) * len) \in arange $$
+$$[p, p+ sizeof(T) * len) \in single allocated object $$
 
 Example APIs: [ptr::offset()](https://doc.rust-lang.org/std/primitive.pointer.html#method.offset), [ptr::copy()](https://doc.rust-lang.org/std/ptr/fn.copy.html) 
 
