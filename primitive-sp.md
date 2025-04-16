@@ -65,7 +65,7 @@ In practice, a safety property may correspond to a precondition, an optional pre
 |---|---|---|---|---|   
 | [Valid pointer](https://doc.rust-lang.org/nightly/std/ptr/index.html) | ValidPtr(p, T, len) | Size(T, 0) \|\| (!Size(T,0) && Deref(p, T, len) ) | precond | [ptr::read<T>()](https://doc.rust-lang.org/nightly/std/ptr/fn.read.html)  |       
 | Dereferenceable | Deref(p, T, len) | Allocated(p, T, len, *) && InBound(p, T, len) | precond | only used to define valid pointers |
-| Valid pointer to reference conversion | Ptr2Ref(p, T) | Allocated(p, T, 1, *) && Init(p, T, 1) && Align(p, T) && Alias(p, *) | precond, hazard | [ptr::as_uninit_ref()](https://doc.rust-lang.org/nightly/std/ptr/struct.NonNull.html#method.as_uninit_ref) |
+| Valid pointer to reference conversion | Ptr2Ref(p, T) | Init(p, T, 1) && Align(p, T) && Alias(p, 0) | precond, hazard | [ptr::as_uninit_ref()](https://doc.rust-lang.org/nightly/std/ptr/struct.NonNull.html#method.as_uninit_ref) |
 | Layout Consistency | Layout(layout) | ValidNum(layout::size, align, range) | precond | [GlobalAlloc::realloc()](https://doc.rust-lang.org/nightly/std/alloc/trait.GlobalAlloc.html#method.realloc) | 
 
 ### 2.3 Synonymous SPs used in Rustdoc
