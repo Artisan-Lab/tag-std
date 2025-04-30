@@ -319,4 +319,4 @@ Example APIs: [intrinsics::unreachable()](https://doc.rust-lang.org/nightly/std/
     
 - Non-language UB
   - Function correctness, e.g., [CursorMut::insert_after_unchecked()](https://doc.rust-lang.org/nightly/alloc/collections/btree_set/struct.CursorMut.html#method.insert_after_unchecked)
-  - System environment, e.g., [env::set_var()](https://doc.rust-lang.org/nightly/std/env/fn.set_var.html), [FromRawFd::from_raw_fd()](https://doc.rust-lang.org/std/os/fd/trait.FromRawFd.html#tymethod.from_raw_fd), [UdpSocket::from_raw_socket()](https://doc.rust-lang.org/std/net/struct.UdpSocket.html#method.from_raw_socket)
+  - System environment, e.g., [env::set_var()](https://doc.rust-lang.org/nightly/std/env/fn.set_var.html)
