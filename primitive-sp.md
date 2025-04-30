@@ -38,9 +38,8 @@ In practice, a safety property may correspond to a precondition, an optional pre
 | I.3  | !Padding(T)  | padding(T) = 0 | precond  | [intrinsics::raw_eq()](https://doc.rust-lang.org/std/intrinsics/fn.raw_eq.html) |
 | II.1  | !Null(p) | p!= 0 | precond  | [NonNull::new_unchecked()](https://doc.rust-lang.org/std/ptr/struct.NonNull.html#method.new_unchecked) |
 | II.2 | Allocated(p, T, len, A) | $\forall$ i $\in$ 0..sizeof(T)*len, allocator(p+i) = A | precond | [Box::from_raw_in()](https://doc.rust-lang.org/std/boxed/struct.Box.html#method.from_raw_in) |
-| II.3  | InBound(p, T, len) | [p, p+ sizeof(T) * len) $\in$ single allocated object  | precond | [ptr::offset()](https://doc.rust-lang.org/std/primitive.pointer.html#method.offset)  |
+| II.3  | InBound(p, T, len) | mem(p, p+ sizeof(T) * len) $\in$ single allocated object  | precond | [ptr::offset()](https://doc.rust-lang.org/std/primitive.pointer.html#method.offset)  |
 | II.4  | !Overlap(dst, src, T, len) | \|dst - src\| $\ge$ sizeof(T) * len | precond | [ptr::copy_nonoverlapping()](https://doc.rust-lang.org/std/ptr/fn.copy_nonoverlapping.html)  |
-| II.5  | Typed(p, T) | typeof(*p) = T | precond | [Rc::from_raw()](https://doc.rust-lang.org/beta/std/rc/struct.Rc.html#method.from_raw) |
 | III.1  | ValidNum(exp, vrange)  | exp $\in$ vrange | precond | [usize::add()](https://doc.rust-lang.org/std/primitive.usize.html#method.unchecked_add)  |
 | III.2  | ValidString(arange) | mem(arange) $\in$ utf-8 |  precond | [String::from_utf8_unchecked()](https://doc.rust-lang.org/std/string/struct.String.html#method.from_utf8_unchecked) |
 |        | ValidString(arange) | - | hazard | [String::as_bytes_mut()](https://doc.rust-lang.org/std/string/struct.String.html#method.as_bytes_mut) |
@@ -49,13 +48,15 @@ In practice, a safety property may correspond to a precondition, an optional pre
 |         | -  | - | hazard | [ptr::copy()](https://doc.rust-lang.org/std/ptr/fn.copy.html) |
 |         | -  | - | option | [ptr::copy()](https://doc.rust-lang.org/std/ptr/fn.copy.html) |
 | III.5  | Unwrap(x, T) | unwrap(x) = T | precond | [Option::unwrap_unchecked()](https://doc.rust-lang.org/std/option/enum.Option.html#method.unwrap_unchecked)  |
+| III.6  | Typed(p, T) | typeof(*p) = T | precond | [Rc::from_raw()](https://doc.rust-lang.org/beta/std/rc/struct.Rc.html#method.from_raw) |
 | IV.1  | Ownning(p) | ownership(*p) = none | precond | [Box::from_raw()](https://doc.rust-lang.org/std/boxed/struct.Box.html#method.from_raw)  |
 | IV.2  | Alias(p1, p2) | p1 = p2 | hazard | [pointer::as_mut()](https://doc.rust-lang.org/std/primitive.pointer.html#method.as_mut) |
 | IV.3  | Alive(p, l) | lifetime(*p) $\ge$ l | precond | [AtomicPtr::from_ptr()](https://doc.rust-lang.org/std/sync/atomic/struct.AtomicPtr.html#method.from_ptr)  |
 | V.1  | Pinned(p, l) | $$\forall t \in 0..l, \\&(*p)_0 = p_t$$ | hazard | [Pin::new_unchecked()](https://doc.rust-lang.org/std/pin/struct.Pin.html#method.new_unchecked)  |
-| V.2  | !Volatile(p) | volatile(*p) = false | precond | [ptr::read()](https://doc.rust-lang.org/std/ptr/fn.read.html) |
-| V.3  | Trait(T, trait) | trait $\in$ traitimpl(T) | option | [ptr::read()](https://doc.rust-lang.org/std/ptr/fn.read.html)  |
-| V.4  | !Reachable() | sat(cond()) = false | precondition | [intrinsics::read()](https://doc.rust-lang.org/nightly/std/intrinsics/fn.unreachable.html) |
+| V.2  | !Volatile(p, T, len) | $$\nexists$$ another thread tid, tid.write(p, p+sizeof(T)*len) | precond | [ptr::read()](https://doc.rust-lang.org/std/ptr/fn.read.html) |
+| V.3  | Opened(fd) | $$\exists$$ openfile()->fd && $$\nexists$$ closefile(fd) | precond | [fd::from_raw_fd()](https://doc.rust-lang.org/std/os/fd/trait.FromRawFd.html#tymethod.from_raw_fd) |
+| V.4  | Trait(T, trait) | trait $\in$ traitimpl(T) | option | [ptr::read()](https://doc.rust-lang.org/std/ptr/fn.read.html)  |
+| V.5  | !Reachable() | sat(cond()) = false | precondition | [intrinsics::read()](https://doc.rust-lang.org/nightly/std/intrinsics/fn.unreachable.html) |
 
 **Note**: These primitives are not yet complete. New proposals are always welcome. 
 
@@ -150,7 +151,7 @@ Bounded access requires that the pointer access with respet to an offset stays w
 
 **psp II.3 InBound(p, T, len, arange)**: 
 
-$$[p, p+ sizeof(T) * len) \in single allocated object $$
+$$\text{mem}(p, p+ sizeof(T) * len) \in single allocated object $$
 
 Example APIs: [ptr::offset()](https://doc.rust-lang.org/std/primitive.pointer.html#method.offset), [ptr::copy()](https://doc.rust-lang.org/std/ptr/fn.copy.html) 
 
@@ -161,16 +162,6 @@ A safety property may require the two pointers do not overlap with respect to `T
 $$|dst - src| > \text{sizeof}(T) * len $$
 
 Example APIs: [ptr::copy_from()](https://doc.rust-lang.org/std/ptr/fn.copy.html), [ptr::copy()](https://doc.rust-lang.org/std/ptr/fn.copy_from.html), [ptr::copy_nonoverlapping()](https://doc.rust-lang.org/std/ptr/fn.copy_nonoverlapping.html), [ptr::copy_from_nonoverlapping](https://doc.rust-lang.org/core/primitive.pointer.html#method.copy_from_nonoverlapping)
-
-Besides, some APIs accepts a raw pointer as the input and requires the raw pointer must have been previously returned by a call of `into_raw` from the same module.
-
-**psp II.5 Typed(p, T)**: 
-
-$$\text{sizeof}(*p) = T $$
-
-Note that this may also concern the memory space ahead of p.
-
-Example APIs: [Rc::from_raw()](https://doc.rust-lang.org/beta/std/rc/struct.Rc.html#method.from_raw), [Arc::from_raw()](https://doc.rust-lang.org/beta/std/sync/struct.Arc.html#method.from_raw), [Weak::from_raw()](https://doc.rust-lang.org/beta/std/sync/struct.Weak.html#method.from_raw),[Thread::from_raw()](https://doc.rust-lang.org/beta/std/thread/struct.Thread.html#method.from_raw)
 
 ### 3.3. Content
 
@@ -191,7 +182,7 @@ The safety properties of String requires the bytes contained in a vector `v` sho
 
 **psp III.2 ValidString(arange)**:
 
-$$mem(arange)\in \text{utf-8}$$
+$$\text{mem}(arange)\in \text{utf-8}$$
 
 The parameter `arange` specifies an address range. For different APIs, the address range can be specified with `(pointer, T, length)' or a vector `v`, etc.
 
@@ -225,6 +216,16 @@ Such safety properties relate to the monadic types, including [Option](https://d
 $$\text{unwrap}(x) = target,\ s.t., \text{typeof}(target) \in \lbrace \text{Ok(T)}, \text{Err(E)}, \text{Some(T)}, \text{None} \rbrace $$
 
 Example APIs: [Option::unwrap_unchecked()](https://doc.rust-lang.org/std/option/enum.Option.html#method.unwrap_unchecked), [Result::unwrap_unchecked()](https://doc.rust-lang.org/core/result/enum.Result.html#method.unwrap_unchecked), [Result::unwrap_err_unchecked()](https://doc.rust-lang.org/core/result/enum.Result.html#method.unwrap_err_unchecked)
+
+Besides, some APIs accepts a raw pointer as the input and requires the raw pointer must have been previously returned by a call of `into_raw` from the same module.
+
+**psp III.6 Typed(p, T)**: 
+
+$$\text{sizeof}(*p) = T $$
+
+Note that this may also concern the memory space ahead of p.
+
+Example APIs: [Rc::from_raw()](https://doc.rust-lang.org/beta/std/rc/struct.Rc.html#method.from_raw), [Arc::from_raw()](https://doc.rust-lang.org/beta/std/sync/struct.Arc.html#method.from_raw), [Weak::from_raw()](https://doc.rust-lang.org/beta/std/sync/struct.Weak.html#method.from_raw),[Thread::from_raw()](https://doc.rust-lang.org/beta/std/thread/struct.Thread.html#method.from_raw)
 
 ### 3.4 Alias
 This category relates to the core mechanism of Rust which aims to avoid shared mutable aliases and achieve automated memory deallocation. 
@@ -272,13 +273,21 @@ Example APIs: [Pin::new_unchecked()](https://doc.rust-lang.org/std/pin/struct.Pi
 
 There are specific APIs for volatile memory access in std-lib, like [ptr::read_volatile()](https://doc.rust-lang.org/std/ptr/fn.read_volatile.html) and [ptr::write_volatile()](https://doc.rust-lang.org/std/ptr/fn.write_volatile.html). Other memory operations should require non-volatile by default.
 
-**psp V.2 !Volatile(p)**:
+**psp V.2 !Volatile(p, T, len)**:
 
-$$\text{volatile}(*p) = false$$
+$$\nexists \text{another thread}\ tid,\ tid.\text{write}(p, p+sizeof(T)*len)$$
 
 Example APIs: [ptr::read()](https://doc.rust-lang.org/std/ptr/fn.read.html), [ptr::write()](https://doc.rust-lang.org/std/ptr/fn.write.html)
 
-#### 3.5.3 Trait
+#### 3.5.3 Opened File 
+
+Some file operations require the file is opened.
+
+$$\exists openfile()->fd\ \\&\\&\ \nexists closefile(fd)$$
+
+Example APIs: [fd::from_raw_fd()](https://doc.rust-lang.org/std/os/fd/trait.FromRawFd.html#tymethod.from_raw_fd)
+
+#### 3.5.4 Trait
 
 If a parameter type `T` implements certain traits, it can guarantee safety or mitigate specific hazards
 
@@ -290,7 +299,7 @@ In particular, $\text{Copy} \in \text{trait}(T)$ ensures that alias issues or Al
 
 Example APIs: [ptr::read()](https://doc.rust-lang.org/std/ptr/fn.read.html), [ptr::read_volatile()](https://doc.rust-lang.org/std/ptr/fn.read_volatile.html), [Pin::new_unchecked()](https://doc.rust-lang.org/std/pin/struct.Pin.html#method.new_unchecked)
 
-#### 3.5.4 Unreachable
+#### 3.5.5 Unreachable
 
 The current program point should not be reachable during execution.
 
