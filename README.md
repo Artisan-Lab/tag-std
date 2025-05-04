@@ -72,3 +72,6 @@ pub fn remove(&mut self, idx: usize) -> char {
     ch
 }
 ```
+
+For more details, please refer to our paper:
+- "[Annotating and Auditing the Safety Properties of Unsafe Rust](https://arxiv.org/abs/2504.21312)", Zihao Rao, Hongliang Tian, Xin Wang, **Hui Xu**, _arXiv:2504.21312_, 2025. (corresponding author)
