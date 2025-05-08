@@ -3,6 +3,8 @@
 #![feature(register_tool)]
 #![register_tool(tag_std)]
 
+extern crate demo;
+
 use demo::MyStruct;
 
 fn main() {
