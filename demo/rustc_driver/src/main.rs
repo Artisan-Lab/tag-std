@@ -13,10 +13,10 @@ extern crate stable_mir;
 use rustc_data_structures::fx::FxHashSet;
 use rustc_hir::Attribute;
 use rustc_middle::ty::TyCtxt;
-use rustc_smir::rustc_internal::internal;
 use stable_mir::{
     CrateDef, CrateItem, ItemKind,
     mir::{MirVisitor, mono::Instance, visit::Location},
+    rustc_internal::internal,
     ty::Ty,
 };
 
@@ -24,8 +24,6 @@ fn main() {
     let rustc_args: Vec<_> = std::env::args().collect();
     _ = run_with_tcx!(&rustc_args, |tcx| {
         analyze(tcx);
-
-        // Don't emit real artifacts.
         ControlFlow::<(), ()>::Continue(())
     });
 }
@@ -46,11 +44,16 @@ fn analyze(tcx: TyCtxt) {
                 continue;
             }
         };
-
         reachability.add_instance(instance);
     }
 
-    dbg!(reachability.instances.len());
+    let local_crate = stable_mir::local_crate();
+    println!(
+        "********* {name:?} {typ:?} has reached {len} instances *********",
+        name = local_crate.name,
+        typ = tcx.crate_types(),
+        len = reachability.instances.len()
+    );
     reachability.print_tag_std_attrs(tcx);
 }
 
@@ -65,29 +68,26 @@ impl Reachability {
         if self.instances.insert(instance) {
             // recurse if this is the first time of insertion
             if let Some(body) = instance.body() {
-                // println!("(body) {:?}", instance.name());
                 self.visit_body(&body);
             }
         }
     }
 
     fn print_tag_std_attrs(&self, tcx: TyCtxt) {
-        // let mut file = std::fs::File::create("tag-std.txt").unwrap();
         for instance in &self.instances {
             // Only user defined instances can be converted.
             match CrateItem::try_from(*instance) {
                 Ok(item) => print_tag_std_attrs(instance, item),
                 Err(_) => {
-                    // println!("(error) {} not converted to be an item: {err:?}", instance.name());
                     // Resort to internal API for unsupported StableMir conversions.
-                    print_tag_std_attrs_throgh_internal_apis(tcx, instance);
+                    print_tag_std_attrs_through_internal_apis(tcx, instance);
                 }
             }
         }
     }
 }
 
-fn print_tag_std_attrs_throgh_internal_apis(tcx: TyCtxt<'_>, instance: &Instance) {
+fn print_tag_std_attrs_through_internal_apis(tcx: TyCtxt<'_>, instance: &Instance) {
     let def_id = internal(tcx, instance.def.def_id());
     let tool_attrs = tcx.get_all_attrs(def_id).filter(|attr| {
         if let Attribute::Unparsed(tool_attr) = attr {
@@ -99,7 +99,7 @@ fn print_tag_std_attrs_throgh_internal_apis(tcx: TyCtxt<'_>, instance: &Instance
     });
     for attr in tool_attrs {
         println!(
-            "\n(internal api) {fn_name:?} ({span:?}) => {attr:?}",
+            "(internal api) {fn_name:?} ({span:?}) => {attr:?}\n",
             fn_name = instance.name(),
             span = instance.def.span().diagnostic(),
             attr = rustc_hir_pretty::attribute_to_string(&tcx, attr)
@@ -114,7 +114,7 @@ fn print_tag_std_attrs(instance: &Instance, item: CrateItem) {
         .filter(|attr| attr.as_str().starts_with(REGISTER_TOOL_ATTR));
     for tag_attr in tool_attrs {
         println!(
-            "\n(stable mir) {fn_name:?} ({span:?}) => {attr:?}",
+            "(stable mir) {fn_name:?} ({span:?}) => {attr:?}\n",
             fn_name = instance.name(),
             span = instance.def.span().diagnostic(),
             attr = tag_attr.as_str()

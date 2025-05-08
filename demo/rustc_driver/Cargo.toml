@@ -10,5 +10,4 @@ path = "src/bin/cargo_tag_std.rs"
 [dependencies]
 
 [package.metadata.rust-analyzer]
-# nightly-2025-04-21-x86_64-unknown-linux-gnu
 rustc_private = true

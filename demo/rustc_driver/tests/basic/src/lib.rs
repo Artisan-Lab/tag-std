@@ -3,7 +3,6 @@
 
 use std::slice;
 
-// #[tag_std(!Reachable())]
 #[tag_std::unreachable]
 pub unsafe fn test() {
     println!("unreachable!");

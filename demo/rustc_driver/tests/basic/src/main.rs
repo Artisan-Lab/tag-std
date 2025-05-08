@@ -1,9 +1,5 @@
 #![feature(vec_into_raw_parts)]
 #![allow(unused_variables)]
-#![feature(register_tool)]
-#![register_tool(tag_std)]
-
-// extern crate demo;
 
 use demo::MyStruct;
 
