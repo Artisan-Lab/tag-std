@@ -33,6 +33,8 @@ impl MyStruct {
 fn main() {
     let (p, l, _c) = Vec::new().into_raw_parts();
     let a = MyStruct::from(p, l);
-    println!("{:?}", unsafe { a.get() });
-    MyStruct::get_contract();
+    println!("{:?}", unsafe { 
+        MyStruct::get_contract();
+        a.get() 
+    });
 }
