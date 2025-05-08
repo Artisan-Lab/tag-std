@@ -1,8 +1,10 @@
 use std::{env::var, process::Command};
 
 fn main() {
-    let cargo_tag_std = var("CARGO_TAG_STD").unwrap();
-    let tag_std = var("TAG_STD").unwrap();
+    // Search cargo-tag-std and tag-std CLI through environment variables,
+    // or just use the name if absent.
+    let cargo_tag_std = var("CARGO_TAG_STD").unwrap_or_else(|_| "cargo-tag-std".to_owned());
+    let tag_std = var("TAG_STD").unwrap_or_else(|_| "tag-std".to_owned());
 
     let mut args = std::env::args().collect::<Vec<_>>();
 

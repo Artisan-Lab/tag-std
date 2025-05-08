@@ -5,7 +5,7 @@ export LD_LIBRARY_PATH=$(rustc --print sysroot)/lib
 
 cargo build
 export TAG_STD=$PWD/target/debug/tag-std
-export CARGO_TAG_STD=$PWD/target/debug/cargo_tag_std
+export CARGO_TAG_STD=$PWD/target/debug/cargo-tag-std
 # export CARGO_TERM_VERBOSE=true
 
 # Test basic demo

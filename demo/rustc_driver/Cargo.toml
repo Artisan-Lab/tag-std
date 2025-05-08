@@ -3,6 +3,10 @@ name = "tag-std"
 version = "0.1.0"
 edition = "2024"
 
+[[bin]]
+name = "cargo-tag-std"
+path = "src/bin/cargo_tag_std.rs"
+
 [dependencies]
 
 [package.metadata.rust-analyzer]
