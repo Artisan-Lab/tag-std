@@ -3,7 +3,7 @@
 #![feature(register_tool)]
 #![register_tool(tag_std)]
 
-extern crate demo;
+// extern crate demo;
 
 use demo::MyStruct;
 

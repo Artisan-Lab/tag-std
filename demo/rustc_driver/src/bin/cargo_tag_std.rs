@@ -18,11 +18,7 @@ fn main() {
 
         run(&tag_std, &args[1..], &[]);
     } else {
-        run(
-            "cargo",
-            &["build", "-vvv"].map(String::from),
-            &[("RUSTC", &cargo_tag_std), ("WRAPPER", "1")],
-        );
+        run("cargo", &["build"].map(String::from), &[("RUSTC", &cargo_tag_std), ("WRAPPER", "1")]);
     }
 }
 
