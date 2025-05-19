@@ -22,8 +22,8 @@ where
 ```
 
 We can tag the API with the following primitive safety property:
-- Primitive SP template: `ValidInt(expr, vrange)`, which means $expr \in vrange$;
-    - Specific primitive SP for the API: `ValidInt((sizeof(T) * count), [isize::MIN, isize::MAX] )`.
+- Primitive SP template: `ValidNum(expr, vrange)`, which means $expr \in vrange$;
+    - Specific primitive SP for the API: `ValidNum((sizeof(T) * count), [isize::MIN, isize::MAX] )`.
 
 For another instance, the unsafe API [ptr::copy()](https://doc.rust-lang.org/beta/core/ptr/fn.copy.html) is described as follows:
 ```rust
