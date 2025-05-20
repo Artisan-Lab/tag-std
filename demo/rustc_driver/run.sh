@@ -4,8 +4,8 @@ set -ex
 export LD_LIBRARY_PATH=$(rustc --print sysroot)/lib
 
 cargo build
-export TAG_STD=$PWD/target/debug/safe
-export CARGO_TAG_STD=$PWD/target/debug/cargo-safe
+export TAG_STD=$PWD/target/debug/safe-tool
+export CARGO_TAG_STD=$PWD/target/debug/cargo-safe-tool
 
 # Test basic demo
 cd ./tests/basic
