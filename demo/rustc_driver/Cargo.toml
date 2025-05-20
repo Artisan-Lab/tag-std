@@ -1,11 +1,11 @@
 [package]
-name = "safe"
+name = "safe-tool"
 version = "0.1.0"
 edition = "2024"
 
 [[bin]]
-name = "cargo-safe"
-path = "src/bin/cargo-safe.rs"
+name = "cargo-safe-tool"
+path = "src/bin/cargo-safe-tool.rs"
 
 [dependencies]
 
