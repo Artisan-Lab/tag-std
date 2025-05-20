@@ -71,7 +71,7 @@ As a result, the safety property is provided as following.
 #[safe::require(!Overlap(dst, src, T, 1))]
 #[safe::require(Align(src, T))]
 #[safe::require(Align(dst, T))]
-#[safe::require(Alias(dst, src))]
+#[safe::hazard(Alias(dst, src))]
 pub const unsafe fn copy<T>(src: *const T, dst: *mut T, count: usize)
 ```
 
