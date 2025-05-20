@@ -27,7 +27,7 @@ We can tag the API with the following primitive safety property:
 
 As a result, the safety property is provided as following.
 ```rust
-#[safe::require(ValidNum((sizeof(T) * count), [isize::MIN, isize::MAX])]
+#[safe::require(ValidNum((sizeof(T) * count), [isize::MIN, isize::MAX]))]
 pub const unsafe fn add(self, count: usize) -> Self
 where
     T: Sized,
