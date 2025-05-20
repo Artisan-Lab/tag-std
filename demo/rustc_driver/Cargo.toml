@@ -1,11 +1,11 @@
 [package]
-name = "tag-std"
+name = "safe"
 version = "0.1.0"
 edition = "2024"
 
 [[bin]]
-name = "cargo-tag-std"
-path = "src/bin/cargo_tag_std.rs"
+name = "cargo-safe"
+path = "src/bin/cargo-safe.rs"
 
 [dependencies]
 

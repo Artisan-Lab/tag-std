@@ -25,6 +25,14 @@ We can tag the API with the following primitive safety property:
 - Primitive SP template: `ValidNum(expr, vrange)`, which means $expr \in vrange$;
     - Specific primitive SP for the API: `ValidNum((sizeof(T) * count), [isize::MIN, isize::MAX] )`.
 
+As a result, the safety property is provided as following.
+```rust
+#[safe::require(ValidNum((sizeof(T) * count), [isize::MIN, isize::MAX])`.
+pub const unsafe fn add(self, count: usize) -> Self
+where
+    T: Sized,
+```
+
 For another instance, the unsafe API [ptr::copy()](https://doc.rust-lang.org/beta/core/ptr/fn.copy.html) is described as follows:
 ```rust
 pub const unsafe fn copy<T>(src: *const T, dst: *mut T, count: usize)
@@ -41,10 +49,10 @@ pub const unsafe fn copy<T>(src: *const T, dst: *mut T, count: usize)
 We can tag the API with the following primitive safety property:
 - Primitive SP template: `Allocated(p, T, len, A)`, which means $\forall$ i $\in$ 0..sizeof(T)*len, allocator(p+i) = A;
     - Specific primitive SP for the API: `Allocated(src, T, len, any)`
-- Primitive SP template: `InBound(p, T, len, arange)`, which means [p, p+ sizeof(T) * len) $\in$ arrange;
-   - Specific primitive SP for the API: `InBound(src, T, len, -)`
+- Primitive SP template: `InBound(p, T, len)`, which means [p, p+ sizeof(T) * len) $\in$ arrange;
+   - Specific primitive SP for the API: `InBound(src, T, len)`
 - Primitive SP template: `Init(p, T, len)`, which means $\forall$ i $\in$ 0..len, mem(p + sizeof(T) * i, p + sizeof(T) * (i+1)) = valid(T);
-    - Specific primitive SP for the API: `Init(dst, T, count)`
+    - Specific primitive SP for the API: `Init(src, T, count)`
 - Primitive SP template: `!Overlap(dst, src, T, len)`, which means \|dst - src\| $\ge$ sizeof(T) * len;
     - Specific primitive SP for the API: `!Overlap(dst, src, T, 1)`
 - Primitive SP template: `Align(p, T)`, which means  p \% alignment(T) = 0;
@@ -54,6 +62,18 @@ These are the preconditions for calling the unsafe APIs. We need more properties
 
 - Primitive SP template: `Alias(p1, p2)`, which means $p1 = p2$;
     - Specific primitive SP for the API: `Alias(dst, src)`
+
+
+As a result, the safety property is provided as following.
+```rust
+#[safe::require(InBound(src, T, len))]
+#[safe::require(Init(src, T, count))]
+#[safe::require(!Overlap(dst, src, T, 1))]
+#[safe::require(Align(src, T))]
+#[safe::require(Align(dst, T))]
+#[safe::require(Alias(dst, src))]
+pub const unsafe fn copy<T>(src: *const T, dst: *mut T, count: usize)
+```
 
 When proving the soundness of [String::remove()](https://doc.rust-lang.org/beta/alloc/string/struct.String.html#method.remove) (see the code below), it is essential to verify that the primitive safety properties of its interior unsafe APIs [ptr.add()](https://doc.rust-lang.org/beta/core/primitive.pointer.html#method.add) and [ptr::copy()](https://doc.rust-lang.org/beta/core/ptr/fn.copy.html) are met in all cases.
 

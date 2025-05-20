@@ -28,8 +28,8 @@ fn main() {
     });
 }
 
-const REGISTER_TOOL_ATTR: &str = "#[tag_std";
-const TAG_STD: &str = "tag_std";
+const REGISTER_TOOL_ATTR: &str = "#[safe";
+const TAG_STD: &str = "safe";
 
 fn analyze(tcx: TyCtxt) {
     let mut reachability = Reachability::default();
