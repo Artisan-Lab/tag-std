@@ -3,7 +3,7 @@ use crate::contract::extract_contract;
 use contract;
 use std::slice;
 
-///safety::requires(!Reachable())
+///safety::precond(!Reachable())
 #[extract_contract]
 pub unsafe fn test() {
     println!("unreachable!");
@@ -17,9 +17,9 @@ impl MyStruct {
     pub fn from(p: *mut u8, l: usize) -> MyStruct {
         MyStruct { ptr: p, len: l }
     }
-    ///safety::requires::Init(self.ptr, u8, self.len)
-    ///safety::requires::InBound(self.ptr, u8, self.len)
-    ///safety::requires::ValidNum(self.len*sizeof(u8), [0,isize::MAX])
+    ///safety::precond::Init(self.ptr, u8, self.len)
+    ///safety::precond::InBound(self.ptr, u8, self.len)
+    ///safety::precond::ValidNum(self.len*sizeof(u8), [0,isize::MAX])
     ///safety::hazard::Alias(self.ptr)
     #[extract_contract]
     pub unsafe fn get(&self) -> &mut [u8] {
