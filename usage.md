@@ -17,4 +17,4 @@ To facilitate reviewing the usage of unsafe APIs, developers can annotate how ea
 #[safety::discharges::Alias(p, 0)::memo(...)]
 ```
 We use the keyword `discharges` to indicate that the associated safety property has been satisfied, 
-with supporting justification provided via the `proof` keyword.
+with supporting justification provided via the `memo` keyword.
