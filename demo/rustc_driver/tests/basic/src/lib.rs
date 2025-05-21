@@ -1,7 +1,7 @@
 #![feature(register_tool)]
 #![register_tool(safety)]
 
-#[safety::require(!Reachable())]
+#[safety::requires(!Reachable())]
 pub unsafe fn test() {
     println!("unreachable!");
 }
