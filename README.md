@@ -2,7 +2,7 @@
 
 This project aims to standardize the safety property annotation of the Rust core and standard library. There are three steps:
 - Define the [primitive safety properties](primitive-sp.md) to be used for describing the safety concerns of unsafe APIs.
-- Label the unsafe APIs in Rust's core and standard library with primitive safety properties.
+- [Label the unsafe APIs](usage.md) in Rust's core and standard library with primitive safety properties.
 - Detect and solve discripencies via program analysis.
 
 Through this project, we aim to establish a foundation for Rust contract design and verification, serving as a preliminary step toward this goal.
