@@ -27,7 +27,7 @@ We can tag the API with the following primitive safety property:
 
 As a result, the safety property is provided as following.
 ```rust
-#[safe::require(ValidNum((sizeof(T) * count), [isize::MIN, isize::MAX]))]
+#[safety::requires::ValidNum((sizeof(T) * count), [isize::MIN, isize::MAX])]
 pub const unsafe fn add(self, count: usize) -> Self
 where
     T: Sized,
@@ -66,12 +66,12 @@ These are the preconditions for calling the unsafe APIs. We need more properties
 
 As a result, the safety property is provided as following.
 ```rust
-#[safe::require(InBound(src, T, len))]
-#[safe::require(Init(src, T, count))]
-#[safe::require(!Overlap(dst, src, T, 1))]
-#[safe::require(Align(src, T))]
-#[safe::require(Align(dst, T))]
-#[safe::hazard(Alias(dst, src))]
+#[safety::requires::InBound(src, T, len)]
+#[safety::requires::Init(src, T, count)]
+#[safety::requires::NotOverlap(dst, src, T, 1)]
+#[safety::requires::Align(src, T)]
+#[safety::requires::Align(dst, T)]
+#[safety::hazard::Alias(dst, src)]
 pub const unsafe fn copy<T>(src: *const T, dst: *mut T, count: usize)
 ```
 
