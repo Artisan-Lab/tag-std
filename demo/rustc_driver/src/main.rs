@@ -28,8 +28,8 @@ fn main() {
     });
 }
 
-const REGISTER_TOOL_ATTR: &str = "#[safe";
-const TAG_STD: &str = "safe";
+const REGISTER_TOOL_ATTR: &str = "#[safety";
+const REGISTER_TOOL: &str = "safety";
 
 fn analyze(tcx: TyCtxt) {
     let mut reachability = Reachability::default();
@@ -91,7 +91,7 @@ fn print_tag_std_attrs_through_internal_apis(tcx: TyCtxt<'_>, instance: &Instanc
     let def_id = internal(tcx, instance.def.def_id());
     let tool_attrs = tcx.get_all_attrs(def_id).filter(|attr| {
         if let Attribute::Unparsed(tool_attr) = attr {
-            if tool_attr.path.segments[0].as_str() == TAG_STD {
+            if tool_attr.path.segments[0].as_str() == REGISTER_TOOL {
                 return true;
             }
         }
