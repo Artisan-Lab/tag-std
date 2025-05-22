@@ -5,7 +5,21 @@ use safety_tool_parser::{
 };
 
 #[proc_macro_attribute]
-pub fn safety(attr: TokenStream, item: TokenStream) -> TokenStream {
+pub fn precond(attr: TokenStream, item: TokenStream) -> TokenStream {
+    generate(attr, item)
+}
+
+#[proc_macro_attribute]
+pub fn hazard(attr: TokenStream, item: TokenStream) -> TokenStream {
+    generate(attr, item)
+}
+
+#[proc_macro_attribute]
+pub fn option(attr: TokenStream, item: TokenStream) -> TokenStream {
+    generate(attr, item)
+}
+
+fn generate(attr: TokenStream, item: TokenStream) -> TokenStream {
     let item = parse_macro_input!(item as ItemFn);
     let attr = parse_macro_input!(attr as SafetyAttrArgs);
 
