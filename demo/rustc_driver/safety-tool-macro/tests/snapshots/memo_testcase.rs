@@ -4,7 +4,7 @@
 use std::prelude::rust_2024::*;
 #[macro_use]
 extern crate std;
-use safety_tool_macro::safety;
+use safety_tool_macro as safety;
 /// This is a single line.
 fn single_line() {}
 /// Line 1.
