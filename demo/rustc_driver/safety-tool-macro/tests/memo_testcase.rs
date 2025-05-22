@@ -1,3 +1,5 @@
+#![feature(register_tool)]
+#![register_tool(Safety)]
 #![allow(dead_code, non_snake_case)]
 use safety_tool_macro as safety;
 
