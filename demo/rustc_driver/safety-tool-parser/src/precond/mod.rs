@@ -1,8 +1,17 @@
+use proc_macro2::TokenStream;
+use std::collections::BTreeSet;
 use syn::{
     parse::{Parse, ParseStream},
     punctuated::Punctuated,
     *,
 };
+
+mod utils;
+
+#[cfg(test)]
+mod tests;
+
+//  ******************** Attribute Parsing ********************
 
 #[derive(Debug)]
 pub struct SafetyAttr {
@@ -19,11 +28,13 @@ impl Parse for SafetyAttr {
     }
 }
 
+type ListNamedArgs = Punctuated<NamedArgs, Token![,]>;
+
 #[derive(Debug)]
 pub struct SafetyAttrArgs {
     pub expr: Expr,
     pub comma: Option<Token![,]>,
-    pub named: Punctuated<NamedArgs, Token![,]>,
+    pub named: ListNamedArgs,
 }
 
 impl Parse for SafetyAttrArgs {
@@ -33,6 +44,12 @@ impl Parse for SafetyAttrArgs {
             comma: input.parse()?,
             named: Punctuated::parse_separated_nonempty(input)?,
         })
+    }
+}
+
+impl SafetyAttrArgs {
+    pub fn generate_code(&self) -> Vec<TokenStream> {
+        NamedArgsSet::new(&self.named).generate_code()
     }
 }
 
@@ -49,9 +66,46 @@ impl Parse for NamedArgs {
     }
 }
 
-#[test]
-fn precond_align() {
-    let attr = r#"#[safety::precond(Align(self.ptr, T), memo = "reason")]"#;
-    let safety_attr: SafetyAttr = parse_str(attr).unwrap();
-    dbg!(&safety_attr);
+//  ******************** Attribute Analyzing ********************
+
+#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
+enum NamedArg {
+    Memo(String),
+}
+
+impl NamedArg {
+    fn new(ident: &Ident, expr: &Expr) -> Self {
+        if ident == "memo"
+            && let Expr::Lit(lit) = expr
+            && let Lit::Str(memo) = &lit.lit
+        {
+            return NamedArg::Memo(memo.value());
+        }
+
+        panic!("{ident:?} is not a supported ident.\nCurrently supported named arguments: memo.")
+    }
+
+    /// Like generate rustdoc attributes to display doc comment in rustdoc HTML.
+    fn generate_code(&self) -> Vec<TokenStream> {
+        match self {
+            NamedArg::Memo(memo) => utils::memo(memo),
+        }
+    }
+}
+
+#[derive(Debug)]
+struct NamedArgsSet {
+    set: BTreeSet<NamedArg>,
+}
+
+impl NamedArgsSet {
+    fn new(named_args: &ListNamedArgs) -> Self {
+        NamedArgsSet {
+            set: named_args.iter().map(|arg| NamedArg::new(&arg.name, &arg.expr)).collect(),
+        }
+    }
+
+    fn generate_code(&self) -> Vec<TokenStream> {
+        self.set.iter().flat_map(NamedArg::generate_code).collect()
+    }
 }
