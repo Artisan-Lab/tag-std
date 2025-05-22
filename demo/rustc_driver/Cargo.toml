@@ -9,5 +9,9 @@ path = "src/bin/cargo-safe-tool.rs"
 
 [dependencies]
 
+[workspace]
+members = [ "safety-tool-lib","safety-tool-macro", "safety-tool-parser"]
+exclude = ["tests/basic"]
+
 [package.metadata.rust-analyzer]
 rustc_private = true
