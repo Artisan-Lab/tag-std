@@ -8,3 +8,6 @@ proc-macro = true
 
 [dependencies]
 safety-tool-parser = { path = "../safety-tool-parser" }
+
+[dev-dependencies]
+expect-test = "1.5.1"
