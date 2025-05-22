@@ -78,7 +78,7 @@ impl Reachability {
     }
 }
 
-const REGISTER_TOOL: &str = "safety_tool_macro";
+const REGISTER_TOOL: &str = "Safety";
 
 fn print_tag_std_attrs_through_internal_apis(tcx: TyCtxt<'_>, instance: &Instance) {
     let def_id = internal(tcx, instance.def.def_id());
