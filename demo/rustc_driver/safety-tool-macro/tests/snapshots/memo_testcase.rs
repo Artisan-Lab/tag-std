@@ -17,6 +17,17 @@ fn multi_lines2() {}
 /// Line 2.
 /// Line 3.
 fn multi_lines3() {}
+/// Line 2.
+/// Line 3.
+/// Line 1.
+/// Line 4.
+fn multi_lines4() {}
+/// Line 4.
+/// Line 2.
+/// Line 3.
+/// Line 1.
+/// Line 5.
+fn multi_lines5() {}
 #[rustc_main]
 #[coverage(off)]
 #[doc(hidden)]
