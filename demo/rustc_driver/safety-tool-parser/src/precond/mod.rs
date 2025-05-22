@@ -51,8 +51,8 @@ impl Parse for SafetyAttrArgs {
 }
 
 impl SafetyAttrArgs {
-    pub fn generate_code(&self) -> Vec<TokenStream> {
-        NamedArgsSet::new(&self.named).generate_code()
+    pub fn generate_doc_comments(&self) -> Vec<TokenStream> {
+        NamedArgsSet::new(&self.named).generate_doc_comments()
     }
 }
 
@@ -89,7 +89,7 @@ impl NamedArg {
     }
 
     /// Like generate rustdoc attributes to display doc comment in rustdoc HTML.
-    fn generate_code(&self) -> Vec<TokenStream> {
+    fn generate_doc_comments(&self) -> Vec<TokenStream> {
         match self {
             NamedArg::Memo(memo) => utils::memo(memo),
         }
@@ -108,7 +108,7 @@ impl NamedArgsSet {
         }
     }
 
-    fn generate_code(&self) -> Vec<TokenStream> {
-        self.set.iter().flat_map(NamedArg::generate_code).collect()
+    fn generate_doc_comments(&self) -> Vec<TokenStream> {
+        self.set.iter().flat_map(NamedArg::generate_doc_comments).collect()
     }
 }

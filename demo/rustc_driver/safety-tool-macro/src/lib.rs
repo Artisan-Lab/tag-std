@@ -23,9 +23,9 @@ fn generate(attr: TokenStream, item: TokenStream) -> TokenStream {
     let item = parse_macro_input!(item as ItemFn);
     let attr = parse_macro_input!(attr as SafetyAttrArgs);
 
-    let gen_code = attr.generate_code();
+    let gen_code = attr.generate_doc_comments();
 
     let mut fn_item = FnItem::new(item);
-    fn_item.insert_doc_string_to_the_back(gen_code);
+    fn_item.insert_doc_comments_to_the_back(gen_code);
     fn_item.into_token_stream().into()
 }
