@@ -1,9 +1,17 @@
 use proc_macro::TokenStream;
-use safety_tool_parser::{precond::SafetyAttrArgs, syn::*};
+use safety_tool_parser::{
+    precond::{FnItem, SafetyAttrArgs},
+    syn::*,
+};
 
 #[proc_macro_attribute]
 pub fn safety(attr: TokenStream, item: TokenStream) -> TokenStream {
+    let item = parse_macro_input!(item as ItemFn);
     let attr = parse_macro_input!(attr as SafetyAttrArgs);
+
     let gen_code = attr.generate_code();
-    gen_code.into_iter().map(TokenStream::from).chain([item]).collect()
+
+    let mut fn_item = FnItem::new(item);
+    fn_item.insert_doc_string_to_the_back(gen_code);
+    fn_item.into_token_stream().into()
 }
