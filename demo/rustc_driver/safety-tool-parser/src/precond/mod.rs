@@ -51,7 +51,7 @@ impl Parse for SafetyAttrArgs {
 }
 
 impl SafetyAttrArgs {
-    pub fn generate_doc_comments(&self) -> Vec<TokenStream> {
+    pub fn generate_doc_comments(&self) -> TokenStream {
         NamedArgsSet::new(&self.named).generate_doc_comments()
     }
 }
@@ -108,7 +108,7 @@ impl NamedArgsSet {
         }
     }
 
-    fn generate_doc_comments(&self) -> Vec<TokenStream> {
+    fn generate_doc_comments(&self) -> TokenStream {
         self.set.iter().flat_map(NamedArg::generate_doc_comments).collect()
     }
 }
