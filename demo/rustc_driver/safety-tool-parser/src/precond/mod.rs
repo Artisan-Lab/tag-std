@@ -8,6 +8,9 @@ use syn::{
 
 mod utils;
 
+mod keep_doc_order;
+pub use keep_doc_order::FnItem;
+
 #[cfg(test)]
 mod tests;
 
