@@ -14,7 +14,7 @@ use rustc_data_structures::fx::FxHashSet;
 use rustc_hir::Attribute;
 use rustc_middle::ty::TyCtxt;
 use stable_mir::{
-    CrateDef, CrateItem, ItemKind,
+    CrateDef, ItemKind,
     mir::{MirVisitor, mono::Instance, visit::Location},
     rustc_internal::internal,
     ty::Ty,
@@ -27,9 +27,6 @@ fn main() {
         ControlFlow::<(), ()>::Continue(())
     });
 }
-
-const REGISTER_TOOL_ATTR: &str = "#[safety";
-const REGISTER_TOOL: &str = "safety";
 
 fn analyze(tcx: TyCtxt) {
     let mut reachability = Reachability::default();
@@ -75,17 +72,13 @@ impl Reachability {
 
     fn print_tag_std_attrs(&self, tcx: TyCtxt) {
         for instance in &self.instances {
-            // Only user defined instances can be converted.
-            match CrateItem::try_from(*instance) {
-                Ok(item) => print_tag_std_attrs(instance, item),
-                Err(_) => {
-                    // Resort to internal API for unsupported StableMir conversions.
-                    print_tag_std_attrs_through_internal_apis(tcx, instance);
-                }
-            }
+            // Resort to internal API for all attrs, rather than tool attrs.
+            print_tag_std_attrs_through_internal_apis(tcx, instance);
         }
     }
 }
+
+const REGISTER_TOOL: &str = "safety_tool_macro";
 
 fn print_tag_std_attrs_through_internal_apis(tcx: TyCtxt<'_>, instance: &Instance) {
     let def_id = internal(tcx, instance.def.def_id());
@@ -99,25 +92,10 @@ fn print_tag_std_attrs_through_internal_apis(tcx: TyCtxt<'_>, instance: &Instanc
     });
     for attr in tool_attrs {
         println!(
-            "(internal api) {fn_name:?} ({span:?}) => {attr:?}\n",
+            "{fn_name:?} ({span:?}) => {attr:?}\n",
             fn_name = instance.name(),
             span = instance.def.span().diagnostic(),
             attr = rustc_hir_pretty::attribute_to_string(&tcx, attr)
-        );
-    }
-}
-
-fn print_tag_std_attrs(instance: &Instance, item: CrateItem) {
-    let tool_attrs = item
-        .all_tool_attrs()
-        .into_iter()
-        .filter(|attr| attr.as_str().starts_with(REGISTER_TOOL_ATTR));
-    for tag_attr in tool_attrs {
-        println!(
-            "(stable mir) {fn_name:?} ({span:?}) => {attr:?}\n",
-            fn_name = instance.name(),
-            span = instance.def.span().diagnostic(),
-            attr = tag_attr.as_str()
         );
     }
 }
