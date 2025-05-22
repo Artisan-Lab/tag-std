@@ -28,7 +28,7 @@ impl FnItem {
         FnItem { fn_ }
     }
 
-    pub fn insert_doc_string_to_the_back(&mut self, tokens: Vec<TokenStream>) {
+    pub fn insert_doc_comments_to_the_back(&mut self, tokens: Vec<TokenStream>) {
         // Double check the given tokens are attributes.
         let tokens: TokenStream = tokens.into_iter().collect();
         let attrs = Attribute::parse_outer.parse2(tokens).unwrap();
