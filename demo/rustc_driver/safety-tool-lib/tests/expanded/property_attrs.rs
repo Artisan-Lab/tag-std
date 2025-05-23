@@ -8,10 +8,13 @@ extern crate std;
 use safety_tool_lib::safety;
 /// reason
 #[Safety::inner(kind = "precond", T, memo = "reason")]
-pub fn api() {}
+pub fn api1() {}
 /// reason
-#[Safety::inner(kind = "precond", T, memo = "reason")]
+#[Safety::inner(kind = "hazard", T, memo = "reason")]
 pub fn api2() {}
+/// reason
+#[Safety::inner(kind = "option", T, memo = "reason")]
+pub fn api3() {}
 #[rustc_main]
 #[coverage(off)]
 #[doc(hidden)]

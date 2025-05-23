@@ -4,7 +4,10 @@
 use safety_tool_lib::safety;
 
 #[safety::precond::Align(T, memo = "reason")]
-pub fn api() {}
+pub fn api1() {}
 
-#[safety::precond::UnReachable(T, memo = "reason")]
+#[safety::hazard::Alias(T, memo = "reason")]
 pub fn api2() {}
+
+#[safety::option::UnReachable(T, memo = "reason")]
+pub fn api3() {}
