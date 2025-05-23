@@ -1,10 +1,10 @@
 use std::{env::var, process::Command};
 
 fn main() {
-    // Search cargo-tag-std and tag-std CLI through environment variables,
+    // Search cargo-safe-tool and safe-tool CLI through environment variables,
     // or just use the name if absent.
-    let cargo_tag_std = var("CARGO_TAG_STD").unwrap_or_else(|_| "cargo-tag-std".to_owned());
-    let tag_std = var("TAG_STD").unwrap_or_else(|_| "tag-std".to_owned());
+    let cargo_safe_tool = &*var("CARGO_SATE_TOOL").unwrap_or_else(|_| "cargo-safe-tool".to_owned());
+    let safe_tool = &*var("SAFE_TOOL").unwrap_or_else(|_| "safe-tool".to_owned());
 
     let mut args = std::env::args().collect::<Vec<_>>();
 
@@ -18,9 +18,9 @@ fn main() {
             args[1] = "src/lib.rs".to_owned();
         }
 
-        run(&tag_std, &args[1..], &[]);
+        run(safe_tool, &args[1..], &[]);
     } else {
-        run("cargo", &["build"].map(String::from), &[("RUSTC", &cargo_tag_std), ("WRAPPER", "1")]);
+        run("cargo", &["build"].map(String::from), &[("RUSTC", cargo_safe_tool), ("WRAPPER", "1")]);
     }
 }
 
@@ -35,6 +35,6 @@ fn run(cmd: &str, args: &[String], vars: &[(&str, &str)]) {
         .wait()
         .unwrap();
     if !status.success() {
-        eprintln!("[error] {cmd}: args={args:?} vars={vars:?}");
+        eprintln!("[error] {cmd}: args={args:#?} vars={vars:?}");
     }
 }
