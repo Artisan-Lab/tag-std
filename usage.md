@@ -13,8 +13,8 @@ Here, the middle keywords `precond`, `option`, and `hazard` correspond to the th
 ## Callsite Annotation
 To facilitate reviewing the usage of unsafe APIs, developers can annotate how each safety property is addressed as follows: 
 ```rust
-#[safety::discharges::Align(p, T)::memo(...)]
-#[safety::discharges::Alias(p, 0)::memo(...)]
+#[safety::discharges(Align(p, T), memo = "...")]
+#[safety::discharges(Alias(p, 0), "..."]
 ```
 We use the keyword `discharges` to indicate that the associated safety property has been satisfied, 
 with supporting justification provided via the `memo` keyword.
