@@ -9,6 +9,20 @@ pub struct Property {
     pub expr: Expr,
 }
 
+impl Property {
+    pub fn from_components(kind: Kind, name: PropertyName, expr: Vec<Expr>) -> Self {
+        Property {
+            kind,
+            name,
+            expr: Expr::Tuple(ExprTuple {
+                attrs: Vec::new(),
+                paren_token: Default::default(),
+                elems: expr.into_iter().collect(),
+            }),
+        }
+    }
+}
+
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum Kind {
     Precond,

@@ -53,6 +53,10 @@ impl SafetyAttrArgs {
         NamedArgsSet::new(self, kind)
     }
 
+    pub fn into_named_args_set2(self, kind: Kind, property: PropertyName) -> NamedArgsSet {
+        NamedArgsSet::new_kind_and_property(self, kind, property)
+    }
+
     pub fn generate_safety_tool_attribute(&self, kind: Kind) -> TokenStream {
         let Self { exprs } = self;
         quote! {
@@ -104,6 +108,9 @@ pub struct NamedArgsSet {
 }
 
 impl NamedArgsSet {
+    // e.g. #[precond(Property(...), memo = "...")]
+    //
+    // The first positional arguement is the whole Property.
     fn new(args: SafetyAttrArgs, kind: Option<Kind>) -> Self {
         let exprs = args.exprs;
         let mut set = IndexSet::with_capacity(exprs.len());
@@ -115,6 +122,27 @@ impl NamedArgsSet {
 
         // parse positional arguments
         parse_positional_args(kind, &mut set, non_named_exprs);
+
+        NamedArgsSet { set }
+    }
+
+    // e.g. #[precond::Property(..., memo = "...")]
+    fn new_kind_and_property(args: SafetyAttrArgs, kind: Kind, property: PropertyName) -> Self {
+        let exprs = args.exprs;
+        let mut set = IndexSet::with_capacity(exprs.len());
+
+        let mut non_named_exprs = Vec::new();
+
+        // parse all named arguments
+        parse_named_args(exprs, &mut set, &mut non_named_exprs);
+
+        // positional arguments are collected into a tuple expr
+        let first = set.insert(NamedArg::Property(Property::from_components(
+            kind,
+            property,
+            non_named_exprs,
+        )));
+        assert!(first, "{kind:?} {property:?} exists.");
 
         NamedArgsSet { set }
     }
