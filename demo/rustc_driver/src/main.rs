@@ -36,8 +36,8 @@ fn analyze(tcx: TyCtxt) {
     for fun in functions {
         let instance = match Instance::try_from(*fun) {
             Ok(instance) => instance,
-            Err(err) => {
-                eprintln!("Failed to get the instance for {fun:?}:\n{err:?}");
+            Err(_) => {
+                // eprintln!("Failed to get the instance for {fun:?}:\n{err:?}");
                 continue;
             }
         };
