@@ -9,5 +9,5 @@ pub fn api1() {}
 #[safety::hazard::Alias(T, memo = "reason")]
 pub fn api2() {}
 
-#[safety::option::UnReachable(T, memo = "reason")]
+#[safety::option::UnReachable()]
 pub fn api3() {}
