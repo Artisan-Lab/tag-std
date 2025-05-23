@@ -1,6 +1,7 @@
 use indexmap::IndexSet;
-use proc_macro2::{Literal, TokenStream};
-use quote::{ToTokens, TokenStreamExt, quote};
+use proc_macro2::TokenStream;
+use property::{Kind, Property, PropertyName};
+use quote::quote;
 use syn::{
     parse::{Parse, ParseStream},
     punctuated::Punctuated,
@@ -11,6 +12,8 @@ mod utils;
 
 mod keep_doc_order;
 pub use keep_doc_order::FnItem;
+
+pub mod property;
 
 #[cfg(test)]
 mod tests;
@@ -95,30 +98,6 @@ impl NamedArg {
     }
 }
 
-#[derive(Clone, Debug, PartialEq, Eq, Hash)]
-pub struct Property {
-    pub kind: Kind,
-    pub expr: Expr,
-}
-
-#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
-pub enum Kind {
-    Precond,
-    Hazard,
-    Option,
-}
-
-impl ToTokens for Kind {
-    fn to_tokens(&self, tokens: &mut TokenStream) {
-        let kind = match self {
-            Kind::Precond => "precond",
-            Kind::Hazard => "hazard",
-            Kind::Option => "option",
-        };
-        tokens.append(Literal::string(kind));
-    }
-}
-
 #[derive(Debug)]
 pub struct NamedArgsSet {
     pub set: IndexSet<NamedArg>,
@@ -173,7 +152,19 @@ fn parse_positional_args(
                 } else {
                     unreachable!("No kind available.")
                 };
-                set.insert(NamedArg::Property(Property { kind, expr }));
+
+                // Property
+                let name = if let Some(name) = PropertyName::try_from_expr_ident(&expr) {
+                    name
+                } else {
+                    // Property(args...) or Property::<T>(args...)
+                    let Expr::Call(call) = &expr else {
+                        panic!("{expr:?} should be a fn call.");
+                    };
+                    PropertyName::from_expr_ident(&call.func)
+                };
+
+                set.insert(NamedArg::Property(Property { kind, name, expr }));
             }
             1 => {
                 if let Some(memo) = set.iter().find_map(|arg| {
@@ -201,15 +192,28 @@ fn parse_named_args(
     for arg in exprs {
         match &arg {
             Expr::Assign(assign) => {
-                let Expr::Path(path) = &*assign.left else {
-                    panic!("{arg:?} is not normal assign expr.")
-                };
                 // ident = expr
-                let ident = path.path.get_ident().unwrap();
+                let ident = &expr_ident(&assign.left);
                 let first = set.insert(NamedArg::new(ident, &assign.right));
                 assert!(first, "{ident} exists.");
             }
             _ => non_named_exprs.push(arg),
         }
     }
+}
+
+/// Parse expr as single ident.
+///
+/// Panic if expr is not Path or a path with multiple segments.
+fn expr_ident(expr: &Expr) -> Ident {
+    let Expr::Path(path) = expr else { panic!("{expr:?} is not path expr.") };
+    path.path.get_ident().unwrap().clone()
+}
+
+/// Parse expr as single ident.
+///
+/// Panic if expr is not Path or a path with multiple segments.
+fn expr_ident_opt(expr: &Expr) -> Option<Ident> {
+    let Expr::Path(path) = expr else { return None };
+    path.path.get_ident().cloned()
 }

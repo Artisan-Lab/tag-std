@@ -1,6 +1,6 @@
 use proc_macro::TokenStream;
 use safety_tool_parser::{
-    precond::{FnItem, Kind, SafetyAttrArgs},
+    precond::{FnItem, SafetyAttrArgs, property::Kind},
     syn::*,
 };
 
