@@ -15,7 +15,11 @@ use rustc_hir::Attribute;
 use rustc_middle::ty::TyCtxt;
 use stable_mir::{
     CrateDef, ItemKind,
-    mir::{MirVisitor, mono::Instance, visit::Location},
+    mir::{
+        MirVisitor,
+        mono::{Instance, InstanceKind},
+        visit::Location,
+    },
     rustc_internal::internal,
     ty::Ty,
 };
@@ -62,7 +66,10 @@ struct Reachability {
 
 impl Reachability {
     fn add_instance(&mut self, instance: Instance) {
-        if self.instances.insert(instance) {
+        if self.instances.insert(instance)
+            && instance.has_body()
+            && matches!(instance.kind, InstanceKind::Item)
+        {
             // recurse if this is the first time of insertion
             if let Some(body) = instance.body() {
                 self.visit_body(&body);
@@ -92,7 +99,7 @@ fn print_tag_std_attrs_through_internal_apis(tcx: TyCtxt<'_>, instance: &Instanc
     });
     for attr in tool_attrs {
         println!(
-            "{fn_name:?} ({span:?}) => {attr:?}\n",
+            "{fn_name:?} ({span:?})\n => {attr:?}\n",
             fn_name = instance.name(),
             span = instance.def.span().diagnostic(),
             attr = rustc_hir_pretty::attribute_to_string(&tcx, attr)
