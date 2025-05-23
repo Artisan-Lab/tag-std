@@ -1,10 +1,10 @@
 use proc_macro::TokenStream;
 use safety_tool_parser::{
-    precond::{
+    proc_macro2::{Ident, TokenStream as TokenStream2},
+    property_attr::{
         FnItem, SafetyAttrArgs,
         property::{Kind, PropertyName},
     },
-    proc_macro2::{Ident, TokenStream as TokenStream2},
     quote::quote_spanned,
     syn::{parse::Parser, punctuated::Punctuated, *},
 };
