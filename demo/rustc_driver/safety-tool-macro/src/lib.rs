@@ -89,14 +89,14 @@ kind_property! {
     Precond_Init: Precond, Init;
     Precond_Unwrap: Precond, Unwrap;
     Precond_Typed: Precond, Typed;
-    Precond_Ownninig: Precond, Ownninig;
+    Precond_Owning: Precond, Owning;
     Precond_Alias: Precond, Alias;
     Precond_Alive: Precond, Alive;
     Precond_Pinned: Precond, Pinned;
     Precond_NotVolatile: Precond, NotVolatile;
     Precond_Opened: Precond, Opened;
     Precond_Trait: Precond, Trait;
-    Precond_UnReachable: Precond, UnReachable;
+    Precond_Unreachable: Precond, Unreachable;
 
     Hazard_Align: Hazard, Align;
     Hazard_Size: Hazard, Size;
@@ -111,14 +111,14 @@ kind_property! {
     Hazard_Init: Hazard, Init;
     Hazard_Unwrap: Hazard, Unwrap;
     Hazard_Typed: Hazard, Typed;
-    Hazard_Ownninig: Hazard, Ownninig;
+    Hazard_Owning: Hazard, Owning;
     Hazard_Alias: Hazard, Alias;
     Hazard_Alive: Hazard, Alive;
     Hazard_Pinned: Hazard, Pinned;
     Hazard_NotVolatile: Hazard, NotVolatile;
     Hazard_Opened: Hazard, Opened;
     Hazard_Trait: Hazard, Trait;
-    Hazard_UnReachable: Hazard, UnReachable;
+    Hazard_Unreachable: Hazard, Unreachable;
 
     Option_Align: Option, Align;
     Option_Size: Option, Size;
@@ -133,14 +133,14 @@ kind_property! {
     Option_Init: Option, Init;
     Option_Unwrap: Option, Unwrap;
     Option_Typed: Option, Typed;
-    Option_Ownninig: Option, Ownninig;
+    Option_Owning: Option, Owning;
     Option_Alias: Option, Alias;
     Option_Alive: Option, Alive;
     Option_Pinned: Option, Pinned;
     Option_NotVolatile: Option, NotVolatile;
     Option_Opened: Option, Opened;
     Option_Trait: Option, Trait;
-    Option_UnReachable: Option, UnReachable;
+    Option_Unreachable: Option, Unreachable;
 }
 
 /// Pub use a attribute by stripping the prefix.

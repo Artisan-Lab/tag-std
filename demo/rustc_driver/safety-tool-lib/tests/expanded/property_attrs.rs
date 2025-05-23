@@ -12,7 +12,7 @@ pub fn api1() {}
 /// reason
 #[Safety::inner(property = Alias(T), kind = "hazard", memo = "reason")]
 pub fn api2() {}
-#[Safety::inner(property = UnReachable(), kind = "option")]
+#[Safety::inner(property = Unreachable(), kind = "option")]
 pub fn api3() {}
 #[rustc_main]
 #[coverage(off)]

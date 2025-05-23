@@ -16,14 +16,14 @@ pub mod precond {
         Precond_Init,
         Precond_Unwrap,
         Precond_Typed,
-        Precond_Ownninig,
+        Precond_Owning,
         Precond_Alias,
         Precond_Alive,
         Precond_Pinned,
         Precond_NotVolatile,
         Precond_Opened,
         Precond_Trait,
-        Precond_UnReachable,
+        Precond_Unreachable,
     }
 }
 
@@ -42,14 +42,14 @@ pub mod hazard {
         Hazard_Init,
         Hazard_Unwrap,
         Hazard_Typed,
-        Hazard_Ownninig,
+        Hazard_Owning,
         Hazard_Alias,
         Hazard_Alive,
         Hazard_Pinned,
         Hazard_NotVolatile,
         Hazard_Opened,
         Hazard_Trait,
-        Hazard_UnReachable,
+        Hazard_Unreachable,
     }
 }
 
@@ -68,13 +68,13 @@ pub mod option {
         Option_Init,
         Option_Unwrap,
         Option_Typed,
-        Option_Ownninig,
+        Option_Owning,
         Option_Alias,
         Option_Alive,
         Option_Pinned,
         Option_NotVolatile,
         Option_Opened,
         Option_Trait,
-        Option_UnReachable,
+        Option_Unreachable,
     }
 }
