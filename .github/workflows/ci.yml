@@ -16,6 +16,10 @@ jobs:
 
       - uses: dtolnay/rust-toolchain@nightly
 
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-expand
+
       - name: Run Tests
         working-directory: demo/rustc_driver
         run: bash run.sh
