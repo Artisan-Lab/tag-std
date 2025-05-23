@@ -1,3 +1,5 @@
+use core::cmp::Ordering;
+
 use proc_macro2::{Literal, Span, TokenStream};
 use quote::{ToTokens, TokenStreamExt};
 use syn::*;
@@ -8,6 +10,27 @@ pub struct Property {
     pub name: PropertyName,
     /// Should be a fn call expr, containing the name.
     pub expr: Expr,
+}
+
+impl PartialOrd for Property {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        Some(self.cmp(other))
+    }
+}
+
+impl Ord for Property {
+    fn cmp(&self, other: &Self) -> Ordering {
+        match self.kind.cmp(&other.kind) {
+            Ordering::Equal => {}
+            ord => return ord,
+        }
+        match self.name.cmp(&other.name) {
+            Ordering::Equal => {}
+            ord => return ord,
+        }
+        // Unable compare expr.
+        Ordering::Equal
+    }
 }
 
 impl Property {

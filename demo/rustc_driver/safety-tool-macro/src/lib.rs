@@ -28,9 +28,9 @@ fn generate(kind: Kind, attr: TokenStream, item: TokenStream) -> TokenStream {
     let item = parse_macro_input!(item as ItemFn);
     let attr = parse_macro_input!(attr as SafetyAttrArgs);
 
-    let safety_tool_attr = attr.generate_safety_tool_attribute(kind);
     let named_args_set = attr.into_named_args_set(Some(kind));
     let doc_comments = named_args_set.generate_doc_comments();
+    let safety_tool_attr = named_args_set.generate_safety_tool_attribute();
 
     let mut fn_item = FnItem::new(item);
     fn_item.insert_attributes_to_the_back(doc_comments);
@@ -47,9 +47,9 @@ fn generate2(
     let item = parse_macro_input!(item as ItemFn);
     let attr = parse_macro_input!(attr as SafetyAttrArgs);
 
-    let safety_tool_attr = attr.generate_safety_tool_attribute(kind);
     let named_args_set = attr.into_named_args_set2(kind, property);
     let doc_comments = named_args_set.generate_doc_comments();
+    let safety_tool_attr = named_args_set.generate_safety_tool_attribute();
 
     let mut fn_item = FnItem::new(item);
     fn_item.insert_attributes_to_the_back(doc_comments);

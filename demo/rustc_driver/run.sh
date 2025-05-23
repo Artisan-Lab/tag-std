@@ -7,8 +7,16 @@ cargo build
 export SAFE_TOOL=$PWD/target/debug/safe-tool
 export CARGO_SAFE_TOOL=$PWD/target/debug/cargo-safe-tool
 
+pushd safety-tool-lib
+bash tests/test.sh
+popd
+
+pushd safety-tool-macro
+cargo test
+popd
+
 # Test basic demo
-cd ./tests/basic
+pushd ./tests/basic
 
 cargo clean
 

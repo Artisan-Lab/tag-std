@@ -6,35 +6,35 @@
 ********* "quote" [Rlib] has reached 505 instances *********
 ********* "indexmap" [Rlib] has reached 128 instances *********
 ********* "syn" [Rlib] has reached 6924 instances *********
-********* "safety_tool_parser" [Rlib] has reached 1378 instances *********
-********* "safety_tool_macro" [ProcMacro] has reached 36 instances *********
+********* "safety_tool_parser" [Rlib] has reached 1531 instances *********
+********* "safety_tool_macro" [ProcMacro] has reached 380 instances *********
 ********* "safety_tool_lib" [Rlib] has reached 0 instances *********
 ********* "demo" [Rlib] has reached 8 instances *********
 "test" ("src/lib.rs:12:1: 12:26")
- => "#[Safety::inner(kind = \"precond\", UnReachable, memo =\n\"It's undefined behavior to reach code marked with this intrinsic function.\")]\n"
+ => "#[Safety::inner(property = UnReachable, kind = \"precond\", memo =\n\"It's undefined behavior to reach code marked with this intrinsic function.\")]\n"
 
 "MyStruct::get" ("src/lib.rs:40:5: 40:42")
- => "#[Safety::inner(kind = \"precond\", Init(self.ptr, u8, self.len), memo =\n\"The ptr must be initialized first!\")]\n"
+ => "#[Safety::inner(property = Init(self.ptr, u8, self.len), kind = \"precond\",\nmemo = \"The ptr must be initialized first!\")]\n"
 
 "MyStruct::get" ("src/lib.rs:40:5: 40:42")
- => "#[Safety::inner(kind = \"precond\", InBound(self.ptr, u8, self.len), memo =\n\"The ptr must be within the length.\")]\n"
+ => "#[Safety::inner(property = InBound(self.ptr, u8, self.len), kind = \"precond\",\nmemo = \"The ptr must be within the length.\")]\n"
 
 "MyStruct::get" ("src/lib.rs:40:5: 40:42")
- => "#[Safety::inner(kind = \"precond\",\nValidNum(self.len * sizeof(u8), [0, isize :: MAX]), memo =\n\"Slice length can't exceed isize::MAX due to allocation limit.\")]\n"
+ => "#[Safety::inner(property = ValidNum(self.len * sizeof(u8), [0, isize :: MAX]),\nkind = \"precond\", memo =\n\"Slice length can't exceed isize::MAX due to allocation limit.\")]\n"
 
 "MyStruct::get" ("src/lib.rs:40:5: 40:42")
- => "#[Safety::inner(kind = \"hazard\", Alias(self.ptr), memo =\n\"Make sure don't alias the ptr.\")]\n"
+ => "#[Safety::inner(property = Alias(self.ptr), kind = \"hazard\", memo =\n\"Make sure don't alias the ptr.\")]\n"
 
 ********* "demo" [Executable] has reached 18 instances *********
 "demo::MyStruct::get" ("/home/gh-zjp-CN/tag-std/demo/rustc_driver/tests/basic/src/lib.rs:40:5: 40:42")
- => "#[Safety::inner(kind = \"precond\", Init(self.ptr, u8, self.len), memo =\n\"The ptr must be initialized first!\")]\n"
+ => "#[Safety::inner(property = Init(self.ptr, u8, self.len), kind = \"precond\",\nmemo = \"The ptr must be initialized first!\")]\n"
 
 "demo::MyStruct::get" ("/home/gh-zjp-CN/tag-std/demo/rustc_driver/tests/basic/src/lib.rs:40:5: 40:42")
- => "#[Safety::inner(kind = \"precond\", InBound(self.ptr, u8, self.len), memo =\n\"The ptr must be within the length.\")]\n"
+ => "#[Safety::inner(property = InBound(self.ptr, u8, self.len), kind = \"precond\",\nmemo = \"The ptr must be within the length.\")]\n"
 
 "demo::MyStruct::get" ("/home/gh-zjp-CN/tag-std/demo/rustc_driver/tests/basic/src/lib.rs:40:5: 40:42")
- => "#[Safety::inner(kind = \"precond\",\nValidNum(self.len * sizeof(u8), [0, isize :: MAX]), memo =\n\"Slice length can't exceed isize::MAX due to allocation limit.\")]\n"
+ => "#[Safety::inner(property = ValidNum(self.len * sizeof(u8), [0, isize :: MAX]),\nkind = \"precond\", memo =\n\"Slice length can't exceed isize::MAX due to allocation limit.\")]\n"
 
 "demo::MyStruct::get" ("/home/gh-zjp-CN/tag-std/demo/rustc_driver/tests/basic/src/lib.rs:40:5: 40:42")
- => "#[Safety::inner(kind = \"hazard\", Alias(self.ptr), memo =\n\"Make sure don't alias the ptr.\")]\n"
+ => "#[Safety::inner(property = Alias(self.ptr), kind = \"hazard\", memo =\n\"Make sure don't alias the ptr.\")]\n"
 

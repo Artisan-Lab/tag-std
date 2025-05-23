@@ -7,13 +7,13 @@ use std::prelude::rust_2024::*;
 extern crate std;
 use safety_tool_lib::safety;
 /// reason
-#[Safety::inner(kind = "precond", T, memo = "reason")]
+#[Safety::inner(property = Align(T), kind = "precond", memo = "reason")]
 pub fn api1() {}
 /// reason
-#[Safety::inner(kind = "hazard", T, memo = "reason")]
+#[Safety::inner(property = Alias(T), kind = "hazard", memo = "reason")]
 pub fn api2() {}
 /// reason
-#[Safety::inner(kind = "option", T, memo = "reason")]
+#[Safety::inner(property = UnReachable(T), kind = "option", memo = "reason")]
 pub fn api3() {}
 #[rustc_main]
 #[coverage(off)]

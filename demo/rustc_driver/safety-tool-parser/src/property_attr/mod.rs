@@ -56,21 +56,14 @@ impl SafetyAttrArgs {
     pub fn into_named_args_set2(self, kind: Kind, property: PropertyName) -> NamedArgsSet {
         NamedArgsSet::new_kind_and_property(self, kind, property)
     }
-
-    pub fn generate_safety_tool_attribute(&self, kind: Kind) -> TokenStream {
-        let Self { exprs } = self;
-        quote! {
-            #[Safety::inner(kind = #kind, #exprs)]
-        }
-    }
 }
 
 //  ******************** Attribute Analyzing ********************
 
-#[derive(Clone, Debug, PartialEq, Eq, Hash)]
+#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum NamedArg {
-    Kind(String),
     Property(Property),
+    Kind(String),
     Memo(String),
 }
 
@@ -123,6 +116,7 @@ impl NamedArgsSet {
         // parse positional arguments
         parse_positional_args(kind, &mut set, non_named_exprs);
 
+        set.sort();
         NamedArgsSet { set }
     }
 
@@ -144,11 +138,29 @@ impl NamedArgsSet {
         )));
         assert!(first, "{kind:?} {property:?} exists.");
 
+        set.sort();
         NamedArgsSet { set }
     }
 
     pub fn generate_doc_comments(&self) -> TokenStream {
         self.set.iter().flat_map(NamedArg::generate_doc_comments).collect()
+    }
+
+    pub fn generate_safety_tool_attribute(&self) -> TokenStream {
+        let mut args = Punctuated::<TokenStream, Token![,]>::new();
+        for arg in &self.set {
+            match arg {
+                NamedArg::Property(property) => {
+                    let (kind, property) = (property.kind, &property.expr);
+                    args.extend([quote!(property = #property), quote!(kind = #kind)]);
+                }
+                NamedArg::Memo(memo) => args.extend([quote!(memo = #memo)]),
+                _ => (),
+            }
+        }
+        quote! {
+            #[Safety::inner(#args)]
+        }
     }
 }
 
