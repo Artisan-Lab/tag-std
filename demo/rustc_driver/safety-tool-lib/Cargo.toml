@@ -5,3 +5,4 @@ edition = "2024"
 
 [dependencies]
 safety-tool-macro = { path = "../safety-tool-macro" }
+safety-tool-parser = { path = "../safety-tool-parser" }
