@@ -1,4 +1,4 @@
-use proc_macro2::{Literal, TokenStream};
+use proc_macro2::{Literal, Span, TokenStream};
 use quote::{ToTokens, TokenStreamExt};
 use syn::*;
 
@@ -6,6 +6,7 @@ use syn::*;
 pub struct Property {
     pub kind: Kind,
     pub name: PropertyName,
+    /// Should be a fn call expr, containing the name.
     pub expr: Expr,
 }
 
@@ -14,10 +15,15 @@ impl Property {
         Property {
             kind,
             name,
-            expr: Expr::Tuple(ExprTuple {
+            expr: Expr::Call(ExprCall {
                 attrs: Vec::new(),
+                func: Box::new(Expr::Path(ExprPath {
+                    attrs: Vec::new(),
+                    qself: None,
+                    path: Ident::new(name.to_str(), Span::call_site()).into(),
+                })),
                 paren_token: Default::default(),
-                elems: expr.into_iter().collect(),
+                args: expr.into_iter().collect(),
             }),
         }
     }
