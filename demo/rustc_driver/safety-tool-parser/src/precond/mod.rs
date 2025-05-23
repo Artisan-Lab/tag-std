@@ -1,5 +1,6 @@
 use indexmap::IndexSet;
-use proc_macro2::TokenStream;
+use proc_macro2::{Literal, TokenStream};
+use quote::{ToTokens, TokenStreamExt, quote};
 use syn::{
     parse::{Parse, ParseStream},
     punctuated::Punctuated,
@@ -44,18 +45,18 @@ impl Parse for SafetyAttrArgs {
     }
 }
 
-// impl SafetyAttrArgs {
-//     pub fn generate_doc_comments(&self) -> TokenStream {
-//         NamedArgsSet::new(&self.named).generate_doc_comments()
-//     }
-//
-//     pub fn generate_safety_tool_attribute(&self, kind: &str) -> TokenStream {
-//         let Self { exprs, .. } = self;
-//         quote! {
-//             #[Safety::inner(kind = #kind, #exprs)]
-//         }
-//     }
-// }
+impl SafetyAttrArgs {
+    pub fn into_named_args_set(self, kind: Option<Kind>) -> NamedArgsSet {
+        NamedArgsSet::new(self, kind)
+    }
+
+    pub fn generate_safety_tool_attribute(&self, kind: Kind) -> TokenStream {
+        let Self { exprs } = self;
+        quote! {
+            #[Safety::inner(kind = #kind, #exprs)]
+        }
+    }
+}
 
 //  ******************** Attribute Analyzing ********************
 
@@ -95,21 +96,32 @@ impl NamedArg {
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Hash)]
-struct Property {
-    kind: Kind,
-    expr: Expr,
+pub struct Property {
+    pub kind: Kind,
+    pub expr: Expr,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
-enum Kind {
+pub enum Kind {
     Precond,
     Hazard,
     Option,
 }
 
+impl ToTokens for Kind {
+    fn to_tokens(&self, tokens: &mut TokenStream) {
+        let kind = match self {
+            Kind::Precond => "precond",
+            Kind::Hazard => "hazard",
+            Kind::Option => "option",
+        };
+        tokens.append(Literal::string(kind));
+    }
+}
+
 #[derive(Debug)]
-struct NamedArgsSet {
-    set: IndexSet<NamedArg>,
+pub struct NamedArgsSet {
+    pub set: IndexSet<NamedArg>,
 }
 
 impl NamedArgsSet {
@@ -126,6 +138,10 @@ impl NamedArgsSet {
         parse_positional_args(kind, &mut set, non_named_exprs);
 
         NamedArgsSet { set }
+    }
+
+    pub fn generate_doc_comments(&self) -> TokenStream {
+        self.set.iter().flat_map(NamedArg::generate_doc_comments).collect()
     }
 }
 
@@ -191,21 +207,9 @@ fn parse_named_args(
                 // ident = expr
                 let ident = path.path.get_ident().unwrap();
                 let first = set.insert(NamedArg::new(ident, &assign.right));
-                assert!(!first, "{ident} exists.");
+                assert!(first, "{ident} exists.");
             }
             _ => non_named_exprs.push(arg),
         }
     }
 }
-
-// impl NamedArgsSet {
-//     fn new(named_args: &ListNamedArgs) -> Self {
-//         NamedArgsSet {
-//             set: named_args.iter().map(|arg| NamedArg::new(&arg.name, &arg.expr)).collect(),
-//         }
-//     }
-//
-//     fn generate_doc_comments(&self) -> TokenStream {
-//         self.set.iter().flat_map(NamedArg::generate_doc_comments).collect()
-//     }
-// }

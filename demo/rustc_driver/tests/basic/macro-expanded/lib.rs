@@ -10,8 +10,8 @@ extern crate std;
 use safety_tool_lib::safety;
 /// It's undefined behavior to reach code marked with this intrinsic function.
 #[Safety::inner(
-    UnReachable,
     kind = "precond",
+    UnReachable,
     memo = "It's undefined behavior to reach code marked with this intrinsic function."
 )]
 pub unsafe fn test() -> ! {
@@ -27,26 +27,26 @@ impl MyStruct {
     }
     /// The ptr must be initialized first!
     #[Safety::inner(
-        Init(self.ptr, u8, self.len),
         kind = "precond",
+        Init(self.ptr, u8, self.len),
         memo = "The ptr must be initialized first!"
     )]
     /// The ptr must be within the length.
     #[Safety::inner(
-        InBound(self.ptr, u8, self.len),
         kind = "precond",
+        InBound(self.ptr, u8, self.len),
         memo = "The ptr must be within the length."
     )]
     /// Slice length can't exceed isize::MAX due to allocation limit.
     #[Safety::inner(
-        ValidNum(self.len*sizeof(u8), [0, isize::MAX]),
         kind = "precond",
+        ValidNum(self.len*sizeof(u8), [0, isize::MAX]),
         memo = "Slice length can't exceed isize::MAX due to allocation limit."
     )]
     /// Make sure don't alias the ptr.
     #[Safety::inner(
-        Alias(self.ptr),
         kind = "hazard",
+        Alias(self.ptr),
         memo = "Make sure don't alias the ptr."
     )]
     pub unsafe fn get(&self) -> &mut [u8] {

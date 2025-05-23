@@ -8,38 +8,38 @@ use std::prelude::rust_2024::*;
 extern crate std;
 use safety_tool_macro as safety;
 /// This is a single line.
-#[Safety::inner(Property, kind = "precond", memo = "This is a single line.")]
+#[Safety::inner(kind = "precond", Property, memo = "This is a single line.")]
 fn single_line() {}
 /// Line 1.
 /// Line 2.
-#[Safety::inner(Property, kind = "hazard", memo = "Line 1.\nLine 2.")]
+#[Safety::inner(kind = "hazard", Property, memo = "Line 1.\nLine 2.")]
 fn multi_lines() {}
 /// Line 1.
 /// Line 2.
-#[Safety::inner(Property, kind = "option", memo = "
+#[Safety::inner(kind = "option", Property, memo = "
 Line 1.
 Line 2.")]
 fn multi_lines2() {}
 /// Line 1.
 /// Line 2.
 /// Line 3.
-#[Safety::inner(Property, kind = "precond", memo = "
+#[Safety::inner(kind = "precond", Property, memo = "
     Line 2.
     Line 3.")]
 fn multi_lines3() {}
 /// Line 1.
 /// Line 2.
 /// Line 3.
-#[Safety::inner(Property, kind = "hazard", memo = "
+#[Safety::inner(kind = "hazard", Property, memo = "
     Line 2.
     Line 3.")]
 /// Line 4.
-#[Safety::inner(Property, kind = "option", memo = "Line 4.")]
+#[Safety::inner(kind = "option", Property, memo = "Line 4.")]
 fn multi_lines4() {}
 /// Line 3.
 /// Line 1.
 /// Line 2.
-#[Safety::inner(Property, kind = "precond", memo = "
+#[Safety::inner(kind = "precond", Property, memo = "
     Line 1.
     Line 2.")]
 fn multi_lines3_DONT_DO_THIS() {}
@@ -47,15 +47,15 @@ fn multi_lines3_DONT_DO_THIS() {}
 /// Line 4.
 /// Line 2.
 /// Line 3.
-#[Safety::inner(Property, kind = "precond", memo = "Line 2.\nLine 3.")]
+#[Safety::inner(kind = "precond", Property, memo = "Line 2.\nLine 3.")]
 fn multi_lines4_DONT_DO_THIS() {}
 /// Line 1.
 /// Line 5.
 /// Line 2.
 /// Line 3.
-#[Safety::inner(Property, kind = "precond", memo = "Line 2.\nLine 3.")]
+#[Safety::inner(kind = "precond", Property, memo = "Line 2.\nLine 3.")]
 /// Line 4.
-#[Safety::inner(Property, kind = "precond", memo = "Line 4.")]
+#[Safety::inner(kind = "precond", Property, memo = "Line 4.")]
 fn multi_lines5_DONT_DO_THIS() {}
 #[rustc_main]
 #[coverage(off)]
