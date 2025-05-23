@@ -1,6 +1,5 @@
+use indexmap::IndexSet;
 use proc_macro2::TokenStream;
-use quote::{ToTokens, quote};
-use std::collections::BTreeSet;
 use syn::{
     parse::{Parse, ParseStream},
     punctuated::Punctuated,
@@ -32,64 +31,38 @@ impl Parse for SafetyAttr {
     }
 }
 
-type ListNamedArgs = Punctuated<NamedArgs, Token![,]>;
+type ListExprs = Punctuated<Expr, Token![,]>;
 
 #[derive(Debug)]
 pub struct SafetyAttrArgs {
-    pub expr: Expr,
-    pub comma: Option<Token![,]>,
-    pub named: ListNamedArgs,
+    pub exprs: ListExprs,
 }
 
 impl Parse for SafetyAttrArgs {
     fn parse(input: ParseStream) -> Result<Self> {
-        Ok(SafetyAttrArgs {
-            expr: input.parse()?,
-            comma: input.parse()?,
-            named: Punctuated::parse_separated_nonempty(input)?,
-        })
+        Ok(SafetyAttrArgs { exprs: Punctuated::parse_terminated(input)? })
     }
 }
 
-impl SafetyAttrArgs {
-    pub fn generate_doc_comments(&self) -> TokenStream {
-        NamedArgsSet::new(&self.named).generate_doc_comments()
-    }
-
-    pub fn generate_safety_tool_attribute(&self, kind: &str) -> TokenStream {
-        let Self { expr, named, .. } = self;
-        quote! {
-            #[Safety::inner(#expr, kind = #kind, #named)]
-        }
-    }
-}
-
-#[derive(Debug)]
-pub struct NamedArgs {
-    pub name: Ident,
-    pub eq: Token![=],
-    pub expr: Expr,
-}
-
-impl Parse for NamedArgs {
-    fn parse(input: ParseStream) -> Result<Self> {
-        Ok(NamedArgs { name: input.parse()?, eq: input.parse()?, expr: input.parse()? })
-    }
-}
-
-impl ToTokens for NamedArgs {
-    fn to_tokens(&self, tokens: &mut TokenStream) {
-        self.name.to_tokens(tokens);
-        self.eq.to_tokens(tokens);
-        self.expr.to_tokens(tokens);
-    }
-}
+// impl SafetyAttrArgs {
+//     pub fn generate_doc_comments(&self) -> TokenStream {
+//         NamedArgsSet::new(&self.named).generate_doc_comments()
+//     }
+//
+//     pub fn generate_safety_tool_attribute(&self, kind: &str) -> TokenStream {
+//         let Self { exprs, .. } = self;
+//         quote! {
+//             #[Safety::inner(kind = #kind, #exprs)]
+//         }
+//     }
+// }
 
 //  ******************** Attribute Analyzing ********************
 
-#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 pub enum NamedArg {
     Kind(String),
+    Property(Property),
     Memo(String),
 }
 
@@ -121,19 +94,32 @@ impl NamedArg {
     }
 }
 
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
+struct Property {
+    kind: Kind,
+    expr: Expr,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
+enum Kind {
+    Precond,
+    Hazard,
+    Option,
+}
+
 #[derive(Debug)]
 struct NamedArgsSet {
-    set: BTreeSet<NamedArg>,
+    set: IndexSet<NamedArg>,
 }
 
-impl NamedArgsSet {
-    fn new(named_args: &ListNamedArgs) -> Self {
-        NamedArgsSet {
-            set: named_args.iter().map(|arg| NamedArg::new(&arg.name, &arg.expr)).collect(),
-        }
-    }
-
-    fn generate_doc_comments(&self) -> TokenStream {
-        self.set.iter().flat_map(NamedArg::generate_doc_comments).collect()
-    }
-}
+// impl NamedArgsSet {
+//     fn new(named_args: &ListNamedArgs) -> Self {
+//         NamedArgsSet {
+//             set: named_args.iter().map(|arg| NamedArg::new(&arg.name, &arg.expr)).collect(),
+//         }
+//     }
+//
+//     fn generate_doc_comments(&self) -> TokenStream {
+//         self.set.iter().flat_map(NamedArg::generate_doc_comments).collect()
+//     }
+// }
