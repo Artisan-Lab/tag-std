@@ -1,0 +1,26 @@
+name: Run Tests
+
+on:
+  push:
+    branches:
+  pull_request:
+    branches:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - uses: dtolnay/rust-toolchain@nightly
+
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-expand
+
+      - name: Run Tests
+        working-directory: demo/rustc_driver
+        run: bash run.sh
+
