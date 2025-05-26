@@ -49,8 +49,8 @@ impl Parse for SafetyAttrArgs {
 }
 
 impl SafetyAttrArgs {
-    pub fn into_named_args_set(self, kind: Option<Kind>) -> NamedArgsSet {
-        NamedArgsSet::new(self, kind)
+    pub fn into_named_args_set(self, kind: Kind) -> NamedArgsSet {
+        NamedArgsSet::new_with_kind(self, kind)
     }
 
     pub fn into_named_args_set2(self, kind: Kind, property: PropertyName) -> NamedArgsSet {
@@ -101,10 +101,12 @@ pub struct NamedArgsSet {
 }
 
 impl NamedArgsSet {
-    // e.g. #[precond(Property(...), memo = "...")]
+    // `#[kind(Property(...), memo = "...")]`
     //
-    // The first positional arguement is the whole Property.
-    fn new(args: SafetyAttrArgs, kind: Option<Kind>) -> Self {
+    // * `kind = {precond, hazard, option}`
+    // * memo is optional
+    // * Property: The first positional arguement is the whole Property.
+    fn new_with_kind(args: SafetyAttrArgs, kind: Kind) -> Self {
         let exprs = args.exprs;
         let mut set = IndexSet::with_capacity(exprs.len());
 
@@ -114,13 +116,17 @@ impl NamedArgsSet {
         parse_named_args(exprs, &mut set, &mut non_named_exprs);
 
         // parse positional arguments
-        parse_positional_args(kind, &mut set, non_named_exprs);
+        parse_positional_args(Some(kind), &mut set, non_named_exprs);
 
         set.sort();
         NamedArgsSet { set }
     }
 
-    // e.g. #[precond::Property(..., memo = "...")]
+    // `#[kind::Property(..., memo = "...")]`
+    //
+    // * `kind = {precond, hazard, option}`
+    // * memo is optional
+    // * Property: The first positional arguement is the whole Property.
     fn new_kind_and_property(args: SafetyAttrArgs, kind: Kind, property: PropertyName) -> Self {
         let exprs = args.exprs;
         let mut set = IndexSet::with_capacity(exprs.len());
