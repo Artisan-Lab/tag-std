@@ -49,7 +49,7 @@ impl Parse for SafetyAttrArgs {
 }
 
 impl SafetyAttrArgs {
-    pub fn into_named_args_set2(self, kind: Kind, property: PropertyName) -> NamedArgsSet {
+    pub fn into_named_args_set(self, kind: Kind, property: PropertyName) -> NamedArgsSet {
         NamedArgsSet::new_kind_and_property(self, kind, property)
     }
 }

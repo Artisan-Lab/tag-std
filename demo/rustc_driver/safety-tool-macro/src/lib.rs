@@ -9,7 +9,7 @@ use safety_tool_parser::{
     syn::{parse::Parser, punctuated::Punctuated, *},
 };
 
-fn generate2(
+fn generate(
     kind: Kind,
     property: PropertyName,
     attr: TokenStream,
@@ -18,7 +18,7 @@ fn generate2(
     let item = parse_macro_input!(item as ItemFn);
     let attr = parse_macro_input!(attr as SafetyAttrArgs);
 
-    let named_args_set = attr.into_named_args_set2(kind, property);
+    let named_args_set = attr.into_named_args_set(kind, property);
     let doc_comments = named_args_set.generate_doc_comments();
     let safety_tool_attr = named_args_set.generate_safety_tool_attribute();
 
@@ -33,7 +33,7 @@ macro_rules! kind_property {
         #[proc_macro_attribute]
         #[allow(non_snake_case)]
         pub fn $f(attr: TokenStream, item: TokenStream) -> TokenStream {
-            generate2(Kind::$kind, PropertyName::$property, attr, item)
+            generate(Kind::$kind, PropertyName::$property, attr, item)
         }
     };
 
