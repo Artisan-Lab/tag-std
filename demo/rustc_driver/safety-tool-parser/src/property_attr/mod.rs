@@ -49,21 +49,25 @@ impl Parse for SafetyAttrArgs {
 }
 
 impl SafetyAttrArgs {
-    pub fn into_named_args_set(self, kind: Option<Kind>) -> NamedArgsSet {
-        NamedArgsSet::new(self, kind)
-    }
-
-    pub fn into_named_args_set2(self, kind: Kind, property: PropertyName) -> NamedArgsSet {
+    pub fn into_named_args_set(self, kind: Kind, property: PropertyName) -> NamedArgsSet {
         NamedArgsSet::new_kind_and_property(self, kind, property)
     }
 }
 
-//  ******************** Attribute Analyzing ********************
-
+/// Single arguement component in a safety attribute.
+///
+/// Currently, these forms are supported:
+/// * `#[Property(args)]` from a kind -> user-faced syntax
+/// * `Safety::inner(property = Property, kind = kind, memo = ".")` -> only for internal use
+//
+// where `kind = {precond, hazard, option}`
 #[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum NamedArg {
-    Property(Property),
+    /// A safety property with kind, name, and expression.
+    Property(Box<Property>),
+    /// A kind among precond, hazard, and option.
     Kind(String),
+    /// An optional user description.
     Memo(String),
 }
 
@@ -80,16 +84,15 @@ impl NamedArg {
             && let Expr::Lit(lit) = expr
             && let Lit::Str(kind) = &lit.lit
         {
-            return NamedArg::Memo(kind.value());
+            return NamedArg::Kind(kind.value());
         }
-
         panic!("{ident:?} is not a supported ident.\nCurrently supported named arguments: memo.")
     }
 
     /// Like generate rustdoc attributes to display doc comment in rustdoc HTML.
     fn generate_doc_comments(&self) -> TokenStream {
         match self {
-            NamedArg::Memo(memo) => utils::memo(memo),
+            NamedArg::Property(property) => property.generate_doc_comments(),
             _ => TokenStream::new(),
         }
     }
@@ -101,42 +104,24 @@ pub struct NamedArgsSet {
 }
 
 impl NamedArgsSet {
-    // e.g. #[precond(Property(...), memo = "...")]
+    // `#[kind::Property(..., memo = "...")]`
     //
-    // The first positional arguement is the whole Property.
-    fn new(args: SafetyAttrArgs, kind: Option<Kind>) -> Self {
+    // * `kind = {precond, hazard, option}`
+    // * memo is optional
+    // * Property: The first positional arguement is the whole Property.
+    fn new_kind_and_property(args: SafetyAttrArgs, kind: Kind, pname: PropertyName) -> Self {
         let exprs = args.exprs;
         let mut set = IndexSet::with_capacity(exprs.len());
 
         let mut non_named_exprs = Vec::new();
 
-        // parse all named arguments
-        parse_named_args(exprs, &mut set, &mut non_named_exprs);
-
-        // parse positional arguments
-        parse_positional_args(kind, &mut set, non_named_exprs);
-
-        set.sort();
-        NamedArgsSet { set }
-    }
-
-    // e.g. #[precond::Property(..., memo = "...")]
-    fn new_kind_and_property(args: SafetyAttrArgs, kind: Kind, property: PropertyName) -> Self {
-        let exprs = args.exprs;
-        let mut set = IndexSet::with_capacity(exprs.len());
-
-        let mut non_named_exprs = Vec::new();
-
-        // parse all named arguments
+        // parse all named arguments such as memo
         parse_named_args(exprs, &mut set, &mut non_named_exprs);
 
         // positional arguments are collected into a tuple expr
-        let first = set.insert(NamedArg::Property(Property::from_components(
-            kind,
-            property,
-            non_named_exprs,
-        )));
-        assert!(first, "{kind:?} {property:?} exists.");
+        let property = Property::new(kind, pname, non_named_exprs, &set);
+        let first = set.insert(NamedArg::Property(Box::new(property)));
+        assert!(first, "{kind:?} {pname:?} exists.");
 
         set.sort();
         NamedArgsSet { set }
@@ -151,8 +136,9 @@ impl NamedArgsSet {
         for arg in &self.set {
             match arg {
                 NamedArg::Property(property) => {
-                    let (kind, property) = (property.kind, &property.expr);
-                    args.extend([quote!(property = #property), quote!(kind = #kind)]);
+                    let call = property.property_tokens();
+                    let kind = property.kind;
+                    args.extend([quote!(property = #call), quote!(kind = #kind)]);
                 }
                 NamedArg::Memo(memo) => args.extend([quote!(memo = #memo)]),
                 _ => (),
@@ -160,66 +146,6 @@ impl NamedArgsSet {
         }
         quote! {
             #[Safety::inner(#args)]
-        }
-    }
-}
-
-fn parse_positional_args(
-    kind: Option<Kind>,
-    set: &mut IndexSet<NamedArg>,
-    non_named_exprs: Vec<Expr>,
-) {
-    for (idx, expr) in non_named_exprs.into_iter().enumerate() {
-        match idx {
-            0 => {
-                let kind = if let Some(kind) = kind {
-                    kind
-                } else if let Some(kind) = set.iter().find_map(|arg| {
-                    if let NamedArg::Kind(kind) = arg { Some(kind.as_str()) } else { None }
-                }) {
-                    match kind {
-                        "precond" => Kind::Precond,
-                        "hazard" => Kind::Hazard,
-                        "option" => Kind::Option,
-                        _ => unreachable!(
-                            "{kind} is invalid: should be one of precond, hazard, and option."
-                        ),
-                    }
-                } else if let Some(property) = set.iter().find_map(|arg| {
-                    if let NamedArg::Property(property) = arg { Some(property) } else { None }
-                }) {
-                    panic!("Only single property allowed. There is one: {property:?}.")
-                } else {
-                    unreachable!("No kind available.")
-                };
-
-                // Property
-                let name = if let Some(name) = PropertyName::try_from_expr_ident(&expr) {
-                    name
-                } else {
-                    // Property(args...) or Property::<T>(args...)
-                    let Expr::Call(call) = &expr else {
-                        panic!("{expr:?} should be a fn call.");
-                    };
-                    PropertyName::from_expr_ident(&call.func)
-                };
-
-                set.insert(NamedArg::Property(Property { kind, name, expr }));
-            }
-            1 => {
-                if let Some(memo) = set.iter().find_map(|arg| {
-                    if let NamedArg::Memo(memo) = arg { Some(memo.as_str()) } else { None }
-                }) {
-                    panic!("Only single memo allowed. There is one: {memo:?}.")
-                } else if let Expr::Lit(lit) = &expr
-                    && let Lit::Str(memo) = &lit.lit
-                {
-                    set.insert(NamedArg::Memo(memo.value()));
-                } else {
-                    panic!("{expr:?} is not string literal as a memo.")
-                }
-            }
-            _ => (),
         }
     }
 }

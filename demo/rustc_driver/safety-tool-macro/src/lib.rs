@@ -9,36 +9,7 @@ use safety_tool_parser::{
     syn::{parse::Parser, punctuated::Punctuated, *},
 };
 
-#[proc_macro_attribute]
-pub fn precond(attr: TokenStream, item: TokenStream) -> TokenStream {
-    generate(Kind::Precond, attr, item)
-}
-
-#[proc_macro_attribute]
-pub fn hazard(attr: TokenStream, item: TokenStream) -> TokenStream {
-    generate(Kind::Hazard, attr, item)
-}
-
-#[proc_macro_attribute]
-pub fn option(attr: TokenStream, item: TokenStream) -> TokenStream {
-    generate(Kind::Option, attr, item)
-}
-
-fn generate(kind: Kind, attr: TokenStream, item: TokenStream) -> TokenStream {
-    let item = parse_macro_input!(item as ItemFn);
-    let attr = parse_macro_input!(attr as SafetyAttrArgs);
-
-    let named_args_set = attr.into_named_args_set(Some(kind));
-    let doc_comments = named_args_set.generate_doc_comments();
-    let safety_tool_attr = named_args_set.generate_safety_tool_attribute();
-
-    let mut fn_item = FnItem::new(item);
-    fn_item.insert_attributes_to_the_back(doc_comments);
-    fn_item.insert_attributes_to_the_back(safety_tool_attr);
-    fn_item.into_token_stream().into()
-}
-
-fn generate2(
+fn generate(
     kind: Kind,
     property: PropertyName,
     attr: TokenStream,
@@ -47,7 +18,7 @@ fn generate2(
     let item = parse_macro_input!(item as ItemFn);
     let attr = parse_macro_input!(attr as SafetyAttrArgs);
 
-    let named_args_set = attr.into_named_args_set2(kind, property);
+    let named_args_set = attr.into_named_args_set(kind, property);
     let doc_comments = named_args_set.generate_doc_comments();
     let safety_tool_attr = named_args_set.generate_safety_tool_attribute();
 
@@ -62,7 +33,7 @@ macro_rules! kind_property {
         #[proc_macro_attribute]
         #[allow(non_snake_case)]
         pub fn $f(attr: TokenStream, item: TokenStream) -> TokenStream {
-            generate2(Kind::$kind, PropertyName::$property, attr, item)
+            generate(Kind::$kind, PropertyName::$property, attr, item)
         }
     };
 
@@ -162,4 +133,10 @@ pub fn pub_use(tokens: TokenStream) -> TokenStream {
         })
         .collect::<TokenStream2>()
         .into()
+}
+
+#[proc_macro_attribute]
+#[allow(non_snake_case)]
+pub fn Memo(attr: TokenStream, item: TokenStream) -> TokenStream {
+    generate(Kind::Memo, PropertyName::Unknown, attr, item)
 }

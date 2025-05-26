@@ -1,4 +1,4 @@
-pub use safety_tool_macro::{hazard, option, precond};
+pub use safety_tool_macro::Memo;
 
 use safety_tool_macro::pub_use;
 pub mod precond {

@@ -1,15 +1,21 @@
 use core::cmp::Ordering;
-
+use indexmap::IndexSet;
 use proc_macro2::{Literal, Span, TokenStream};
-use quote::{ToTokens, TokenStreamExt};
+use quote::{ToTokens, TokenStreamExt, quote};
 use syn::*;
+
+use crate::property_attr::expr_ident;
+
+use super::NamedArg;
 
 #[derive(Clone, Debug, PartialEq, Eq, Hash)]
 pub struct Property {
     pub kind: Kind,
     pub name: PropertyName,
-    /// Should be a fn call expr, containing the name.
-    pub expr: Expr,
+    /// Should be a vec of args, not containing the name.
+    pub expr: Vec<Expr>,
+    /// User-provided desciption.
+    pub memo: Option<String>,
 }
 
 impl PartialOrd for Property {
@@ -34,20 +40,42 @@ impl Ord for Property {
 }
 
 impl Property {
-    pub fn from_components(kind: Kind, name: PropertyName, expr: Vec<Expr>) -> Self {
+    pub fn new(
+        kind: Kind,
+        name: PropertyName,
+        expr: Vec<Expr>,
+        named_args: &IndexSet<NamedArg>,
+    ) -> Self {
         Property {
             kind,
             name,
-            expr: Expr::Call(ExprCall {
-                attrs: Vec::new(),
-                func: Box::new(Expr::Path(ExprPath {
-                    attrs: Vec::new(),
-                    qself: None,
-                    path: Ident::new(name.to_str(), Span::call_site()).into(),
-                })),
-                paren_token: Default::default(),
-                args: expr.into_iter().collect(),
+            expr,
+            // extract memo from named_args
+            memo: named_args.iter().find_map(|arg| {
+                if let NamedArg::Memo(memo) = arg { Some(memo.clone()) } else { None }
             }),
+        }
+    }
+
+    /// `PropertyName(arg1, arg2, ...)`
+    pub fn property_tokens(&self) -> TokenStream {
+        let name = Ident::new(&format!("{:?}", self.name), Span::call_site());
+        let args: TokenStream = self.expr.iter().map(|arg| arg.to_token_stream()).collect();
+        quote! {
+            #name (#args)
+        }
+    }
+
+    pub fn generate_doc_comments(&self) -> TokenStream {
+        // auto doc from Property
+        let auto = match self.kind {
+            Kind::Memo => format!(" {}: auto doc placeholder.", expr_ident(&self.expr[0])),
+            _ => format!(" {:?}: auto doc placeholder.", self.name),
+        };
+        let memo = self.memo.as_deref().map(super::utils::memo).unwrap_or_default();
+        quote! {
+            #[doc = #auto]
+            #memo
         }
     }
 }
@@ -57,6 +85,7 @@ pub enum Kind {
     Precond,
     Hazard,
     Option,
+    Memo,
 }
 
 impl ToTokens for Kind {
@@ -65,8 +94,24 @@ impl ToTokens for Kind {
             Kind::Precond => "precond",
             Kind::Hazard => "hazard",
             Kind::Option => "option",
+            Kind::Memo => "memo",
         };
         tokens.append(Literal::string(kind));
+    }
+}
+
+impl Kind {
+    pub fn new(kind: &str) -> Self {
+        match kind {
+            "precond" => Kind::Precond,
+            "hazard" => Kind::Hazard,
+            "option" => Kind::Option,
+            "memo" => Kind::Option,
+            _ => unreachable!(
+                "{kind} is invalid: should be one of \
+                 precond, hazard, option, and memo."
+            ),
+        }
     }
 }
 
