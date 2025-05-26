@@ -92,7 +92,7 @@ impl NamedArg {
     /// Like generate rustdoc attributes to display doc comment in rustdoc HTML.
     fn generate_doc_comments(&self) -> TokenStream {
         match self {
-            NamedArg::Memo(memo) => utils::memo(memo),
+            NamedArg::Property(property) => property.generate_doc_comments(),
             _ => TokenStream::new(),
         }
     }

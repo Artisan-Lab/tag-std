@@ -1,7 +1,7 @@
 use core::cmp::Ordering;
 use indexmap::IndexSet;
 use proc_macro2::{Literal, Span, TokenStream};
-use quote::{ToTokens, TokenStreamExt};
+use quote::{ToTokens, TokenStreamExt, quote};
 use syn::*;
 
 use super::NamedArg;
@@ -61,6 +61,16 @@ impl Property {
             memo: named_args.iter().find_map(|arg| {
                 if let NamedArg::Memo(memo) = arg { Some(memo.clone()) } else { None }
             }),
+        }
+    }
+
+    pub fn generate_doc_comments(&self) -> TokenStream {
+        // auto doc from Property
+        let auto = format!(" {:?}: auto doc placeholder.", self.name);
+        let memo = self.memo.as_deref().map(super::utils::memo).unwrap_or_default();
+        quote! {
+            #[doc = #auto]
+            #memo
         }
     }
 }
