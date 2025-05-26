@@ -8,12 +8,7 @@ use std::prelude::rust_2024::*;
 #[macro_use]
 extern crate std;
 use safety_tool_lib::safety;
-/// It's undefined behavior to reach code marked with this intrinsic function.
-#[Safety::inner(
-    property = UnReachable,
-    kind = "precond",
-    memo = "It's undefined behavior to reach code marked with this intrinsic function."
-)]
+#[Safety::inner(property = Unreachable(), kind = "precond")]
 pub unsafe fn test() -> ! {
     unsafe { std::intrinsics::unreachable() }
 }
@@ -25,30 +20,13 @@ impl MyStruct {
     pub fn from(p: *mut u8, l: usize) -> MyStruct {
         MyStruct { ptr: p, len: l }
     }
-    /// The ptr must be initialized first!
-    #[Safety::inner(
-        property = Init(self.ptr, u8, self.len),
-        kind = "precond",
-        memo = "The ptr must be initialized first!"
-    )]
-    /// The ptr must be within the length.
-    #[Safety::inner(
-        property = InBound(self.ptr, u8, self.len),
-        kind = "precond",
-        memo = "The ptr must be within the length."
-    )]
-    /// Slice length can't exceed isize::MAX due to allocation limit.
+    #[Safety::inner(property = Init(self.ptr, u8, self.len), kind = "precond")]
+    #[Safety::inner(property = InBound(self.ptr, u8, self.len), kind = "precond")]
     #[Safety::inner(
         property = ValidNum(self.len*sizeof(u8), [0, isize::MAX]),
-        kind = "precond",
-        memo = "Slice length can't exceed isize::MAX due to allocation limit."
+        kind = "precond"
     )]
-    /// Make sure don't alias the ptr.
-    #[Safety::inner(
-        property = Alias(self.ptr),
-        kind = "hazard",
-        memo = "Make sure don't alias the ptr."
-    )]
+    #[Safety::inner(property = Alias(self.ptr), kind = "hazard")]
     pub unsafe fn get(&self) -> &mut [u8] {
         unsafe { std::slice::from_raw_parts_mut(self.ptr, self.len) }
     }

@@ -5,10 +5,7 @@
 
 use safety_tool_lib::safety;
 
-#[safety::precond(
-    UnReachable,
-    memo = "It's undefined behavior to reach code marked with this intrinsic function."
-)]
+#[safety::precond::Unreachable()]
 pub unsafe fn test() -> ! {
     unsafe { std::intrinsics::unreachable() }
 }
@@ -21,22 +18,11 @@ impl MyStruct {
     pub fn from(p: *mut u8, l: usize) -> MyStruct {
         MyStruct { ptr: p, len: l }
     }
-    #[safety::precond(
-        Init(self.ptr, u8, self.len),
-        memo = "The ptr must be initialized first!"
-    )]
-    #[safety::precond(
-        InBound(self.ptr, u8, self.len),
-        memo = "The ptr must be within the length."
-    )]
-    #[safety::precond(
-        ValidNum(self.len*sizeof(u8), [0,isize::MAX]),
-        memo = "Slice length can't exceed isize::MAX due to allocation limit."
-    )]
-    #[safety::hazard(
-        Alias(self.ptr),
-        memo = "Make sure don't alias the ptr."
-    )]
+
+    #[safety::precond::Init(self.ptr, u8, self.len)]
+    #[safety::precond::InBound(self.ptr, u8, self.len)]
+    #[safety::precond::ValidNum(self.len*sizeof(u8), [0,isize::MAX])]
+    #[safety::hazard::Alias(self.ptr)]
     pub unsafe fn get(&self) -> &mut [u8] {
         unsafe { std::slice::from_raw_parts_mut(self.ptr, self.len) }
     }
