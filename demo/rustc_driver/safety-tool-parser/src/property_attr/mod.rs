@@ -136,8 +136,9 @@ impl NamedArgsSet {
         for arg in &self.set {
             match arg {
                 NamedArg::Property(property) => {
-                    let (kind, property) = (property.kind, &property.expr);
-                    args.extend([quote!(property = #property), quote!(kind = #kind)]);
+                    let call = property.property_tokens();
+                    let kind = property.kind;
+                    args.extend([quote!(property = #call), quote!(kind = #kind)]);
                 }
                 NamedArg::Memo(memo) => args.extend([quote!(memo = #memo)]),
                 _ => (),

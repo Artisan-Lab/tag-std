@@ -4,14 +4,16 @@ use proc_macro2::{Literal, Span, TokenStream};
 use quote::{ToTokens, TokenStreamExt, quote};
 use syn::*;
 
+use crate::property_attr::expr_ident;
+
 use super::NamedArg;
 
 #[derive(Clone, Debug, PartialEq, Eq, Hash)]
 pub struct Property {
     pub kind: Kind,
     pub name: PropertyName,
-    /// Should be a fn call expr, containing the name.
-    pub expr: Expr,
+    /// Should be a vec of args, not containing the name.
+    pub expr: Vec<Expr>,
     /// User-provided desciption.
     pub memo: Option<String>,
 }
@@ -47,16 +49,7 @@ impl Property {
         Property {
             kind,
             name,
-            expr: Expr::Call(ExprCall {
-                attrs: Vec::new(),
-                func: Box::new(Expr::Path(ExprPath {
-                    attrs: Vec::new(),
-                    qself: None,
-                    path: Ident::new(name.to_str(), Span::call_site()).into(),
-                })),
-                paren_token: Default::default(),
-                args: expr.into_iter().collect(),
-            }),
+            expr,
             // extract memo from named_args
             memo: named_args.iter().find_map(|arg| {
                 if let NamedArg::Memo(memo) = arg { Some(memo.clone()) } else { None }
@@ -64,9 +57,21 @@ impl Property {
         }
     }
 
+    /// `PropertyName(arg1, arg2, ...)`
+    pub fn property_tokens(&self) -> TokenStream {
+        let name = Ident::new(&format!("{:?}", self.name), Span::call_site());
+        let args: TokenStream = self.expr.iter().map(|arg| arg.to_token_stream()).collect();
+        quote! {
+            #name (#args)
+        }
+    }
+
     pub fn generate_doc_comments(&self) -> TokenStream {
         // auto doc from Property
-        let auto = format!(" {:?}: auto doc placeholder.", self.name);
+        let auto = match self.kind {
+            Kind::Memo => format!(" {}: auto doc placeholder.", expr_ident(&self.expr[0])),
+            _ => format!(" {:?}: auto doc placeholder.", self.name),
+        };
         let memo = self.memo.as_deref().map(super::utils::memo).unwrap_or_default();
         quote! {
             #[doc = #auto]

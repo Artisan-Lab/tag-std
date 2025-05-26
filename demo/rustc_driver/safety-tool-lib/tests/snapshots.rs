@@ -17,8 +17,13 @@ fn snapshot(test: &str) {
 }
 
 #[test]
-fn memo() {
-    snapshot("testcase_memo");
+fn memo_arg() {
+    snapshot("testcase_memo_arg");
+}
+
+#[test]
+fn memo_property() {
+    snapshot("testcase_memo_property");
 }
 
 #[test]

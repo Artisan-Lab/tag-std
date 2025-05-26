@@ -1,3 +1,5 @@
+pub use safety_tool_macro::Memo;
+
 use safety_tool_macro::pub_use;
 pub mod precond {
     super::pub_use! {

@@ -15,6 +15,7 @@ pub struct MyStruct {
     len: usize,
 }
 impl MyStruct {
+    #[safety::Memo(UserProperty, memo = "Customed user property.")]
     pub fn from(p: *mut u8, l: usize) -> MyStruct {
         MyStruct { ptr: p, len: l }
     }

@@ -134,3 +134,9 @@ pub fn pub_use(tokens: TokenStream) -> TokenStream {
         .collect::<TokenStream2>()
         .into()
 }
+
+#[proc_macro_attribute]
+#[allow(non_snake_case)]
+pub fn Memo(attr: TokenStream, item: TokenStream) -> TokenStream {
+    generate(Kind::Memo, PropertyName::Unknown, attr, item)
+}

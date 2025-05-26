@@ -18,16 +18,23 @@ pub struct MyStruct {
     len: usize,
 }
 impl MyStruct {
+    /// UserProperty: auto doc placeholder.
+    /// Customed user property.
+    #[Safety::inner(
+        property = Unknown(UserProperty),
+        kind = "memo",
+        memo = "Customed user property."
+    )]
     pub fn from(p: *mut u8, l: usize) -> MyStruct {
         MyStruct { ptr: p, len: l }
     }
     /// Init: auto doc placeholder.
-    #[Safety::inner(property = Init(self.ptr, u8, self.len), kind = "precond")]
+    #[Safety::inner(property = Init(self.ptr u8 self.len), kind = "precond")]
     /// InBound: auto doc placeholder.
-    #[Safety::inner(property = InBound(self.ptr, u8, self.len), kind = "precond")]
+    #[Safety::inner(property = InBound(self.ptr u8 self.len), kind = "precond")]
     /// ValidNum: auto doc placeholder.
     #[Safety::inner(
-        property = ValidNum(self.len*sizeof(u8), [0, isize::MAX]),
+        property = ValidNum(self.len*sizeof(u8)[0, isize::MAX]),
         kind = "precond"
     )]
     /// Alias: auto doc placeholder.
