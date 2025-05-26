@@ -58,12 +58,21 @@ impl SafetyAttrArgs {
     }
 }
 
-//  ******************** Attribute Analyzing ********************
-
+/// Single arguement component in a safety attribute.
+///
+/// Currently, these forms are supported:
+/// * `#[Property(args)]` from a kind -> user-faced syntax
+/// * `#[kind(Property(args), ...rest args such as memo)]` (possibly deprecated?)
+/// * `Safety::inner(property = Property, kind = kind, memo = ".")` -> only for internal use
+//
+// where `kind = {precond, hazard, option}`
 #[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum NamedArg {
-    Property(Property),
+    /// A safety property with kind, name, and expression.
+    Property(Box<Property>),
+    /// A kind among precond, hazard, and option.
     Kind(String),
+    /// An optional memo.
     Memo(String),
 }
 
@@ -137,11 +146,11 @@ impl NamedArgsSet {
         parse_named_args(exprs, &mut set, &mut non_named_exprs);
 
         // positional arguments are collected into a tuple expr
-        let first = set.insert(NamedArg::Property(Property::from_components(
+        let first = set.insert(NamedArg::Property(Box::new(Property::from_components(
             kind,
             property,
             non_named_exprs,
-        )));
+        ))));
         assert!(first, "{kind:?} {property:?} exists.");
 
         set.sort();
@@ -210,7 +219,7 @@ fn parse_positional_args(
                     PropertyName::from_expr_ident(&call.func)
                 };
 
-                set.insert(NamedArg::Property(Property { kind, name, expr }));
+                set.insert(NamedArg::Property(Box::new(Property { kind, name, expr })));
             }
             1 => {
                 if let Some(memo) = set.iter().find_map(|arg| {
