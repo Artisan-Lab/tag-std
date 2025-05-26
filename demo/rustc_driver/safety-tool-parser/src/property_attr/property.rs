@@ -10,6 +10,8 @@ pub struct Property {
     pub name: PropertyName,
     /// Should be a fn call expr, containing the name.
     pub expr: Expr,
+    /// User-provided desciption.
+    pub memo: Option<String>,
 }
 
 impl PartialOrd for Property {
@@ -48,6 +50,8 @@ impl Property {
                 paren_token: Default::default(),
                 args: expr.into_iter().collect(),
             }),
+            // TODO: extract memo from asign expr?
+            memo: None,
         }
     }
 }
@@ -57,6 +61,7 @@ pub enum Kind {
     Precond,
     Hazard,
     Option,
+    Memo,
 }
 
 impl ToTokens for Kind {
@@ -65,8 +70,24 @@ impl ToTokens for Kind {
             Kind::Precond => "precond",
             Kind::Hazard => "hazard",
             Kind::Option => "option",
+            Kind::Memo => "memo",
         };
         tokens.append(Literal::string(kind));
+    }
+}
+
+impl Kind {
+    pub fn new(kind: &str) -> Self {
+        match kind {
+            "precond" => Kind::Precond,
+            "hazard" => Kind::Hazard,
+            "option" => Kind::Option,
+            "memo" => Kind::Option,
+            _ => unreachable!(
+                "{kind} is invalid: should be one of \
+                 precond, hazard, option, and memo."
+            ),
+        }
     }
 }
 

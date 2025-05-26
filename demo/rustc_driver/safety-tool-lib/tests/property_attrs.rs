@@ -3,10 +3,12 @@
 
 use safety_tool_lib::safety;
 
-#[safety::precond::Align(T, memo = "reason")]
+// #[Property(args)] syntax
+
+#[safety::precond::Align(T)]
 pub fn api1() {}
 
-#[safety::hazard::Alias(T, memo = "reason")]
+#[safety::hazard::Alias(T)]
 pub fn api2() {}
 
 #[safety::option::Unreachable()]

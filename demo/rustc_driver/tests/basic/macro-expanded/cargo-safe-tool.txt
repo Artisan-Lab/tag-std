@@ -3,11 +3,11 @@
 ********* "build_script_build" [Executable] has reached 156 instances *********
 ********* "hashbrown" [Rlib] has reached 240 instances *********
 ********* "proc_macro2" [Rlib] has reached 1054 instances *********
-********* "indexmap" [Rlib] has reached 128 instances *********
 ********* "quote" [Rlib] has reached 505 instances *********
+********* "indexmap" [Rlib] has reached 128 instances *********
 ********* "syn" [Rlib] has reached 6924 instances *********
-********* "safety_tool_parser" [Rlib] has reached 1531 instances *********
-********* "safety_tool_macro" [ProcMacro] has reached 380 instances *********
+********* "safety_tool_parser" [Rlib] has reached 1512 instances *********
+********* "safety_tool_macro" [ProcMacro] has reached 375 instances *********
 ********* "safety_tool_lib" [Rlib] has reached 0 instances *********
 ********* "demo" [Rlib] has reached 8 instances *********
 "test" ("src/lib.rs:9:1: 9:26")
