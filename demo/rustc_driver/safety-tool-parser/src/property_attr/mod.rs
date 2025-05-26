@@ -109,22 +109,19 @@ impl NamedArgsSet {
     // * `kind = {precond, hazard, option}`
     // * memo is optional
     // * Property: The first positional arguement is the whole Property.
-    fn new_kind_and_property(args: SafetyAttrArgs, kind: Kind, property: PropertyName) -> Self {
+    fn new_kind_and_property(args: SafetyAttrArgs, kind: Kind, pname: PropertyName) -> Self {
         let exprs = args.exprs;
         let mut set = IndexSet::with_capacity(exprs.len());
 
         let mut non_named_exprs = Vec::new();
 
-        // parse all named arguments
+        // parse all named arguments such as memo
         parse_named_args(exprs, &mut set, &mut non_named_exprs);
 
         // positional arguments are collected into a tuple expr
-        let first = set.insert(NamedArg::Property(Box::new(Property::from_components(
-            kind,
-            property,
-            non_named_exprs,
-        ))));
-        assert!(first, "{kind:?} {property:?} exists.");
+        let property = Property::new(kind, pname, non_named_exprs, &set);
+        let first = set.insert(NamedArg::Property(Box::new(property)));
+        assert!(first, "{kind:?} {pname:?} exists.");
 
         set.sort();
         NamedArgsSet { set }

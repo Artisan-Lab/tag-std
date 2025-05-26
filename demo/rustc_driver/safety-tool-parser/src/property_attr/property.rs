@@ -1,8 +1,10 @@
 use core::cmp::Ordering;
-
+use indexmap::IndexSet;
 use proc_macro2::{Literal, Span, TokenStream};
 use quote::{ToTokens, TokenStreamExt};
 use syn::*;
+
+use super::NamedArg;
 
 #[derive(Clone, Debug, PartialEq, Eq, Hash)]
 pub struct Property {
@@ -36,7 +38,12 @@ impl Ord for Property {
 }
 
 impl Property {
-    pub fn from_components(kind: Kind, name: PropertyName, expr: Vec<Expr>) -> Self {
+    pub fn new(
+        kind: Kind,
+        name: PropertyName,
+        expr: Vec<Expr>,
+        named_args: &IndexSet<NamedArg>,
+    ) -> Self {
         Property {
             kind,
             name,
@@ -50,8 +57,10 @@ impl Property {
                 paren_token: Default::default(),
                 args: expr.into_iter().collect(),
             }),
-            // TODO: extract memo from asign expr?
-            memo: None,
+            // extract memo from named_args
+            memo: named_args.iter().find_map(|arg| {
+                if let NamedArg::Memo(memo) = arg { Some(memo.clone()) } else { None }
+            }),
         }
     }
 }
