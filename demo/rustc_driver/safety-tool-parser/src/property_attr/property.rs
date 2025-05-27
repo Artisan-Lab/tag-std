@@ -194,8 +194,8 @@ impl PropertyName {
         PropertyName::new(&ident_str)
     }
 
-    fn map_property_to_doc_comments(&self, expr: &Vec<Expr>) -> String {
-        let args: Vec<String> = expr.iter().map(|arg| super::expr_to_string(arg)).collect();
+    fn map_property_to_doc_comments(&self, expr: &[Expr]) -> String {
+        let args: Vec<String> = expr.iter().map(super::expr_to_string).collect();
         if args.len() < self.args_len() {
             unreachable!("Arg length is invalid for {}", self.to_str())
         }
@@ -271,9 +271,9 @@ impl PropertyName {
                 )
             }
             Self::Unreachable => {
-                format!("the current program point should not be reachable during execution")
+                "the current program point should not be reachable during execution".to_string()
             }
-            Self::Unknown => format!("unknown sp"),
+            Self::Unknown => "unknown sp".to_string(),
         }
     }
 

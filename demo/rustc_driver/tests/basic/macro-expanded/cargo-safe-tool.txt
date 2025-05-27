@@ -6,7 +6,7 @@
 ********* "quote" [Rlib] has reached 505 instances *********
 ********* "indexmap" [Rlib] has reached 128 instances *********
 ********* "syn" [Rlib] has reached 6924 instances *********
-********* "safety_tool_parser" [Rlib] has reached 1609 instances *********
+********* "safety_tool_parser" [Rlib] has reached 1611 instances *********
 ********* "safety_tool_macro" [ProcMacro] has reached 376 instances *********
 ********* "safety_tool_lib" [Rlib] has reached 0 instances *********
 ********* "demo" [Rlib] has reached 8 instances *********
