@@ -8,13 +8,16 @@ extern crate std;
 use safety_tool_lib::safety;
 /// Align: Make sure pointer `p` must be properly aligned for type `T` before calling this function.
 #[Safety::inner(property = Align(p T), kind = "precond")]
-pub fn api1() {}
+pub fn align() {}
+/// Unwrap: Make sure the value p must be Some(T) before calling this function.
+#[Safety::inner(property = Unwrap(p T), kind = "precond")]
+pub fn unwrap() {}
 /// Alias: Make sure p1 must not have other alias after calling this function.
 #[Safety::inner(property = Alias(p1), kind = "hazard")]
-pub fn api2() {}
+pub fn alias() {}
 /// Unreachable: To be noticed that, the current program point should not be reachable during execution.
 #[Safety::inner(property = Unreachable(), kind = "option")]
-pub fn api3() {}
+pub fn unreachable() {}
 #[rustc_main]
 #[coverage(off)]
 #[doc(hidden)]

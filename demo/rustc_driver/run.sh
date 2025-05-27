@@ -1,4 +1,5 @@
 set -ex
+set -o pipefail
 
 # Set up toolchain: works under current folder.
 export LD_LIBRARY_PATH=$(rustc --print sysroot)/lib
