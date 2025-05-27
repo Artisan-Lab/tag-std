@@ -4,6 +4,9 @@ set -o pipefail
 # Set up toolchain: works under current folder.
 export LD_LIBRARY_PATH=$(rustc --print sysroot)/lib
 
+cargo fmt --check
+cargo clippy --workspace -- -D clippy::all
+
 cargo build
 export SAFE_TOOL=$PWD/target/debug/safe-tool
 export CARGO_SAFE_TOOL=$PWD/target/debug/cargo-safe-tool
