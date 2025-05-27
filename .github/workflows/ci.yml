@@ -20,6 +20,10 @@ jobs:
         with:
           tool: cargo-expand
 
+      - name: Install specified toolchain
+        working-directory: demo/rustc_driver
+        run: rustup show
+
       - name: Run Tests
         working-directory: demo/rustc_driver
         run: bash run.sh
