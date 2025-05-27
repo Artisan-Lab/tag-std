@@ -14,7 +14,7 @@ fn snapshot(test: &str) {
     let dir = Path::new("snapshots");
     let path = {
         let mut p = dir.join(test);
-        assert!(p.set_extension(".rs"));
+        assert!(p.set_extension("rs"));
         p
     };
     expect_file![path].assert_eq(expanded);

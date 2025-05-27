@@ -3,15 +3,14 @@
 #![allow(dead_code, non_snake_case)]
 use safety_tool_lib::safety;
 
-#[safety::precond::Unwrap(x, u32, memo = "This is a single line.")]
+#[safety::Memo(x, memo = "This is a single line.")]
 fn single_line() {}
 
-#[safety::precond::Unwrap(x, String, memo = "Line 1.\nLine 2.")]
+#[safety::Memo(x, memo = "Line 1.\nLine 2.")]
 fn multi_lines() {}
 
-#[safety::precond::Unwrap(
+#[safety::Memo(
     x,
-    Box,
     memo = "
 Line 1.
 Line 2."
@@ -19,9 +18,8 @@ Line 2."
 fn multi_lines2() {}
 
 /// Line 1.
-#[safety::precond::Unwrap(
+#[safety::Memo(
     x,
-    T,
     memo = "
     Line 2.
     Line 3."
@@ -29,22 +27,20 @@ fn multi_lines2() {}
 fn multi_lines3() {}
 
 #[doc = " Line 1."]
-#[safety::precond::Unwrap(
+#[safety::Memo(
     x,
-    T,
     memo = "
     Line 2.
     Line 3."
 )]
-#[safety::precond::Unwrap(x, T, memo = "Line 4.")]
+#[safety::Memo(x, memo = "Line 4.")]
 fn multi_lines4() {}
 
 //  WARNING: dont't put `#[doc]` (i.e. `///`) after `#[safety(memo)]`
 // because the doc order will be messed up.
 
-#[safety::precond::Unwrap(
+#[safety::Memo(
     x,
-    T,
     memo = "
     Line 1.
     Line 2."
@@ -53,12 +49,12 @@ fn multi_lines4() {}
 fn multi_lines3_DONT_DO_THIS() {}
 
 /// Line 1.
-#[safety::precond::Unwrap(x, T, memo = "Line 2.\nLine 3.")]
+#[safety::Memo(x, memo = "Line 2.\nLine 3.")]
 #[doc = " Line 4."] // don't do this.
 fn multi_lines4_DONT_DO_THIS() {}
 
 /// Line 1.
-#[safety::precond::Unwrap(x, T, memo = "Line 2.\nLine 3.")]
-#[safety::precond::Unwrap(x, T, memo = "Line 4.")]
+#[safety::Memo(x, memo = "Line 2.\nLine 3.")]
+#[safety::Memo(x, memo = "Line 4.")]
 #[doc = " Line 5."] // don't do this.
 fn multi_lines5_DONT_DO_THIS() {}
