@@ -12,7 +12,7 @@ pub fn api1() {}
 /// Alias: Make sure p1 must not alias with p2 after calling this function.
 #[Safety::inner(property = Alias(p1 p2), kind = "hazard")]
 pub fn api2() {}
-/// Unreachable: Make sure the current program point should not be reachable during execution before calling this function.
+/// Unreachable: To be noticed that, the current program point should not be reachable during execution.
 #[Safety::inner(property = Unreachable(), kind = "option")]
 pub fn api3() {}
 #[rustc_main]
