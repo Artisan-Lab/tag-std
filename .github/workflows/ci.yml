@@ -22,7 +22,7 @@ jobs:
 
       - name: Install specified toolchain
         working-directory: demo/rustc_driver
-        run: cargo check
+        run: rustup show
 
       - name: Run Tests
         working-directory: demo/rustc_driver
