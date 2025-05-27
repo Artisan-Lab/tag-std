@@ -70,7 +70,21 @@ impl Property {
         // auto doc from Property
         let auto = match self.kind {
             Kind::Memo => format!(" {}: auto doc placeholder.", expr_ident(&self.expr[0])),
-            _ => format!(" {:?}: auto doc placeholder.", self.name),
+            Kind::Precond => format!(
+                " {:?}: Make sure {} before calling this function.",
+                self.name,
+                self.name.map_property_to_doc_comments(&self.expr)
+            ),
+            Kind::Hazard => format!(
+                " {:?}: Make sure {} after calling this function.",
+                self.name,
+                self.name.map_property_to_doc_comments(&self.expr)
+            ),
+            Kind::Option => format!(
+                " {:?}: To be noticed that, {}.",
+                self.name,
+                self.name.map_property_to_doc_comments(&self.expr)
+            ),
         };
         let memo = self.memo.as_deref().map(super::utils::memo).unwrap_or_default();
         quote! {
@@ -178,6 +192,116 @@ impl PropertyName {
     pub fn from_expr_ident(expr: &Expr) -> Self {
         let ident_str = super::expr_ident(expr).to_string();
         PropertyName::new(&ident_str)
+    }
+
+    fn map_property_to_doc_comments(&self, expr: &Vec<Expr>) -> String {
+        let args: Vec<String> = expr.iter().map(|arg| super::expr_ident(arg).to_string()).collect();
+        if args.len() < self.args_len() {
+            unreachable!("Arg length is invalid for {}", self.to_str())
+        }
+        match self {
+            Self::Align => {
+                format!("pointer `{}` must be properly aligned for type `{}`", args[0], args[1])
+            }
+            Self::Size => format!("the size of type {} should be {}", args[0], args[1]),
+            Self::NoPadding => format!("type {} must have no padding bytes ", args[0]),
+            Self::NotNull => format!("pointer {} must not be null", args[0]),
+            Self::Allocated => format!(
+                "the memory range [{}, {} + sizeof({})*{}) must be allocated by allocator {}",
+                args[0], args[0], args[1], args[2], args[3]
+            ),
+            Self::InBound => format!(
+                "the pointer {} and its offset up to sizeof({})*{} must point to a single allocated object",
+                args[0], args[1], args[2]
+            ),
+            Self::NotOverlap => format!(
+                "the memory ranges [{}, {} + sizeof({})*{}) and [{}, {} + sizeof({})*{}] must not overlap",
+                args[0], args[0], args[2], args[3], args[1], args[1], args[2], args[3]
+            ),
+            Self::ValidNum => {
+                format!("the value of {} must lie within the valid {}", args[0], args[1])
+            }
+            Self::ValidString => {
+                format!("the memory range {} must contain valid UTF-8 bytes", args[0])
+            }
+            Self::ValidCStr => {
+                format!(
+                    "the memory range [{}, {} + {} + 1] must contain a valid C-style string",
+                    args[0], args[0], args[1]
+                )
+            }
+            Self::Init => {
+                format!(
+                    "the memory range [{}, {} + sizeof({})*{}] must be fully initialized for type T",
+                    args[0], args[0], args[1], args[2]
+                )
+            }
+            Self::Unwrap => format!("the value {} must be Some({})", args[0], args[1]),
+            Self::Typed => {
+                format!("the pointer {} must point to a value of {}", args[0], args[1])
+            }
+            Self::Owning => {
+                format!("the pointer {} must hold exclusive ownership of its reference", args[0])
+            }
+            Self::Alias => {
+                format!("{} must not alias with {}", args[0], args[1])
+            }
+            Self::Alive => {
+                format!("the reference of {} must outlive the lifetime {}", args[0], args[1])
+            }
+            Self::Pinned => {
+                format!(
+                    "pointer {} must remain at the same memory address for the duration of lifetime {}",
+                    args[0], args[1]
+                )
+            }
+            Self::NotVolatile => {
+                format!(
+                    "the memory access of [{}, {} + sizeof({})*{}] must be volatile",
+                    args[0], args[0], args[1], args[2]
+                )
+            }
+            Self::Opened => {
+                format!("the file descriptor {} must be valid and open", args[0])
+            }
+            Self::Trait => {
+                format!(
+                    "if type {} implements trait {}, the property {} is mitigated",
+                    args[0], args[1], args[2]
+                )
+            }
+            Self::Unreachable => {
+                format!("the current program point should not be reachable during execution")
+            }
+            Self::Unknown => format!("unknown sp"),
+        }
+    }
+
+    fn args_len(&self) -> usize {
+        match self {
+            Self::Align => 2,
+            Self::Size => 2,
+            Self::NoPadding => 1,
+            Self::NotNull => 1,
+            Self::Allocated => 3,
+            Self::InBound => 3,
+            Self::NotOverlap => 4,
+            Self::ValidNum => 2,
+            Self::ValidString => 1,
+            Self::ValidCStr => 2,
+            Self::Init => 3,
+            Self::Unwrap => 2,
+            Self::Typed => 2,
+            Self::Owning => 1,
+            Self::Alias => 2,
+            Self::Alive => 2,
+            Self::Pinned => 2,
+            Self::NotVolatile => 3,
+            Self::Opened => 1,
+            Self::Trait => 3,
+            Self::Unreachable => 0,
+            Self::Unknown => 0, // Is it right?
+        }
     }
 
     pub fn to_str(self) -> &'static str {

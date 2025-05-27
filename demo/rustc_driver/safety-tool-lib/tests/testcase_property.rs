@@ -5,10 +5,10 @@ use safety_tool_lib::safety;
 
 // #[Property(args)] syntax
 
-#[safety::precond::Align(T)]
+#[safety::precond::Align(p, T)]
 pub fn api1() {}
 
-#[safety::hazard::Alias(T)]
+#[safety::hazard::Alias(p1, p2)]
 pub fn api2() {}
 
 #[safety::option::Unreachable()]

@@ -6,13 +6,13 @@ use std::prelude::rust_2024::*;
 #[macro_use]
 extern crate std;
 use safety_tool_lib::safety;
-/// Align: auto doc placeholder.
-#[Safety::inner(property = Align(T), kind = "precond")]
+/// Align: Make sure pointer `p` must be properly aligned for type `T` before calling this function.
+#[Safety::inner(property = Align(p T), kind = "precond")]
 pub fn api1() {}
-/// Alias: auto doc placeholder.
-#[Safety::inner(property = Alias(T), kind = "hazard")]
+/// Alias: Make sure p1 must not alias with p2 after calling this function.
+#[Safety::inner(property = Alias(p1 p2), kind = "hazard")]
 pub fn api2() {}
-/// Unreachable: auto doc placeholder.
+/// Unreachable: Make sure the current program point should not be reachable during execution before calling this function.
 #[Safety::inner(property = Unreachable(), kind = "option")]
 pub fn api3() {}
 #[rustc_main]
