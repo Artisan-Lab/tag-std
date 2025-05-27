@@ -195,7 +195,7 @@ impl PropertyName {
     }
 
     fn map_property_to_doc_comments(&self, expr: &Vec<Expr>) -> String {
-        let args: Vec<String> = expr.iter().map(|arg| super::expr_ident(arg).to_string()).collect();
+        let args: Vec<String> = expr.iter().map(|arg| super::expr_to_string(arg)).collect();
         if args.len() < self.args_len() {
             unreachable!("Arg length is invalid for {}", self.to_str())
         }
@@ -244,7 +244,7 @@ impl PropertyName {
                 format!("the pointer {} must hold exclusive ownership of its reference", args[0])
             }
             Self::Alias => {
-                format!("{} must not alias with {}", args[0], args[1])
+                format!("{} must not have other alias", args[0])
             }
             Self::Alive => {
                 format!("the reference of {} must outlive the lifetime {}", args[0], args[1])
@@ -293,7 +293,7 @@ impl PropertyName {
             Self::Unwrap => 2,
             Self::Typed => 2,
             Self::Owning => 1,
-            Self::Alias => 2,
+            Self::Alias => 1,
             Self::Alive => 2,
             Self::Pinned => 2,
             Self::NotVolatile => 3,

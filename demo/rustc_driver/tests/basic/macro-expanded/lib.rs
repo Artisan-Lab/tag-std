@@ -8,7 +8,7 @@ use std::prelude::rust_2024::*;
 #[macro_use]
 extern crate std;
 use safety_tool_lib::safety;
-/// Unreachable: auto doc placeholder.
+/// Unreachable: Make sure the current program point should not be reachable during execution before calling this function.
 #[Safety::inner(property = Unreachable(), kind = "precond")]
 pub unsafe fn test() -> ! {
     unsafe { std::intrinsics::unreachable() }
@@ -28,16 +28,16 @@ impl MyStruct {
     pub fn from(p: *mut u8, l: usize) -> MyStruct {
         MyStruct { ptr: p, len: l }
     }
-    /// Init: auto doc placeholder.
+    /// Init: Make sure the memory range [self.ptr, self.ptr + sizeof(u8)*self.len] must be fully initialized for type T before calling this function.
     #[Safety::inner(property = Init(self.ptr u8 self.len), kind = "precond")]
-    /// InBound: auto doc placeholder.
+    /// InBound: Make sure the pointer self.ptr and its offset up to sizeof(u8)*self.len must point to a single allocated object before calling this function.
     #[Safety::inner(property = InBound(self.ptr u8 self.len), kind = "precond")]
-    /// ValidNum: auto doc placeholder.
+    /// ValidNum: Make sure the value of self.len * sizeof(u8) must lie within the valid [0, isize :: MAX] before calling this function.
     #[Safety::inner(
         property = ValidNum(self.len*sizeof(u8)[0, isize::MAX]),
         kind = "precond"
     )]
-    /// Alias: auto doc placeholder.
+    /// Alias: Make sure self.ptr must not have other alias after calling this function.
     #[Safety::inner(property = Alias(self.ptr), kind = "hazard")]
     pub unsafe fn get(&self) -> &mut [u8] {
         unsafe { std::slice::from_raw_parts_mut(self.ptr, self.len) }

@@ -183,3 +183,8 @@ fn expr_ident_opt(expr: &Expr) -> Option<Ident> {
     let Expr::Path(path) = expr else { return None };
     path.path.get_ident().cloned()
 }
+
+fn expr_to_string(expr: &Expr) -> String {
+    let tokens = quote! { #expr };
+    tokens.to_string()
+}
