@@ -11,7 +11,7 @@ fn snapshot(test: &str) {
     }
 
     let expanded = std::str::from_utf8(&stdout.stdout).unwrap();
-    let dir = Path::new("snapshots");
+    let dir = Path::new("oracle");
     let path = {
         let mut p = dir.join(test);
         assert!(p.set_extension("rs"));

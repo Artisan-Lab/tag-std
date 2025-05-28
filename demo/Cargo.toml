@@ -3,15 +3,15 @@ name = "safe-tool"
 version = "0.1.0"
 edition = "2024"
 
-[[bin]]
-name = "cargo-safe-tool"
-path = "src/bin/cargo-safe-tool.rs"
+#[[bin]]
+#name = "cargo-safe-tool"
+#path = "src/bin/cargo-safe-tool.rs"
 
 [dependencies]
 
 [workspace]
 members = ["safety-tool-lib","safety-tool-macro", "safety-tool-parser"]
-exclude = ["tests/basic"]
+exclude = ["tests"]
 
 [package.metadata.rust-analyzer]
 rustc_private = true

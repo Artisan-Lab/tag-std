@@ -69,49 +69,14 @@ kind_property! {
     Precond_Trait: Precond, Trait;
     Precond_Unreachable: Precond, Unreachable;
 
-    Hazard_Align: Hazard, Align;
-    Hazard_Size: Hazard, Size;
-    Hazard_NoPadding: Hazard, NoPadding;
-    Hazard_NotNull: Hazard, NotNull;
-    Hazard_Allocated: Hazard, Allocated;
-    Hazard_InBound: Hazard, InBound;
-    Hazard_NotOverlap: Hazard, NotOverlap;
-    Hazard_ValidNum: Hazard, ValidNum;
     Hazard_ValidString: Hazard, ValidString;
-    Hazard_ValidCStr: Hazard, ValidCStr;
     Hazard_Init: Hazard, Init;
-    Hazard_Unwrap: Hazard, Unwrap;
-    Hazard_Typed: Hazard, Typed;
-    Hazard_Owning: Hazard, Owning;
     Hazard_Alias: Hazard, Alias;
-    Hazard_Alive: Hazard, Alive;
     Hazard_Pinned: Hazard, Pinned;
-    Hazard_NotVolatile: Hazard, NotVolatile;
-    Hazard_Opened: Hazard, Opened;
-    Hazard_Trait: Hazard, Trait;
-    Hazard_Unreachable: Hazard, Unreachable;
 
-    Option_Align: Option, Align;
     Option_Size: Option, Size;
-    Option_NoPadding: Option, NoPadding;
-    Option_NotNull: Option, NotNull;
-    Option_Allocated: Option, Allocated;
-    Option_InBound: Option, InBound;
-    Option_NotOverlap: Option, NotOverlap;
-    Option_ValidNum: Option, ValidNum;
-    Option_ValidString: Option, ValidString;
-    Option_ValidCStr: Option, ValidCStr;
     Option_Init: Option, Init;
-    Option_Unwrap: Option, Unwrap;
-    Option_Typed: Option, Typed;
-    Option_Owning: Option, Owning;
-    Option_Alias: Option, Alias;
-    Option_Alive: Option, Alive;
-    Option_Pinned: Option, Pinned;
-    Option_NotVolatile: Option, NotVolatile;
-    Option_Opened: Option, Opened;
     Option_Trait: Option, Trait;
-    Option_Unreachable: Option, Unreachable;
 }
 
 /// Pub use a attribute by stripping the prefix.

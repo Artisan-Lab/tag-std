@@ -29,52 +29,17 @@ pub mod precond {
 
 pub mod hazard {
     super::pub_use! {
-        Hazard_Align,
-        Hazard_Size,
-        Hazard_NoPadding,
-        Hazard_NotNull,
-        Hazard_Allocated,
-        Hazard_InBound,
-        Hazard_NotOverlap,
-        Hazard_ValidNum,
         Hazard_ValidString,
-        Hazard_ValidCStr,
         Hazard_Init,
-        Hazard_Unwrap,
-        Hazard_Typed,
-        Hazard_Owning,
         Hazard_Alias,
-        Hazard_Alive,
         Hazard_Pinned,
-        Hazard_NotVolatile,
-        Hazard_Opened,
-        Hazard_Trait,
-        Hazard_Unreachable,
     }
 }
 
 pub mod option {
     super::pub_use! {
-        Option_Align,
         Option_Size,
-        Option_NoPadding,
-        Option_NotNull,
-        Option_Allocated,
-        Option_InBound,
-        Option_NotOverlap,
-        Option_ValidNum,
-        Option_ValidString,
-        Option_ValidCStr,
         Option_Init,
-        Option_Unwrap,
-        Option_Typed,
-        Option_Owning,
-        Option_Alias,
-        Option_Alive,
-        Option_Pinned,
-        Option_NotVolatile,
-        Option_Opened,
         Option_Trait,
-        Option_Unreachable,
     }
 }
