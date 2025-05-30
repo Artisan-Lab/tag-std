@@ -1,6 +1,6 @@
 #![feature(prelude_import)]
 #![feature(register_tool)]
-#![register_tool(Safety)]
+#![register_tool(rapx)]
 #![allow(dead_code, non_snake_case)]
 #[prelude_import]
 use std::prelude::rust_2024::*;
@@ -9,7 +9,7 @@ extern crate std;
 use safety_tool_lib::safety;
 /// Ident: auto doc placeholder.
 /// This is a user defined property.
-#[Safety::inner(
+#[rapx::inner(
     property = Unknown(Ident),
     kind = "memo",
     memo = "This is a user defined property."

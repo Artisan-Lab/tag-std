@@ -1,6 +1,6 @@
 #![feature(prelude_import)]
 #![feature(register_tool)]
-#![register_tool(Safety)]
+#![register_tool(rapx)]
 #![allow(clippy::missing_safety_doc, clippy::mut_from_ref, internal_features)]
 #![feature(core_intrinsics)]
 #[prelude_import]
@@ -9,7 +9,7 @@ use std::prelude::rust_2024::*;
 extern crate std;
 use safety_tool_lib::safety;
 /// Unreachable: Make sure the current program point should not be reachable during execution before calling this function.
-#[Safety::inner(property = Unreachable(), kind = "precond")]
+#[rapx::inner(property = Unreachable(), kind = "precond")]
 pub unsafe fn test() -> ! {
     unsafe { std::intrinsics::unreachable() }
 }
@@ -20,7 +20,7 @@ pub struct MyStruct {
 impl MyStruct {
     /// UserProperty: auto doc placeholder.
     /// Customed user property.
-    #[Safety::inner(
+    #[rapx::inner(
         property = Unknown(UserProperty),
         kind = "memo",
         memo = "Customed user property."
@@ -29,16 +29,16 @@ impl MyStruct {
         MyStruct { ptr: p, len: l }
     }
     /// Init: Make sure the memory range [self.ptr, self.ptr + sizeof(u8)*self.len] must be fully initialized for type T before calling this function.
-    #[Safety::inner(property = Init(self.ptr u8 self.len), kind = "precond")]
+    #[rapx::inner(property = Init(self.ptr u8 self.len), kind = "precond")]
     /// InBound: Make sure the pointer self.ptr and its offset up to sizeof(u8)*self.len must point to a single allocated object before calling this function.
-    #[Safety::inner(property = InBound(self.ptr u8 self.len), kind = "precond")]
+    #[rapx::inner(property = InBound(self.ptr u8 self.len), kind = "precond")]
     /// ValidNum: Make sure the value of self.len * sizeof(u8) must lie within the valid [0, isize :: MAX] before calling this function.
-    #[Safety::inner(
+    #[rapx::inner(
         property = ValidNum(self.len*sizeof(u8)[0, isize::MAX]),
         kind = "precond"
     )]
     /// Alias: Make sure self.ptr must not have other alias after calling this function.
-    #[Safety::inner(property = Alias(self.ptr), kind = "hazard")]
+    #[rapx::inner(property = Alias(self.ptr), kind = "hazard")]
     pub unsafe fn get(&self) -> &mut [u8] {
         unsafe { std::slice::from_raw_parts_mut(self.ptr, self.len) }
     }

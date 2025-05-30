@@ -1,5 +1,5 @@
 #![feature(register_tool)]
-#![register_tool(Safety)]
+#![register_tool(rapx)]
 
 use safety_tool_lib::safety;
 

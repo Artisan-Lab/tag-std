@@ -145,7 +145,7 @@ impl NamedArgsSet {
             }
         }
         quote! {
-            #[Safety::inner(#args)]
+            #[rapx::inner(#args)]
         }
     }
 }
