@@ -1,11 +1,14 @@
+#![feature(proc_macro_hygiene)]
 #![feature(vec_into_raw_parts)]
 #![feature(stmt_expr_attributes)]
 
 use safety_tool_lib::safety;
 use demo::MyStruct;
+use safety_tool_lib::safety;
 
 fn main() {
     let (p, l, _c) = Vec::new().into_raw_parts();
+    #[safety::discharge(Memo(UserProperty))]
     let a = MyStruct::from(p, l);
     println!(
         "{:?}",

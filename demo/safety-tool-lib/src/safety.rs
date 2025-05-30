@@ -1,4 +1,5 @@
 pub use safety_tool_macro::Memo;
+pub use safety_tool_macro::discharge;
 
 use safety_tool_macro::pub_use;
 pub mod precond {
