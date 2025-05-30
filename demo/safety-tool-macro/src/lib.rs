@@ -107,6 +107,6 @@ pub fn Memo(attr: TokenStream, item: TokenStream) -> TokenStream {
 }
 
 #[proc_macro_attribute]
-pub fn discharge(_attr: TokenStream, item: TokenStream) -> TokenStream {
+pub fn discharges(_attr: TokenStream, item: TokenStream) -> TokenStream {
     item
 }
