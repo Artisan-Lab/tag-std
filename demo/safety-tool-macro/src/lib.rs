@@ -105,3 +105,8 @@ pub fn pub_use(tokens: TokenStream) -> TokenStream {
 pub fn Memo(attr: TokenStream, item: TokenStream) -> TokenStream {
     generate(Kind::Memo, PropertyName::Unknown, attr, item)
 }
+
+#[proc_macro_attribute]
+pub fn discharge(_attr: TokenStream, item: TokenStream) -> TokenStream {
+    item
+}
