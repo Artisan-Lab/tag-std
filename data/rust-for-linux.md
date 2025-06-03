@@ -1,4 +1,4 @@
-## Intro
+## Introduction
 This is a temporary document summarizing our analysis of the unsafe APIs in [rust-for-linux](https://github.com/Artisan-Lab/tag-rust-for-linux). 
 Our initial analysis is based on the official [doc](https://rust.docs.kernel.org/kernel/) provided by the project.
 
