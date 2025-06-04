@@ -4,20 +4,28 @@ Our initial analysis is based on the official [doc](https://rust.docs.kernel.org
 
 ### Module: [List](https://rust.docs.kernel.org/kernel/list/index.html) 
 
-#### Overview
+#### Overview of the Module
 
-List is similar to [LinkedList](https://doc.rust-lang.org/std/collections/struct.LinkedList.html) in the Rust standard library, especially the namming strategy and design of the structs: 
-- List/LinkedList
-- Iter/IterMut: refer to current node of the list; cannot insert/delete nodes because of no position info (previous pointer).
-- IntoIter: consume the ownership of the list.
-- Cursor/CursorMut: can insert/delete nodes.
+[List](https://rust.docs.kernel.org/kernel/list/struct.List.html) shares many similarities with [LinkedList](https://doc.rust-lang.org/std/collections/struct.LinkedList.html) from the Rust standard library. However, `LinkedList` is designed for single-threaded programs and stores list nodes using `Box`, which is insufficient for kernel programming. In contrast, `List` is intended for multi-threaded environments and manages its nodes through `ListArc` or `Arc`.
 
-Different from the LinkedList, which holds the list nodes via `Box`, List holds its node via `ListArc`. 
+Despite their different use cases, both modules adopt similar naming conventions and type structures. In particular, they each provide the following iterator and cursor types:
+- `Iter` / `IterMut`: Immutable and mutable iterators over the list. These refer to the current node, but cannot insert or remove elements, as they lack position information (e.g., a pointer to the previous node).
+- `IntoIter`: Consumes the list and yields ownership of its elements.
+- `Cursor` / `CursorMut`: Provide a movable cursor with position awareness, enabling insertion and removal of nodes during iteration.
+
+Besides, the `List` module has several other strusts:
+- `ListLinks`:	The prev/next pointers for an item in a linked list.
+- `ListLinksSelfPtr`: Similar to `ListLinks`, it also contains a pointer to the current node.
+- `AtomicTracker`:
+- `CursorPeek`: 
+- `ListArcField`:
 
 Traits associated with structs: 
-- Trait ListArcSafe <==> struct ListArc
-- Trait HasListLinks <==> struct ListLinks 
-- Trait HasSelfPtr <==> struct ListLinksSelfPtr
+- `ListArcSafe`: Implemented for types used with the `ListArc` wrapper.
+- `ListItem`: Inherits from ListArcSafe and adds requirements for types that can be inserted into a List.
+- `TryNewListArc`: Also inherits from ListArcSafe; provides a fallible constructor for ListArc.
+`HasListLinks`: Implemented for types containing a ListLinks field.
+- `HasSelfPtr`: corresponds to the struct `ListLinksSelfPtr`
 
 #### Struct: [AtomicTracker](https://rust.docs.kernel.org/kernel/list/struct.AtomicTracker.html)
 There are two unsafe APIs.
