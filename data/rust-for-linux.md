@@ -4,7 +4,13 @@ Our initial analysis is based on the official [doc](https://rust.docs.kernel.org
 
 ### Module: [List](https://rust.docs.kernel.org/kernel/list/index.html) 
 
-#### Trait: 
+```rust
+struct List
+
+struct ListLinksSelfPtr <==> Trait HasSelfPtr
+|-- struct ListLinks    <==> Trait HasListLinks
+|---- struct ListArc    <==> Trait ListArcSafe
+```
 
 #### Struct: [AtomicTracker](https://rust.docs.kernel.org/kernel/list/struct.AtomicTracker.html)
 There are two unsafe APIs.
@@ -32,12 +38,11 @@ unsafe fn __pinned_init(self, slot: *mut T) -> Result<(), E> // A method in Trai
 ```
 #### Struct: [CursorPeek](https://rust.docs.kernel.org/kernel/list/struct.CursorPeek.html)
 
-
 #### Struct: [IntoIter](https://rust.docs.kernel.org/kernel/list/struct.IntoIter.html)
 
 #### Struct: [Iter](https://rust.docs.kernel.org/kernel/list/struct.Iter.html)
 
-#### Struct: [List] [https://rust.docs.kernel.org/kernel/list/struct.List.html] 
+#### Struct: [List](https://rust.docs.kernel.org/kernel/list/struct.List.html)
 There are three unsafe APIs:
 ```rust
 ///Safety
@@ -56,10 +61,20 @@ unsafe fn __init(self, slot: *mut T) -> Result<(), E> // A method in Trait kerne
 unsafe fn __pinned_init(self, slot: *mut T) -> Result<(), E> // A method in Trait kernel::prelude::PinInit
 ```
 
-#### Struct: [ListArc] [https://rust.docs.kernel.org/kernel/list/struct.ListArc.html] 
+#### Struct: [ListArc](https://rust.docs.kernel.org/kernel/list/struct.ListArc.html)
 
-#### Struct: [ListArcField] [https://rust.docs.kernel.org/kernel/list/struct.ListArcField.html] 
+#### Struct: [ListArcField](https://rust.docs.kernel.org/kernel/list/struct.ListArcField.html)
 
-#### Struct: [ListLinks] [https://rust.docs.kernel.org/kernel/list/struct.ListLinks.html] 
+#### Struct: [ListLinks](https://rust.docs.kernel.org/kernel/list/struct.ListLinks.html)
 
-#### Struct: [ListLinksSelfPtr] [https://rust.docs.kernel.org/kernel/list/struct.ListLinksSelfPtr.html] 
+#### Struct: [ListLinksSelfPtr](https://rust.docs.kernel.org/kernel/list/struct.ListLinksSelfPtr.html)
+
+#### Trait: [HasListLinks](https://rust.docs.kernel.org/kernel/list/trait.HasListLinks.html)
+
+#### Trait: [HasSelfPtr](https://rust.docs.kernel.org/kernel/list/trait.HasSelfPtr.html)
+
+#### Trait: [ListArcSafe](https://rust.docs.kernel.org/kernel/list/trait.ListArcSafe.html)
+
+#### Trait: [ListItem](https://rust.docs.kernel.org/kernel/list/trait.ListItem.html)
+
+#### Trait: [TryNewListArc](https://rust.docs.kernel.org/kernel/list/trait.TryNewListArc.html)
