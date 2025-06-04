@@ -4,19 +4,20 @@ Our initial analysis is based on the official [doc](https://rust.docs.kernel.org
 
 ### Module: [List](https://rust.docs.kernel.org/kernel/list/index.html) 
 
-```rust
-struct List<T: ?Sized + ListItem<ID>, const ID: u64 = 0> {
-    first: *mut ListLinksFields,
-    _ty: PhantomData<ListArc<T, ID>>, // struct ListArc <==> Trait ListArcSafe
-}
-struct IntoIter // owned List
-struct Iter // ref to List (current node) 
-struct ListLinks // only pointers of the list, no PhantomData, <==> Trait HasListLinks
-struct ListLinksSelfPtr<T: ?Sized, const ID: u64 = 0> { // <==> Trait HasSelfPtr
-    pub inner: ListLinks<ID>,
-    self_ptr: Opaque<*const T>,
-}
-```
+#### Overview
+
+List is similar to [LinkedList](https://doc.rust-lang.org/std/collections/struct.LinkedList.html) in the Rust standard library, especially the namming strategy and design of the structs: 
+- List/LinkedList
+- Iter/IterMut: refer to current node of the list; cannot insert/delete nodes because of no position info (previous pointer).
+- IntoIter: consume the ownership of the list.
+- Cursor/CursorMut: can insert/delete nodes.
+
+Different from the LinkedList, which holds the list nodes via `Box`, List holds its node via `ListArc`. 
+
+Traits associated with structs: 
+- Trait ListArcSafe <==> struct ListArc
+- Trait HasListLinks <==> struct ListLinks 
+- Trait HasSelfPtr <==> struct ListLinksSelfPtr
 
 #### Struct: [AtomicTracker](https://rust.docs.kernel.org/kernel/list/struct.AtomicTracker.html)
 There are two unsafe APIs.
