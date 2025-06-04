@@ -5,11 +5,17 @@ Our initial analysis is based on the official [doc](https://rust.docs.kernel.org
 ### Module: [List](https://rust.docs.kernel.org/kernel/list/index.html) 
 
 ```rust
-struct List
-
-struct ListLinksSelfPtr <==> Trait HasSelfPtr
-|-- struct ListLinks    <==> Trait HasListLinks
-|---- struct ListArc    <==> Trait ListArcSafe
+struct List<T: ?Sized + ListItem<ID>, const ID: u64 = 0> {
+    first: *mut ListLinksFields,
+    _ty: PhantomData<ListArc<T, ID>>, // struct ListArc <==> Trait ListArcSafe
+}
+struct IntoIter // owned List
+struct Iter // ref to List (current node) 
+struct ListLinks // only pointers of the list, no PhantomData, <==> Trait HasListLinks
+struct ListLinksSelfPtr<T: ?Sized, const ID: u64 = 0> { // <==> Trait HasSelfPtr
+    pub inner: ListLinks<ID>,
+    self_ptr: Opaque<*const T>,
+}
 ```
 
 #### Struct: [AtomicTracker](https://rust.docs.kernel.org/kernel/list/struct.AtomicTracker.html)
