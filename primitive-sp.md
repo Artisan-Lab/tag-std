@@ -263,7 +263,7 @@ Example APIs: [AtomicPtr::from_ptr()](https://doc.rust-lang.org/std/sync/atomic/
 #### 3.5.1 Pin
 Implementing `Pin` for `!Unpin` is also valid in Rust, developers should not move the pinned object pointed by `p` after created.
 
-**psp V.1 Pinned(p)**:
+**psp V.1 Pinned(p, l)**:
 
 $$\forall t \in 0..l, \\&(*p)_0 = p_t$$
 
