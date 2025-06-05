@@ -3,8 +3,9 @@ use std::{env::var, process::Command};
 fn main() {
     // Search cargo-safe-tool and safe-tool CLI through environment variables,
     // or just use the name if absent.
-    let cargo_safe_tool = &*var("CARGO_SAFE_TOOL").unwrap_or_else(|_| "cargo-safe-tool".to_owned());
-    let safe_tool = &*var("SAFE_TOOL").unwrap_or_else(|_| "safe-tool".to_owned());
+    let cargo_safe_tool =
+        &*var("CARGO_SAFETY_TOOL").unwrap_or_else(|_| "cargo-safety-tool".to_owned());
+    let safe_tool = &*var("SAFETY_TOOL").unwrap_or_else(|_| "safety-tool".to_owned());
 
     let args = std::env::args().collect::<Vec<_>>();
 

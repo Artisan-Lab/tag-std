@@ -1,11 +1,11 @@
 [package]
-name = "safe-tool"
+name = "safety-tool"
 version = "0.1.0"
 edition = "2024"
 
 [[bin]]
-name = "cargo-safe-tool"
-path = "src/bin/cargo-safe-tool.rs"
+name = "cargo-safety-tool"
+path = "src/bin/cargo-safety-tool.rs"
 
 [dependencies]
 rusqlite = { version = "0.36.0", features = ["bundled", "jiff"] }

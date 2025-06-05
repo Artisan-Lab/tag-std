@@ -14,8 +14,8 @@ cargo fmt --check --all
 cargo clippy --workspace -- -D clippy::all
 
 cargo build
-export SAFE_TOOL=$PWD/target/debug/safe-tool
-export CARGO_SAFE_TOOL=$PWD/target/debug/cargo-safe-tool
+export SAFETY_TOOL=$PWD/target/debug/safety-tool
+export CARGO_SAFETY_TOOL=$PWD/target/debug/cargo-safety-tool
 
 rm data.sqlite3 a.sqlite3 -f
 cargo test
@@ -40,7 +40,7 @@ unset STOP_COMPILATION
 
 # Analyze the lib and bin crates.
 # Same as `cargo safe-tool` when tag-std and cargo-safe-tool are installed.
-CARGO_TERM_PROGRESS_WHEN=never $CARGO_SAFE_TOOL | tee macro-expanded/cargo-safe-tool.txt
+CARGO_TERM_PROGRESS_WHEN=never $CARGO_SAFETY_TOOL | tee macro-expanded/cargo-safe-tool.txt
 cargo expand --lib >macro-expanded/lib.rs
 cargo expand --bin demo >macro-expanded/main.rs
 rm data.sqlite3 -f
