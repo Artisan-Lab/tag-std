@@ -2,7 +2,7 @@ use core::cmp::Ordering;
 use indexmap::IndexSet;
 use proc_macro2::{Literal, Span, TokenStream};
 use quote::{ToTokens, TokenStreamExt, quote};
-use syn::*;
+use syn::{punctuated::Punctuated, *};
 
 use crate::property_attr::expr_ident;
 
@@ -57,10 +57,19 @@ impl Property {
         }
     }
 
+    pub fn from_call(expr: &Expr) -> Self {
+        let Expr::Call(call) = expr else { panic!("{expr:?} should be a call expr") };
+        let name = expr_ident(&call.func).to_string();
+        let name = PropertyName::new(&name);
+        let args = call.args.iter().cloned().collect();
+        // NOTE: kind = Memo is a temporary state
+        Property { kind: Kind::Memo, name, expr: args, memo: None }
+    }
+
     /// `PropertyName(arg1, arg2, ...)`
     pub fn property_tokens(&self) -> TokenStream {
         let name = Ident::new(&format!("{:?}", self.name), Span::call_site());
-        let args: TokenStream = self.expr.iter().map(|arg| arg.to_token_stream()).collect();
+        let args: Punctuated<&Expr, Token![,]> = self.expr.iter().collect();
         quote! {
             #name (#args)
         }
@@ -120,7 +129,7 @@ impl Kind {
             "precond" => Kind::Precond,
             "hazard" => Kind::Hazard,
             "option" => Kind::Option,
-            "memo" => Kind::Option,
+            "memo" => Kind::Memo,
             _ => unreachable!(
                 "{kind} is invalid: should be one of \
                  precond, hazard, option, and memo."

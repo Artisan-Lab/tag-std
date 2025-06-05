@@ -86,6 +86,12 @@ impl NamedArg {
         {
             return NamedArg::Kind(kind.value());
         }
+
+        if ident == "property" {
+            let property = Property::from_call(expr);
+            return NamedArg::Property(Box::new(property));
+        }
+
         panic!("{ident:?} is not a supported ident.\nCurrently supported named arguments: memo.")
     }
 
@@ -96,6 +102,37 @@ impl NamedArg {
             _ => TokenStream::new(),
         }
     }
+}
+
+pub fn parse_inner_attr(s: &str) -> Option<Property> {
+    use syn::parse::Parser;
+    let mut attrs = Attribute::parse_outer.parse_str(s).unwrap();
+    assert!(attrs.len() < 2, "{s:?} shouldn't be parsed into multiple attributes.");
+    let attr = attrs.pop()?;
+
+    let args: SafetyAttrArgs = attr.parse_args().unwrap();
+    let exprs = args.exprs;
+    let mut set = IndexSet::with_capacity(exprs.len());
+    let mut non_named_exprs = Vec::new();
+
+    // parse all named arguments such as memo, but discard all positional args.
+    parse_named_args(exprs, &mut set, &mut non_named_exprs);
+
+    let mut property = set
+        .iter()
+        .find_map(|arg| {
+            if let NamedArg::Property(property) = arg { Some(property.clone()) } else { None }
+        })
+        .unwrap_or_else(|| panic!("No property in {set:?}"));
+    property.kind = set
+        .iter()
+        .find_map(|arg| if let NamedArg::Kind(kind) = arg { Some(Kind::new(kind)) } else { None })
+        .unwrap_or_else(|| panic!("No kind in {set:?}"));
+    property.memo = set
+        .iter()
+        .find_map(|arg| if let NamedArg::Memo(memo) = arg { Some(memo.clone()) } else { None });
+
+    Some(*property)
 }
 
 #[derive(Debug)]
@@ -171,7 +208,7 @@ fn parse_named_args(
 /// Parse expr as single ident.
 ///
 /// Panic if expr is not Path or a path with multiple segments.
-fn expr_ident(expr: &Expr) -> Ident {
+pub fn expr_ident(expr: &Expr) -> Ident {
     let Expr::Path(path) = expr else { panic!("{expr:?} is not path expr.") };
     path.path.get_ident().unwrap().clone()
 }

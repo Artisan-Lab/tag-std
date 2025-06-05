@@ -1,11 +1,14 @@
 #![feature(rustc_private)]
 
+extern crate itertools;
+extern crate rustc_ast;
 extern crate rustc_data_structures;
 extern crate rustc_driver;
 extern crate rustc_hir;
 extern crate rustc_hir_pretty;
 extern crate rustc_interface;
 extern crate rustc_middle;
+extern crate rustc_span;
 #[macro_use]
 extern crate rustc_smir;
 extern crate stable_mir;
@@ -23,12 +26,28 @@ use stable_mir::{
     rustc_internal::internal,
     ty::Ty,
 };
+use std::ops::ControlFlow;
+
+mod analyze_hir;
+mod logger;
+
+use eyre::Result;
 
 fn main() {
+    logger::init();
+
     let rustc_args: Vec<_> = std::env::args().collect();
-    _ = run_with_tcx!(&rustc_args, |tcx| {
-        analyze(tcx);
+    // When STOP_COMPILATION is set to non-0, stop compiling.
+    let ret = if std::env::var("STOP_COMPILATION").map(|s| s != "0").unwrap_or(false) {
+        ControlFlow::<(), ()>::Break(())
+    } else {
         ControlFlow::<(), ()>::Continue(())
+    };
+    _ = run_with_tcx!(&rustc_args, |tcx| {
+        analyze_hir::analyze_hir(tcx).unwrap();
+        analyze(tcx);
+
+        ret
     });
 }
 
@@ -85,7 +104,7 @@ impl Reachability {
     }
 }
 
-const REGISTER_TOOL: &str = "Safety";
+const REGISTER_TOOL: &str = "rapx";
 
 fn print_tag_std_attrs_through_internal_apis(tcx: TyCtxt<'_>, instance: &Instance) {
     let def_id = internal(tcx, instance.def.def_id());

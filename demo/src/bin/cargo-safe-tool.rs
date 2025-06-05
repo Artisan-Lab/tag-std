@@ -35,6 +35,6 @@ fn run(cmd: &str, args: &[String], vars: &[(&str, &str)]) {
         .wait()
         .unwrap();
     if !status.success() {
-        eprintln!("[error] {cmd}: args={args:#?} vars={vars:?}");
+        panic!("[error] {cmd}: args={args:#?} vars={vars:?}");
     }
 }
