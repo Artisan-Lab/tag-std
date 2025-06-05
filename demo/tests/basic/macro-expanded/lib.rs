@@ -29,16 +29,23 @@ impl MyStruct {
         MyStruct { ptr: p, len: l }
     }
     /// Init: Make sure the memory range [self.ptr, self.ptr + sizeof(u8)*self.len] must be fully initialized for type T before calling this function.
-    #[rapx::inner(property = Init(self.ptr u8 self.len), kind = "precond")]
+    #[rapx::inner(property = Init(self.ptr, u8, self.len), kind = "precond")]
     /// InBound: Make sure the pointer self.ptr and its offset up to sizeof(u8)*self.len must point to a single allocated object before calling this function.
-    #[rapx::inner(property = InBound(self.ptr u8 self.len), kind = "precond")]
+    #[rapx::inner(property = InBound(self.ptr, u8, self.len), kind = "precond")]
     /// ValidNum: Make sure the value of self.len * sizeof(u8) must lie within the valid [0, isize :: MAX] before calling this function.
     #[rapx::inner(
-        property = ValidNum(self.len*sizeof(u8)[0, isize::MAX]),
+        property = ValidNum(self.len*sizeof(u8), [0, isize::MAX]),
         kind = "precond"
     )]
     /// Alias: Make sure self.ptr must not have other alias after calling this function.
     #[rapx::inner(property = Alias(self.ptr), kind = "hazard")]
+    /// UserPropertyGet: auto doc placeholder.
+    /// Customed user property.
+    #[rapx::inner(
+        property = Unknown(UserPropertyGet),
+        kind = "memo",
+        memo = "Customed user property."
+    )]
     pub unsafe fn get(&self) -> &mut [u8] {
         unsafe { std::slice::from_raw_parts_mut(self.ptr, self.len) }
     }

@@ -1,17 +1,38 @@
 [package]
-name = "safe-tool"
+name = "safety-tool"
 version = "0.1.0"
 edition = "2024"
 
-#[[bin]]
-#name = "cargo-safe-tool"
-#path = "src/bin/cargo-safe-tool.rs"
+[[bin]]
+name = "cargo-safety-tool"
+path = "src/bin/cargo-safety-tool.rs"
 
 [dependencies]
+rusqlite = { version = "0.36.0", features = ["bundled", "jiff"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+prettyplease = "0.2"
+jiff = { version = "0.2", features = ["serde"] }
+annotate-snippets = "0.11.5"
+
+safety-tool-parser = { path = "./safety-tool-parser/" }
+
+# error handling
+eyre = "0.6"
+color-eyre = "0.6"
+
+# logger
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+tracing-error = "0.2"
+
+[dev-dependencies]
+assert_cmd = "2.0.17"
+expect-test = "1.5.1"
 
 [workspace]
 members = ["safety-tool-lib","safety-tool-macro", "safety-tool-parser"]
-exclude = ["tests"]
+exclude = ["tests/basic"]
 
 [package.metadata.rust-analyzer]
 rustc_private = true
