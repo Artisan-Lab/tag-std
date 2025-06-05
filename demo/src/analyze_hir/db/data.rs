@@ -2,7 +2,7 @@ use super::super::{HirFn, is_tool_attr};
 use rustc_data_structures::fx::FxIndexMap;
 use rustc_hir::{HirId, def_id::DefId};
 use rustc_middle::ty::TyCtxt;
-use safety_tool_parser::property_attr::{expr_ident, parse_inner_attr, property::Kind};
+use safety_tool_parser::property_attr::{expr_ident, parse_inner_attr_from_str, property::Kind};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct PrimaryKey {
@@ -122,7 +122,7 @@ impl Property {
 }
 
 fn push_properties(s: &str, v: &mut Vec<Property>) {
-    if let Some(property) = parse_inner_attr(s) {
+    if let Some(property) = parse_inner_attr_from_str(s) {
         if property.kind == Kind::Memo {
             let s = expr_ident(&property.expr[0]).to_string();
             v.push(Property { property: s.into_boxed_str() })

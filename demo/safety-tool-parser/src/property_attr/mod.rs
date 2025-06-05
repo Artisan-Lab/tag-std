@@ -3,7 +3,7 @@ use proc_macro2::TokenStream;
 use property::{Kind, Property, PropertyName};
 use quote::quote;
 use syn::{
-    parse::{Parse, ParseStream},
+    parse::{Parse, ParseStream, Parser},
     punctuated::Punctuated,
     *,
 };
@@ -104,8 +104,7 @@ impl NamedArg {
     }
 }
 
-pub fn parse_inner_attr(s: &str) -> Option<Property> {
-    use syn::parse::Parser;
+pub fn parse_inner_attr_from_str(s: &str) -> Option<Property> {
     let mut attrs = Attribute::parse_outer.parse_str(s).unwrap();
     assert!(attrs.len() < 2, "{s:?} shouldn't be parsed into multiple attributes.");
     let attr = attrs.pop()?;
@@ -133,6 +132,27 @@ pub fn parse_inner_attr(s: &str) -> Option<Property> {
         .find_map(|arg| if let NamedArg::Memo(memo) = arg { Some(memo.clone()) } else { None });
 
     Some(*property)
+}
+
+pub fn parse_inner_attr_from_tokenstream(ts: TokenStream) -> Property {
+    let v_expr = Punctuated::<Expr, Token![,]>::parse_separated_nonempty.parse2(ts).unwrap();
+    let Expr::Call(call) = v_expr[0].clone() else {
+        panic!("The first expr is not a call expr in {v_expr:?} ");
+    };
+
+    let mut set = IndexSet::with_capacity(call.args.len());
+
+    let mut non_named_exprs = Vec::new();
+
+    // parse all named arguments such as memo
+    parse_named_args(call.args, &mut set, &mut non_named_exprs);
+
+    let name = expr_ident(&call.func).to_string();
+    if name != "Memo" {
+        panic!("Only support `Memo` property, but got {name:?}");
+    }
+    let name = PropertyName::new(&name);
+    Property::new(Kind::Memo, name, non_named_exprs, &set)
 }
 
 #[derive(Debug)]

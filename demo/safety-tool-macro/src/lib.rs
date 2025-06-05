@@ -2,10 +2,10 @@ use proc_macro::TokenStream;
 use safety_tool_parser::{
     proc_macro2::{Ident, TokenStream as TokenStream2},
     property_attr::{
-        FnItem, SafetyAttrArgs,
+        FnItem, SafetyAttrArgs, parse_inner_attr_from_tokenstream,
         property::{Kind, PropertyName},
     },
-    quote::quote_spanned,
+    quote::{quote, quote_spanned},
     syn::{parse::Parser, punctuated::Punctuated, *},
 };
 
@@ -107,6 +107,13 @@ pub fn Memo(attr: TokenStream, item: TokenStream) -> TokenStream {
 }
 
 #[proc_macro_attribute]
-pub fn discharges(_attr: TokenStream, item: TokenStream) -> TokenStream {
-    item
+pub fn discharges(attr: TokenStream, item: TokenStream) -> TokenStream {
+    let property = parse_inner_attr_from_tokenstream(attr.into());
+    let discharge_attr = property.generate_discharge_attr();
+    let item = TokenStream2::from(item);
+    quote! {
+        #discharge_attr
+        #item
+    }
+    .into()
 }

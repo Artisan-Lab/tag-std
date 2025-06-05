@@ -75,6 +75,17 @@ impl Property {
         }
     }
 
+    pub fn generate_discharge_attr(&self) -> TokenStream {
+        let mut args = Punctuated::<TokenStream, Token![,]>::new();
+        let call = self.property_tokens();
+        let kind = self.kind;
+        args.extend([quote!(property = #call), quote!(kind = #kind)]);
+        args.extend(self.memo.as_deref().map(|memo| quote!(memo = #memo)));
+        quote! {
+            #[rapx::inner(#args)]
+        }
+    }
+
     pub fn generate_doc_comments(&self) -> TokenStream {
         // auto doc from Property
         let auto = match self.kind {

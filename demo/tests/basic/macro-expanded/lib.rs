@@ -39,10 +39,10 @@ impl MyStruct {
     )]
     /// Alias: Make sure self.ptr must not have other alias after calling this function.
     #[rapx::inner(property = Alias(self.ptr), kind = "hazard")]
-    /// UserProperty: auto doc placeholder.
+    /// UserPropertyGet: auto doc placeholder.
     /// Customed user property.
     #[rapx::inner(
-        property = Unknown(UserProperty),
+        property = Unknown(UserPropertyGet),
         kind = "memo",
         memo = "Customed user property."
     )]
