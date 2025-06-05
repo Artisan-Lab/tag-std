@@ -16,10 +16,9 @@ cargo clippy --workspace -- -D clippy::all
 cargo build
 export SAFETY_TOOL=$PWD/target/debug/safety-tool
 export CARGO_SAFETY_TOOL=$PWD/target/debug/cargo-safety-tool
+export DATA_SQLITE3=$PWD/target/data.sqlite3
 
-rm data.sqlite3 a.sqlite3 -f
 cargo test
-rm data.sqlite3 a.sqlite3 -f
 
 pushd safety-tool-lib
 cargo test
@@ -32,7 +31,6 @@ popd
 # Test basic demo
 pushd ./tests/basic
 
-rm data.sqlite3 -f
 cargo clean
 
 # Emit artifacts for build scripts.
@@ -43,4 +41,3 @@ unset STOP_COMPILATION
 CARGO_TERM_PROGRESS_WHEN=never $CARGO_SAFETY_TOOL | tee macro-expanded/cargo-safe-tool.txt
 cargo expand --lib >macro-expanded/lib.rs
 cargo expand --bin demo >macro-expanded/main.rs
-rm data.sqlite3 -f
