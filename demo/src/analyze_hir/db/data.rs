@@ -122,10 +122,10 @@ impl Property {
 }
 
 fn push_properties(s: &str, v: &mut Vec<Property>) {
-    if let Some(property) = parse_inner_attr_from_str(s) {
-        if property.kind == Kind::Memo {
-            let s = expr_ident(&property.expr[0]).to_string();
-            v.push(Property { property: s.into_boxed_str() })
-        }
+    if let Some(property) = parse_inner_attr_from_str(s)
+        && property.kind == Kind::Memo
+    {
+        let s = expr_ident(&property.expr[0]).to_string();
+        v.push(Property { property: s.into_boxed_str() })
     }
 }

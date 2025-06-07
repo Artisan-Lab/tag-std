@@ -109,10 +109,10 @@ const REGISTER_TOOL: &str = "rapx";
 fn print_tag_std_attrs_through_internal_apis(tcx: TyCtxt<'_>, instance: &Instance) {
     let def_id = internal(tcx, instance.def.def_id());
     let tool_attrs = tcx.get_all_attrs(def_id).filter(|attr| {
-        if let Attribute::Unparsed(tool_attr) = attr {
-            if tool_attr.path.segments[0].as_str() == REGISTER_TOOL {
-                return true;
-            }
+        if let Attribute::Unparsed(tool_attr) = attr
+            && tool_attr.path.segments[0].as_str() == REGISTER_TOOL
+        {
+            return true;
         }
         false
     });

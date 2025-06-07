@@ -55,10 +55,10 @@ pub fn analyze_hir(tcx: TyCtxt) -> Result<()> {
 }
 
 fn is_tool_attr(attr: &Attribute) -> bool {
-    if let Attribute::Unparsed(tool_attr) = attr {
-        if tool_attr.path.segments[0].as_str() == REGISTER_TOOL {
-            return true;
-        }
+    if let Attribute::Unparsed(tool_attr) = attr
+        && tool_attr.path.segments[0].as_str() == REGISTER_TOOL
+    {
+        return true;
     }
     false
 }

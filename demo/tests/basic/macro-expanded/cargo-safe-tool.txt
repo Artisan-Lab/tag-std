@@ -1,13 +1,10 @@
-********* "equivalent" [Rlib] has reached 0 instances *********
 ********* "unicode_ident" [Rlib] has reached 12 instances *********
 ********* "build_script_build" [Executable] has reached 156 instances *********
-********* "hashbrown" [Rlib] has reached 240 instances *********
-********* "proc_macro2" [Rlib] has reached 1054 instances *********
-********* "quote" [Rlib] has reached 505 instances *********
-********* "indexmap" [Rlib] has reached 128 instances *********
-********* "syn" [Rlib] has reached 6924 instances *********
-********* "safety_tool_parser" [Rlib] has reached 1714 instances *********
-********* "safety_tool_macro" [ProcMacro] has reached 346 instances *********
+********* "proc_macro2" [Rlib] has reached 1060 instances *********
+********* "quote" [Rlib] has reached 506 instances *********
+********* "syn" [Rlib] has reached 6925 instances *********
+********* "safety_tool_parser" [Rlib] has reached 943 instances *********
+********* "safety_tool_macro" [ProcMacro] has reached 347 instances *********
 ********* "safety_tool_lib" [Rlib] has reached 0 instances *********
 ********* "demo" [Rlib] has reached 8 instances *********
 "test" ("src/lib.rs:9:1: 9:26")

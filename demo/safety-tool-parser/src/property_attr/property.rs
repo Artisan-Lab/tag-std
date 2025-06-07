@@ -1,5 +1,4 @@
 use core::cmp::Ordering;
-use indexmap::IndexSet;
 use proc_macro2::{Literal, Span, TokenStream};
 use quote::{ToTokens, TokenStreamExt, quote};
 use syn::{punctuated::Punctuated, *};
@@ -40,12 +39,7 @@ impl Ord for Property {
 }
 
 impl Property {
-    pub fn new(
-        kind: Kind,
-        name: PropertyName,
-        expr: Vec<Expr>,
-        named_args: &IndexSet<NamedArg>,
-    ) -> Self {
+    pub fn new(kind: Kind, name: PropertyName, expr: Vec<Expr>, named_args: &[NamedArg]) -> Self {
         Property {
             kind,
             name,
