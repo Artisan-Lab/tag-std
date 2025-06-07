@@ -1,4 +1,3 @@
-use indexmap::IndexSet;
 use proc_macro2::TokenStream;
 use property::{Kind, Property, PropertyName};
 use quote::quote;
@@ -49,8 +48,8 @@ impl Parse for SafetyAttrArgs {
 }
 
 impl SafetyAttrArgs {
-    pub fn into_named_args_set(self, kind: Kind, property: PropertyName) -> NamedArgsSet {
-        NamedArgsSet::new_kind_and_property(self, kind, property)
+    pub fn into_named_args_set(self, kind: Kind, property: PropertyName) -> NamedArgs {
+        NamedArgs::new_kind_and_property(self, kind, property)
     }
 }
 
@@ -111,23 +110,23 @@ pub fn parse_inner_attr_from_str(s: &str) -> Option<Property> {
 
     let args: SafetyAttrArgs = attr.parse_args().unwrap();
     let exprs = args.exprs;
-    let mut set = IndexSet::with_capacity(exprs.len());
+    let mut named = Vec::with_capacity(exprs.len());
     let mut non_named_exprs = Vec::new();
 
     // parse all named arguments such as memo, but discard all positional args.
-    parse_named_args(exprs, &mut set, &mut non_named_exprs);
+    parse_named_args(exprs, &mut named, &mut non_named_exprs);
 
-    let mut property = set
+    let mut property = named
         .iter()
         .find_map(|arg| {
             if let NamedArg::Property(property) = arg { Some(property.clone()) } else { None }
         })
-        .unwrap_or_else(|| panic!("No property in {set:?}"));
-    property.kind = set
+        .unwrap_or_else(|| panic!("No property in {named:?}"));
+    property.kind = named
         .iter()
         .find_map(|arg| if let NamedArg::Kind(kind) = arg { Some(Kind::new(kind)) } else { None })
-        .unwrap_or_else(|| panic!("No kind in {set:?}"));
-    property.memo = set
+        .unwrap_or_else(|| panic!("No kind in {named:?}"));
+    property.memo = named
         .iter()
         .find_map(|arg| if let NamedArg::Memo(memo) = arg { Some(memo.clone()) } else { None });
 
@@ -140,27 +139,29 @@ pub fn parse_inner_attr_from_tokenstream(ts: TokenStream) -> Property {
         panic!("The first expr is not a call expr in {v_expr:?} ");
     };
 
-    let mut set = IndexSet::with_capacity(call.args.len());
+    let mut named = Vec::with_capacity(call.args.len());
 
     let mut non_named_exprs = Vec::new();
 
     // parse all named arguments such as memo
-    parse_named_args(call.args, &mut set, &mut non_named_exprs);
+    parse_named_args(call.args, &mut named, &mut non_named_exprs);
 
     let name = expr_ident(&call.func).to_string();
     if name != "Memo" {
         panic!("Only support `Memo` property, but got {name:?}");
     }
     let name = PropertyName::new(&name);
-    Property::new(Kind::Memo, name, non_named_exprs, &set)
+    Property::new(Kind::Memo, name, non_named_exprs, &named)
 }
 
 #[derive(Debug)]
-pub struct NamedArgsSet {
-    pub set: IndexSet<NamedArg>,
+pub struct NamedArgs {
+    // NOTE: this field hasn't deduplicated values yet, and search
+    // arg by finding the first occurence.
+    pub named: Vec<NamedArg>,
 }
 
-impl NamedArgsSet {
+impl NamedArgs {
     // `#[kind::Property(..., memo = "...")]`
     //
     // * `kind = {precond, hazard, option}`
@@ -168,29 +169,28 @@ impl NamedArgsSet {
     // * Property: The first positional arguement is the whole Property.
     fn new_kind_and_property(args: SafetyAttrArgs, kind: Kind, pname: PropertyName) -> Self {
         let exprs = args.exprs;
-        let mut set = IndexSet::with_capacity(exprs.len());
+        let mut named = Vec::with_capacity(exprs.len());
 
         let mut non_named_exprs = Vec::new();
 
         // parse all named arguments such as memo
-        parse_named_args(exprs, &mut set, &mut non_named_exprs);
+        parse_named_args(exprs, &mut named, &mut non_named_exprs);
 
         // positional arguments are collected into a tuple expr
-        let property = Property::new(kind, pname, non_named_exprs, &set);
-        let first = set.insert(NamedArg::Property(Box::new(property)));
-        assert!(first, "{kind:?} {pname:?} exists.");
+        let property = Property::new(kind, pname, non_named_exprs, &named);
+        named.push(NamedArg::Property(Box::new(property)));
 
-        set.sort();
-        NamedArgsSet { set }
+        named.sort();
+        NamedArgs { named }
     }
 
     pub fn generate_doc_comments(&self) -> TokenStream {
-        self.set.iter().flat_map(NamedArg::generate_doc_comments).collect()
+        self.named.iter().flat_map(NamedArg::generate_doc_comments).collect()
     }
 
     pub fn generate_safety_tool_attribute(&self) -> TokenStream {
         let mut args = Punctuated::<TokenStream, Token![,]>::new();
-        for arg in &self.set {
+        for arg in &self.named {
             match arg {
                 NamedArg::Property(property) => {
                     let call = property.property_tokens();
@@ -209,7 +209,7 @@ impl NamedArgsSet {
 
 fn parse_named_args(
     exprs: Punctuated<Expr, token::Comma>,
-    set: &mut IndexSet<NamedArg>,
+    set: &mut Vec<NamedArg>,
     non_named_exprs: &mut Vec<Expr>,
 ) {
     for arg in exprs {
@@ -217,8 +217,7 @@ fn parse_named_args(
             Expr::Assign(assign) => {
                 // ident = expr
                 let ident = &expr_ident(&assign.left);
-                let first = set.insert(NamedArg::new(ident, &assign.right));
-                assert!(first, "{ident} exists.");
+                set.push(NamedArg::new(ident, &assign.right));
             }
             _ => non_named_exprs.push(arg),
         }
