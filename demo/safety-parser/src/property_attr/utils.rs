@@ -13,3 +13,11 @@ pub fn memo(s: &str) -> TokenStream {
         })
         .collect()
 }
+
+pub fn find<T, U>(v: &[T], f: impl FnMut(&T) -> Option<U>, or_else: impl FnOnce() -> U) -> U {
+    v.iter().find_map(f).unwrap_or_else(or_else)
+}
+
+pub fn find_some<T, U>(v: &[T], f: impl FnMut(&T) -> Option<U>) -> Option<U> {
+    v.iter().find_map(f)
+}

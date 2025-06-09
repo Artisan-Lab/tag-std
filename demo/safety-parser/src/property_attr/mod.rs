@@ -8,6 +8,7 @@ use syn::{
 };
 
 mod utils;
+use utils::{find, find_some};
 
 mod keep_doc_order;
 pub use keep_doc_order::FnItem;
@@ -116,19 +117,23 @@ pub fn parse_inner_attr_from_str(s: &str) -> Option<Property> {
     // parse all named arguments such as memo, but discard all positional args.
     parse_named_args(exprs, &mut named, &mut non_named_exprs);
 
-    let mut property = named
-        .iter()
-        .find_map(|arg| {
+    let mut property = find(
+        &named,
+        |arg| {
             if let NamedArg::Property(property) = arg { Some(property.clone()) } else { None }
-        })
-        .unwrap_or_else(|| panic!("No property in {named:?}"));
-    property.kind = named
-        .iter()
-        .find_map(|arg| if let NamedArg::Kind(kind) = arg { Some(Kind::new(kind)) } else { None })
-        .unwrap_or_else(|| panic!("No kind in {named:?}"));
-    property.memo = named
-        .iter()
-        .find_map(|arg| if let NamedArg::Memo(memo) = arg { Some(memo.clone()) } else { None });
+        },
+        || panic!("No property in {named:?}"),
+    );
+    property.kind = find(
+        &named,
+        |arg| if let NamedArg::Kind(kind) = arg { Some(Kind::new(kind)) } else { None },
+        || panic!("No kind in {named:?}"),
+    );
+    property.memo =
+        find_some(
+            &named,
+            |arg| if let NamedArg::Memo(memo) = arg { Some(memo.clone()) } else { None },
+        );
 
     Some(*property)
 }

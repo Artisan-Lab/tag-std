@@ -1,11 +1,8 @@
+use super::{NamedArg, expr_ident, find_some};
 use core::cmp::Ordering;
 use proc_macro2::{Literal, Span, TokenStream};
 use quote::{ToTokens, TokenStreamExt, quote};
 use syn::{punctuated::Punctuated, *};
-
-use crate::property_attr::expr_ident;
-
-use super::NamedArg;
 
 #[derive(Clone, Debug, PartialEq, Eq, Hash)]
 pub struct Property {
@@ -45,7 +42,7 @@ impl Property {
             name,
             expr,
             // extract memo from named_args
-            memo: named_args.iter().find_map(|arg| {
+            memo: find_some(&named_args, |arg| {
                 if let NamedArg::Memo(memo) = arg { Some(memo.clone()) } else { None }
             }),
         }
