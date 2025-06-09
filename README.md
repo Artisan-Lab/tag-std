@@ -68,7 +68,7 @@ As a result, the safety property is provided as following.
 ```rust
 #[safety::precond::InBound(src, T, len)]
 #[safety::precond::Init(src, T, count)]
-#[safety::precond::NotOverlap(dst, src, T, 1)]
+#[safety::precond::NonOverlap(dst, src, T, 1)]
 #[safety::precond::Align(src, T)]
 #[safety::precond::Align(dst, T)]
 #[safety::hazard::Alias(dst, src)]

@@ -148,10 +148,10 @@ pub enum PropertyName {
     Align,
     Size,
     NoPadding,
-    NotNull,
+    NonNull,
     Allocated,
     InBound,
-    NotOverlap,
+    NonOverlap,
     ValidNum,
     ValidString,
     ValidCStr,
@@ -162,10 +162,14 @@ pub enum PropertyName {
     Alias,
     Alive,
     Pinned,
-    NotVolatile,
+    NonVolatile,
     Opened,
     Trait,
     Unreachable,
+    ValidPtr,
+    Deref,
+    Ptr2Ref,
+    Layout,
     // A placeholder for invalid or future-proof property
     Unknown,
 }
@@ -176,10 +180,10 @@ impl PropertyName {
             "Align" => Self::Align,
             "Size" => Self::Size,
             "NoPadding" => Self::NoPadding,
-            "NotNull" => Self::NotNull,
+            "NonNull" => Self::NonNull,
             "Allocated" => Self::Allocated,
             "InBound" => Self::InBound,
-            "NotOverlap" => Self::NotOverlap,
+            "NonOverlap" => Self::NonOverlap,
             "ValidNum" => Self::ValidNum,
             "ValidString" => Self::ValidString,
             "ValidCStr" => Self::ValidCStr,
@@ -190,10 +194,14 @@ impl PropertyName {
             "Alias" => Self::Alias,
             "Alive" => Self::Alive,
             "Pinned" => Self::Pinned,
-            "NotVolatile" => Self::NotVolatile,
+            "NonVolatile" => Self::NonVolatile,
             "Opened" => Self::Opened,
             "Trait" => Self::Trait,
             "Unreachable" => Self::Unreachable,
+            "ValidPtr" => Self::ValidPtr,
+            "Deref" => Self::Deref,
+            "Ptr2Ref" => Self::Ptr2Ref,
+            "Layout" => Self::Layout,
             _ => Self::Unknown,
         }
     }
@@ -219,7 +227,7 @@ impl PropertyName {
             }
             Self::Size => format!("the size of type {} should be {}", args[0], args[1]),
             Self::NoPadding => format!("type {} must have no padding bytes ", args[0]),
-            Self::NotNull => format!("pointer {} must not be null", args[0]),
+            Self::NonNull => format!("pointer {} must not be null", args[0]),
             Self::Allocated => format!(
                 "the memory range [{}, {} + sizeof({})*{}) must be allocated by allocator {}",
                 args[0], args[0], args[1], args[2], args[3]
@@ -228,7 +236,7 @@ impl PropertyName {
                 "the pointer {} and its offset up to sizeof({})*{} must point to a single allocated object",
                 args[0], args[1], args[2]
             ),
-            Self::NotOverlap => format!(
+            Self::NonOverlap => format!(
                 "the memory ranges [{}, {} + sizeof({})*{}) and [{}, {} + sizeof({})*{}] must not overlap",
                 args[0], args[0], args[2], args[3], args[1], args[1], args[2], args[3]
             ),
@@ -269,7 +277,7 @@ impl PropertyName {
                     args[0], args[1]
                 )
             }
-            Self::NotVolatile => {
+            Self::NonVolatile => {
                 format!(
                     "the memory access of [{}, {} + sizeof({})*{}] must be volatile",
                     args[0], args[0], args[1], args[2]
@@ -287,6 +295,24 @@ impl PropertyName {
             Self::Unreachable => {
                 "the current program point should not be reachable during execution".to_string()
             }
+            Self::ValidPtr => {
+                format!(
+                    "pointer {} must be valid for reading and writing the sizeof({})*{} memory from it",
+                    args[0], args[1], args[2]
+                )
+            }
+            Self::Deref => {
+                format!(
+                    "pointer {} must be dereferencable in the sizeof({})*{} memory from it",
+                    args[0], args[1], args[2]
+                )
+            }
+            Self::Ptr2Ref => {
+                format!("the reference conversion of the pointer {} must be valid", args[0])
+            }
+            Self::Layout => {
+                format!("the memory pointed by {} must remain consistent with {}", args[0], args[1])
+            }
             Self::Unknown => "unknown sp".to_string(),
         }
     }
@@ -296,10 +322,10 @@ impl PropertyName {
             Self::Align => 2,
             Self::Size => 2,
             Self::NoPadding => 1,
-            Self::NotNull => 1,
+            Self::NonNull => 1,
             Self::Allocated => 3,
             Self::InBound => 3,
-            Self::NotOverlap => 4,
+            Self::NonOverlap => 4,
             Self::ValidNum => 2,
             Self::ValidString => 1,
             Self::ValidCStr => 2,
@@ -310,10 +336,14 @@ impl PropertyName {
             Self::Alias => 1,
             Self::Alive => 2,
             Self::Pinned => 2,
-            Self::NotVolatile => 3,
+            Self::NonVolatile => 3,
             Self::Opened => 1,
             Self::Trait => 3,
             Self::Unreachable => 0,
+            Self::ValidPtr => 3,
+            Self::Deref => 3,
+            Self::Ptr2Ref => 2,
+            Self::Layout => 2,
             Self::Unknown => 0, // Is it right?
         }
     }
@@ -323,10 +353,10 @@ impl PropertyName {
             Self::Align => "Align",
             Self::Size => "Size",
             Self::NoPadding => "NoPadding",
-            Self::NotNull => "NotNull",
+            Self::NonNull => "NonNull",
             Self::Allocated => "Allocated",
             Self::InBound => "InBound",
-            Self::NotOverlap => "NotOverlap",
+            Self::NonOverlap => "NonOverlap",
             Self::ValidNum => "ValidNum",
             Self::ValidString => "ValidString",
             Self::ValidCStr => "ValidCStr",
@@ -337,10 +367,14 @@ impl PropertyName {
             Self::Alias => "Alias",
             Self::Alive => "Alive",
             Self::Pinned => "Pinned",
-            Self::NotVolatile => "NotVolatile",
+            Self::NonVolatile => "NonVolatile",
             Self::Opened => "Opened",
             Self::Trait => "Trait",
             Self::Unreachable => "Unreachable",
+            Self::ValidPtr => "ValidPtr",
+            Self::Deref => "Deref",
+            Self::Ptr2Ref => "Ptr2Ref",
+            Self::Layout => "Layout",
             Self::Unknown => "Unknown",
         }
     }

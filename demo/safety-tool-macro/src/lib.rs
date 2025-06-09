@@ -50,10 +50,10 @@ kind_property! {
     Precond_Align: Precond, Align;
     Precond_Size: Precond, Size;
     Precond_NoPadding: Precond, NoPadding;
-    Precond_NotNull: Precond, NotNull;
+    Precond_NonNull: Precond, NonNull;
     Precond_Allocated: Precond, Allocated;
     Precond_InBound: Precond, InBound;
-    Precond_NotOverlap: Precond, NotOverlap;
+    Precond_NonOverlap: Precond, NonOverlap;
     Precond_ValidNum: Precond, ValidNum;
     Precond_ValidString: Precond, ValidString;
     Precond_ValidCStr: Precond, ValidCStr;
@@ -64,15 +64,20 @@ kind_property! {
     Precond_Alias: Precond, Alias;
     Precond_Alive: Precond, Alive;
     Precond_Pinned: Precond, Pinned;
-    Precond_NotVolatile: Precond, NotVolatile;
+    Precond_NonVolatile: Precond, NonVolatile;
     Precond_Opened: Precond, Opened;
     Precond_Trait: Precond, Trait;
     Precond_Unreachable: Precond, Unreachable;
+    Precond_ValidPtr: Precond, ValidPtr;
+    Precond_Deref: Precond, Deref;
+    Precond_Ptr2Ref: Precond, Ptr2Ref;
+    Precond_Layout: Precond, Layout;
 
     Hazard_ValidString: Hazard, ValidString;
     Hazard_Init: Hazard, Init;
     Hazard_Alias: Hazard, Alias;
     Hazard_Pinned: Hazard, Pinned;
+    Hazard_Ptr2Ref: Hazard, Ptr2Ref;
 
     Option_Size: Option, Size;
     Option_Init: Option, Init;

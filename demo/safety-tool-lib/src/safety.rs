@@ -7,10 +7,10 @@ pub mod precond {
         Precond_Align,
         Precond_Size,
         Precond_NoPadding,
-        Precond_NotNull,
+        Precond_NonNull,
         Precond_Allocated,
         Precond_InBound,
-        Precond_NotOverlap,
+        Precond_NonOverlap,
         Precond_ValidNum,
         Precond_ValidString,
         Precond_ValidCStr,
@@ -21,10 +21,14 @@ pub mod precond {
         Precond_Alias,
         Precond_Alive,
         Precond_Pinned,
-        Precond_NotVolatile,
+        Precond_NonVolatile,
         Precond_Opened,
         Precond_Trait,
         Precond_Unreachable,
+        Precond_ValidPtr,
+        Precond_Deref,
+        Precond_Ptr2Ref,
+        Precond_Layout
     }
 }
 
@@ -34,6 +38,7 @@ pub mod hazard {
         Hazard_Init,
         Hazard_Alias,
         Hazard_Pinned,
+        Hazard_Ptr2Ref,
     }
 }
 
