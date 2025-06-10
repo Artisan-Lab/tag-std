@@ -8,9 +8,7 @@ stderr=
     },
 ]
 [src/analyze_hir/visit.rs:36:9] &tags_state = {
-    Property {
-        property: "Tag",
-    }: false,
+    "Tag": false,
 }
 hir_id=HirId(DefId(0:4 ~ unsafe_calls_panic_discharge_all_tagged_more[7b38]::tag_unsafe_fn).3) fn_hir_id=HirId(DefId(0:4 ~ unsafe_calls_panic_discharge_all_tagged_more[7b38]::tag_unsafe_fn).0)
 hir_id=HirId(DefId(0:4 ~ unsafe_calls_panic_discharge_all_tagged_more[7b38]::tag_unsafe_fn).2) fn_hir_id=HirId(DefId(0:4 ~ unsafe_calls_panic_discharge_all_tagged_more[7b38]::tag_unsafe_fn).0)
@@ -19,8 +17,8 @@ hir_id=HirId(DefId(0:4 ~ unsafe_calls_panic_discharge_all_tagged_more[7b38]::tag
 hir_id=HirId(DefId(0:4 ~ unsafe_calls_panic_discharge_all_tagged_more[7b38]::tag_unsafe_fn).6) fn_hir_id=HirId(DefId(0:4 ~ unsafe_calls_panic_discharge_all_tagged_more[7b38]::tag_unsafe_fn).0)
 hir_id=HirId(DefId(0:4 ~ unsafe_calls_panic_discharge_all_tagged_more[7b38]::tag_unsafe_fn).0) fn_hir_id=HirId(DefId(0:4 ~ unsafe_calls_panic_discharge_all_tagged_more[7b38]::tag_unsafe_fn).0)
 [31mThe application panicked (crashed).[0m
-Message:  [36mtag Property { property: "Precond_Align" } doesn't belong to tags {Property { property: "Tag" }: true}[0m
-Location: [35msrc/analyze_hir/visit.rs[0m:[35m45[0m
+Message:  [36mtag "Precond_Align" doesn't belong to tags ["Tag"][0m
+Location: [35msrc/analyze_hir/visit.rs[0m:[35m46[0m
 
 Backtrace omitted. Run with RUST_BACKTRACE=1 environment variable to display it.
 Run with RUST_BACKTRACE=full to include source snippets.

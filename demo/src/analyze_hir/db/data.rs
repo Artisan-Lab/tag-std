@@ -3,7 +3,7 @@ use rustc_data_structures::fx::FxIndexMap;
 use rustc_hir::{HirId, def_id::DefId};
 use rustc_middle::ty::TyCtxt;
 use safety_parser::property_attr::{parse_inner_attr_from_str, property::Kind, utils::expr_ident};
-use std::sync::LazyLock;
+use std::{fmt, sync::LazyLock};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct PrimaryKey {
@@ -100,9 +100,21 @@ impl ToolAttrs {
     }
 }
 
-#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[derive(Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Property {
     property: Box<str>,
+}
+
+impl fmt::Display for Property {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.write_str(&self.property)
+    }
+}
+
+impl fmt::Debug for Property {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        <str as fmt::Debug>::fmt(&self.property, f)
+    }
 }
 
 impl Property {

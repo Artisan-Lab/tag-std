@@ -21,21 +21,28 @@ struct CompilationOptions<'a> {
     args: &'a [&'a str],
     envs: &'a [(&'a str, &'a str)],
     stop: bool,
+    discharges_all_properties: bool,
 }
 
 impl Default for CompilationOptions<'_> {
     fn default() -> Self {
-        Self { args: &["--crate-type=lib"], envs: &[], stop: true }
+        Self {
+            args: &["--crate-type=lib"],
+            envs: &[],
+            stop: true,
+            discharges_all_properties: false,
+        }
     }
 }
 
 impl CompilationOptions<'_> {
     fn discharges_all_properties() -> Self {
-        CompilationOptions { envs: &[("DISCHARGES_ALL_PROPERTIES", "1")], ..Default::default() }
+        CompilationOptions { discharges_all_properties: true, ..Default::default() }
     }
 }
 
 const STOP_COMPILATION: &str = "STOP_COMPILATION";
+const DISCHARGES_ALL_PROPERTIES: &str = "DISCHARGES_ALL_PROPERTIES";
 
 fn compile(file: &str, opts: CompilationOptions) -> (&'static str, std::process::Output) {
     let exe = env!("CARGO_PKG_NAME");
@@ -49,6 +56,12 @@ fn compile(file: &str, opts: CompilationOptions) -> (&'static str, std::process:
         cmd.env(STOP_COMPILATION, "1");
     } else {
         cmd.env_remove(STOP_COMPILATION);
+    }
+
+    if opts.discharges_all_properties {
+        cmd.env(DISCHARGES_ALL_PROPERTIES, "1");
+    } else {
+        cmd.env_remove(DISCHARGES_ALL_PROPERTIES);
     }
 
     let output = cmd.output().unwrap();
@@ -168,8 +181,7 @@ fn compile_libunsafe_calls() -> CompilationOptions<'static> {
         outfile,
         CompilationOptions {
             args: &["--crate-type=lib", "-otarget/libunsafe_calls.rlib"],
-            envs: &[],
-            stop: false,
+            ..Default::default()
         },
     );
     CompilationOptions {

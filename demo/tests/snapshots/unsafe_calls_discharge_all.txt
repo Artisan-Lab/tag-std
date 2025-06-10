@@ -21,12 +21,8 @@ stderr=
     },
 ]
 [src/analyze_hir/visit.rs:36:9] &tags_state = {
-    Property {
-        property: "Tag",
-    }: false,
-    Property {
-        property: "Precond_Align",
-    }: false,
+    "Tag": false,
+    "Precond_Align": false,
 }
 hir_id=HirId(DefId(0:3 ~ unsafe_calls_discharge_all[b6db]::tag_expr).5) fn_hir_id=HirId(DefId(0:3 ~ unsafe_calls_discharge_all[b6db]::tag_expr).0)
 hir_id=HirId(DefId(0:3 ~ unsafe_calls_discharge_all[b6db]::tag_expr).4) fn_hir_id=HirId(DefId(0:3 ~ unsafe_calls_discharge_all[b6db]::tag_expr).0)
@@ -37,12 +33,8 @@ hir_id=HirId(DefId(0:3 ~ unsafe_calls_discharge_all[b6db]::tag_expr).4) fn_hir_i
     },
 ]
 [src/analyze_hir/visit.rs:36:9] &tags_state = {
-    Property {
-        property: "Tag",
-    }: false,
-    Property {
-        property: "Precond_Align",
-    }: false,
+    "Tag": false,
+    "Precond_Align": false,
 }
 hir_id=HirId(DefId(0:4 ~ unsafe_calls_discharge_all[b6db]::tag_block).5) fn_hir_id=HirId(DefId(0:4 ~ unsafe_calls_discharge_all[b6db]::tag_block).0)
 hir_id=HirId(DefId(0:4 ~ unsafe_calls_discharge_all[b6db]::tag_block).4) fn_hir_id=HirId(DefId(0:4 ~ unsafe_calls_discharge_all[b6db]::tag_block).0)
@@ -56,12 +48,8 @@ hir_id=HirId(DefId(0:4 ~ unsafe_calls_discharge_all[b6db]::tag_block).2) fn_hir_
     },
 ]
 [src/analyze_hir/visit.rs:36:9] &tags_state = {
-    Property {
-        property: "Tag",
-    }: false,
-    Property {
-        property: "Precond_Align",
-    }: false,
+    "Tag": false,
+    "Precond_Align": false,
 }
 hir_id=HirId(DefId(0:6 ~ unsafe_calls_discharge_all[b6db]::tag_unsafe_fn).3) fn_hir_id=HirId(DefId(0:6 ~ unsafe_calls_discharge_all[b6db]::tag_unsafe_fn).0)
 hir_id=HirId(DefId(0:6 ~ unsafe_calls_discharge_all[b6db]::tag_unsafe_fn).2) fn_hir_id=HirId(DefId(0:6 ~ unsafe_calls_discharge_all[b6db]::tag_unsafe_fn).0)

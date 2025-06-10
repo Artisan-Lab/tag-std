@@ -18,9 +18,7 @@ stderr=
     },
 ]
 [src/analyze_hir/visit.rs:36:9] &tags_state = {
-    Property {
-        property: "Tag",
-    }: false,
+    "Tag": false,
 }
 hir_id=HirId(DefId(0:4 ~ unsafe_calls_panic_discharge_all_tagged_less_fine[17c6]::tag_unsafe_fn).3) fn_hir_id=HirId(DefId(0:4 ~ unsafe_calls_panic_discharge_all_tagged_less_fine[17c6]::tag_unsafe_fn).0)
 hir_id=HirId(DefId(0:4 ~ unsafe_calls_panic_discharge_all_tagged_less_fine[17c6]::tag_unsafe_fn).2) fn_hir_id=HirId(DefId(0:4 ~ unsafe_calls_panic_discharge_all_tagged_less_fine[17c6]::tag_unsafe_fn).0)

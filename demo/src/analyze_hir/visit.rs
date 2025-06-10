@@ -42,7 +42,8 @@ impl Call {
 
             for tag in &properties {
                 let Some(state) = tags_state.get_mut(tag) else {
-                    panic!("tag {tag:?} doesn't belong to tags {tags_state:?}")
+                    let tags: Vec<_> = tags_state.keys().collect();
+                    panic!("tag {tag:?} doesn't belong to tags {tags:?}")
                 };
                 assert!(!*state, "{tag:?} has already been discharged");
                 *state = true;

@@ -15,9 +15,7 @@ stderr=
     },
 ]
 [src/analyze_hir/visit.rs:36:9] &tags_state = {
-    Property {
-        property: "Tag",
-    }: false,
+    "Tag": false,
 }
 hir_id=HirId(DefId(0:3 ~ unsafe_calls[d41f]::tag_expr).5) fn_hir_id=HirId(DefId(0:3 ~ unsafe_calls[d41f]::tag_expr).0)
 hir_id=HirId(DefId(0:3 ~ unsafe_calls[d41f]::tag_expr).4) fn_hir_id=HirId(DefId(0:3 ~ unsafe_calls[d41f]::tag_expr).0)
@@ -28,9 +26,7 @@ hir_id=HirId(DefId(0:3 ~ unsafe_calls[d41f]::tag_expr).4) fn_hir_id=HirId(DefId(
     },
 ]
 [src/analyze_hir/visit.rs:36:9] &tags_state = {
-    Property {
-        property: "Tag",
-    }: false,
+    "Tag": false,
 }
 hir_id=HirId(DefId(0:4 ~ unsafe_calls[d41f]::tag_block).5) fn_hir_id=HirId(DefId(0:4 ~ unsafe_calls[d41f]::tag_block).0)
 hir_id=HirId(DefId(0:4 ~ unsafe_calls[d41f]::tag_block).4) fn_hir_id=HirId(DefId(0:4 ~ unsafe_calls[d41f]::tag_block).0)
@@ -44,9 +40,7 @@ hir_id=HirId(DefId(0:4 ~ unsafe_calls[d41f]::tag_block).2) fn_hir_id=HirId(DefId
     },
 ]
 [src/analyze_hir/visit.rs:36:9] &tags_state = {
-    Property {
-        property: "Tag",
-    }: false,
+    "Tag": false,
 }
 hir_id=HirId(DefId(0:6 ~ unsafe_calls[d41f]::tag_unsafe_fn).3) fn_hir_id=HirId(DefId(0:6 ~ unsafe_calls[d41f]::tag_unsafe_fn).0)
 hir_id=HirId(DefId(0:6 ~ unsafe_calls[d41f]::tag_unsafe_fn).2) fn_hir_id=HirId(DefId(0:6 ~ unsafe_calls[d41f]::tag_unsafe_fn).0)
