@@ -40,6 +40,7 @@ unset STOP_COMPILATION
 
 # Analyze the lib and bin crates.
 # Same as `cargo safe-tool` when tag-std and cargo-safe-tool are installed.
-CARGO_TERM_PROGRESS_WHEN=never $CARGO_SAFETY_TOOL | tee macro-expanded/cargo-safe-tool.txt
+PREFIX=$PWD/
+CARGO_TERM_PROGRESS_WHEN=never $CARGO_SAFETY_TOOL | sed "s#$PREFIX##g" | tee macro-expanded/cargo-safety-tool.txt
 cargo expand --lib >macro-expanded/lib.rs
 cargo expand --bin demo >macro-expanded/main.rs
