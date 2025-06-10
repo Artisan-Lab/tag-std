@@ -1,7 +1,7 @@
 #![feature(register_tool)]
 #![register_tool(rapx)]
 #![allow(dead_code, non_snake_case)]
-use safety_tool_lib::safety;
+use safety_lib::safety;
 
 #[safety::Memo(x, memo = "This is a single line.")]
 fn single_line() {}

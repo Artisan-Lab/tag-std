@@ -2,7 +2,7 @@
 #![register_tool(rapx)]
 #![allow(unused_variables)]
 
-use safety_tool_lib::safety;
+use safety_lib::safety;
 
 /// # Safety
 #[safety::precond::Align(p, T)]

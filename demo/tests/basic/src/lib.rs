@@ -3,7 +3,7 @@
 #![allow(clippy::missing_safety_doc, clippy::mut_from_ref, internal_features)]
 #![feature(core_intrinsics)]
 
-use safety_tool_lib::safety;
+use safety_lib::safety;
 
 #[safety::precond::Unreachable()]
 pub unsafe fn test() -> ! {

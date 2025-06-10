@@ -6,7 +6,7 @@ version = 4
 name = "demo"
 version = "0.1.0"
 dependencies = [
- "safety-tool-lib",
+ "safety-lib",
 ]
 
 [[package]]
@@ -28,22 +28,22 @@ dependencies = [
 ]
 
 [[package]]
-name = "safety-tool-lib"
+name = "safety-lib"
 version = "0.1.0"
 dependencies = [
- "safety-tool-macro",
- "safety-tool-parser",
+ "safety-macro",
+ "safety-parser",
 ]
 
 [[package]]
-name = "safety-tool-macro"
+name = "safety-macro"
 version = "0.1.0"
 dependencies = [
- "safety-tool-parser",
+ "safety-parser",
 ]
 
 [[package]]
-name = "safety-tool-parser"
+name = "safety-parser"
 version = "0.1.0"
 dependencies = [
  "proc-macro2",

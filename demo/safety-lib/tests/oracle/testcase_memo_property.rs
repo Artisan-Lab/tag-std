@@ -6,7 +6,7 @@
 use std::prelude::rust_2024::*;
 #[macro_use]
 extern crate std;
-use safety_tool_lib::safety;
+use safety_lib::safety;
 /// Ident: auto doc placeholder.
 /// This is a user defined property.
 #[rapx::inner(

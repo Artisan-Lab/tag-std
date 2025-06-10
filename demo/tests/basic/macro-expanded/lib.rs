@@ -7,7 +7,7 @@
 use std::prelude::rust_2024::*;
 #[macro_use]
 extern crate std;
-use safety_tool_lib::safety;
+use safety_lib::safety;
 /// Unreachable: Make sure the current program point should not be reachable during execution before calling this function.
 #[rapx::inner(property = Unreachable(), kind = "precond")]
 pub unsafe fn test() -> ! {

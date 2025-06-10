@@ -9,7 +9,7 @@ use std::prelude::rust_2024::*;
 #[macro_use]
 extern crate std;
 use demo::MyStruct;
-use safety_tool_lib::safety;
+use safety_lib::safety;
 fn main() {
     let (p, l, _c) = Vec::new().into_raw_parts();
     let a = MyStruct::from(p, l);

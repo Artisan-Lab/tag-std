@@ -20,11 +20,11 @@ export DATA_SQLITE3=$PWD/target/data.sqlite3
 
 cargo test
 
-pushd safety-tool-lib
+pushd safety-lib
 cargo test
 popd
 
-pushd safety-tool-macro
+pushd safety-macro
 cargo test
 popd
 
