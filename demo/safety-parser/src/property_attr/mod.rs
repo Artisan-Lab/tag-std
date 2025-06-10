@@ -102,6 +102,18 @@ impl NamedArg {
             _ => TokenStream::new(),
         }
     }
+
+    fn as_property(&self) -> Option<&Property> {
+        if let Self::Property(prop) = self { Some(prop) } else { None }
+    }
+
+    fn as_kind(&self) -> Option<Kind> {
+        if let Self::Kind(kind) = self { Some(Kind::new(kind)) } else { None }
+    }
+
+    fn as_memo(&self) -> Option<&str> {
+        if let Self::Memo(memo) = self { Some(memo) } else { None }
+    }
 }
 
 pub fn parse_inner_attr_from_str(s: &str) -> Option<Property> {
@@ -117,46 +129,43 @@ pub fn parse_inner_attr_from_str(s: &str) -> Option<Property> {
     // parse all named arguments such as memo, but discard all positional args.
     parse_named_args(exprs, &mut named, &mut non_named_exprs);
 
-    let mut property = find(
-        &named,
-        |arg| {
-            if let NamedArg::Property(property) = arg { Some(property.clone()) } else { None }
-        },
-        || panic!("No property in {named:?}"),
-    );
-    property.kind = find(
-        &named,
-        |arg| if let NamedArg::Kind(kind) = arg { Some(Kind::new(kind)) } else { None },
-        || panic!("No kind in {named:?}"),
-    );
-    property.memo =
-        find_some(
-            &named,
-            |arg| if let NamedArg::Memo(memo) = arg { Some(memo.clone()) } else { None },
-        );
+    let mut property =
+        find(&named, |arg| arg.as_property().cloned(), || panic!("No property in {named:?}"));
+    property.kind = find(&named, NamedArg::as_kind, || panic!("No kind in {named:?}"));
+    property.memo = find_some(&named, |arg| Some(arg.as_memo()?.to_owned()));
 
-    Some(*property)
+    Some(property)
 }
 
+/// Parse `...` in `#[dischages(...)]`.
 pub fn parse_inner_attr_from_tokenstream(ts: TokenStream) -> Property {
     let v_expr = Punctuated::<Expr, Token![,]>::parse_separated_nonempty.parse2(ts).unwrap();
-    let Expr::Call(call) = v_expr[0].clone() else {
-        panic!("The first expr is not a call expr in {v_expr:?} ");
-    };
+    let expr = v_expr.first().expect("Must be a single expr in this attribute.");
 
-    let mut named = Vec::with_capacity(call.args.len());
-
+    let mut named = Vec::with_capacity(2);
     let mut non_named_exprs = Vec::new();
 
-    // parse all named arguments such as memo
-    parse_named_args(call.args, &mut named, &mut non_named_exprs);
+    match expr {
+        Expr::Call(call) => {
+            // parse all named arguments such as memo
+            parse_named_args(call.args.clone(), &mut named, &mut non_named_exprs);
 
-    let name = utils::expr_ident(&call.func).to_string();
-    if name != "Memo" {
-        panic!("Only support `Memo` property, but got {name:?}");
+            let name = utils::expr_ident(&call.func).to_string();
+            let name = PropertyName::new(&name);
+            // i.e. `Memo(Prop)` or `Align(args), kind = "precond"`
+            let kind = find_some(&named, NamedArg::as_kind).unwrap_or(Kind::Memo);
+
+            Property::new(kind, name, non_named_exprs, &named)
+        }
+        Expr::Path(_) => {
+            // i.e. `Precond_Align`
+            let ident = utils::expr_ident(expr).to_string();
+            let (kind, name) = property::parse_kind_property(&ident);
+            // TODO: how to handle property arguments?
+            Property::new(kind, name, non_named_exprs, &named)
+        }
+        _ => panic!("The expr is not a call expr or ident:\nexpr={expr:#?}"),
     }
-    let name = PropertyName::new(&name);
-    Property::new(Kind::Memo, name, non_named_exprs, &named)
 }
 
 #[derive(Debug)]

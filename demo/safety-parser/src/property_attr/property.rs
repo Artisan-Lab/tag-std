@@ -141,6 +141,19 @@ impl Kind {
             ),
         }
     }
+
+    pub fn new_for_capitalized(kind: &str) -> Self {
+        match kind {
+            "Precond" => Kind::Precond,
+            "Hazard" => Kind::Hazard,
+            "Option" => Kind::Option,
+            "Memo" => Kind::Memo,
+            _ => unreachable!(
+                "{kind} is invalid: should be one of \
+                 precond, hazard, option, and memo."
+            ),
+        }
+    }
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
@@ -170,7 +183,8 @@ pub enum PropertyName {
     Deref,
     Ptr2Ref,
     Layout,
-    // A placeholder for invalid or future-proof property
+    // A placeholder for invalid or future-proof property.
+    // For example, custom property `Prop` will be `property = Unknown(Prop), kind = "memo"`.
     Unknown,
 }
 
@@ -378,4 +392,10 @@ impl PropertyName {
             Self::Unknown => "Unknown",
         }
     }
+}
+
+/// Construct a Property with empty expr and memo.
+pub fn parse_kind_property(s: &str) -> (Kind, PropertyName) {
+    let (kind, prop) = s.split_once('_').unwrap();
+    (Kind::new_for_capitalized(kind), PropertyName::new(prop))
 }

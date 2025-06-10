@@ -34,3 +34,8 @@ fn memo_property() {
 fn property() {
     snapshot("testcase_property");
 }
+
+#[test]
+fn discharges() {
+    snapshot("testcase_discharges");
+}
