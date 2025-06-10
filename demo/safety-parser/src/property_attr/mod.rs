@@ -130,8 +130,8 @@ pub fn parse_inner_attr_from_str(s: &str) -> Option<Property> {
     parse_named_args(exprs, &mut named, &mut non_named_exprs);
 
     let mut property =
-        find(&named, |arg| arg.as_property().cloned(), || panic!("No property in {named:?}"));
-    property.kind = find(&named, NamedArg::as_kind, || panic!("No kind in {named:?}"));
+        find(&named, |arg| arg.as_property().cloned(), || panic!("No property in {attr:#?}"));
+    property.kind = find(&named, NamedArg::as_kind, || panic!("No kind in {attr:#?}"));
     property.memo = find_some(&named, |arg| Some(arg.as_memo()?.to_owned()));
 
     Some(property)

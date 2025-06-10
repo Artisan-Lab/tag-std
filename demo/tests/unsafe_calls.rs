@@ -19,12 +19,19 @@ static LD_LIBRARY_PATH: LazyLock<PathBuf> = LazyLock::new(|| {
 
 struct CompilationOptions<'a> {
     args: &'a [&'a str],
+    envs: &'a [(&'a str, &'a str)],
     stop: bool,
 }
 
 impl Default for CompilationOptions<'_> {
     fn default() -> Self {
-        Self { args: &["--crate-type=lib"], stop: true }
+        Self { args: &["--crate-type=lib"], envs: &[], stop: true }
+    }
+}
+
+impl CompilationOptions<'_> {
+    fn discharges_all_properties() -> Self {
+        CompilationOptions { envs: &[("DISCHARGES_ALL_PROPERTIES", "1")], ..Default::default() }
     }
 }
 
@@ -35,6 +42,8 @@ fn compile(file: &str, opts: CompilationOptions) -> (&'static str, std::process:
     let mut cmd = Command::cargo_bin(exe).unwrap();
 
     cmd.arg(file).args(opts.args).env("LD_LIBRARY_PATH", &*LD_LIBRARY_PATH);
+
+    cmd.envs(opts.envs.iter().copied());
 
     if opts.stop {
         cmd.env(STOP_COMPILATION, "1");
@@ -94,6 +103,18 @@ fn unsafe_calls_panic_method() {
     should_panic(file, outfile, Default::default());
 }
 
+#[test]
+fn unsafe_calls_panic_discharge_all_tagged_less() {
+    let [file, outfile] = &testcase("unsafe_calls_panic_discharge_all_tagged_less");
+    should_panic(file, outfile, CompilationOptions::discharges_all_properties());
+}
+
+#[test]
+fn unsafe_calls_panic_discharge_all_tagged_more() {
+    let [file, outfile] = &testcase("unsafe_calls_panic_discharge_all_tagged_more");
+    should_panic(file, outfile, CompilationOptions::discharges_all_properties());
+}
+
 fn fine(file: &str, outfile: &str, opts: CompilationOptions) {
     let (exe, output) = compile(file, opts);
     let stdout = std::str::from_utf8(&output.stdout).unwrap();
@@ -119,6 +140,12 @@ fn unsafe_calls_method() {
 }
 
 #[test]
+fn unsafe_calls_discharge_all() {
+    let [file, outfile] = &testcase("unsafe_calls_discharge_all");
+    fine(file, outfile, CompilationOptions::discharges_all_properties());
+}
+
+#[test]
 fn unsafe_calls_with_dep() {
     let opts = compile_libunsafe_calls();
 
@@ -133,6 +160,7 @@ fn compile_libunsafe_calls() -> CompilationOptions<'static> {
         outfile,
         CompilationOptions {
             args: &["--crate-type=lib", "-otarget/libunsafe_calls.rlib"],
+            envs: &[],
             stop: false,
         },
     );

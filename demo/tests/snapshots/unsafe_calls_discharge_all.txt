@@ -1,0 +1,71 @@
+stdout=
+********* "unsafe_calls_discharge_all" [Rlib] has reached 4 instances *********
+"tag_unsafe_fn" ("./tests/snippets/unsafe_calls_discharge_all.rs:28:1: 28:30")
+ => "#[rapx::tag_unsafe_fn(property = Memo(Tag), kind = \"memo\")]\n"
+
+"tag_unsafe_fn" ("./tests/snippets/unsafe_calls_discharge_all.rs:28:1: 28:30")
+ => "#[rapx::tag_unsafe_fn(property = Align(), kind = \"precond\")]\n"
+
+"call" ("./tests/snippets/unsafe_calls_discharge_all.rs:24:1: 24:17")
+ => "#[rapx::inner(property = Memo(Tag), kind = \"memo\")]\n"
+
+"call" ("./tests/snippets/unsafe_calls_discharge_all.rs:24:1: 24:17")
+ => "#[rapx::inner(property = Align(), kind = \"precond\")]\n"
+
+
+stderr=
+[src/analyze_hir/mod.rs:47:13] &unsafe_calls = [
+    Call {
+        hir_id: HirId(DefId(0:3 ~ unsafe_calls_discharge_all[b6db]::tag_expr).5),
+        def_id: DefId(0:5 ~ unsafe_calls_discharge_all[b6db]::call),
+    },
+]
+[src/analyze_hir/visit.rs:36:9] &tags_state = {
+    Property {
+        property: "Tag",
+    }: false,
+    Property {
+        property: "Precond_Align",
+    }: false,
+}
+hir_id=HirId(DefId(0:3 ~ unsafe_calls_discharge_all[b6db]::tag_expr).5) fn_hir_id=HirId(DefId(0:3 ~ unsafe_calls_discharge_all[b6db]::tag_expr).0)
+hir_id=HirId(DefId(0:3 ~ unsafe_calls_discharge_all[b6db]::tag_expr).4) fn_hir_id=HirId(DefId(0:3 ~ unsafe_calls_discharge_all[b6db]::tag_expr).0)
+[src/analyze_hir/mod.rs:47:13] &unsafe_calls = [
+    Call {
+        hir_id: HirId(DefId(0:4 ~ unsafe_calls_discharge_all[b6db]::tag_block).5),
+        def_id: DefId(0:5 ~ unsafe_calls_discharge_all[b6db]::call),
+    },
+]
+[src/analyze_hir/visit.rs:36:9] &tags_state = {
+    Property {
+        property: "Tag",
+    }: false,
+    Property {
+        property: "Precond_Align",
+    }: false,
+}
+hir_id=HirId(DefId(0:4 ~ unsafe_calls_discharge_all[b6db]::tag_block).5) fn_hir_id=HirId(DefId(0:4 ~ unsafe_calls_discharge_all[b6db]::tag_block).0)
+hir_id=HirId(DefId(0:4 ~ unsafe_calls_discharge_all[b6db]::tag_block).4) fn_hir_id=HirId(DefId(0:4 ~ unsafe_calls_discharge_all[b6db]::tag_block).0)
+hir_id=HirId(DefId(0:4 ~ unsafe_calls_discharge_all[b6db]::tag_block).7) fn_hir_id=HirId(DefId(0:4 ~ unsafe_calls_discharge_all[b6db]::tag_block).0)
+hir_id=HirId(DefId(0:4 ~ unsafe_calls_discharge_all[b6db]::tag_block).3) fn_hir_id=HirId(DefId(0:4 ~ unsafe_calls_discharge_all[b6db]::tag_block).0)
+hir_id=HirId(DefId(0:4 ~ unsafe_calls_discharge_all[b6db]::tag_block).2) fn_hir_id=HirId(DefId(0:4 ~ unsafe_calls_discharge_all[b6db]::tag_block).0)
+[src/analyze_hir/mod.rs:47:13] &unsafe_calls = [
+    Call {
+        hir_id: HirId(DefId(0:6 ~ unsafe_calls_discharge_all[b6db]::tag_unsafe_fn).3),
+        def_id: DefId(0:5 ~ unsafe_calls_discharge_all[b6db]::call),
+    },
+]
+[src/analyze_hir/visit.rs:36:9] &tags_state = {
+    Property {
+        property: "Tag",
+    }: false,
+    Property {
+        property: "Precond_Align",
+    }: false,
+}
+hir_id=HirId(DefId(0:6 ~ unsafe_calls_discharge_all[b6db]::tag_unsafe_fn).3) fn_hir_id=HirId(DefId(0:6 ~ unsafe_calls_discharge_all[b6db]::tag_unsafe_fn).0)
+hir_id=HirId(DefId(0:6 ~ unsafe_calls_discharge_all[b6db]::tag_unsafe_fn).2) fn_hir_id=HirId(DefId(0:6 ~ unsafe_calls_discharge_all[b6db]::tag_unsafe_fn).0)
+hir_id=HirId(DefId(0:6 ~ unsafe_calls_discharge_all[b6db]::tag_unsafe_fn).5) fn_hir_id=HirId(DefId(0:6 ~ unsafe_calls_discharge_all[b6db]::tag_unsafe_fn).0)
+hir_id=HirId(DefId(0:6 ~ unsafe_calls_discharge_all[b6db]::tag_unsafe_fn).1) fn_hir_id=HirId(DefId(0:6 ~ unsafe_calls_discharge_all[b6db]::tag_unsafe_fn).0)
+hir_id=HirId(DefId(0:6 ~ unsafe_calls_discharge_all[b6db]::tag_unsafe_fn).6) fn_hir_id=HirId(DefId(0:6 ~ unsafe_calls_discharge_all[b6db]::tag_unsafe_fn).0)
+hir_id=HirId(DefId(0:6 ~ unsafe_calls_discharge_all[b6db]::tag_unsafe_fn).0) fn_hir_id=HirId(DefId(0:6 ~ unsafe_calls_discharge_all[b6db]::tag_unsafe_fn).0)
