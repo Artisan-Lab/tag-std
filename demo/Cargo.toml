@@ -20,8 +20,7 @@ prettyplease = "0.2"
 jiff = { version = "0.2", features = ["serde"] }
 annotate-snippets = "0.11.5"
 
-safety-parser = { path = "./safety-parser/" }
-#safety-parser = "0.1.0"
+safety-parser = { path = "./safety-parser/", version = "0.1.0" }
 
 # error handling
 eyre = "0.6"
@@ -37,7 +36,7 @@ assert_cmd = "2.0.17"
 expect-test = "1.5.1"
 
 [workspace]
-members = ["safety-lib","safety-macro", "safety-parser"]
+members = ["safety-lib", "safety-macro", "safety-parser"]
 exclude = ["tests/basic"]
 
 [package.metadata.rust-analyzer]
