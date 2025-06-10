@@ -32,24 +32,24 @@
  => "#[rapx::inner(property = Unknown(UserProperty), kind = \"memo\", memo =\n\"Customed user property.\")]\n"
 
 ********* "demo" [Executable] has reached 18 instances *********
-"demo::MyStruct::from" ("/home/gh-zjp-CN/tag-std/safety-tool/tests/basic/src/lib.rs:19:5: 19:50")
+"demo::MyStruct::from" ("src/lib.rs:19:5: 19:50")
  => "#[rapx::inner(property = Unknown(UserProperty), kind = \"memo\", memo =\n\"Customed user property.\")]\n"
 
-"demo::MyStruct::get" ("/home/gh-zjp-CN/tag-std/safety-tool/tests/basic/src/lib.rs:29:5: 29:42")
+"demo::MyStruct::get" ("src/lib.rs:29:5: 29:42")
  => "#[rapx::inner(property = Init(self.ptr, u8, self.len), kind = \"precond\")]\n"
 
-"demo::MyStruct::get" ("/home/gh-zjp-CN/tag-std/safety-tool/tests/basic/src/lib.rs:29:5: 29:42")
+"demo::MyStruct::get" ("src/lib.rs:29:5: 29:42")
  => "#[rapx::inner(property = InBound(self.ptr, u8, self.len), kind = \"precond\")]\n"
 
-"demo::MyStruct::get" ("/home/gh-zjp-CN/tag-std/safety-tool/tests/basic/src/lib.rs:29:5: 29:42")
+"demo::MyStruct::get" ("src/lib.rs:29:5: 29:42")
  => "#[rapx::inner(property = ValidNum(self.len * sizeof(u8), [0, isize :: MAX]),\nkind = \"precond\")]\n"
 
-"demo::MyStruct::get" ("/home/gh-zjp-CN/tag-std/safety-tool/tests/basic/src/lib.rs:29:5: 29:42")
+"demo::MyStruct::get" ("src/lib.rs:29:5: 29:42")
  => "#[rapx::inner(property = Alias(self.ptr), kind = \"hazard\")]\n"
 
-"demo::MyStruct::get" ("/home/gh-zjp-CN/tag-std/safety-tool/tests/basic/src/lib.rs:29:5: 29:42")
+"demo::MyStruct::get" ("src/lib.rs:29:5: 29:42")
  => "#[rapx::inner(property = Unknown(UserPropertyGet), kind = \"memo\", memo =\n\"Customed user property.\")]\n"
 
-"demo::MyStruct::get" ("/home/gh-zjp-CN/tag-std/safety-tool/tests/basic/src/lib.rs:29:5: 29:42")
+"demo::MyStruct::get" ("src/lib.rs:29:5: 29:42")
  => "#[rapx::inner(property = Unknown(UserPropertyGet2), kind = \"memo\")]\n"
 
