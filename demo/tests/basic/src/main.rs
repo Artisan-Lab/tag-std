@@ -12,6 +12,12 @@ fn main() {
     let a = MyStruct::from(p, l);
     println!("{:?}", unsafe {
         #[safety::discharges(Memo(UserPropertyGet))]
+        // The following discharges are checked if
+        // `DISCHARGES_ALL_PROPERTIES=1` is set.
+        #[safety::discharges(Precond_Init)]
+        #[safety::discharges(Precond_InBound)]
+        #[safety::discharges(Precond_ValidNum)]
+        #[safety::discharges(Hazard_Alias)]
         a.get()
     });
 }

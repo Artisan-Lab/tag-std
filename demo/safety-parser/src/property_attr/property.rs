@@ -106,6 +106,11 @@ impl Property {
             #memo
         }
     }
+
+    /// A `Kind_Property` format string, used in `#[discharges]`.
+    pub fn kind_property(&self) -> String {
+        format!("{:?}_{:?}", self.kind, self.name)
+    }
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]

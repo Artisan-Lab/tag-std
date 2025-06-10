@@ -3,6 +3,7 @@ use rustc_data_structures::fx::FxIndexMap;
 use rustc_hir::{HirId, def_id::DefId};
 use rustc_middle::ty::TyCtxt;
 use safety_parser::property_attr::{parse_inner_attr_from_str, property::Kind, utils::expr_ident};
+use std::sync::LazyLock;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct PrimaryKey {
@@ -122,10 +123,24 @@ impl Property {
 }
 
 fn push_properties(s: &str, v: &mut Vec<Property>) {
-    if let Some(property) = parse_inner_attr_from_str(s)
-        && property.kind == Kind::Memo
-    {
-        let s = expr_ident(&property.expr[0]).to_string();
-        v.push(Property { property: s.into_boxed_str() })
+    // `DISCHARGES_ALL_PROPERTIES=0` or unset will only check Memo properties.
+    // When the env var is set, all properties will be checked.
+    static DISCHARGES_ALL_PROPERTIES: LazyLock<bool> = LazyLock::new(|| {
+        std::env::var("DISCHARGES_ALL_PROPERTIES").map(|var| var != "0").unwrap_or(false)
+    });
+
+    if let Some(property) = parse_inner_attr_from_str(s) {
+        // FIXME: it's a bit weird to have separate forms
+        // `Memo(Prop)` and `Kind_Property`.
+        // Maybe define a Memo kind to uniformly accept `Memo_Prop`?
+        let property = if property.kind == Kind::Memo {
+            expr_ident(&property.expr[0]).to_string()
+        } else if *DISCHARGES_ALL_PROPERTIES {
+            property.kind_property()
+        } else {
+            return;
+        }
+        .into_boxed_str();
+        v.push(Property { property });
     }
 }
