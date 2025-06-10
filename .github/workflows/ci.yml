@@ -21,10 +21,10 @@ jobs:
           tool: cargo-expand
 
       - name: Install specified toolchain
-        working-directory: demo
+        working-directory: safety-tool
         run: rustup show
 
       - name: Run Tests
-        working-directory: demo
+        working-directory: safety-tool
         run: bash run.sh
 
