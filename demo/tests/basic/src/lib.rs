@@ -25,6 +25,7 @@ impl MyStruct {
     #[safety::precond::ValidNum(self.len*sizeof(u8), [0,isize::MAX])]
     #[safety::hazard::Alias(self.ptr)]
     #[safety::Memo(UserPropertyGet, memo = "Customed user property.")]
+    #[safety::Memo(UserPropertyGet2)]
     pub unsafe fn get(&self) -> &mut [u8] {
         unsafe { std::slice::from_raw_parts_mut(self.ptr, self.len) }
     }

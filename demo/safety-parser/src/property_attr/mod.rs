@@ -159,8 +159,18 @@ pub fn parse_inner_attr_from_tokenstream(ts: TokenStream) -> Property {
         }
         Expr::Path(_) => {
             // i.e. `Precond_Align`
-            let ident = utils::expr_ident(expr).to_string();
-            let (kind, name) = property::parse_kind_property(&ident);
+            let ident = utils::expr_ident(expr);
+            let span = ident.span();
+            let ident_str = ident.to_string();
+            let (kind, name) = property::parse_kind_property(&ident_str);
+
+            // Memo_Prop should be reworte as Memo(Prop)
+            if kind == Kind::Memo && name == PropertyName::Unknown {
+                let custom_prop = Ident::new(ident_str.trim_start_matches("Memo_"), span);
+                let custom_prop_expr: Expr = parse_quote!(#custom_prop);
+                non_named_exprs.push(custom_prop_expr);
+            }
+
             // TODO: how to handle property arguments?
             Property::new(kind, name, non_named_exprs, &named)
         }

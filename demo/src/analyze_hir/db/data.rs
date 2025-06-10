@@ -146,7 +146,14 @@ fn push_properties(s: &str, v: &mut Vec<Property>) {
         // `Memo(Prop)` and `Kind_Property`.
         // Maybe define a Memo kind to uniformly accept `Memo_Prop`?
         let property = if property.kind == Kind::Memo {
-            expr_ident(&property.expr[0]).to_string()
+            if let Some(expr) = property.expr.first() {
+                // Memo(Prop)
+                expr_ident(expr).to_string()
+            } else {
+                // Memo_Prop
+                dbg!(&property);
+                property.kind_property()
+            }
         } else if *DISCHARGES_ALL_PROPERTIES {
             property.kind_property()
         } else {

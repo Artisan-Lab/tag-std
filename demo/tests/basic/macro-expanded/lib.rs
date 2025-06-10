@@ -46,6 +46,8 @@ impl MyStruct {
         kind = "memo",
         memo = "Customed user property."
     )]
+    /// UserPropertyGet2: auto doc placeholder.
+    #[rapx::inner(property = Unknown(UserPropertyGet2), kind = "memo")]
     pub unsafe fn get(&self) -> &mut [u8] {
         unsafe { std::slice::from_raw_parts_mut(self.ptr, self.len) }
     }
