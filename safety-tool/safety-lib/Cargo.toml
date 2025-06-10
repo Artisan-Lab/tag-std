@@ -1,0 +1,16 @@
+[package]
+name = "safety-lib"
+version = "0.1.0"
+edition = "2024"
+authors = ["Artisan-Lab <xuh@fudan.edu.cn>"]
+description = "A lib for using safety tags defined in tag-std"
+license = "MPL-2.0"
+repository = "https://github.com/Artisan-Lab/tag-std"
+readme = "README.md"
+
+[dependencies]
+safety-macro = { path = "../safety-macro", version = "0.1.0" }
+safety-parser = { path = "../safety-parser", version = "0.1.0" }
+
+[dev-dependencies]
+expect-test = "1.5.1"

@@ -1,0 +1,43 @@
+[package]
+name = "safety-tool"
+version = "0.1.0"
+edition = "2024"
+authors = ["Artisan-Lab <xuh@fudan.edu.cn>"]
+description = "A tool for analyzing safety tags defined in tag-std"
+license = "MPL-2.0"
+repository = "https://github.com/Artisan-Lab/tag-std"
+readme = "README.md"
+
+[[bin]]
+name = "cargo-safety-tool"
+path = "src/bin/cargo-safety-tool.rs"
+
+[dependencies]
+rusqlite = { version = "0.36.0", features = ["bundled", "jiff"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+prettyplease = "0.2"
+jiff = { version = "0.2", features = ["serde"] }
+annotate-snippets = "0.11.5"
+
+safety-parser = { path = "./safety-parser/", version = "0.1.0" }
+
+# error handling
+eyre = "0.6"
+color-eyre = "0.6"
+
+# logger
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+tracing-error = "0.2"
+
+[dev-dependencies]
+assert_cmd = "2.0.17"
+expect-test = "1.5.1"
+
+[workspace]
+members = ["safety-lib", "safety-macro", "safety-parser"]
+exclude = ["tests/basic"]
+
+[package.metadata.rust-analyzer]
+rustc_private = true

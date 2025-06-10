@@ -1,0 +1,28 @@
+stdout=
+
+stderr=
+[src/analyze_hir/mod.rs:47:13] &unsafe_calls = [
+    Call {
+        hir_id: HirId(DefId(0:4 ~ unsafe_calls_panic_discharge_all_tagged_less[a238]::tag_unsafe_fn).3),
+        def_id: DefId(0:3 ~ unsafe_calls_panic_discharge_all_tagged_less[a238]::call),
+    },
+]
+[src/analyze_hir/visit.rs:36:9] &tags_state = {
+    "Tag": false,
+    "Precond_Align": false,
+}
+hir_id=HirId(DefId(0:4 ~ unsafe_calls_panic_discharge_all_tagged_less[a238]::tag_unsafe_fn).3) fn_hir_id=HirId(DefId(0:4 ~ unsafe_calls_panic_discharge_all_tagged_less[a238]::tag_unsafe_fn).0)
+hir_id=HirId(DefId(0:4 ~ unsafe_calls_panic_discharge_all_tagged_less[a238]::tag_unsafe_fn).2) fn_hir_id=HirId(DefId(0:4 ~ unsafe_calls_panic_discharge_all_tagged_less[a238]::tag_unsafe_fn).0)
+hir_id=HirId(DefId(0:4 ~ unsafe_calls_panic_discharge_all_tagged_less[a238]::tag_unsafe_fn).5) fn_hir_id=HirId(DefId(0:4 ~ unsafe_calls_panic_discharge_all_tagged_less[a238]::tag_unsafe_fn).0)
+hir_id=HirId(DefId(0:4 ~ unsafe_calls_panic_discharge_all_tagged_less[a238]::tag_unsafe_fn).1) fn_hir_id=HirId(DefId(0:4 ~ unsafe_calls_panic_discharge_all_tagged_less[a238]::tag_unsafe_fn).0)
+hir_id=HirId(DefId(0:4 ~ unsafe_calls_panic_discharge_all_tagged_less[a238]::tag_unsafe_fn).6) fn_hir_id=HirId(DefId(0:4 ~ unsafe_calls_panic_discharge_all_tagged_less[a238]::tag_unsafe_fn).0)
+hir_id=HirId(DefId(0:4 ~ unsafe_calls_panic_discharge_all_tagged_less[a238]::tag_unsafe_fn).0) fn_hir_id=HirId(DefId(0:4 ~ unsafe_calls_panic_discharge_all_tagged_less[a238]::tag_unsafe_fn).0)
+[src/analyze_hir/visit.rs:105:5] &src_body = "pub unsafe fn tag_unsafe_fn() {\n    call();\n}"
+[1m[91merror[0m: [1m`Precond_Align` is not discharged[0m
+  [1m[94m-->[0m ./tests/snippets/unsafe_calls_panic_discharge_all_tagged_less.rs:9:1
+   [1m[94m|[0m
+[1m[94m 9 |[0m pub unsafe fn tag_unsafe_fn() {
+   [1m[94m|[0m [1m[91m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m [1m[91mFor this unsafe call.[0m
+[1m[94m10 |[0m     call();
+[1m[94m11 |[0m }
+   [1m[94m|[0m
