@@ -142,24 +142,16 @@ fn push_properties(s: &str, v: &mut Vec<Property>) {
     });
 
     if let Some(property) = parse_inner_attr_from_str(s) {
-        // FIXME: it's a bit weird to have separate forms
-        // `Memo(Prop)` and `Kind_Property`.
-        // Maybe define a Memo kind to uniformly accept `Memo_Prop`?
         let property = if property.kind == Kind::Memo {
-            if let Some(expr) = property.expr.first() {
-                // Memo(Prop)
-                expr_ident(expr).to_string()
-            } else {
-                // Memo_Prop
-                dbg!(&property);
-                property.kind_property()
-            }
+            // `Memo(Prop)` or `Memo_Prop` are normalized to call expr
+            expr_ident(&property.expr[0]).to_string()
         } else if *DISCHARGES_ALL_PROPERTIES {
             property.kind_property()
         } else {
             return;
         }
         .into_boxed_str();
+
         v.push(Property { property });
     }
 }
