@@ -181,11 +181,13 @@ fn compile_libunsafe_calls() -> CompilationOptions<'static> {
         outfile,
         CompilationOptions {
             args: &["--crate-type=lib", "-otarget/libunsafe_calls.rlib"],
+            stop: false,
             ..Default::default()
         },
     );
     CompilationOptions {
         args: &["--crate-type=lib", "--extern=unsafe_calls=target/libunsafe_calls.rlib"],
+        stop: false,
         ..Default::default()
     }
 }
