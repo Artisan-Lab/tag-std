@@ -7,7 +7,7 @@ use syn::{
     *,
 };
 
-mod utils;
+pub mod utils;
 use utils::{find, find_some};
 
 mod keep_doc_order;
@@ -151,7 +151,7 @@ pub fn parse_inner_attr_from_tokenstream(ts: TokenStream) -> Property {
     // parse all named arguments such as memo
     parse_named_args(call.args, &mut named, &mut non_named_exprs);
 
-    let name = expr_ident(&call.func).to_string();
+    let name = utils::expr_ident(&call.func).to_string();
     if name != "Memo" {
         panic!("Only support `Memo` property, but got {name:?}");
     }
@@ -221,31 +221,10 @@ fn parse_named_args(
         match &arg {
             Expr::Assign(assign) => {
                 // ident = expr
-                let ident = &expr_ident(&assign.left);
+                let ident = &utils::expr_ident(&assign.left);
                 set.push(NamedArg::new(ident, &assign.right));
             }
             _ => non_named_exprs.push(arg),
         }
     }
-}
-
-/// Parse expr as single ident.
-///
-/// Panic if expr is not Path or a path with multiple segments.
-pub fn expr_ident(expr: &Expr) -> Ident {
-    let Expr::Path(path) = expr else { panic!("{expr:?} is not path expr.") };
-    path.path.get_ident().unwrap().clone()
-}
-
-/// Parse expr as single ident.
-///
-/// Panic if expr is not Path or a path with multiple segments.
-fn expr_ident_opt(expr: &Expr) -> Option<Ident> {
-    let Expr::Path(path) = expr else { return None };
-    path.path.get_ident().cloned()
-}
-
-fn expr_to_string(expr: &Expr) -> String {
-    let tokens = quote! { #expr };
-    tokens.to_string()
 }

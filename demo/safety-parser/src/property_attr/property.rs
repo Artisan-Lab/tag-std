@@ -1,4 +1,7 @@
-use super::{NamedArg, expr_ident, find_some};
+use super::{
+    NamedArg,
+    utils::{expr_ident, expr_ident_opt, expr_to_string, find_some},
+};
 use core::cmp::Ordering;
 use proc_macro2::{Literal, Span, TokenStream};
 use quote::{ToTokens, TokenStreamExt, quote};
@@ -42,7 +45,7 @@ impl Property {
             name,
             expr,
             // extract memo from named_args
-            memo: find_some(&named_args, |arg| {
+            memo: find_some(named_args, |arg| {
                 if let NamedArg::Memo(memo) = arg { Some(memo.clone()) } else { None }
             }),
         }
@@ -204,17 +207,17 @@ impl PropertyName {
     }
 
     pub fn try_from_expr_ident(expr: &Expr) -> Option<Self> {
-        let ident_str = super::expr_ident_opt(expr)?.to_string();
+        let ident_str = expr_ident_opt(expr)?.to_string();
         Some(PropertyName::new(&ident_str))
     }
 
     pub fn from_expr_ident(expr: &Expr) -> Self {
-        let ident_str = super::expr_ident(expr).to_string();
+        let ident_str = expr_ident(expr).to_string();
         PropertyName::new(&ident_str)
     }
 
     fn map_property_to_doc_comments(&self, expr: &[Expr]) -> String {
-        let args: Vec<String> = expr.iter().map(super::expr_to_string).collect();
+        let args: Vec<String> = expr.iter().map(expr_to_string).collect();
         if args.len() < self.args_len() {
             unreachable!("Arg length is invalid for {}", self.to_str())
         }
