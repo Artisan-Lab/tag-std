@@ -110,6 +110,14 @@ fn unsafe_calls_panic_discharge_all_tagged_less() {
 }
 
 #[test]
+fn unsafe_calls_panic_discharge_all_tagged_less_fine() {
+    let [file, outfile] = &testcase("unsafe_calls_panic_discharge_all_tagged_less_fine");
+    // NOTE: for unset DISCHARGES_ALL_PROPERTIES,
+    // it's fine if non Memo properties are discharged or not.
+    fine(file, outfile, CompilationOptions::default());
+}
+
+#[test]
 fn unsafe_calls_panic_discharge_all_tagged_more() {
     let [file, outfile] = &testcase("unsafe_calls_panic_discharge_all_tagged_more");
     should_panic(file, outfile, CompilationOptions::discharges_all_properties());
