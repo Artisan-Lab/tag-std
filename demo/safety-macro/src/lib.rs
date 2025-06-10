@@ -98,7 +98,7 @@ pub fn pub_use(tokens: TokenStream) -> TokenStream {
             let span = ident.span();
             let property_ident = Ident::new(property_name, span);
             quote_spanned! { span =>
-                pub use ::safety_tool_macro::#ident as #property_ident;
+                pub use ::safety_macro::#ident as #property_ident;
             }
         })
         .collect::<TokenStream2>()

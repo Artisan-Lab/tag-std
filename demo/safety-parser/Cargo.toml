@@ -6,7 +6,7 @@ authors = ["Artisan-Lab <xuh@fudan.edu.cn>"]
 description = "A lib for parsing safety tags defined in tag-std"
 license = "MPL-2.0"
 repository = "https://github.com/Artisan-Lab/tag-std"
-readme = "../README.md"
+readme = "README.md"
 
 [dependencies]
 quote = "1"

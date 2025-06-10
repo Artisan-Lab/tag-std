@@ -2,6 +2,11 @@
 name = "safety-tool"
 version = "0.1.0"
 edition = "2024"
+authors = ["Artisan-Lab <xuh@fudan.edu.cn>"]
+description = "A tool for analyzing safety tags defined in tag-std"
+license = "MPL-2.0"
+repository = "https://github.com/Artisan-Lab/tag-std"
+readme = "README.md"
 
 [[bin]]
 name = "cargo-safety-tool"
@@ -16,6 +21,7 @@ jiff = { version = "0.2", features = ["serde"] }
 annotate-snippets = "0.11.5"
 
 safety-parser = { path = "./safety-parser/" }
+#safety-parser = "0.1.0"
 
 # error handling
 eyre = "0.6"

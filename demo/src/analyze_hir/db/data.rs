@@ -2,7 +2,7 @@ use super::super::{HirFn, is_tool_attr};
 use rustc_data_structures::fx::FxIndexMap;
 use rustc_hir::{HirId, def_id::DefId};
 use rustc_middle::ty::TyCtxt;
-use safety_tool_parser::property_attr::{expr_ident, parse_inner_attr_from_str, property::Kind};
+use safety_parser::property_attr::{expr_ident, parse_inner_attr_from_str, property::Kind};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct PrimaryKey {

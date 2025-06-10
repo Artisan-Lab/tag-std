@@ -513,20 +513,40 @@ name = "safety-lib"
 version = "0.1.0"
 dependencies = [
  "expect-test",
- "safety-macro",
- "safety-parser",
+ "safety-macro 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "safety-parser 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
 name = "safety-macro"
 version = "0.1.0"
 dependencies = [
- "safety-parser",
+ "safety-parser 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
+name = "safety-macro"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b0794819b325888d9821a8aac2fff4767109f287659230b8d3766679dc518804"
+dependencies = [
+ "safety-parser 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
 name = "safety-parser"
 version = "0.1.0"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
+]
+
+[[package]]
+name = "safety-parser"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "dbd97776ec41e4e37fef0afb5ea8fe6f4355e86f01f5680301f9b20384571e73"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -545,7 +565,7 @@ dependencies = [
  "jiff",
  "prettyplease",
  "rusqlite",
- "safety-parser",
+ "safety-parser 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde",
  "serde_json",
  "tracing",
