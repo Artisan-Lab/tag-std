@@ -6,7 +6,7 @@
 use std::prelude::rust_2024::*;
 #[macro_use]
 extern crate std;
-use safety_tool_lib::safety;
+use safety_lib::safety;
 /// # Safety
 /// Align: Make sure pointer `p` must be properly aligned for type `T` before calling this function.
 #[rapx::inner(property = Align(p, T), kind = "precond")]
