@@ -1,5 +1,5 @@
 [package]
-name = "safety-tool-macro"
+name = "safety-macro"
 version = "0.1.0"
 edition = "2024"
 
@@ -7,5 +7,5 @@ edition = "2024"
 proc-macro = true
 
 [dependencies]
-safety-tool-parser = { path = "../safety-tool-parser" }
+safety-parser = { path = "../safety-parser" }
 

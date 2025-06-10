@@ -1,4 +1,4 @@
-pub use safety_tool_parser;
+pub use safety_parser;
 
 /// Safety macros.
 pub mod safety;

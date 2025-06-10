@@ -1,5 +1,5 @@
 use proc_macro::TokenStream;
-use safety_tool_parser::{
+use safety_parser::{
     proc_macro2::{Ident, TokenStream as TokenStream2},
     property_attr::{
         FnItem, SafetyAttrArgs, parse_inner_attr_from_tokenstream,

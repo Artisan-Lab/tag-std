@@ -1,7 +1,7 @@
-pub use safety_tool_macro::Memo;
-pub use safety_tool_macro::discharges;
+pub use safety_macro::Memo;
+pub use safety_macro::discharges;
 
-use safety_tool_macro::pub_use;
+use safety_macro::pub_use;
 pub mod precond {
     super::pub_use! {
         Precond_Align,

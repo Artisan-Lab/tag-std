@@ -1,0 +1,11 @@
+[package]
+name = "safety-lib"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+safety-macro = { path = "../safety-macro" }
+safety-parser = { path = "../safety-parser" }
+
+[dev-dependencies]
+expect-test = "1.5.1"
