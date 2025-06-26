@@ -1,0 +1,26 @@
+name: Check Rust for Linux
+
+on:
+  push:
+  pull_request:
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout tag-std to rust-for-linux branch
+        uses: actions/checkout@v4
+        with:
+          ref: rust-for-linux
+
+      - name: Install safety-tool
+        run: cd safety-tool && cargo install --path . --locked
+
+      - name: Download Linux Repo
+        run: .github/rust-for-linux/install.sh
+
+      - name: Check Linux Repo
+        run: .github/rust-for-linux/check.sh
