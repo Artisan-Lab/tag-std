@@ -16,6 +16,9 @@ jobs:
         with:
           ref: rust-for-linux
 
+      - name: Install deps required by linux
+        run: sudo apt-get install libelf-dev
+
       - name: Install safety-tool
         run: cd safety-tool && cargo install --path . --locked
 
