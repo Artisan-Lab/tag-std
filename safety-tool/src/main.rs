@@ -1,4 +1,5 @@
 #![feature(rustc_private)]
+#![feature(let_chains)]
 
 extern crate itertools;
 extern crate rustc_ast;
@@ -16,6 +17,7 @@ extern crate stable_mir;
 use rustc_data_structures::fx::FxHashSet;
 use rustc_hir::Attribute;
 use rustc_middle::ty::TyCtxt;
+use rustc_smir::rustc_internal::{self, internal};
 use stable_mir::{
     CrateDef, ItemKind,
     mir::{
@@ -23,7 +25,6 @@ use stable_mir::{
         mono::{Instance, InstanceKind},
         visit::Location,
     },
-    rustc_internal::internal,
     ty::Ty,
 };
 use std::ops::ControlFlow;
@@ -43,7 +44,7 @@ fn main() {
     } else {
         ControlFlow::<(), ()>::Continue(())
     };
-    _ = run_with_tcx!(&rustc_args, |tcx| {
+    _ = run_with_tcx!(rustc_args, |tcx| {
         analyze_hir::analyze_hir(tcx).unwrap();
         analyze(tcx);
 

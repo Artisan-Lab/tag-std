@@ -93,7 +93,7 @@ fn check_tag_state(
         let span_body = tcx.source_span(hir_id.owner);
         let is = if n == 1 { "is" } else { "are" };
         let title = format!("{undischarged} {is} not discharged");
-        let span_node = tcx.hir_span(hir_id);
+        let span_node = tcx.hir().span(hir_id);
         let anno =
             Level::Error.span(anno_span(span_body, span_node)).label("For this unsafe call.");
         gen_diagnosis(span_body, src_map, &title, anno);
