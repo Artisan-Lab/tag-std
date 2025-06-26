@@ -13,3 +13,9 @@ git -C linux init
 git -C linux remote add origin https://github.com/Rust-for-Linux/linux.git
 git -C linux fetch --depth 1 origin ${LINUX_VERSION}
 git -C linux checkout FETCH_HEAD
+
+# Download LLVM and rustc toolchain required by Rust for Linux
+# see https://mirrors.edge.kernel.org/pub/tools/llvm/rust/
+llvm=llvm-20.1.7-rust-1.87.0-$(uname -m)
+wget https://mirrors.edge.kernel.org/pub/tools/llvm/rust/files/$llvm.tar.xz
+tar -xvf $llvm.tar.xz

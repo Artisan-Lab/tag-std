@@ -3,3 +3,5 @@
 target/
 *.sqlite3
 *.rlib
+/linux
+/llvm*

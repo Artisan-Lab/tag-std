@@ -15,13 +15,8 @@ export LD_LIBRARY_PATH=$(rustc --print sysroot)/lib
 # This should print `rustc 1.87.0 (17067e9ac 2025-05-09)`.
 safety-tool --version
 
-# Download LLVM and rustc toolchain required by Rust for Linux
-# see https://mirrors.edge.kernel.org/pub/tools/llvm/rust/
-llvm=llvm-20.1.7-rust-1.87.0-x86_64
-wget https://mirrors.edge.kernel.org/pub/tools/llvm/rust/files/$llvm.tar.xz
-tar -xvf $llvm.tar.xz
-
 # Add llvm to PATH, and set up libclang
+llvm=llvm-20.1.7-rust-1.87.0-$(uname -m)
 llvm_prefix=$PWD/$llvm
 export PATH=$llvm_prefix/bin:$PATH
 export LIBCLANG_PATH=$llvm_prefix/lib/libclang.so
