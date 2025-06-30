@@ -19,6 +19,7 @@ serde_json = "1"
 prettyplease = "0.2"
 jiff = { version = "0.2", features = ["serde"] }
 annotate-snippets = "0.11.5"
+cargo_metadata = "0.20.0"
 
 safety-parser = { path = "./safety-parser/", version = "0.1.0" }
 

@@ -1,0 +1,146 @@
+use crate::{Result, Utf8Path, Utf8PathBuf};
+use cargo_metadata::{Artifact, CrateType, Message};
+use eyre::{Context, ContextCompat};
+use std::{
+    fs,
+    io::ErrorKind,
+    process::{Command, Stdio},
+};
+
+pub fn run() -> Result<()> {
+    // Ensure the rendered field of JSON messages contains
+    // embedded ANSI color codes for respecting rustc’s default color scheme
+    let mut command = Command::new("cargo")
+        .args(["build", "--message-format=json-diagnostic-rendered-ansi"])
+        .stdout(Stdio::piped())
+        .spawn()
+        .context("Failed to run `cargo build`.")?;
+
+    let sysroot = SafetyToolSysroot::new()?;
+    sysroot.create_metadata_json()?;
+
+    let mut artifacts = Vec::with_capacity(32);
+    let reader = std::io::BufReader::new(command.stdout.take().unwrap());
+    for message in Message::parse_stream(reader) {
+        if let Message::CompilerArtifact(artifact) = message.context("Faied to read message.")? {
+            sysroot.copy_artifacts(&artifact)?;
+            artifacts.push(artifact);
+        }
+    }
+    sysroot.create_artifacts_json(&artifacts)?;
+
+    Ok(())
+}
+
+#[derive(Debug)]
+struct SafetyToolSysroot {
+    root: Utf8PathBuf,
+    lib: Utf8PathBuf,
+    bin: Utf8PathBuf,
+}
+
+impl SafetyToolSysroot {
+    fn new() -> Result<Self> {
+        let root = safety_tool_sysroot();
+        let lib = root.join("lib");
+        let bin = root.join("bin");
+
+        // clean sysroot
+        remove_dir(&root)?;
+
+        // crate sysroot dir and child dirs
+        create_dir(&root)?;
+        create_dir(&lib)?;
+        create_dir(&bin)?;
+
+        let this = SafetyToolSysroot { root, lib, bin };
+        info!(?this);
+        Ok(this)
+    }
+
+    fn copy_artifacts(&self, artifact: &Artifact) -> Result<()> {
+        for file in &artifact.filenames {
+            let filename = file
+                .file_name()
+                .with_context(|| format!("Unable to know filename from `{file}`."))?;
+
+            if artifact.target.crate_types.contains(&CrateType::Bin) {
+                let name = &*artifact.target.name;
+                if name == "cargo-safety-tool" || name == "safety-tool" || name == "safety-tool-rfl"
+                {
+                    fs::copy(file, self.bin.join(filename))?;
+                }
+            }
+
+            if let Some(ext) = file.extension() {
+                let crate_type = CrateType::from(ext);
+                if matches!(
+                    crate_type,
+                    CrateType::Lib
+                        | CrateType::RLib
+                        | CrateType::DyLib
+                        | CrateType::CDyLib
+                        | CrateType::StaticLib
+                ) || is_system_lib(ext)
+                {
+                    fs::copy(file, self.lib.join(filename))?;
+                };
+            }
+        }
+
+        Ok(())
+    }
+
+    fn create_artifacts_json(&self, artifacts: &[Artifact]) -> Result<()> {
+        let file = fs::File::create(self.root.join("artifacts.json"))?;
+        serde_json::to_writer_pretty(file, artifacts)?;
+        Ok(())
+    }
+
+    fn create_metadata_json(&self) -> Result<()> {
+        // cargo metadata --format-version=1
+        let file = fs::File::create(self.root.join("cargo_metadata.json"))?;
+        let output = Command::new("cargo").args(["metadata", "--format-version=1"]).output()?;
+        let stdout = String::from_utf8_lossy(&output.stdout);
+        ensure!(
+            output.status.success(),
+            "Failed to run `cargo metadata --format-version=1`:\nstdout={stdout}\nstderr={stderr}",
+            stderr = String::from_utf8_lossy(&output.stderr)
+        );
+
+        let json: serde_json::Value = serde_json::from_str(&stdout)?;
+        serde_json::to_writer_pretty(file, &json)?;
+        Ok(())
+    }
+}
+
+fn safety_tool_sysroot() -> Utf8PathBuf {
+    Utf8PathBuf::from(env!("SAFETY_TOOL_SYSROOT"))
+}
+
+/// Create a folder, but ignore if it has already existed.
+fn create_dir(path: &Utf8Path) -> Result<()> {
+    if let Err(err) = fs::create_dir(path) {
+        ensure!(err.kind() == ErrorKind::AlreadyExists, "Failed to create dir `{path}`: {err:?}")
+    }
+    Ok(())
+}
+
+/// Remove a folder and all contents, but ignore if it doesn't exist.
+fn remove_dir(path: &Utf8Path) -> Result<()> {
+    if let Err(err) = fs::remove_dir_all(path) {
+        ensure!(err.kind() == ErrorKind::NotFound, "Failed to remove dir `{path}`: {err:?}")
+    }
+    Ok(())
+}
+
+fn is_system_lib(ext: &str) -> bool {
+    let system_lib_ext = if cfg!(target_os = "linux") {
+        "so"
+    } else if cfg!(target_os = "macos") {
+        "dylib"
+    } else {
+        unimplemented!("system lib extension");
+    };
+    ext == system_lib_ext
+}
