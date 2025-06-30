@@ -8,14 +8,22 @@ set -exou pipefail
 LINUX_REPO=https://github.com/Artisan-Lab/tag-rust-for-linux.git
 
 # Download Linux at a specific commit
-mkdir -p linux
-git -C linux init
-git -C linux remote add origin ${LINUX_REPO}
-git -C linux fetch --depth 1 origin rust-next
-git -C linux checkout FETCH_HEAD
+if [ ! -d "linux" ]; then
+  mkdir -p linux
+  git -C linux init
+  git -C linux remote add origin ${LINUX_REPO}
+  git -C linux fetch --depth 1 origin rust-next
+  git -C linux checkout FETCH_HEAD
+else
+  echo "linux source code has been downloaded"
+fi
 
 # Download LLVM and rustc toolchain required by Rust for Linux
 # see https://mirrors.edge.kernel.org/pub/tools/llvm/rust/
 llvm=llvm-20.1.7-rust-1.87.0-$(uname -m)
-wget https://mirrors.edge.kernel.org/pub/tools/llvm/rust/files/$llvm.tar.xz
-tar -xvf $llvm.tar.xz
+if [ ! -d "${llvm}" ]; then
+  wget https://mirrors.edge.kernel.org/pub/tools/llvm/rust/files/$llvm.tar.xz
+  tar -xvf $llvm.tar.xz
+else
+  echo "llvm and rust toolchain have been downloaded"
+fi
