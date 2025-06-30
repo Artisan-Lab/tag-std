@@ -14,7 +14,7 @@ fn main() -> Result<()> {
     safety_tool::logger::init();
 
     // cp safety-parser's lib
-    cargo_build::run("safety-parser", CopyMode::Lib, "safety-parser")?;
+    cargo_build::run("safety-lib", CopyMode::Lib, "safety-lib")?;
     // cp safety-tool's bins
     cargo_build::run(".", CopyMode::Bin, "safety-tool")?;
 
