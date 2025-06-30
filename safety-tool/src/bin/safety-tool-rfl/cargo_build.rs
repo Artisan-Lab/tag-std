@@ -5,32 +5,37 @@ use std::{
     fs,
     io::ErrorKind,
     process::{Command, Stdio},
+    sync::LazyLock,
 };
 
-pub fn run() -> Result<()> {
+pub fn run(dir: &str, mode: CopyMode, prefix: &str) -> Result<()> {
     // Ensure the rendered field of JSON messages contains
     // embedded ANSI color codes for respecting rustc’s default color scheme
     let mut command = Command::new("cargo")
         .args(["build", "--message-format=json-diagnostic-rendered-ansi"])
+        .current_dir(dir)
         .stdout(Stdio::piped())
         .spawn()
         .context("Failed to run `cargo build`.")?;
 
-    let sysroot = SafetyToolSysroot::new()?;
-    sysroot.create_metadata_json()?;
+    let sysroot = &*SAFETY_TOOL_SYSROOT;
+    sysroot.create_metadata_json(prefix)?;
 
     let mut artifacts = Vec::with_capacity(32);
     let reader = std::io::BufReader::new(command.stdout.take().unwrap());
     for message in Message::parse_stream(reader) {
         if let Message::CompilerArtifact(artifact) = message.context("Faied to read message.")? {
-            sysroot.copy_artifacts(&artifact)?;
+            sysroot.copy_artifacts(&artifact, mode)?;
             artifacts.push(artifact);
         }
     }
-    sysroot.create_artifacts_json(&artifacts)?;
+    sysroot.create_artifacts_json(&artifacts, prefix)?;
 
     Ok(())
 }
+
+static SAFETY_TOOL_SYSROOT: LazyLock<SafetyToolSysroot> =
+    LazyLock::new(|| SafetyToolSysroot::init().unwrap());
 
 #[derive(Debug)]
 struct SafetyToolSysroot {
@@ -40,7 +45,7 @@ struct SafetyToolSysroot {
 }
 
 impl SafetyToolSysroot {
-    fn new() -> Result<Self> {
+    fn init() -> Result<Self> {
         let root = safety_tool_sysroot();
         let lib = root.join("lib");
         let bin = root.join("bin");
@@ -58,13 +63,15 @@ impl SafetyToolSysroot {
         Ok(this)
     }
 
-    fn copy_artifacts(&self, artifact: &Artifact) -> Result<()> {
+    fn copy_artifacts(&self, artifact: &Artifact, mode: CopyMode) -> Result<()> {
         for file in &artifact.filenames {
             let filename = file
                 .file_name()
                 .with_context(|| format!("Unable to know filename from `{file}`."))?;
 
-            if artifact.target.crate_types.contains(&CrateType::Bin) {
+            if matches!(mode, CopyMode::Bin | CopyMode::Both)
+                && artifact.target.crate_types.contains(&CrateType::Bin)
+            {
                 let name = &*artifact.target.name;
                 if name == "cargo-safety-tool" || name == "safety-tool" || name == "safety-tool-rfl"
                 {
@@ -72,7 +79,9 @@ impl SafetyToolSysroot {
                 }
             }
 
-            if let Some(ext) = file.extension() {
+            if matches!(mode, CopyMode::Lib | CopyMode::Both)
+                && let Some(ext) = file.extension()
+            {
                 let crate_type = CrateType::from(ext);
                 if matches!(
                     crate_type,
@@ -91,15 +100,16 @@ impl SafetyToolSysroot {
         Ok(())
     }
 
-    fn create_artifacts_json(&self, artifacts: &[Artifact]) -> Result<()> {
-        let file = fs::File::create(self.root.join("artifacts.json"))?;
+    fn create_artifacts_json(&self, artifacts: &[Artifact], prefix: &str) -> Result<()> {
+        let filename = format!("{prefix}_artifacts.json");
+        let file = fs::File::create(self.root.join(filename))?;
         serde_json::to_writer_pretty(file, artifacts)?;
         Ok(())
     }
 
-    fn create_metadata_json(&self) -> Result<()> {
-        // cargo metadata --format-version=1
-        let file = fs::File::create(self.root.join("cargo_metadata.json"))?;
+    fn create_metadata_json(&self, prefix: &str) -> Result<()> {
+        let filename = format!("{prefix}_cargo_metadata.json");
+        let file = fs::File::create(self.root.join(filename))?;
         let output = Command::new("cargo").args(["metadata", "--format-version=1"]).output()?;
         let stdout = String::from_utf8_lossy(&output.stdout);
         ensure!(
@@ -143,4 +153,12 @@ fn is_system_lib(ext: &str) -> bool {
         unimplemented!("system lib extension");
     };
     ext == system_lib_ext
+}
+
+#[derive(Debug, Clone, Copy)]
+pub enum CopyMode {
+    Bin,
+    Lib,
+    #[allow(dead_code)]
+    Both,
 }
