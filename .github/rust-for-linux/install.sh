@@ -5,13 +5,13 @@
 set -exou pipefail
 
 # Linux version
-LINUX_VERSION=v6.16-rc1
+LINUX_REPO=https://github.com/Artisan-Lab/tag-rust-for-linux.git
 
 # Download Linux at a specific commit
 mkdir -p linux
 git -C linux init
-git -C linux remote add origin https://github.com/Rust-for-Linux/linux.git
-git -C linux fetch --depth 1 origin ${LINUX_VERSION}
+git -C linux remote add origin ${LINUX_REPO}
+git -C linux fetch --depth 1 origin rust-next
 git -C linux checkout FETCH_HEAD
 
 # Download LLVM and rustc toolchain required by Rust for Linux
