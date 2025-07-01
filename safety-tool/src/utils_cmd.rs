@@ -24,7 +24,6 @@ pub fn execute_cmd(mut cmd: Command) -> Result<()> {
     )
     .entered();
 
-    debug!(?cmd);
     ensure!(success, "Failed to run cmd.",);
 
     Ok(())
