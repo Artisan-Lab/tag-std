@@ -1,6 +1,7 @@
 use crate::{Result, Utf8Path, Utf8PathBuf};
 use cargo_metadata::{Artifact, CrateType, Message};
 use eyre::{Context, ContextCompat};
+use safety_tool::utils::sysroot::{self, CARGO_SAFETY_TOOL, SAFETY_TOOL, SAFETY_TOOL_RFL};
 use std::{
     fs,
     io::ErrorKind,
@@ -46,10 +47,10 @@ static SAFETY_TOOL_SYSROOT: LazyLock<SafetyToolSysroot> =
     LazyLock::new(|| SafetyToolSysroot::init().unwrap());
 
 #[derive(Debug)]
-pub struct SafetyToolSysroot {
-    pub root: Utf8PathBuf,
-    pub lib: Utf8PathBuf,
-    pub bin: Utf8PathBuf,
+struct SafetyToolSysroot {
+    root: Utf8PathBuf,
+    lib: Utf8PathBuf,
+    bin: Utf8PathBuf,
 }
 
 impl SafetyToolSysroot {
@@ -69,10 +70,10 @@ impl SafetyToolSysroot {
         Ok(this)
     }
 
-    pub fn new() -> Self {
-        let root = safety_tool_sysroot();
-        let lib = root.join("lib");
-        let bin = root.join("bin");
+    fn new() -> Self {
+        let root = sysroot::root();
+        let lib = sysroot::lib();
+        let bin = sysroot::bin();
         SafetyToolSysroot { root, lib, bin }
     }
 
@@ -86,8 +87,7 @@ impl SafetyToolSysroot {
                 && artifact.target.crate_types.contains(&CrateType::Bin)
             {
                 let name = &*artifact.target.name;
-                if name == "cargo-safety-tool" || name == "safety-tool" || name == "safety-tool-rfl"
-                {
+                if name == CARGO_SAFETY_TOOL || name == SAFETY_TOOL || name == SAFETY_TOOL_RFL {
                     fs::copy(file, self.bin.join(filename))?;
                 }
             }
@@ -135,10 +135,6 @@ impl SafetyToolSysroot {
         serde_json::to_writer_pretty(file, &json)?;
         Ok(())
     }
-}
-
-fn safety_tool_sysroot() -> Utf8PathBuf {
-    Utf8PathBuf::from(env!("SAFETY_TOOL_SYSROOT"))
 }
 
 /// Create a folder, but ignore if it has already existed.

@@ -786,6 +786,7 @@ version = "0.1.0"
 dependencies = [
  "annotate-snippets",
  "assert_cmd",
+ "camino",
  "cargo_metadata",
  "color-eyre",
  "expect-test",

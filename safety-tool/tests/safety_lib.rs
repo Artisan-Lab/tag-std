@@ -4,11 +4,18 @@
 use eyre::Result;
 use safety_tool::{
     logger,
-    utils::cmd::{execute, make_args},
+    utils::{
+        cmd::{execute, make_args},
+        sysroot,
+    },
 };
 use std::sync::LazyLock;
 
-static INIT: LazyLock<()> = LazyLock::new(|| {
+struct Global {
+    safety_tool_rfl: String,
+}
+
+static GLOBAL: LazyLock<Global> = LazyLock::new(|| {
     logger::init();
     let mut cmd = assert_cmd::Command::cargo_bin("safety-tool-rfl").unwrap();
     let output = cmd.arg("build-dev").output().unwrap();
@@ -19,10 +26,14 @@ static INIT: LazyLock<()> = LazyLock::new(|| {
         stderr = String::from_utf8_lossy(&output.stderr)
     );
     println!("Success to build safety-tool artifacts.");
+
+    let safety_tool_rfl = sysroot::bin().join("safety-tool-rfl");
+    let safety_tool_rfl = safety_tool_rfl.canonicalize_utf8().unwrap().into_string();
+    Global { safety_tool_rfl }
 });
 
 fn init() {
-    _ = &*INIT;
+    _ = &*GLOBAL;
 }
 
 #[test]
@@ -30,6 +41,7 @@ fn basic() -> Result<()> {
     init();
 
     let args = make_args(&["tests/snippets/safety_lib_basic.rs"]);
-    execute("safety-tool-rfl", &args, vec![])?;
+
+    execute(&GLOBAL.safety_tool_rfl, &args, vec![])?;
     Ok(())
 }
