@@ -1,6 +1,7 @@
 //  RUSTC_BOOTSTRAP=1 rustc a.rs -L target/safety-tool/lib/ -Zcrate-attr="feature(register_tool)" -Zcrate-attr="register_too
 // l(rapx)" -o target/a
 
+use camino::Utf8PathBuf;
 use eyre::Result;
 use safety_tool::{
     logger,
@@ -27,8 +28,11 @@ static GLOBAL: LazyLock<Global> = LazyLock::new(|| {
     );
     println!("Success to build safety-tool artifacts.");
 
-    let safety_tool_rfl = sysroot::bin().join("safety-tool-rfl");
-    let safety_tool_rfl = safety_tool_rfl.canonicalize_utf8().unwrap().into_string();
+    // Check these paths exist through canonicalize_utf8.
+    let make_sure_exists = |path: Utf8PathBuf| path.canonicalize_utf8().unwrap().into_string();
+
+    let _safety_tool = make_sure_exists(sysroot::bin_safety_tool());
+    let safety_tool_rfl = make_sure_exists(sysroot::bin_safety_tool_rfl());
     Global { safety_tool_rfl }
 });
 

@@ -10,7 +10,7 @@ pub fn run(mut args: Vec<String>) -> Result<()> {
     args.extend(extra_rustc_args());
     let vars = vec![("RUSTC_BOOTSTRAP", "1")];
 
-    execute("safety-tool", &args, vars)?;
+    execute(sysroot::bin_safety_tool().as_str(), &args, vars)?;
 
     Ok(())
 }
