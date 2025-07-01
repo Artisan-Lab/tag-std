@@ -8,7 +8,15 @@ use std::{
     sync::LazyLock,
 };
 
-pub fn run(dir: &str, mode: CopyMode, prefix: &str) -> Result<()> {
+pub fn dev() -> Result<()> {
+    // cp safety-parser's lib
+    run("safety-lib", CopyMode::Lib, "safety-lib")?;
+    // cp safety-tool's bins
+    run(".", CopyMode::Bin, "safety-tool")?;
+    Ok(())
+}
+
+fn run(dir: &str, mode: CopyMode, prefix: &str) -> Result<()> {
     // Ensure the rendered field of JSON messages contains
     // embedded ANSI color codes for respecting rustc’s default color scheme
     let mut command = Command::new("cargo")
@@ -156,7 +164,7 @@ fn is_system_lib(ext: &str) -> bool {
 }
 
 #[derive(Debug, Clone, Copy)]
-pub enum CopyMode {
+enum CopyMode {
     Bin,
     Lib,
     #[allow(dead_code)]

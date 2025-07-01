@@ -8,15 +8,19 @@ extern crate eyre;
 extern crate tracing;
 
 mod cargo_build;
-use cargo_build::CopyMode;
+mod run_safety_tool;
 
 fn main() -> Result<()> {
     safety_tool::logger::init();
 
-    // cp safety-parser's lib
-    cargo_build::run("safety-lib", CopyMode::Lib, "safety-lib")?;
-    // cp safety-tool's bins
-    cargo_build::run(".", CopyMode::Bin, "safety-tool")?;
+    let args: Vec<_> = std::env::args().skip(1).collect();
+    ensure!(!args.is_empty(), "Must pass at least one argument.");
+
+    if args[0] == "build-dev" {
+        cargo_build::dev()?;
+    } else {
+        run_safety_tool::run(&args)?;
+    }
 
     Ok(())
 }
