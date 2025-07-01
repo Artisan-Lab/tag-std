@@ -1,9 +1,35 @@
-use crate::Result;
+use crate::{Result, cargo_build::SafetyToolSysroot};
+use safety_tool::utils_cmd::{execute, make_args};
 
-pub fn run(args: &[String]) -> Result<()> {
+// RUSTC_BOOTSTRAP=1 safety-tool tests/snippets/safety_lib_basic.rs -L target/safety-tool/lib/
+// -Zcrate-attr="feature(register_tool)" -Zcrate-attr="register_tool(rapx)" --crate-type=lib
+pub fn run(mut args: Vec<String>) -> Result<()> {
+    args.extend(extra_rustc_args());
     let vars = vec![("RUSTC_BOOTSTRAP", "1")];
 
-    safety_tool::utils_cmd::execute("safety-tool", args, vars)?;
+    execute("safety-tool", &args, vars)?;
 
     Ok(())
+}
+
+fn extra_rustc_args() -> Vec<String> {
+    let safety_tool_sysroot = SafetyToolSysroot::new();
+    let safety_lib = safety_tool_sysroot.lib.as_str();
+
+    let crate_type = if std::env::var("CRATE_TYPE").map(|s| s == "bin").unwrap_or(false) {
+        "--crate-type=bin"
+    } else {
+        "--crate-type=lib"
+    };
+
+    make_args(&[
+        // default to compile lib crate unless `CRATE_TYPE=bin` exists
+        crate_type,
+        // inject safety_lib dependency
+        "-L",
+        safety_lib,
+        // inject rapx tool attr
+        "-Zcrate-attr=feature(register_tool)",
+        "-Zcrate-attr=register_tool(rapx)",
+    ])
 }

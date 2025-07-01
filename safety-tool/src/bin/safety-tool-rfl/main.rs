@@ -19,7 +19,7 @@ fn main() -> Result<()> {
     if args[0] == "build-dev" {
         cargo_build::dev()?;
     } else {
-        run_safety_tool::run(&args)?;
+        run_safety_tool::run(args)?;
     }
 
     Ok(())

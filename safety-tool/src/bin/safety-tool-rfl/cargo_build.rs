@@ -46,29 +46,34 @@ static SAFETY_TOOL_SYSROOT: LazyLock<SafetyToolSysroot> =
     LazyLock::new(|| SafetyToolSysroot::init().unwrap());
 
 #[derive(Debug)]
-struct SafetyToolSysroot {
-    root: Utf8PathBuf,
-    lib: Utf8PathBuf,
-    bin: Utf8PathBuf,
+pub struct SafetyToolSysroot {
+    pub root: Utf8PathBuf,
+    pub lib: Utf8PathBuf,
+    pub bin: Utf8PathBuf,
 }
 
 impl SafetyToolSysroot {
     fn init() -> Result<Self> {
+        let this = Self::new();
+        info!(?this);
+        let Self { root, lib, bin } = &this;
+
+        // clean sysroot
+        remove_dir(root)?;
+
+        // crate sysroot dir and child dirs
+        create_dir(root)?;
+        create_dir(lib)?;
+        create_dir(bin)?;
+
+        Ok(this)
+    }
+
+    pub fn new() -> Self {
         let root = safety_tool_sysroot();
         let lib = root.join("lib");
         let bin = root.join("bin");
-
-        // clean sysroot
-        remove_dir(&root)?;
-
-        // crate sysroot dir and child dirs
-        create_dir(&root)?;
-        create_dir(&lib)?;
-        create_dir(&bin)?;
-
-        let this = SafetyToolSysroot { root, lib, bin };
-        info!(?this);
-        Ok(this)
+        SafetyToolSysroot { root, lib, bin }
     }
 
     fn copy_artifacts(&self, artifact: &Artifact, mode: CopyMode) -> Result<()> {

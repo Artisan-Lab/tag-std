@@ -29,9 +29,7 @@ fn init() {
 fn basic() -> Result<()> {
     init();
 
-    // RUSTC_BOOTSTRAP=1 safety-tool tests/snippets/safety_lib_basic.rs -L target/safety-tool/lib/
-    // -Zcrate-attr="feature(register_tool)" -Zcrate-attr="register_tool(rapx)" --crate-type=lib
-    let args = make_args(&["tests/snippets/safety_lib_basic2", "--crate-type=lib"]);
+    let args = make_args(&["tests/snippets/safety_lib_basic.rs"]);
     execute("safety-tool-rfl", &args, vec![])?;
     Ok(())
 }
