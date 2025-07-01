@@ -1,5 +1,5 @@
 pub mod logger;
-pub mod utils_cmd;
+pub mod utils;
 pub use eyre::Result;
 
 #[macro_use]

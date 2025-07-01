@@ -4,7 +4,7 @@
 use eyre::Result;
 use safety_tool::{
     logger,
-    utils_cmd::{execute, make_args},
+    utils::cmd::{execute, make_args},
 };
 use std::sync::LazyLock;
 

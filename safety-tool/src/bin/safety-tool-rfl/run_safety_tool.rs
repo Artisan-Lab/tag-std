@@ -1,5 +1,5 @@
 use crate::{Result, cargo_build::SafetyToolSysroot};
-use safety_tool::utils_cmd::{execute, make_args};
+use safety_tool::utils::cmd::{execute, make_args};
 
 // RUSTC_BOOTSTRAP=1 safety-tool tests/snippets/safety_lib_basic.rs -L target/safety-tool/lib/
 // -Zcrate-attr="feature(register_tool)" -Zcrate-attr="register_tool(rapx)" --crate-type=lib
