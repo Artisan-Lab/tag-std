@@ -33,6 +33,8 @@ mod analyze_hir;
 mod logger;
 
 use eyre::Result;
+#[macro_use]
+extern crate tracing;
 
 fn main() {
     logger::init();
