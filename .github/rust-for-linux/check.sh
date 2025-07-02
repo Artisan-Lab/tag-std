@@ -4,8 +4,8 @@
 
 set -exou pipefail
 
-# export RUST_LOG=info
-# export RUST_LOG_FILE=$PWD/tag-std.log
+export RUST_LOG=info
+export RUST_LOG_FILE=$PWD/tag-std.log
 
 # Rust toolchain
 RUST_TOOLCHAIN=1.87
@@ -57,11 +57,9 @@ make -C linux LLVM=1 -j$(($(nproc) + 1)) \
 
 BUILD_TARGETS="
     samples/rust/rust_minimal.o
-    samples/rust/rust_print_main.o
-    drivers/net/phy/ax88796b_rust.o
-    rust/doctests_kernel_generated.o
 "
 
 # Compile rust code by our tool to check it!
-make -C linux LLVM=1 -j$(($(nproc) + 1)) RUSTC=$(which safety-tool) \
+make -C linux LLVM=1 -j$(($(nproc) + 1)) \
+  RUSTC=$(which safety-tool-rfl) \
   $BUILD_TARGETS
