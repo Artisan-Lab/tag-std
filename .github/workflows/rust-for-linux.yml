@@ -9,7 +9,11 @@ env:
 
 jobs:
   check:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, ubuntu-24.04-arm]
+      fail-fast: false
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout tag-std to rust-for-linux branch
         uses: actions/checkout@v4
