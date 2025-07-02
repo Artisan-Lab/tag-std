@@ -72,5 +72,8 @@ BUILD_TARGETS="
 "
 
 # Compile rust code by our tool to check it!
-make LLVM=1 -j$(($(nproc) + 1)) -n \
+make LLVM=1 -j$(($(nproc) + 1)) \
+  RUSTC=$(which safety-tool-rfl) \
+  RUSTDOC=$(which safety-tool-rfl-rustdoc) \
+  rustavailable \
   $BUILD_TARGETS
