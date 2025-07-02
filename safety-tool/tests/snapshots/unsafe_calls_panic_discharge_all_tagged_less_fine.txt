@@ -11,12 +11,6 @@ stdout=
 
 
 stderr=
-[src/analyze_hir/mod.rs:47:13] &unsafe_calls = [
-    Call {
-        hir_id: HirId(DefId(0:4 ~ unsafe_calls_panic_discharge_all_tagged_less_fine[126b]::tag_unsafe_fn).3),
-        def_id: DefId(0:3 ~ unsafe_calls_panic_discharge_all_tagged_less_fine[126b]::call),
-    },
-]
 [src/analyze_hir/visit.rs:36:9] &tags_state = {
     "Tag": false,
 }

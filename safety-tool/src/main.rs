@@ -19,7 +19,7 @@ use rustc_hir::Attribute;
 use rustc_middle::ty::TyCtxt;
 use rustc_smir::rustc_internal::{self, internal};
 use stable_mir::{
-    CrateDef, ItemKind,
+    CompilerError, CrateDef, ItemKind,
     mir::{
         MirVisitor,
         mono::{Instance, InstanceKind},
@@ -33,23 +33,32 @@ mod analyze_hir;
 mod logger;
 
 use eyre::Result;
+#[macro_use]
+extern crate tracing;
 
 fn main() {
     logger::init();
 
     let rustc_args: Vec<_> = std::env::args().collect();
+
+    let res = run_with_tcx!(rustc_args, |tcx| {
+        analyze_hir::analyze_hir(tcx).unwrap();
+        analyze(tcx);
+        compilation_status()
+    });
+
+    if let Err(CompilerError::Failed) = res {
+        std::process::abort();
+    }
+}
+
+fn compilation_status() -> ControlFlow<()> {
     // When STOP_COMPILATION is set to non-0, stop compiling.
-    let ret = if std::env::var("STOP_COMPILATION").map(|s| s != "0").unwrap_or(false) {
+    if std::env::var("STOP_COMPILATION").map(|s| s != "0").unwrap_or(false) {
         ControlFlow::<(), ()>::Break(())
     } else {
         ControlFlow::<(), ()>::Continue(())
-    };
-    _ = run_with_tcx!(rustc_args, |tcx| {
-        analyze_hir::analyze_hir(tcx).unwrap();
-        analyze(tcx);
-
-        ret
-    });
+    }
 }
 
 fn analyze(tcx: TyCtxt) {
