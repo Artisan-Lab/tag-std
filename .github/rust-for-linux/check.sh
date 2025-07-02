@@ -28,7 +28,7 @@ export LIBCLANG_PATH=$llvm_prefix/lib/libclang.so
 # Install bindgen-cli which must be built from the same version of
 # libclang and rustc required above.
 cargo --version
-cargo install --locked --root $llvm_prefix --version $(linux/scripts/min-tool-version.sh bindgen) bindgen-cli
+cargo install --locked --root $llvm_prefix bindgen-cli
 
 # Prepare Rust for Linux config
 cat <<EOF >linux/kernel/configs/rfl-for-rust-ci.config
@@ -56,14 +56,11 @@ make -C linux LLVM=1 -j$(($(nproc) + 1)) \
   defconfig \
   rfl-for-rust-ci.config
 
-# BUILD_TARGETS="
-#     samples/rust/rust_minimal.o
-#     samples/rust/rust_print_main.o
-#     drivers/net/phy/ax88796b_rust.o
-#     rust/doctests_kernel_generated.o
-# "
 BUILD_TARGETS="
-      rust/kernel.o
+    samples/rust/rust_minimal.o
+    samples/rust/rust_print_main.o
+    drivers/net/phy/ax88796b_rust.o
+    rust/doctests_kernel_generated.o
 "
 
 # Compile rust code by our tool to check it!
