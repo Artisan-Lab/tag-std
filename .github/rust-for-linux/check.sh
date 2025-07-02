@@ -62,7 +62,7 @@ make -C linux LLVM=1 -j$(($(nproc) + 1)) \
 #     rust/doctests_kernel_generated.o
 # "
 BUILD_TARGETS="
-      rust/kernel.o
+      ${PWD}/linux/rust/kernel.o
 "
 
 # Compile rust code by our tool to check it!
