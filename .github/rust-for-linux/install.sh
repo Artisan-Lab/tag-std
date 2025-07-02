@@ -5,14 +5,18 @@
 set -exou pipefail
 
 # Linux version
-LINUX_REPO=https://github.com/Artisan-Lab/tag-rust-for-linux.git
+# LINUX_REPO=https://github.com/Artisan-Lab/tag-rust-for-linux.git
+# LINUX_BRANCH=rust-next
+# === temporary for CI ===
+LINUX_REPO=https://github.com/os-checker/linux
+LINUX_BRANCH=tag-std
 
 # Download Linux at a specific commit
 if [ ! -d "linux" ]; then
   mkdir -p linux
   git -C linux init
   git -C linux remote add origin ${LINUX_REPO}
-  git -C linux fetch --depth 1 origin rust-next
+  git -C linux fetch --depth 1 origin ${LINUX_BRANCH}
   git -C linux checkout FETCH_HEAD
 else
   echo "linux source code has been downloaded"
