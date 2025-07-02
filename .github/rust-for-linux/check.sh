@@ -57,6 +57,9 @@ make -C linux LLVM=1 -j$(($(nproc) + 1)) \
 
 BUILD_TARGETS="
     samples/rust/rust_minimal.o
+    samples/rust/rust_print_main.o
+    drivers/net/phy/ax88796b_rust.o
+    rust/doctests_kernel_generated.o
 "
 
 # Compile rust code by our tool to check it!
