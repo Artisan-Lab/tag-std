@@ -18,6 +18,10 @@ export LD_LIBRARY_PATH=$(rustc --print sysroot)/lib
 # This should print `rustc 1.87.0 (17067e9ac 2025-05-09)`.
 cargo install --path safety-tool --locked
 safety-tool --version
+# generate bin and lib in target/safety-tool
+pushd safety-tool
+safety-tool-rfl build-dev
+popd
 
 # Add llvm to PATH, and set up libclang
 llvm=llvm-20.1.7-rust-1.87.0-$(uname -m)
@@ -67,4 +71,5 @@ BUILD_TARGETS="
 make -C linux LLVM=1 -j$(($(nproc) + 1)) -n \
   RUSTC=$(which safety-tool-rfl) \
   RUSTDOC=$(which safety-tool-rfl-rustdoc) \
+  rustavailable \
   $BUILD_TARGETS
