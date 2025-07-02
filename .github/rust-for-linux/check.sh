@@ -54,8 +54,12 @@ CONFIG_KUNIT=y
 CONFIG_RUST_KERNEL_DOCTESTS=y
 EOF
 
+pushd linux
+make clean
+rm rust/*.so rust/*.rmeta -f
+
 # Merge linux config
-make -C linux LLVM=1 -j$(($(nproc) + 1)) \
+make LLVM=1 -j$(($(nproc) + 1)) \
   rustavailable \
   defconfig \
   rfl-for-rust-ci.config
@@ -68,8 +72,5 @@ BUILD_TARGETS="
 "
 
 # Compile rust code by our tool to check it!
-make -C linux LLVM=1 -j$(($(nproc) + 1)) -n \
-  RUSTC=$(which safety-tool-rfl) \
-  RUSTDOC=$(which safety-tool-rfl-rustdoc) \
-  rustavailable \
+make LLVM=1 -j$(($(nproc) + 1)) -n \
   $BUILD_TARGETS
