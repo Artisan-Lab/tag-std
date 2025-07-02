@@ -6,25 +6,14 @@ pub fn make_args(args: &[&str]) -> Vec<String> {
 }
 
 pub fn execute(bin: &str, args: &[String], vars: Vec<(&str, &str)>) -> Result<()> {
-    let _span = error_span!("execute", bin, ?args, ?vars).entered();
     let mut cmd = Command::new(bin);
     cmd.envs(vars).args(args);
     execute_cmd(cmd)
 }
 
 pub fn execute_cmd(mut cmd: Command) -> Result<()> {
-    let output = cmd.output()?;
-    let success = output.status.success();
-
-    let _span = error_span!(
-        "output",
-        success,
-        stdout = %String::from_utf8_lossy(&output.stdout),
-        stderr = %String::from_utf8_lossy(&output.stderr)
-    )
-    .entered();
-
-    ensure!(success, "Failed to run cmd.",);
-
+    let _span = info_span!("execute", ?cmd).entered();
+    let status = cmd.status()?;
+    ensure!(status.success(), "Failed to run cmd");
     Ok(())
 }

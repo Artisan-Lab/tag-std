@@ -7,10 +7,26 @@ use safety_tool::utils::{
 // RUSTC_BOOTSTRAP=1 safety-tool tests/snippets/safety_lib_basic.rs -L target/safety-tool/lib/
 // -Zcrate-attr="feature(register_tool)" -Zcrate-attr="register_tool(rapx)" --crate-type=lib
 pub fn run(mut args: Vec<String>) -> Result<()> {
-    args.extend(extra_rustc_args());
-    let vars = vec![("RUSTC_BOOTSTRAP", "1")];
+    if !args.iter().any(|arg| arg.starts_with("--crate-type")) {
+        // default to compile lib crate unless `CRATE_TYPE=bin` exists
+        let crate_type = if std::env::var("CRATE_TYPE").map(|s| s == "bin").unwrap_or(false) {
+            "--crate-type=bin"
+        } else {
+            "--crate-type=lib"
+        };
+        args.push(crate_type.to_owned());
+    }
 
-    execute(sysroot::bin_safety_tool().as_str(), &args, vars)?;
+    let bin_safety_tool = sysroot::bin_safety_tool();
+    if matches!(&*args[0], "--version" | "-V" | "-Vv" | "-vV") {
+        // linux will parse the version output
+        execute(bin_safety_tool.as_str(), &args, vec![])?;
+    } else {
+        args.extend(extra_rustc_args());
+        info!("args = {args:#?}");
+        let vars = vec![("RUSTC_BOOTSTRAP", "1")];
+        execute(bin_safety_tool.as_str(), &args, vars)?;
+    }
 
     Ok(())
 }
@@ -18,15 +34,7 @@ pub fn run(mut args: Vec<String>) -> Result<()> {
 fn extra_rustc_args() -> Vec<String> {
     let safety_lib = sysroot::lib();
 
-    let crate_type = if std::env::var("CRATE_TYPE").map(|s| s == "bin").unwrap_or(false) {
-        "--crate-type=bin"
-    } else {
-        "--crate-type=lib"
-    };
-
     make_args(&[
-        // default to compile lib crate unless `CRATE_TYPE=bin` exists
-        crate_type,
         // inject safety_lib dependency
         "-L",
         safety_lib.as_str(),
