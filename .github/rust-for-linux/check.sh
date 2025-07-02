@@ -16,6 +16,7 @@ rustup default $RUST_TOOLCHAIN
 export LD_LIBRARY_PATH=$(rustc --print sysroot)/lib
 
 # This should print `rustc 1.87.0 (17067e9ac 2025-05-09)`.
+cargo install --path safety-tool --locked
 safety-tool --version
 
 # Add llvm to PATH, and set up libclang
@@ -62,11 +63,11 @@ make -C linux LLVM=1 -j$(($(nproc) + 1)) \
 #     rust/doctests_kernel_generated.o
 # "
 BUILD_TARGETS="
-      /home/runner/work/tag-std/tag-std/linux/rust/kernel.o
+      rust/kernel.o
 "
 
 # Compile rust code by our tool to check it!
-make -C linux LLVM=1 -j$(($(nproc) + 1)) \
+make -C linux LLVM=1 -j$(($(nproc) + 1)) -n \
   RUSTC=$(which safety-tool-rfl) \
   RUSTDOC=$(which safety-tool-rfl-rustdoc) \
   $BUILD_TARGETS
