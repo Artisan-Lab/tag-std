@@ -12,7 +12,7 @@ pub fn execute(bin: &str, args: &[String], vars: Vec<(&str, &str)>) -> Result<()
 }
 
 pub fn execute_cmd(mut cmd: Command) -> Result<()> {
-    let _span = info_span!("execute", ?cmd).entered();
+    info!(?cmd);
     let status = cmd.status()?;
     ensure!(status.success(), "Failed to run cmd");
     Ok(())

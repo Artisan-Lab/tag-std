@@ -4,8 +4,8 @@
 
 set -exou pipefail
 
-export RUST_LOG=info
-export RUST_LOG_FILE=$PWD/tag-std.log
+export SAFETY_TOOL_LOG=info
+export SAFETY_TOOL_LOG_FILE=$PWD/tag-std.log
 
 # Rust toolchain
 RUST_TOOLCHAIN=1.87
