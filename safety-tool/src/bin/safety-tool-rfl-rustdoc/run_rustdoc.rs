@@ -28,6 +28,9 @@ fn extra_rustc_args() -> Vec<String> {
         // inject safety_lib dependency
         "-L",
         safety_lib.as_str(),
+        // Specify direct dependency to allow `use safety_macro` in crate root.
+        // The use extern crate syntax only works after --edition=2018.
+        "--extern=safety_macro",
         // inject rapx tool attr
         // "-Zallow-features=register_tool",
         "-Zcrate-attr=feature(register_tool)",

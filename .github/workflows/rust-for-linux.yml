@@ -9,6 +9,14 @@ env:
 
 jobs:
   check:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment-ubuntu-latest.outputs.page_url }}
+    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
+    permissions:
+      pages: write      # to deploy to Pages
+      id-token: write   # to verify the deployment originates from an appropriate source
+
     strategy:
       matrix:
         os: [ubuntu-latest, ubuntu-24.04-arm]
@@ -30,7 +38,17 @@ jobs:
         run: .github/rust-for-linux/install.sh
 
       - name: make version
-        run: make -v
+        run:  make -v
 
       - name: Check Linux Repo
         run: .github/rust-for-linux/check.sh
+
+      - name: Upload static files as artifact
+        uses: actions/upload-pages-artifact@v3
+        if: runner.os == 'Linux' && runner.arch == 'X64'
+        with:
+          path: linux/Documentation/output/rust/rustdoc/
+
+      - name: Deploy to GitHub Pages
+        if: runner.os == 'Linux' && runner.arch == 'X64'
+        uses: actions/deploy-pages@v4
