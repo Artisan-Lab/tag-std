@@ -69,6 +69,7 @@ BUILD_TARGETS="
     samples/rust/rust_print_main.o
     drivers/net/phy/ax88796b_rust.o
     rust/doctests_kernel_generated.o
+    rustdoc
 "
 
 # Compile rust code by our tool to check it!
