@@ -38,8 +38,15 @@ fn extra_rustc_args() -> Vec<String> {
         // inject safety_lib dependency
         "-L",
         safety_lib.as_str(),
-        // inject rapx tool attr
+        // NOTE: the last -Zallow-features wins, meaning that specified by rfl
+        // previously will be disregarded.
+        // cc https://github.com/rust-lang/rust/issues/143312
         // "-Zallow-features=register_tool",
+        //
+        // Specify direct dependency to allow `use safety_macro` in crate root.
+        // The use extern crate syntax only works after --edition=2018.
+        "--extern=safety_macro",
+        // inject rapx tool attr
         "-Zcrate-attr=feature(register_tool)",
         "-Zcrate-attr=register_tool(rapx)",
     ])
