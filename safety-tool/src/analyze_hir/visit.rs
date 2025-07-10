@@ -1,5 +1,3 @@
-use std::ops::Range;
-
 use super::db::{Property, ToolAttrs};
 use annotate_snippets::*;
 use itertools::Itertools;
@@ -12,6 +10,7 @@ use rustc_hir::{
 };
 use rustc_middle::ty::{TyCtxt, TypeckResults};
 use rustc_span::{Span, source_map::SourceMap};
+use std::ops::Range;
 
 #[derive(Debug)]
 pub struct Call {
@@ -93,7 +92,12 @@ fn check_tag_state(
         let span_body = tcx.source_span(hir_id.owner);
         let is = if n == 1 { "is" } else { "are" };
         let title = format!("{undischarged} {is} not discharged");
-        let span_node = tcx.hir_span(hir_id);
+
+        crossfig::switch! {
+            crate::std => { let span_node = tcx.hir_span(hir_id); }
+            _ => { let span_node = tcx.hir().span(hir_id); }
+        };
+
         let anno =
             Level::Error.span(anno_span(span_body, span_node)).label("For this unsafe call.");
         gen_diagnosis(span_body, src_map, &title, anno);

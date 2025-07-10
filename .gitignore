@@ -1,5 +1,7 @@
 .idea/
-.vscode/
 target/
 *.sqlite3
 *.rlib
+*.log
+/linux
+/llvm*

@@ -1,0 +1,3 @@
+[submodule "rapx-verify-rust-std"]
+	path = rapx-verify-rust-std
+	url = https://github.com/Artisan-Lab/rapx-verify-rust-std.git

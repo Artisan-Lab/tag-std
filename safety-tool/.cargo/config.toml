@@ -1,0 +1,4 @@
+[env]
+RUSTC_BOOTSTRAP = "1"
+# All artifacts related to safety-tool, including bins and libs.
+SAFETY_TOOL_SYSROOT = { value = "target/safety-tool", relative = true }

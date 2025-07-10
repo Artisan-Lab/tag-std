@@ -1,4 +1,5 @@
 #![feature(rustc_private)]
+#![feature(let_chains)]
 
 extern crate itertools;
 extern crate rustc_ast;
@@ -13,17 +14,37 @@ extern crate rustc_span;
 extern crate rustc_smir;
 extern crate stable_mir;
 
+// NOTE: before compilation (i.e. calling `cargo build` or something)
+// `./gen_rust_toolchain_toml.rs $proj` should be run first
+// where $proj is one of std, rfl, or asterinas.
+crossfig::alias! {
+    // verify-rust-std
+    std: { #[cfg(feature = "std")] },
+    // Rust for Linux
+    rfl: { #[cfg(feature = "rfl")] },
+    // Asterinas OS
+    asterinas: { #[cfg(feature = "asterinas")] }
+}
+
+crossfig::switch! {
+    std => {
+        use rustc_smir::rustc_internal::internal;
+    }
+    _ => {
+        use rustc_smir::rustc_internal::{self, internal};
+    }
+}
+
 use rustc_data_structures::fx::FxHashSet;
 use rustc_hir::Attribute;
 use rustc_middle::ty::TyCtxt;
 use stable_mir::{
-    CrateDef, ItemKind,
+    CompilerError, CrateDef, ItemKind,
     mir::{
         MirVisitor,
         mono::{Instance, InstanceKind},
         visit::Location,
     },
-    rustc_internal::internal,
     ty::Ty,
 };
 use std::ops::ControlFlow;
@@ -32,23 +53,37 @@ mod analyze_hir;
 mod logger;
 
 use eyre::Result;
+#[macro_use]
+extern crate tracing;
 
 fn main() {
     logger::init();
 
     let rustc_args: Vec<_> = std::env::args().collect();
+
+    crossfig::switch! {
+        std => { let rustc_args = &rustc_args; }
+        _ => { }
+    };
+
+    let res = run_with_tcx!(rustc_args, |tcx| {
+        analyze_hir::analyze_hir(tcx).unwrap();
+        analyze(tcx);
+        compilation_status()
+    });
+
+    if let Err(CompilerError::Failed) = res {
+        std::process::abort();
+    }
+}
+
+fn compilation_status() -> ControlFlow<()> {
     // When STOP_COMPILATION is set to non-0, stop compiling.
-    let ret = if std::env::var("STOP_COMPILATION").map(|s| s != "0").unwrap_or(false) {
+    if std::env::var("STOP_COMPILATION").map(|s| s != "0").unwrap_or(false) {
         ControlFlow::<(), ()>::Break(())
     } else {
         ControlFlow::<(), ()>::Continue(())
-    };
-    _ = run_with_tcx!(&rustc_args, |tcx| {
-        analyze_hir::analyze_hir(tcx).unwrap();
-        analyze(tcx);
-
-        ret
-    });
+    }
 }
 
 fn analyze(tcx: TyCtxt) {

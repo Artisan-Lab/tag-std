@@ -8,13 +8,7 @@ stdout=
 
 
 stderr=
-[src/analyze_hir/mod.rs:47:13] &unsafe_calls = [
-    Call {
-        hir_id: HirId(DefId(0:3 ~ unsafe_calls_method[946d]::tag_expr).12),
-        def_id: DefId(0:8 ~ unsafe_calls_method[946d]::{impl#0}::call),
-    },
-]
-[src/analyze_hir/visit.rs:36:9] &tags_state = {
+[src/analyze_hir/visit.rs:35:9] &tags_state = {
     "Tag": false,
 }
 hir_id=HirId(DefId(0:3 ~ unsafe_calls_method[946d]::tag_expr).12) fn_hir_id=HirId(DefId(0:3 ~ unsafe_calls_method[946d]::tag_expr).0)
@@ -24,26 +18,14 @@ hir_id=HirId(DefId(0:3 ~ unsafe_calls_method[946d]::tag_expr).16) fn_hir_id=HirI
 hir_id=HirId(DefId(0:3 ~ unsafe_calls_method[946d]::tag_expr).1) fn_hir_id=HirId(DefId(0:3 ~ unsafe_calls_method[946d]::tag_expr).0)
 hir_id=HirId(DefId(0:3 ~ unsafe_calls_method[946d]::tag_expr).17) fn_hir_id=HirId(DefId(0:3 ~ unsafe_calls_method[946d]::tag_expr).0)
 hir_id=HirId(DefId(0:3 ~ unsafe_calls_method[946d]::tag_expr).0) fn_hir_id=HirId(DefId(0:3 ~ unsafe_calls_method[946d]::tag_expr).0)
-[src/analyze_hir/mod.rs:47:13] &unsafe_calls = [
-    Call {
-        hir_id: HirId(DefId(0:4 ~ unsafe_calls_method[946d]::tag_block).12),
-        def_id: DefId(0:8 ~ unsafe_calls_method[946d]::{impl#0}::call),
-    },
-]
-[src/analyze_hir/visit.rs:36:9] &tags_state = {
+[src/analyze_hir/visit.rs:35:9] &tags_state = {
     "Tag": false,
 }
 hir_id=HirId(DefId(0:4 ~ unsafe_calls_method[946d]::tag_block).12) fn_hir_id=HirId(DefId(0:4 ~ unsafe_calls_method[946d]::tag_block).0)
 hir_id=HirId(DefId(0:4 ~ unsafe_calls_method[946d]::tag_block).16) fn_hir_id=HirId(DefId(0:4 ~ unsafe_calls_method[946d]::tag_block).0)
 hir_id=HirId(DefId(0:4 ~ unsafe_calls_method[946d]::tag_block).11) fn_hir_id=HirId(DefId(0:4 ~ unsafe_calls_method[946d]::tag_block).0)
 hir_id=HirId(DefId(0:4 ~ unsafe_calls_method[946d]::tag_block).10) fn_hir_id=HirId(DefId(0:4 ~ unsafe_calls_method[946d]::tag_block).0)
-[src/analyze_hir/mod.rs:47:13] &unsafe_calls = [
-    Call {
-        hir_id: HirId(DefId(0:9 ~ unsafe_calls_method[946d]::tag_unsafe_fn).10),
-        def_id: DefId(0:8 ~ unsafe_calls_method[946d]::{impl#0}::call),
-    },
-]
-[src/analyze_hir/visit.rs:36:9] &tags_state = {
+[src/analyze_hir/visit.rs:35:9] &tags_state = {
     "Tag": false,
 }
 hir_id=HirId(DefId(0:9 ~ unsafe_calls_method[946d]::tag_unsafe_fn).10) fn_hir_id=HirId(DefId(0:9 ~ unsafe_calls_method[946d]::tag_unsafe_fn).0)

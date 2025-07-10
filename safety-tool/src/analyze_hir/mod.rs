@@ -44,7 +44,7 @@ pub fn analyze_hir(tcx: TyCtxt) -> Result<()> {
         let calls = visit::get_calls(tcx, body, tyck);
         let unsafe_calls = calls.get_unsafe_calls();
         if !unsafe_calls.is_empty() {
-            dbg!(&unsafe_calls);
+            debug!(?unsafe_calls);
             for call in &unsafe_calls {
                 call.check_tool_attrs(hir_fn.hir_id, tcx, &src_map, &mut tool_attrs);
             }

@@ -17,6 +17,7 @@ static LD_LIBRARY_PATH: LazyLock<PathBuf> = LazyLock::new(|| {
     path
 });
 
+#[derive(Clone, Copy)]
 struct CompilationOptions<'a> {
     args: &'a [&'a str],
     envs: &'a [(&'a str, &'a str)],
@@ -149,12 +150,6 @@ fn fine(file: &str, outfile: &str, opts: CompilationOptions) {
 }
 
 #[test]
-fn unsafe_calls() {
-    let [file, outfile] = &testcase("unsafe_calls");
-    fine(file, outfile, Default::default());
-}
-
-#[test]
 fn unsafe_calls_method() {
     let [file, outfile] = &testcase("unsafe_calls_method");
     fine(file, outfile, Default::default());
@@ -175,21 +170,24 @@ fn unsafe_calls_with_dep() {
 }
 
 fn compile_libunsafe_calls() -> CompilationOptions<'static> {
-    let [file, outfile] = &testcase("unsafe_calls");
-    fine(
-        file,
-        outfile,
+    static INIT: LazyLock<CompilationOptions<'static>> = LazyLock::new(|| {
+        let [file, outfile] = &testcase("unsafe_calls");
+        fine(
+            file,
+            outfile,
+            CompilationOptions {
+                args: &["--crate-type=lib", "-otarget/libunsafe_calls.rlib"],
+                stop: false,
+                ..Default::default()
+            },
+        );
         CompilationOptions {
-            args: &["--crate-type=lib", "-otarget/libunsafe_calls.rlib"],
+            args: &["--crate-type=lib", "--extern=unsafe_calls=target/libunsafe_calls.rlib"],
             stop: false,
             ..Default::default()
-        },
-    );
-    CompilationOptions {
-        args: &["--crate-type=lib", "--extern=unsafe_calls=target/libunsafe_calls.rlib"],
-        stop: false,
-        ..Default::default()
-    }
+        }
+    });
+    *INIT
 }
 
 #[test]

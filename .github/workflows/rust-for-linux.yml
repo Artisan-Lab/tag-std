@@ -1,0 +1,55 @@
+name: Check Rust for Linux
+
+on:
+  push:
+  pull_request:
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  check:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment-ubuntu-latest.outputs.page_url }}
+    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
+    permissions:
+      pages: write      # to deploy to Pages
+      id-token: write   # to verify the deployment originates from an appropriate source
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, ubuntu-24.04-arm]
+      fail-fast: false
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout tag-std to rust-for-linux branch
+        uses: actions/checkout@v4
+
+      - name: Install deps required by linux
+        run: sudo apt-get install libelf-dev
+
+      - name: Install safety-tool
+        working-directory: safety-tool
+        run: |
+          ./gen_rust_toolchain_toml.rs rfl
+          cargo install -F rfl --path . --locked
+
+      - name: Download Linux Repo
+        run: .github/rust-for-linux/install.sh
+
+      - name: make version
+        run:  make -v
+
+      - name: Check Linux Repo
+        run: .github/rust-for-linux/check.sh
+
+      - name: Upload static files as artifact
+        uses: actions/upload-pages-artifact@v3
+        if: runner.os == 'Linux' && runner.arch == 'X64'
+        with:
+          path: linux/Documentation/output/rust/rustdoc/
+
+      - name: Deploy to GitHub Pages
+        if: runner.os == 'Linux' && runner.arch == 'X64' && github.ref == 'refs/heads/main'
+        uses: actions/deploy-pages@v4
