@@ -37,7 +37,6 @@ crossfig::switch! {
 }
 
 use rustc_data_structures::fx::FxHashSet;
-use rustc_hir::Attribute;
 use rustc_middle::ty::TyCtxt;
 use stable_mir::{
     CompilerError, CrateDef, ItemKind,
@@ -144,14 +143,32 @@ const REGISTER_TOOL: &str = "rapx";
 
 fn print_tag_std_attrs_through_internal_apis(tcx: TyCtxt<'_>, instance: &Instance) {
     let def_id = internal(tcx, instance.def.def_id());
-    let tool_attrs = tcx.get_all_attrs(def_id).filter(|attr| {
-        if let Attribute::Unparsed(tool_attr) = attr
-            && tool_attr.path.segments[0].as_str() == REGISTER_TOOL
-        {
-            return true;
+
+    crossfig::switch! {
+        crate::asterinas => {
+            let attrs = tcx.get_attrs_unchecked(def_id).iter();
+            let tool_attrs = attrs.filter(|attr| {
+                if let rustc_hir::AttrKind::Normal(tool_attr) = &attr.kind
+                    && tool_attr.path.segments[0].as_str() == REGISTER_TOOL
+                {
+                    return true;
+                }
+                false
+            });
+        },
+        _  => {
+            let attrs = tcx.get_all_attrs(def_id);
+            let tool_attrs = attrs.filter(|attr| {
+                if let rustc_hir::Attribute::Unparsed(tool_attr) = attr
+                    && tool_attr.path.segments[0].as_str() == REGISTER_TOOL
+                {
+                    return true;
+                }
+                false
+            });
         }
-        false
-    });
+    }
+
     for attr in tool_attrs {
         println!(
             "{fn_name:?} ({span:?})\n => {attr:?}\n",
