@@ -130,16 +130,40 @@ pub struct Calls<'tcx> {
     calls: Vec<Call>,
 }
 
-impl<'tcx> Visitor<'tcx> for Calls<'tcx> {
-    type MaybeTyCtxt = TyCtxt<'tcx>;
-    type NestedFilter = rustc_middle::hir::nested_filter::OnlyBodies;
-    type Result = ();
+crossfig::switch! {
+    crate::asterinas => {
+        impl<'tcx> Visitor<'tcx> for Calls<'tcx> {
+            type NestedFilter = rustc_middle::hir::nested_filter::OnlyBodies;
+            type Result = ();
 
-    fn maybe_tcx(&mut self) -> Self::MaybeTyCtxt {
-        self.tcx
+            fn nested_visit_map(&mut self) -> Self::Map {
+                self.tcx.hir()
+            }
+
+            fn visit_expr(&mut self, ex: &'tcx Expr<'tcx>) -> Self::Result {
+                self._visit_expr(ex)
+            }
+        }
+    },
+    _ => {
+        impl<'tcx> Visitor<'tcx> for Calls<'tcx> {
+            type MaybeTyCtxt = TyCtxt<'tcx>;
+            type NestedFilter = rustc_middle::hir::nested_filter::OnlyBodies;
+            type Result = ();
+
+            fn maybe_tcx(&mut self) -> Self::MaybeTyCtxt {
+                self.tcx
+            }
+
+            fn visit_expr(&mut self, ex: &'tcx Expr<'tcx>) -> Self::Result {
+                self._visit_expr(ex)
+            }
+        }
     }
+}
 
-    fn visit_expr(&mut self, ex: &'tcx Expr<'tcx>) -> Self::Result {
+impl<'tcx> Calls<'tcx> {
+    fn _visit_expr(&mut self, ex: &Expr<'tcx>) {
         let hir_id = ex.hir_id;
         match ex.kind {
             ExprKind::Path(QPath::Resolved(_opt_ty, path)) => {
