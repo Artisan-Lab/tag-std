@@ -188,6 +188,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "crossfig"
+version = "0.1.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "40a998414a3656e7a11ca59d55598ce7df58daafd742e783844e80bbd8d500dd"
+
+[[package]]
 name = "difflib"
 version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -789,6 +795,7 @@ dependencies = [
  "camino",
  "cargo_metadata",
  "color-eyre",
+ "crossfig",
  "expect-test",
  "eyre",
  "jiff",

@@ -9,9 +9,10 @@ repository = "https://github.com/Artisan-Lab/tag-std"
 readme = "README.md"
 
 [features]
-std = []
-rfl = []
-asterinas = []
+# Exclusive features to match its Rust toolchain.
+std = [] # verify-rust-std
+rfl = [] # Rust for Linux
+asterinas = [] # Asterinas OS
 
 [dependencies]
 rusqlite = { version = "0.36.0", features = ["bundled", "jiff"] }
@@ -24,6 +25,7 @@ cargo_metadata = "0.20.0"
 camino = "1.1.10"
 
 safety-parser = { path = "./safety-parser/", version = "0.1.0" }
+crossfig = "0.1.3"
 
 # error handling
 eyre = "0.6"

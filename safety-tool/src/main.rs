@@ -14,10 +14,30 @@ extern crate rustc_span;
 extern crate rustc_smir;
 extern crate stable_mir;
 
+// NOTE: before compilation (i.e. calling `cargo build` or something)
+// `./gen_rust_toolchain_toml.rs $proj` should be run first
+// where $proj is one of std, rfl, or asterinas.
+crossfig::alias! {
+    // verify-rust-std
+    std: { #[cfg(feature = "std")] },
+    // Rust for Linux
+    rfl: { #[cfg(feature = "rfl")] },
+    // Asterinas OS
+    asterinas: { #[cfg(feature = "asterinas")] }
+}
+
+crossfig::switch! {
+    std => {
+        use rustc_smir::rustc_internal::internal;
+    }
+    _ => {
+        use rustc_smir::rustc_internal::{self, internal};
+    }
+}
+
 use rustc_data_structures::fx::FxHashSet;
 use rustc_hir::Attribute;
 use rustc_middle::ty::TyCtxt;
-use rustc_smir::rustc_internal::{self, internal};
 use stable_mir::{
     CompilerError, CrateDef, ItemKind,
     mir::{
@@ -40,6 +60,11 @@ fn main() {
     logger::init();
 
     let rustc_args: Vec<_> = std::env::args().collect();
+
+    crossfig::switch! {
+        std => { let rustc_args = &rustc_args; }
+        _ => { }
+    };
 
     let res = run_with_tcx!(rustc_args, |tcx| {
         analyze_hir::analyze_hir(tcx).unwrap();
