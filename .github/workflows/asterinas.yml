@@ -1,0 +1,53 @@
+name: Check Asterinas
+
+on:
+  push:
+  pull_request:
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  deploy-rustc-doc:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment-ubuntu-latest.outputs.page_url }}
+    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
+    permissions:
+      pages: write      # to deploy to Pages
+      id-token: write   # to verify the deployment originates from an appropriate source
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout tag-std
+        uses: actions/checkout@v4
+
+      - name: Install toolchain
+        working-directory: safety-tool
+        run: |
+          ./gen_rust_toolchain_toml.rs asterinas
+          rustup show
+
+      - name: Install rustc internal docs
+        working-directory: safety-tool
+        run: |
+          rustup toolchain list -v
+          # Find toolchain path
+          export TOOLCHAIN=$(rustc --print sysroot)
+          echo "toolchain=\"$TOOLCHAIN\""
+          # Remove rustc book
+          rm $TOOLCHAIN/share/doc/rust/html/rustc -rf
+          # Download rustc API docs
+          rustup component add rustc-docs
+          mkdir doc
+          # Move the docs to deployment path
+          mv $TOOLCHAIN/share/doc/rust/html/rustc doc/rustc
+
+      - name: Upload static files as artifact
+        uses: actions/upload-pages-artifact@v3 # or specific "vX.X.X" version tag for this action
+        with:
+          path: safety-tool/doc
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

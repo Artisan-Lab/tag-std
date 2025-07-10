@@ -23,7 +23,7 @@ jobs:
       fail-fast: false
     runs-on: ${{ matrix.os }}
     steps:
-      - name: Checkout tag-std to rust-for-linux branch
+      - name: Checkout tag-std
         uses: actions/checkout@v4
 
       - name: Install deps required by linux
