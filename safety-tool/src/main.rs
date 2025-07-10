@@ -1,5 +1,6 @@
 #![feature(rustc_private)]
 #![feature(let_chains)]
+#![cfg_attr(feature = "asterinas", feature(integer_sign_cast))]
 
 extern crate itertools;
 extern crate rustc_ast;
