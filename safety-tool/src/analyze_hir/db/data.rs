@@ -1,6 +1,6 @@
 use super::super::{HirFn, is_tool_attr};
 use rustc_data_structures::fx::FxIndexMap;
-use rustc_hir::{HirId, def_id::DefId};
+use rustc_hir::{Attribute, HirId, def_id::DefId};
 use rustc_middle::ty::TyCtxt;
 use safety_parser::property_attr::{parse_inner_attr_from_str, property::Kind, utils::expr_ident};
 use std::{fmt, sync::LazyLock};
@@ -40,18 +40,38 @@ impl Data {
         let hash = PrimaryKey::new(def_id, tcx);
 
         let hid = hir_fn.hir_id;
+
+        crossfig::switch! {
+            crate::asterinas => {
+                let function = rustc_hir_pretty::id_to_string(&tcx.hir(), hid);
+            },
+            _ => {
+                let function = rustc_hir_pretty::id_to_string(&tcx, hid);
+            }
+        }
+
         let func = Func {
-            tool_attrs: tcx
-                .hir_attrs(hid)
-                .iter()
+            tool_attrs: get_attrs(tcx, hid)
                 .filter_map(|attr| opt_attribute_to_string(tcx, attr))
                 .collect(),
             def_path: tcx.def_path_debug_str(def_id),
-            function: rustc_hir_pretty::id_to_string(&tcx, hid),
+            function,
         };
 
         Data { hash, func }
     }
+}
+
+fn get_attrs(tcx: TyCtxt<'_>, hid: HirId) -> impl Iterator<Item = &'_ Attribute> {
+    crossfig::switch! {
+        crate::asterinas => {
+            let attrs = tcx.hir_attrs(hid.owner).get(hid.local_id).iter();
+        },
+        _ => {
+            let attrs = tcx.hir_attrs(hid);
+        }
+    }
+    attrs
 }
 
 fn opt_attribute_to_string(tcx: TyCtxt<'_>, attr: &rustc_hir::Attribute) -> Option<String> {
@@ -121,8 +141,7 @@ impl Property {
     pub fn new_with_hir_id(hir_id: HirId, tcx: TyCtxt) -> Vec<Self> {
         let mut v = Vec::new();
 
-        tcx.hir_attrs(hir_id)
-            .iter()
+        get_attrs(tcx, hir_id)
             .filter_map(|attr| opt_attribute_to_string(tcx, attr))
             .for_each(|s| push_properties(&s, &mut v));
 
