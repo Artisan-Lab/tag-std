@@ -32,7 +32,10 @@ jobs:
         run: sudo apt-get install libelf-dev
 
       - name: Install safety-tool
-        run: cd safety-tool && cargo install --path . --locked
+        working-directory: safety-tool
+        run: |
+          ./gen_rust_toolchain_toml.rs rfl
+          cargo install -F rfl --path . --locked
 
       - name: Download Linux Repo
         run: .github/rust-for-linux/install.sh
