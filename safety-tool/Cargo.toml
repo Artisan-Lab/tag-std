@@ -8,6 +8,11 @@ license = "MPL-2.0"
 repository = "https://github.com/Artisan-Lab/tag-std"
 readme = "README.md"
 
+[features]
+std = []
+rfl = []
+asterinas = []
+
 [dependencies]
 rusqlite = { version = "0.36.0", features = ["bundled", "jiff"] }
 serde = { version = "1", features = ["derive"] }
