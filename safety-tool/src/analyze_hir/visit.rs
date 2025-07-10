@@ -57,8 +57,8 @@ impl Call {
         print(self.hir_id);
 
         crossfig::switch! {
-            crate::asterinas => { let parent_hirs = tcx.hir().parent_id_iter(self.hir_id); },
-            _ => { let parent_hirs = tcx.hir_parent_id_iter(self.hir_id); },
+            crate::asterinas => { let parent_hirs = tcx.hir().parent_id_iter(self.hir_id); }
+            _ => { let parent_hirs = tcx.hir_parent_id_iter(self.hir_id); }
         }
 
         for parent in parent_hirs {
@@ -149,7 +149,7 @@ crossfig::switch! {
                 self._visit_expr(ex)
             }
         }
-    },
+    }
     _ => {
         impl<'tcx> Visitor<'tcx> for Calls<'tcx> {
             type MaybeTyCtxt = TyCtxt<'tcx>;

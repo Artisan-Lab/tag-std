@@ -44,7 +44,7 @@ impl Data {
         crossfig::switch! {
             crate::asterinas => {
                 let function = rustc_hir_pretty::id_to_string(&tcx.hir(), hid);
-            },
+            }
             _ => {
                 let function = rustc_hir_pretty::id_to_string(&tcx, hid);
             }
@@ -62,16 +62,13 @@ impl Data {
     }
 }
 
-fn get_attrs(tcx: TyCtxt<'_>, hid: HirId) -> impl Iterator<Item = &'_ Attribute> {
+fn get_attrs(tcx: TyCtxt, hid: HirId) -> impl Iterator<Item = &Attribute> {
     crossfig::switch! {
         crate::asterinas => {
-            let attrs = tcx.hir_attrs(hid.owner).get(hid.local_id).iter();
-        },
-        _ => {
-            let attrs = tcx.hir_attrs(hid);
+            tcx.hir_attrs(hid.owner).get(hid.local_id).iter()
         }
+        _ => {tcx.hir_attrs(hid).iter() }
     }
-    attrs
 }
 
 fn opt_attribute_to_string(tcx: TyCtxt<'_>, attr: &rustc_hir::Attribute) -> Option<String> {

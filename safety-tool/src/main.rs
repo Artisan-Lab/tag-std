@@ -150,7 +150,7 @@ fn is_tool_attr(attr: &rustc_hir::Attribute) -> bool {
                 return true;
             }
             false
-        },
+        }
         _  => {
             if let rustc_hir::Attribute::Unparsed(tool_attr) = attr
                 && tool_attr.path.segments[0].as_str() == REGISTER_TOOL
@@ -166,7 +166,7 @@ fn print_tag_std_attrs_through_internal_apis(tcx: TyCtxt<'_>, instance: &Instanc
     let def_id = internal(tcx, instance.def.def_id());
 
     crossfig::switch! {
-        crate::asterinas => { let attrs = tcx.get_attrs_unchecked(def_id).iter(); },
+        crate::asterinas => { let attrs = tcx.get_attrs_unchecked(def_id).iter(); }
         _  => { let attrs = tcx.get_all_attrs(def_id); }
     }
 

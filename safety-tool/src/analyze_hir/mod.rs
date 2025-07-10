@@ -20,7 +20,7 @@ pub fn analyze_hir(tcx: TyCtxt) -> Result<()> {
                     crate::asterinas => {
                         let name = item.ident;
                         let (sig, _generics, body) = item.expect_fn();
-                    },
+                    }
                     _ => { let (name, sig, _generics, body) = item.expect_fn(); }
                 }
 
@@ -49,7 +49,7 @@ pub fn analyze_hir(tcx: TyCtxt) -> Result<()> {
             crate::asterinas => {
                 let body_hir_id = body_id.hir_id;
                 let body = tcx.hir_owner_nodes(body_hir_id.owner).bodies[&body_hir_id.local_id].value;
-            },
+            }
             _ => { let body = tcx.hir_body(body_id).value; }
         }
 
@@ -80,7 +80,7 @@ impl HirFn<'_> {
     fn has_tool_attrs(&self, tcx: TyCtxt) -> bool {
         let hir_id = self.hir_id;
         crossfig::switch! {
-            crate::asterinas => { tcx.hir_attrs(hir_id.owner).get(hir_id.local_id).iter().any(is_tool_attr) },
+            crate::asterinas => { tcx.hir_attrs(hir_id.owner).get(hir_id.local_id).iter().any(is_tool_attr) }
             _ => { tcx.hir_attrs(hir_id).iter().any(is_tool_attr) }
         }
     }
