@@ -14,6 +14,14 @@ std = [] # verify-rust-std
 rfl = [] # Rust for Linux
 asterinas = [] # Asterinas OS
 
+[[test]]
+name = "unsafe_calls"
+required-features = ["std"]
+
+[[test]]
+name = "safety_lib"
+required-features = ["rfl"]
+
 [dependencies]
 rusqlite = { version = "0.36.0", features = ["bundled", "jiff"] }
 serde = { version = "1", features = ["derive"] }

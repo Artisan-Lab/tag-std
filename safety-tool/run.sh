@@ -13,15 +13,21 @@ export STOP_COMPILATION=1
 # Check all properties are discharged.
 export DISCHARGES_ALL_PROPERTIES=1
 
-cargo fmt --check --all
-cargo clippy --workspace -- -D clippy::all
+# ./run.sh -Fstd
+FEATURES=${1:-"std"}
 
-cargo build
+./gen_rust_toolchain_toml.rs ${FEATURES}
+
+cargo fmt --check --all
+cargo clippy -F${FEATURES} --workspace -- -D clippy::all
+
+cargo build -F${FEATURES}
+export SAFETY_TOOL=$PWD/target/debug/safety-tool
 export SAFETY_TOOL=$PWD/target/debug/safety-tool
 export CARGO_SAFETY_TOOL=$PWD/target/debug/cargo-safety-tool
 export DATA_SQLITE3=$PWD/target/data.sqlite3
 
-cargo test
+cargo test -F${FEATURES}
 
 pushd safety-lib
 cargo test
