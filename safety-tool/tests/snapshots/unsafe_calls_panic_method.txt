@@ -11,7 +11,7 @@ hir_id=HirId(DefId(0:3 ~ unsafe_calls_panic_method[35ad]::tag_block).10) fn_hir_
 hir_id=HirId(DefId(0:3 ~ unsafe_calls_panic_method[35ad]::tag_block).1) fn_hir_id=HirId(DefId(0:3 ~ unsafe_calls_panic_method[35ad]::tag_block).0)
 hir_id=HirId(DefId(0:3 ~ unsafe_calls_panic_method[35ad]::tag_block).17) fn_hir_id=HirId(DefId(0:3 ~ unsafe_calls_panic_method[35ad]::tag_block).0)
 hir_id=HirId(DefId(0:3 ~ unsafe_calls_panic_method[35ad]::tag_block).0) fn_hir_id=HirId(DefId(0:3 ~ unsafe_calls_panic_method[35ad]::tag_block).0)
-[src/analyze_hir/visit.rs:109:5] &src_body = "pub fn tag_block() {\n    let s = Struct::new();\n    unsafe {\n        s.call();\n    }\n}"
+[src/analyze_hir/visit.rs:114:5] &src_body = "pub fn tag_block() {\n    let s = Struct::new();\n    unsafe {\n        s.call();\n    }\n}"
 [1m[91merror[0m: [1m`Tag` is not discharged[0m
   [1m[94m-->[0m ./tests/snippets/unsafe_calls_panic_method.rs:9:9
    [1m[94m|[0m

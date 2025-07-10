@@ -10,7 +10,7 @@ hir_id=HirId(DefId(0:4 ~ unsafe_calls_panic_no_tag[9353]::submod::submod_no_tag)
 hir_id=HirId(DefId(0:4 ~ unsafe_calls_panic_no_tag[9353]::submod::submod_no_tag).1) fn_hir_id=HirId(DefId(0:4 ~ unsafe_calls_panic_no_tag[9353]::submod::submod_no_tag).0)
 hir_id=HirId(DefId(0:4 ~ unsafe_calls_panic_no_tag[9353]::submod::submod_no_tag).7) fn_hir_id=HirId(DefId(0:4 ~ unsafe_calls_panic_no_tag[9353]::submod::submod_no_tag).0)
 hir_id=HirId(DefId(0:4 ~ unsafe_calls_panic_no_tag[9353]::submod::submod_no_tag).0) fn_hir_id=HirId(DefId(0:4 ~ unsafe_calls_panic_no_tag[9353]::submod::submod_no_tag).0)
-[src/analyze_hir/visit.rs:109:5] &src_body = "unsafe fn submod_no_tag() {\n        super::call();\n    }"
+[src/analyze_hir/visit.rs:114:5] &src_body = "unsafe fn submod_no_tag() {\n        super::call();\n    }"
 [1m[91merror[0m: [1m`Tag` is not discharged[0m
   [1m[94m-->[0m ./tests/snippets/unsafe_calls_panic_no_tag.rs:13:9
    [1m[94m|[0m
