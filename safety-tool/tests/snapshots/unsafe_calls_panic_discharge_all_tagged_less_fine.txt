@@ -1,22 +1,22 @@
 stdout=
 ********* "unsafe_calls_panic_discharge_all_tagged_less_fine" [Rlib] has reached 2 instances *********
 "call" ("./tests/snippets/unsafe_calls_panic_discharge_all_tagged_less_fine.rs:8:1: 8:17")
- => "#[rapx::inner(property = Memo(Tag), kind = \"memo\")]"
+ => "#[rapx::inner(property = Memo(Tag), kind = \"memo\")]\n"
 
 "call" ("./tests/snippets/unsafe_calls_panic_discharge_all_tagged_less_fine.rs:8:1: 8:17")
- => "#[rapx::tag_unsafe_fn(property = Align(), kind = \"precond\")]"
+ => "#[rapx::tag_unsafe_fn(property = Align(), kind = \"precond\")]\n"
 
 "tag_unsafe_fn" ("./tests/snippets/unsafe_calls_panic_discharge_all_tagged_less_fine.rs:11:1: 11:30")
- => "#[rapx::tag_unsafe_fn(property = Memo(Tag), kind = \"memo\")]"
+ => "#[rapx::tag_unsafe_fn(property = Memo(Tag), kind = \"memo\")]\n"
 
 
 stderr=
-[src/analyze_hir/visit.rs:36:9] &tags_state = {
+[src/analyze_hir/visit.rs:35:9] &tags_state = {
     "Tag": false,
 }
-hir_id=HirId(DefId(0:4 ~ unsafe_calls_panic_discharge_all_tagged_less_fine[126b]::tag_unsafe_fn).3) fn_hir_id=HirId(DefId(0:4 ~ unsafe_calls_panic_discharge_all_tagged_less_fine[126b]::tag_unsafe_fn).0)
-hir_id=HirId(DefId(0:4 ~ unsafe_calls_panic_discharge_all_tagged_less_fine[126b]::tag_unsafe_fn).2) fn_hir_id=HirId(DefId(0:4 ~ unsafe_calls_panic_discharge_all_tagged_less_fine[126b]::tag_unsafe_fn).0)
-hir_id=HirId(DefId(0:4 ~ unsafe_calls_panic_discharge_all_tagged_less_fine[126b]::tag_unsafe_fn).5) fn_hir_id=HirId(DefId(0:4 ~ unsafe_calls_panic_discharge_all_tagged_less_fine[126b]::tag_unsafe_fn).0)
-hir_id=HirId(DefId(0:4 ~ unsafe_calls_panic_discharge_all_tagged_less_fine[126b]::tag_unsafe_fn).1) fn_hir_id=HirId(DefId(0:4 ~ unsafe_calls_panic_discharge_all_tagged_less_fine[126b]::tag_unsafe_fn).0)
-hir_id=HirId(DefId(0:4 ~ unsafe_calls_panic_discharge_all_tagged_less_fine[126b]::tag_unsafe_fn).6) fn_hir_id=HirId(DefId(0:4 ~ unsafe_calls_panic_discharge_all_tagged_less_fine[126b]::tag_unsafe_fn).0)
-hir_id=HirId(DefId(0:4 ~ unsafe_calls_panic_discharge_all_tagged_less_fine[126b]::tag_unsafe_fn).0) fn_hir_id=HirId(DefId(0:4 ~ unsafe_calls_panic_discharge_all_tagged_less_fine[126b]::tag_unsafe_fn).0)
+hir_id=HirId(DefId(0:4 ~ unsafe_calls_panic_discharge_all_tagged_less_fine[17c6]::tag_unsafe_fn).3) fn_hir_id=HirId(DefId(0:4 ~ unsafe_calls_panic_discharge_all_tagged_less_fine[17c6]::tag_unsafe_fn).0)
+hir_id=HirId(DefId(0:4 ~ unsafe_calls_panic_discharge_all_tagged_less_fine[17c6]::tag_unsafe_fn).2) fn_hir_id=HirId(DefId(0:4 ~ unsafe_calls_panic_discharge_all_tagged_less_fine[17c6]::tag_unsafe_fn).0)
+hir_id=HirId(DefId(0:4 ~ unsafe_calls_panic_discharge_all_tagged_less_fine[17c6]::tag_unsafe_fn).5) fn_hir_id=HirId(DefId(0:4 ~ unsafe_calls_panic_discharge_all_tagged_less_fine[17c6]::tag_unsafe_fn).0)
+hir_id=HirId(DefId(0:4 ~ unsafe_calls_panic_discharge_all_tagged_less_fine[17c6]::tag_unsafe_fn).1) fn_hir_id=HirId(DefId(0:4 ~ unsafe_calls_panic_discharge_all_tagged_less_fine[17c6]::tag_unsafe_fn).0)
+hir_id=HirId(DefId(0:4 ~ unsafe_calls_panic_discharge_all_tagged_less_fine[17c6]::tag_unsafe_fn).6) fn_hir_id=HirId(DefId(0:4 ~ unsafe_calls_panic_discharge_all_tagged_less_fine[17c6]::tag_unsafe_fn).0)
+hir_id=HirId(DefId(0:4 ~ unsafe_calls_panic_discharge_all_tagged_less_fine[17c6]::tag_unsafe_fn).0) fn_hir_id=HirId(DefId(0:4 ~ unsafe_calls_panic_discharge_all_tagged_less_fine[17c6]::tag_unsafe_fn).0)
