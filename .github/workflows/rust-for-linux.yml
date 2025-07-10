@@ -32,6 +32,7 @@ jobs:
       - name: Install safety-tool
         working-directory: safety-tool
         run: |
+          rm -f rust-toolchain.toml
           ./gen_rust_toolchain_toml.rs rfl
           cargo install -F rfl --path . --locked
 

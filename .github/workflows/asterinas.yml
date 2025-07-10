@@ -25,6 +25,7 @@ jobs:
       - name: Install toolchain
         working-directory: safety-tool
         run: |
+          rm -f rust-toolchain.toml
           ./gen_rust_toolchain_toml.rs asterinas
           rustup show
 
