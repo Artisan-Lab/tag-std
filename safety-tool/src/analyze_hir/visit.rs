@@ -56,7 +56,12 @@ impl Call {
         };
         print(self.hir_id);
 
-        for parent in tcx.hir_parent_id_iter(self.hir_id) {
+        crossfig::switch! {
+            crate::asterinas => { let parent_hirs = tcx.hir().parent_id_iter(self.hir_id); },
+            _ => { let parent_hirs = tcx.hir_parent_id_iter(self.hir_id); },
+        }
+
+        for parent in parent_hirs {
             let empty = print(parent);
             // Stop at first tool attrs or the function item.
             // For a function inside a nested module, hir_parent_id_iter
@@ -163,7 +168,7 @@ crossfig::switch! {
 }
 
 impl<'tcx> Calls<'tcx> {
-    fn _visit_expr(&mut self, ex: &Expr<'tcx>) {
+    fn _visit_expr(&mut self, ex: &'tcx Expr<'tcx>) {
         let hir_id = ex.hir_id;
         match ex.kind {
             ExprKind::Path(QPath::Resolved(_opt_ty, path)) => {
