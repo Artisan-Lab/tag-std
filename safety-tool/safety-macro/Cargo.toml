@@ -12,4 +12,4 @@ readme = "README.md"
 proc-macro = true
 
 [dependencies]
-safety-parser = { path = "../safety-parser", version = "0.1.0" }
+safety-parser = { path = "../safety-parser", version = "0.2.0" }
