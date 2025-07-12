@@ -1,7 +1,7 @@
 use std::{env::var, process::Command};
 
 fn main() {
-    // Search cargo-safe-tool and safe-tool CLI through environment variables,
+    // Search cargo-safety-tool and safety-tool CLI through environment variables,
     // or just use the name if absent.
     let cargo_safe_tool =
         &*var("CARGO_SAFETY_TOOL").unwrap_or_else(|_| "cargo-safety-tool".to_owned());
