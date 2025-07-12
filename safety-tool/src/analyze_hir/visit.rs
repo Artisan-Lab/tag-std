@@ -32,10 +32,10 @@ impl Call {
             // No tool attrs to be checked.
             return;
         };
-        dbg!(&tags_state);
+        debug!(?tags_state);
 
-        let mut print = |hir_id: HirId| {
-            eprintln!("hir_id={hir_id:?} fn_hir_id={fn_hir_id:?}");
+        let mut check = |hir_id: HirId| {
+            debug!(?hir_id, ?fn_hir_id);
 
             let properties = Property::new_with_hir_id(hir_id, tcx);
 
@@ -54,7 +54,7 @@ impl Call {
             }
             is_empty
         };
-        print(self.hir_id);
+        check(self.hir_id);
 
         crossfig::switch! {
             crate::asterinas => { let parent_hirs = tcx.hir().parent_id_iter(self.hir_id); }
@@ -62,7 +62,7 @@ impl Call {
         }
 
         for parent in parent_hirs {
-            let empty = print(parent);
+            let empty = check(parent);
             // Stop at first tool attrs or the function item.
             // For a function inside a nested module, hir_parent_id_iter
             // will pop up to the crate root, thus it's necessary to
@@ -111,7 +111,6 @@ fn check_tag_state(
 
 fn gen_diagnosis(span_body: Span, src_map: &SourceMap, title: &str, anno: Annotation) {
     let src_body = src_map.span_to_snippet(span_body).unwrap();
-    dbg!(&src_body);
     let file_and_line = src_map.lookup_line(span_body.lo()).unwrap();
     let line_start = file_and_line.line + 1; // adjust to starting from 1
     let origin = file_and_line.sf.name.prefer_local().to_string_lossy();
