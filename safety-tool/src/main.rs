@@ -67,7 +67,7 @@ fn main() {
     };
 
     let res = run_with_tcx!(rustc_args, |tcx| {
-        analyze_hir::analyze_hir(tcx).unwrap();
+        analyze_hir::analyze_hir(tcx);
         analyze(tcx);
         compilation_status()
     });

@@ -1,4 +1,4 @@
-use crate::{Result, is_tool_attr};
+use crate::is_tool_attr;
 use rustc_hir::{BodyId, FnSig, HirId, ImplItemKind, ItemKind, Node, def_id::LocalDefId};
 use rustc_middle::ty::TyCtxt;
 use rustc_span::{Ident, source_map::get_source_map};
@@ -6,7 +6,9 @@ use rustc_span::{Ident, source_map::get_source_map};
 mod db;
 mod visit;
 
-pub fn analyze_hir(tcx: TyCtxt) -> Result<()> {
+pub mod diagnostic;
+
+pub fn analyze_hir(tcx: TyCtxt) {
     let mut v_hir_fn = Vec::with_capacity(64);
 
     let def_items = tcx.hir_crate_items(()).definitions();
@@ -42,6 +44,7 @@ pub fn analyze_hir(tcx: TyCtxt) -> Result<()> {
         db::get_all_tool_attrs(v_hir_fn.iter().filter_map(|f| f.to_data(tcx))).unwrap();
     let src_map = get_source_map().unwrap();
 
+    let mut diagnostics = Vec::new();
     for hir_fn in &v_hir_fn {
         let body_id = hir_fn.body;
 
@@ -59,12 +62,23 @@ pub fn analyze_hir(tcx: TyCtxt) -> Result<()> {
         if !unsafe_calls.is_empty() {
             debug!(?unsafe_calls);
             for call in &unsafe_calls {
-                call.check_tool_attrs(hir_fn.hir_id, tcx, &src_map, &mut tool_attrs);
+                call.check_tool_attrs(
+                    hir_fn.hir_id,
+                    tcx,
+                    &src_map,
+                    &mut tool_attrs,
+                    &mut diagnostics,
+                );
             }
         }
     }
 
-    Ok(())
+    if !diagnostics.is_empty() {
+        for diagnostic in diagnostics {
+            eprintln!("{}", diagnostic.render)
+        }
+        std::process::abort()
+    }
 }
 
 #[allow(dead_code)]
