@@ -24,9 +24,11 @@ fn main() {
         // Entry for cargo-safety-tool: all arguments after `cargo safety-tool`
         // will be passed to `cargo build`.
         let mut args = args;
-        if args[0].ends_with("cargo-safety-tool") && args[1] == "safety-tool" {
-            // [cargo, safety-tool, args...]
-            args.remove(0);
+        if args[0].ends_with("cargo-safety-tool") {
+            if args.get(1).map(|arg| arg == "safety-tool").unwrap_or(false) {
+                // [cargo, safety-tool, args...]
+                args.remove(0);
+            }
             args[0] = "build".to_owned();
         } else {
             unimplemented!("Need to support this case: {args:#?}")
