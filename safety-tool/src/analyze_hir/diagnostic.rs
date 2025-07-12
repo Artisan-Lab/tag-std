@@ -1,4 +1,5 @@
 /// A report / diagnostic to display.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 pub enum DiagnosticKind {
     /// A non-existent tag is specified.
     InvaidTag,
@@ -64,4 +65,13 @@ impl ExitAndEmit {
     pub fn should_emit(self) -> bool {
         matches!(self, ExitAndEmit::AbortAndEmit | ExitAndEmit::SlienceAndEmit)
     }
+}
+
+pub fn total(diagnostics: &[Diagnostic]) {
+    use annotate_snippets::renderer::{AnsiColor, Style};
+    use itertools::Itertools;
+
+    let counts = diagnostics.iter().counts_by(|d| d.kind);
+    let style = Style::new().bold().fg_color(Some(AnsiColor::Red.into()));
+    eprintln!("{style}Total counts of diagnostics from safety-tool: {counts:?}{style:#}\n");
 }

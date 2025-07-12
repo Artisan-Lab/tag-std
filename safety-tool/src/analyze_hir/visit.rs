@@ -49,7 +49,7 @@ impl Call {
                     *state = true;
                 } else {
                     let tags: Vec<_> = tags_state.keys().collect();
-                    let title = format!("tag {tag:?} doesn't belong to tags {tags:?}");
+                    let title = format!("Tag {tag:?} doesn't belong to tags {tags:?}");
                     let render = gen_diagnosis_for_a_line(hir_span(hir_id, tcx), src_map, &title);
                     diagnostics.push(Diagnostic::invalid_tag(render));
                 }
