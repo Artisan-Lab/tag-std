@@ -48,10 +48,13 @@ impl Call {
                     assert!(!*state, "{tag:?} has already been discharged");
                     *state = true;
                 } else {
-                    let tags: Vec<_> = tags_state.keys().collect();
-                    let title = format!("Tag {tag:?} doesn't belong to tags {tags:?}");
-                    let render = gen_diagnosis_for_a_line(hir_span(hir_id, tcx), src_map, &title);
-                    diagnostics.push(Diagnostic::invalid_tag(render));
+                    // FIXME: a parent is allowed to have extra tags than
+                    // the current call, so is invalid_tag check necessary?
+                    //
+                    // let tags: Vec<_> = tags_state.keys().collect();
+                    // let title = format!("Tag {tag:?} doesn't belong to tags {tags:?}");
+                    // let render = gen_diagnosis_for_a_line(hir_span(hir_id, tcx), src_map, &title);
+                    // diagnostics.push(Diagnostic::invalid_tag(render));
                 }
             }
             let is_empty = properties.is_empty();
@@ -137,16 +140,16 @@ fn gen_diagnosis_for_a_func(
     Renderer::styled().render(msg).to_string().into()
 }
 
-fn gen_diagnosis_for_a_line(span: Span, src_map: &SourceMap, title: &str) -> Box<str> {
-    let src = src_map.span_to_snippet(span).unwrap();
-    let file_and_line = src_map.lookup_line(span.lo()).unwrap();
-    let line_start = file_and_line.line + 1; // adjust to starting from 1
-    let origin = file_and_line.sf.name.prefer_local().to_string_lossy();
-    let snippet = Snippet::source(&src).line_start(line_start).origin(&origin).fold(true);
-
-    let msg = Level::Error.title(title).snippet(snippet);
-    Renderer::styled().render(msg).to_string().into()
-}
+// fn gen_diagnosis_for_a_line(span: Span, src_map: &SourceMap, title: &str) -> Box<str> {
+//     let src = src_map.span_to_snippet(span).unwrap();
+//     let file_and_line = src_map.lookup_line(span.lo()).unwrap();
+//     let line_start = file_and_line.line + 1; // adjust to starting from 1
+//     let origin = file_and_line.sf.name.prefer_local().to_string_lossy();
+//     let snippet = Snippet::source(&src).line_start(line_start).origin(&origin).fold(true);
+//
+//     let msg = Level::Error.title(title).snippet(snippet);
+//     Renderer::styled().render(msg).to_string().into()
+// }
 
 fn anno_span(span_body: Span, span_node: Span) -> Range<usize> {
     let body_lo = span_body.lo().0;

@@ -1,8 +1,8 @@
 /// A report / diagnostic to display.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 pub enum DiagnosticKind {
-    /// A non-existent tag is specified.
-    InvaidTag,
+    // A non-existent tag is specified.
+    // InvaidTag,
     /// A missing `#[discharges]` attribute on a call with context of source code.
     MissingDischarges,
 }
@@ -14,9 +14,9 @@ pub struct Diagnostic {
 }
 
 impl Diagnostic {
-    pub fn invalid_tag(render: Box<str>) -> Self {
-        Diagnostic { render, kind: DiagnosticKind::InvaidTag }
-    }
+    // pub fn invalid_tag(render: Box<str>) -> Self {
+    //     Diagnostic { render, kind: DiagnosticKind::InvaidTag }
+    // }
 
     pub fn missing_discharges(render: Box<str>) -> Self {
         Diagnostic { render, kind: DiagnosticKind::MissingDischarges }
