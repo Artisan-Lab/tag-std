@@ -9,6 +9,7 @@ mod visit;
 pub mod diagnostic;
 
 pub fn analyze_hir(tcx: TyCtxt) {
+    let exit_and_emit = diagnostic::ExitAndEmit::new();
     let mut v_hir_fn = Vec::with_capacity(64);
 
     let def_items = tcx.hir_crate_items(()).definitions();
@@ -74,10 +75,14 @@ pub fn analyze_hir(tcx: TyCtxt) {
     }
 
     if !diagnostics.is_empty() {
-        for diagnostic in diagnostics {
-            eprintln!("{}\n", diagnostic.render)
+        if exit_and_emit.should_emit() {
+            for diagnostic in diagnostics {
+                eprintln!("{}\n", diagnostic.render)
+            }
         }
-        std::process::abort()
+        if exit_and_emit.should_abort() {
+            std::process::abort()
+        }
     }
 }
 
