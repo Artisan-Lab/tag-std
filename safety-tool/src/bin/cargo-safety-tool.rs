@@ -21,7 +21,18 @@ fn main() {
 
         run(safe_tool, &args[1..], &[]);
     } else {
-        run("cargo", &["build"].map(String::from), &[("RUSTC", cargo_safe_tool), ("WRAPPER", "1")]);
+        // Entry for cargo-safety-tool: all arguments after `cargo safety-tool`
+        // will be passed to `cargo build`.
+        let mut args = args;
+        if args[0].ends_with("cargo-safety-tool") && args[1] == "safety-tool" {
+            // [cargo, safety-tool, args...]
+            args.remove(0);
+            args[0] = "build".to_owned();
+        } else {
+            unimplemented!("Need to support this case: {args:#?}")
+        }
+        // cargo build args...
+        run("cargo", &args, &[("RUSTC", cargo_safe_tool), ("WRAPPER", "1")]);
     }
 }
 
