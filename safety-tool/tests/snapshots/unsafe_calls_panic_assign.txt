@@ -7,3 +7,4 @@ stderr=
 [1m[94m12 |[0m     let f = call;
    [1m[94m|[0m             [1m[91m^^^^[0m [1m[91mFor this unsafe call.[0m
    [1m[94m|[0m
+

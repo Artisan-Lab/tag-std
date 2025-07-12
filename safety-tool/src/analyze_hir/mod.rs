@@ -75,7 +75,7 @@ pub fn analyze_hir(tcx: TyCtxt) {
 
     if !diagnostics.is_empty() {
         for diagnostic in diagnostics {
-            eprintln!("{}", diagnostic.render)
+            eprintln!("{}\n", diagnostic.render)
         }
         std::process::abort()
     }

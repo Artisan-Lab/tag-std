@@ -1,5 +1,5 @@
-********* "build_script_build" [Executable] has reached 156 instances *********
 ********* "unicode_ident" [Rlib] has reached 12 instances *********
+********* "build_script_build" [Executable] has reached 156 instances *********
 ********* "proc_macro2" [Rlib] has reached 1112 instances *********
 ********* "quote" [Rlib] has reached 506 instances *********
 ********* "syn" [Rlib] has reached 6925 instances *********

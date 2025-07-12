@@ -5,3 +5,4 @@ stderr=
 [1m[94m-->[0m ./tests/snippets/unsafe_calls_panic_discharge_all_tagged_more.rs
  [1m[94m|[0m
  [1m[94m|[0m
+
