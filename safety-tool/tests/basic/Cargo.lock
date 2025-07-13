@@ -29,22 +29,21 @@ dependencies = [
 
 [[package]]
 name = "safety-lib"
-version = "0.1.0"
+version = "0.2.1"
 dependencies = [
  "safety-macro",
- "safety-parser",
 ]
 
 [[package]]
 name = "safety-macro"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "safety-parser",
 ]
 
 [[package]]
 name = "safety-parser"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "proc-macro2",
  "quote",
