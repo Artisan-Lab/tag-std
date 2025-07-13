@@ -24,7 +24,8 @@ jobs:
           rustup show
 
       - name: Install cargo-safety-tool
-        run: cargo install --path safety-tool --locked -Fasterinas
+        working-directory: safety-tool
+        run: cargo install --path . --locked -Fasterinas
 
       - name: Check Asterinas
         working-directory: tag-asterinas
