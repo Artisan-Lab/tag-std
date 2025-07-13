@@ -1,18 +1,7 @@
 stdout=
 
 stderr=
-[src/analyze_hir/visit.rs:35:9] &tags_state = {
-    "Tag": false,
-}
-hir_id=HirId(DefId(0:4 ~ unsafe_calls_panic_discharge_all_tagged_more[7b38]::tag_unsafe_fn).3) fn_hir_id=HirId(DefId(0:4 ~ unsafe_calls_panic_discharge_all_tagged_more[7b38]::tag_unsafe_fn).0)
-hir_id=HirId(DefId(0:4 ~ unsafe_calls_panic_discharge_all_tagged_more[7b38]::tag_unsafe_fn).2) fn_hir_id=HirId(DefId(0:4 ~ unsafe_calls_panic_discharge_all_tagged_more[7b38]::tag_unsafe_fn).0)
-hir_id=HirId(DefId(0:4 ~ unsafe_calls_panic_discharge_all_tagged_more[7b38]::tag_unsafe_fn).5) fn_hir_id=HirId(DefId(0:4 ~ unsafe_calls_panic_discharge_all_tagged_more[7b38]::tag_unsafe_fn).0)
-hir_id=HirId(DefId(0:4 ~ unsafe_calls_panic_discharge_all_tagged_more[7b38]::tag_unsafe_fn).1) fn_hir_id=HirId(DefId(0:4 ~ unsafe_calls_panic_discharge_all_tagged_more[7b38]::tag_unsafe_fn).0)
-hir_id=HirId(DefId(0:4 ~ unsafe_calls_panic_discharge_all_tagged_more[7b38]::tag_unsafe_fn).6) fn_hir_id=HirId(DefId(0:4 ~ unsafe_calls_panic_discharge_all_tagged_more[7b38]::tag_unsafe_fn).0)
-hir_id=HirId(DefId(0:4 ~ unsafe_calls_panic_discharge_all_tagged_more[7b38]::tag_unsafe_fn).0) fn_hir_id=HirId(DefId(0:4 ~ unsafe_calls_panic_discharge_all_tagged_more[7b38]::tag_unsafe_fn).0)
-[31mThe application panicked (crashed).[0m
-Message:  [36mtag "Precond_Align" doesn't belong to tags ["Tag"][0m
-Location: [35msrc/analyze_hir/visit.rs[0m:[35m45[0m
-
-Backtrace omitted. Run with RUST_BACKTRACE=1 environment variable to display it.
-Run with RUST_BACKTRACE=full to include source snippets.
+[1m[91merror[0m: [1mtag "Precond_Align" doesn't belong to tags ["Tag"][0m
+[1m[94m-->[0m ./tests/snippets/unsafe_calls_panic_discharge_all_tagged_more.rs
+ [1m[94m|[0m
+ [1m[94m|[0m

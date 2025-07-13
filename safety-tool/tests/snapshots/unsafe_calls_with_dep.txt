@@ -8,13 +8,3 @@ stdout=
 
 
 stderr=
-[src/analyze_hir/visit.rs:35:9] &tags_state = {
-    "Tag": false,
-}
-hir_id=HirId(DefId(0:4 ~ unsafe_calls_with_dep[267d]::use_tag_unsafe_fn).5) fn_hir_id=HirId(DefId(0:4 ~ unsafe_calls_with_dep[267d]::use_tag_unsafe_fn).0)
-hir_id=HirId(DefId(0:4 ~ unsafe_calls_with_dep[267d]::use_tag_unsafe_fn).4) fn_hir_id=HirId(DefId(0:4 ~ unsafe_calls_with_dep[267d]::use_tag_unsafe_fn).0)
-hir_id=HirId(DefId(0:4 ~ unsafe_calls_with_dep[267d]::use_tag_unsafe_fn).3) fn_hir_id=HirId(DefId(0:4 ~ unsafe_calls_with_dep[267d]::use_tag_unsafe_fn).0)
-hir_id=HirId(DefId(0:4 ~ unsafe_calls_with_dep[267d]::use_tag_unsafe_fn).2) fn_hir_id=HirId(DefId(0:4 ~ unsafe_calls_with_dep[267d]::use_tag_unsafe_fn).0)
-hir_id=HirId(DefId(0:4 ~ unsafe_calls_with_dep[267d]::use_tag_unsafe_fn).1) fn_hir_id=HirId(DefId(0:4 ~ unsafe_calls_with_dep[267d]::use_tag_unsafe_fn).0)
-hir_id=HirId(DefId(0:4 ~ unsafe_calls_with_dep[267d]::use_tag_unsafe_fn).8) fn_hir_id=HirId(DefId(0:4 ~ unsafe_calls_with_dep[267d]::use_tag_unsafe_fn).0)
-hir_id=HirId(DefId(0:4 ~ unsafe_calls_with_dep[267d]::use_tag_unsafe_fn).0) fn_hir_id=HirId(DefId(0:4 ~ unsafe_calls_with_dep[267d]::use_tag_unsafe_fn).0)
