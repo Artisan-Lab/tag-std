@@ -19,7 +19,7 @@ jobs:
         run: |
           git clone https://github.com/os-checker/tag-asterinas.git
           cd tag-asterinas
-          git checkout c167212
+          git checkout 87c410f8
 
       - name: Install toolchain
         working-directory: safety-tool
@@ -37,7 +37,13 @@ jobs:
         env:
           # valid value: abort_and_emit, abort_and_no_emit, silence_and_emit, and silence_and_no_emit
           RAPX_EXIT_AND_EMIT: silence_and_emit # don't abort if discharges are missing, but still emit diagnostics
+          RAPX_ARGS: --color=always 2>rapx.err
         run: make rapx
+
+      - name: Print safety-tool diagnostics
+        if: always()
+        working-directory: tag-asterinas/ostd
+        run: cat rapx.err
 
   rustc-doc:
     runs-on: ubuntu-latest
