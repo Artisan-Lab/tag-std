@@ -43,7 +43,7 @@ impl Project {
         match self {
             Project::Std => "nightly-2025-06-02",
             Project::RustForLinux => "1.87",
-            Project::Asterinas => todo!("Haven't supported Asterinas yet."),
+            Project::Asterinas => "nightly-2025-02-01",
             Project::Default => todo!("Haven't decided which toolchain as default to support."),
         }
     }

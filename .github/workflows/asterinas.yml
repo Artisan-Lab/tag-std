@@ -1,0 +1,99 @@
+name: Check Asterinas
+
+on:
+  push:
+  pull_request:
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  check-asterinas:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout tag-std
+        uses: actions/checkout@v4
+      - name: Init asterinas submodule
+        # FIXME: wait for https://github.com/Artisan-Lab/tag-asterinas/pull/3 to merge.
+        # run: git submodule update --init --recursive --remote tag-asterinas
+        run: |
+          git clone https://github.com/os-checker/tag-asterinas.git
+          cd tag-asterinas
+          git checkout 87c410f8
+
+      - name: Install toolchain
+        working-directory: safety-tool
+        run: |
+          rm -f rust-toolchain.toml
+          ./gen_rust_toolchain_toml.rs asterinas
+          rustup show
+
+      - name: Install cargo-safety-tool
+        working-directory: safety-tool
+        run: cargo install --path . --locked -Fasterinas
+
+      - name: Check Asterinas
+        working-directory: tag-asterinas
+        env:
+          # valid value: abort_and_emit, abort_and_no_emit, silence_and_emit, and silence_and_no_emit
+          RAPX_EXIT_AND_EMIT: silence_and_emit # don't abort if discharges are missing, but still emit diagnostics
+          RAPX_ARGS: --color=always 2>rapx.err
+        run: make rapx
+
+      - name: Print safety-tool diagnostics
+        if: always()
+        working-directory: tag-asterinas/ostd
+        run: cat rapx.err
+
+  rustc-doc:
+    runs-on: ubuntu-latest
+    # Sometimes it'd be convenient to look up hitory rustc internal API doc online.
+    if: false
+    steps:
+      - name: Checkout tag-std
+        uses: actions/checkout@v4
+
+      - name: Install toolchain
+        working-directory: safety-tool
+        run: |
+          rm -f rust-toolchain.toml
+          ./gen_rust_toolchain_toml.rs asterinas
+          rustup show
+
+      - name: Install rustc internal docs
+        working-directory: safety-tool
+        run: |
+          rustup toolchain list -v
+          # Find toolchain path
+          export TOOLCHAIN=$(rustc --print sysroot)
+          echo "toolchain=\"$TOOLCHAIN\""
+          # Remove rustc book
+          rm $TOOLCHAIN/share/doc/rust/html/rustc -rf
+          # Download rustc API docs
+          rustup component add rustc-docs
+          mkdir doc
+          # Move the docs to deployment path
+          mv $TOOLCHAIN/share/doc/rust/html/rustc doc/rustc
+
+      - name: Upload static files as artifact
+        id: deployment
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: safety-tool/doc
+
+  # Deployment job
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
+    permissions:
+      pages: write      # to deploy to Pages
+      id-token: write   # to verify the deployment originates from an appropriate source
+
+    needs: rustc-doc
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

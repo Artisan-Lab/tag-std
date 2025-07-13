@@ -1,25 +1,12 @@
 stdout=
 
 stderr=
-[src/analyze_hir/visit.rs:35:9] &tags_state = {
-    "Tag": false,
-}
-hir_id=HirId(DefId(0:3 ~ unsafe_calls_panic_assign_fn_ptr[7c8d]::assign_fn_ptr).4) fn_hir_id=HirId(DefId(0:3 ~ unsafe_calls_panic_assign_fn_ptr[7c8d]::assign_fn_ptr).0)
-hir_id=HirId(DefId(0:3 ~ unsafe_calls_panic_assign_fn_ptr[7c8d]::assign_fn_ptr).6) fn_hir_id=HirId(DefId(0:3 ~ unsafe_calls_panic_assign_fn_ptr[7c8d]::assign_fn_ptr).0)
-hir_id=HirId(DefId(0:3 ~ unsafe_calls_panic_assign_fn_ptr[7c8d]::assign_fn_ptr).2) fn_hir_id=HirId(DefId(0:3 ~ unsafe_calls_panic_assign_fn_ptr[7c8d]::assign_fn_ptr).0)
-hir_id=HirId(DefId(0:3 ~ unsafe_calls_panic_assign_fn_ptr[7c8d]::assign_fn_ptr).1) fn_hir_id=HirId(DefId(0:3 ~ unsafe_calls_panic_assign_fn_ptr[7c8d]::assign_fn_ptr).0)
-hir_id=HirId(DefId(0:3 ~ unsafe_calls_panic_assign_fn_ptr[7c8d]::assign_fn_ptr).14) fn_hir_id=HirId(DefId(0:3 ~ unsafe_calls_panic_assign_fn_ptr[7c8d]::assign_fn_ptr).0)
-hir_id=HirId(DefId(0:3 ~ unsafe_calls_panic_assign_fn_ptr[7c8d]::assign_fn_ptr).0) fn_hir_id=HirId(DefId(0:3 ~ unsafe_calls_panic_assign_fn_ptr[7c8d]::assign_fn_ptr).0)
-[src/analyze_hir/visit.rs:109:5] &src_body = "pub fn assign_fn_ptr() {\n    let f: unsafe fn() = call;\n    unsafe {\n        #[rapx::assign_fn_ptr(property = Memo(Tag), kind = \"memo\")]\n        f()\n    };\n}"
 [1m[91merror[0m: [1m`Tag` is not discharged[0m
   [1m[94m-->[0m ./tests/snippets/unsafe_calls_panic_assign_fn_ptr.rs:12:26
    [1m[94m|[0m
-[1m[94m11 |[0m pub fn assign_fn_ptr() {
 [1m[94m12 |[0m     let f: unsafe fn() = call;
    [1m[94m|[0m                          [1m[91m^^^^[0m [1m[91mFor this unsafe call.[0m
-[1m[94m13 |[0m     unsafe {
-[1m[94m14 |[0m         #[rapx::assign_fn_ptr(property = Memo(Tag), kind = "memo")]
-[1m[94m15 |[0m         f()
-[1m[94m16 |[0m     };
-[1m[94m17 |[0m }
    [1m[94m|[0m
+
+[1m[31mTotal counts of diagnostics from safety-tool: {MissingDischarges: 1}[0m
+
