@@ -8,10 +8,35 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
+  check-asterinas:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout tag-std
+        uses: actions/checkout@v4
+      - name: Init asterinas submodule
+        run: git submodule update --init --recursive --remote tag-asterinas
+
+      - name: Install toolchain
+        working-directory: safety-tool
+        run: |
+          rm -f rust-toolchain.toml
+          ./gen_rust_toolchain_toml.rs asterinas
+          rustup show
+
+      - name: Install cargo-safety-tool
+        run: cargo install --path safety-tool --locked -Fasterinas
+
+      - name: Check Asterinas
+        working-directory: tag-asterinas
+        env:
+          # valid value: abort_and_emit, abort_and_no_emit, silence_and_emit, and silence_and_no_emit
+          RAPX_EXIT_AND_EMIT: silence_and_emit # don't abort if discharges are missing, but still emit diagnostics
+        run: make rapx
+
   rustc-doc:
     runs-on: ubuntu-latest
     # Sometimes it'd be convenient to look up hitory rustc internal API doc online.
-    if: true
+    if: false
     steps:
       - name: Checkout tag-std
         uses: actions/checkout@v4
