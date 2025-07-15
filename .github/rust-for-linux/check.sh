@@ -7,6 +7,9 @@ set -exou pipefail
 export SAFETY_TOOL_LOG=info
 export SAFETY_TOOL_LOG_FILE=$PWD/tag-std.log
 
+export DATA_SQLITE3=$PWD/linux/rust_safety.sqlite3
+KCONFIG=$PWD/linux/kernel/configs/rfl-for-rust-ci.config
+
 # Logger file will be only appended, meaning all logs are
 # preserved during building in this script.
 # And we'd better remove it and create a new one for new logs.
@@ -48,7 +51,7 @@ cargo --version
 cargo install --locked --root $llvm_prefix bindgen-cli
 
 # Prepare Rust for Linux config
-cat <<EOF >linux/kernel/configs/rfl-for-rust-ci.config
+cat <<EOF >$KCONFIG
 # CONFIG_WERROR is not set
 
 CONFIG_RUST=y
@@ -90,3 +93,6 @@ make LLVM=1 -j$(($(nproc) + 1)) \
   RUSTDOC=$(which safety-tool-rfl-rustdoc) \
   rustavailable \
   $BUILD_TARGETS
+
+rm -rf $DATA_SQLITE3
+rm -rf $KCONFIG
