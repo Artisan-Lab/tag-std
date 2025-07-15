@@ -10,20 +10,18 @@ use std::{
 };
 
 pub fn dev() -> Result<()> {
-    // cp safety-parser's lib
-    // run("safety-lib", &["--target=aarch64-unknown-none-softfloat"], CopyMode::Lib, "safety-lib")?;
-    run("safety-lib", &[], CopyMode::Lib, "safety-lib")?;
+    // NOTE: this compiles safety-lib on host target
+    run("safety-lib", CopyMode::Lib, "safety-lib")?;
     // cp safety-tool's bins
-    run(".", &[], CopyMode::Bin, "safety-tool")?;
+    run(".", CopyMode::Bin, "safety-tool")?;
     Ok(())
 }
 
-fn run(dir: &str, args: &[&str], mode: CopyMode, prefix: &str) -> Result<()> {
+fn run(dir: &str, mode: CopyMode, prefix: &str) -> Result<()> {
     // Ensure the rendered field of JSON messages contains
     // embedded ANSI color codes for respecting rustc’s default color scheme
     let mut command = Command::new("cargo")
         .args(["build", "--message-format=json-diagnostic-rendered-ansi"])
-        .args(args)
         .current_dir(dir)
         .stdout(Stdio::piped())
         .spawn()
@@ -106,7 +104,6 @@ impl SafetyToolSysroot {
                         | CrateType::CDyLib
                         | CrateType::StaticLib
                 ) || is_system_lib(ext)
-                    || ext == "rmeta"
                 {
                     fs::copy(file, self.lib.join(filename))?;
                 };
