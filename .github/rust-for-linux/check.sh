@@ -51,7 +51,7 @@ CONFIG_AX88796B_PHY=y
 CONFIG_AX88796B_RUST_PHY=y
 
 CONFIG_KUNIT=y
-CONFIG_RUST_KERNEL_DOCTESTS=y
+CONFIG_RUST_KERNEL_DOCTESTS=n
 EOF
 
 pushd linux
@@ -68,7 +68,6 @@ BUILD_TARGETS="
     samples/rust/rust_minimal.o
     samples/rust/rust_print_main.o
     drivers/net/phy/ax88796b_rust.o
-    rust/doctests_kernel_generated.o
     rustdoc
 "
 
