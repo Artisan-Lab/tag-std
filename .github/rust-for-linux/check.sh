@@ -21,11 +21,12 @@ rustup default $RUST_TOOLCHAIN
 # Set up dynamic link path for rustc driver.
 export LD_LIBRARY_PATH=$(rustc --print sysroot)/lib
 
+pushd safety-tool
+# Must enter safety-tool folder to respect rust toolchain to compile code.
+cargo install --path . --locked
 # This should print `rustc 1.87.0 (17067e9ac 2025-05-09)`.
-cargo install --path safety-tool --locked
 safety-tool --version
 # generate bin and lib in target/safety-tool
-pushd safety-tool
 safety-tool-rfl build-dev
 popd
 
