@@ -28,6 +28,12 @@ cargo install --path . --locked
 safety-tool --version
 # generate bin and lib in target/safety-tool
 safety-tool-rfl build-dev
+
+# Copy safety-lib's safety.rs file to linux/rust
+{
+  printf '#![no_std]\n'
+  cat safety-lib/src/safety.rs
+} >../linux/rust/safety.rs
 popd
 
 # Add llvm to PATH, and set up libclang

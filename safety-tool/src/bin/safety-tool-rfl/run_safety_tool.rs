@@ -32,38 +32,24 @@ pub fn run(mut args: Vec<String>) -> Result<()> {
 }
 
 fn extra_rustc_args() -> Vec<String> {
-    // let lib = sysroot::lib();
-    // let safety_lib = lib.join("libsafety_lib.rlib");
+    let lib = sysroot::lib();
 
     // safety-lib compiled on no-std target
     make_args(&[
-        "-L/home/gh-zjp-CN/tag-std/safety-tool/safety-lib/",
-        // inject safety_lib dependency
-        // "-L",
-        // lib.as_str(),
+        // inject safety_macro and safety_lib dependency
+        "-L",
+        lib.as_str(),
+        // Specify direct dependency to allow `use safety_macro` in crate root.
+        // The use extern crate syntax only works after --edition=2018.
+        "--extern=safety_macro",
+        // safety is compiled in linux/rust
+        "--extern=safety",
+        // inject rapx tool attr
+        "-Zcrate-attr=feature(register_tool)",
+        "-Zcrate-attr=register_tool(rapx)",
         // NOTE: the last -Zallow-features wins, meaning that specified by rfl
         // previously will be disregarded.
         // cc https://github.com/rust-lang/rust/issues/143312
         // "-Zallow-features=register_tool",
-        //
-        // Specify direct dependency to allow `use safety_macro` in crate root.
-        // The use extern crate syntax only works after --edition=2018.
-        // &format!("--extern=safety={safety_lib}"),
-        "--extern=safety=/home/gh-zjp-CN/tag-std/safety-tool/safety-lib/libsafety_lib.rlib",
-        // inject rapx tool attr
-        "-Zcrate-attr=feature(register_tool)",
-        "-Zcrate-attr=register_tool(rapx)",
     ])
 }
-
-// fn find_safety_lib_rmeta(path: &Utf8Path) -> Result<String> {
-//     for entry in std::fs::read_dir(path).unwrap() {
-//         let entry = entry?;
-//         let file_name = entry.file_name().into_string().unwrap();
-//         if file_name.starts_with("libsafety_lib") && file_name.ends_with(".rmeta") {
-//             info!(file_name);
-//             return Ok(entry.path().canonicalize()?.to_str().unwrap().to_owned());
-//         }
-//     }
-//     Err(eyre!("Can't find libsafety_lib rmeta in {path}"))
-// }
