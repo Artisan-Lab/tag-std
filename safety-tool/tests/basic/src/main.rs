@@ -11,10 +11,6 @@ fn main() {
     let (p, l, _c) = Vec::new().into_raw_parts();
     let a = MyStruct::from(p, l);
     println!("{:?}", unsafe {
-        #[safety::discharges(Memo_UserPropertyGet)]
-        #[safety::discharges(Memo(UserPropertyGet2))]
-        // The following discharges are checked if
-        // `DISCHARGES_ALL_PROPERTIES=1` is set.
         #[safety::discharges(Precond_Init)]
         #[safety::discharges(Precond_InBound)]
         #[safety::discharges(Precond_ValidNum)]

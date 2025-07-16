@@ -18,13 +18,6 @@ pub struct MyStruct {
     len: usize,
 }
 impl MyStruct {
-    /// UserProperty: auto doc placeholder.
-    /// Customed user property.
-    #[rapx::inner(
-        property = Unknown(UserProperty),
-        kind = "memo",
-        memo = "Customed user property."
-    )]
     pub fn from(p: *mut u8, l: usize) -> MyStruct {
         MyStruct { ptr: p, len: l }
     }
@@ -39,15 +32,6 @@ impl MyStruct {
     )]
     /// Alias: Make sure self.ptr must not have other alias after calling this function.
     #[rapx::inner(property = Alias(self.ptr), kind = "hazard")]
-    /// UserPropertyGet: auto doc placeholder.
-    /// Customed user property.
-    #[rapx::inner(
-        property = Unknown(UserPropertyGet),
-        kind = "memo",
-        memo = "Customed user property."
-    )]
-    /// UserPropertyGet2: auto doc placeholder.
-    #[rapx::inner(property = Unknown(UserPropertyGet2), kind = "memo")]
     pub unsafe fn get(&self) -> &mut [u8] {
         unsafe { std::slice::from_raw_parts_mut(self.ptr, self.len) }
     }

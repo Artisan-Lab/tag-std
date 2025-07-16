@@ -21,10 +21,7 @@ fn main() {
                     #[rapx::inner(property = Alias(), kind = "hazard")]
                     #[rapx::inner(property = ValidNum(), kind = "precond")]
                     #[rapx::inner(property = InBound(), kind = "precond")]
-                    #[rapx::inner(property = Init(), kind = "precond")]
-                    #[rapx::inner(property = Unknown(UserPropertyGet2), kind = "memo")]
-                    #[rapx::inner(property = Unknown(UserPropertyGet), kind = "memo")]
-                    a.get()
+                    #[rapx::inner(property = Init(), kind = "precond")] a.get()
                 },
             ),
         );
