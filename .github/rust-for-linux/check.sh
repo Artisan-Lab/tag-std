@@ -7,6 +7,12 @@ set -exou pipefail
 export SAFETY_TOOL_LOG=info
 export SAFETY_TOOL_LOG_FILE=$PWD/tag-std.log
 
+# Logger file will be only appended, meaning all logs are
+# preserved during building in this script.
+# And we'd better remove it and create a new one for new logs.
+rm -rf $SAFETY_TOOL_LOG_FILE
+touch $SAFETY_TOOL_LOG_FILE
+
 # Rust toolchain
 RUST_TOOLCHAIN=1.87
 

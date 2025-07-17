@@ -12,7 +12,7 @@ pub fn init() {
 
     let reg = registry().with(env_layer).with(error_layer);
     let res = if let Ok(path) = std::env::var(SAFETY_TOOL_LOG_FILE) {
-        let file = std::fs::File::create(path).unwrap();
+        let file = std::fs::OpenOptions::new().append(true).open(path).unwrap();
         reg.with(fmt_layer.with_writer(file)).try_init()
     } else {
         reg.with(fmt_layer).try_init()
