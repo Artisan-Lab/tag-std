@@ -4,6 +4,5 @@ target/
 *.sqlite3
 *.rlib
 *.log
-*.vscode
 /linux
 /llvm*
