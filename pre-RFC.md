@@ -11,7 +11,7 @@ A safety property mechanism that is standardized on writing safety documentation
 To avoid the misuse of unsafe code, Rust developers should provide clear safety comments for unsafe APIs.
 
 While these safety comments are quite human readable, they can be interpreted differently from person to person.
-Even the current best practices in the Rust standard library are ad hoc and informal.
+Even the current best practices in the Rust standard library are ad hoc and informal in some places.
 
 Besides, safety comments are sometimes tedious and repetitive to write, thus people just feel bothered to do or 
 simply leave a short note, but reviewers may neglect some unmentioned safety requirements.
@@ -22,9 +22,9 @@ crates whose safety comments are out of date since the change from upstream API.
 
 So we need to improve the practice of writing safety comments by making it machine readable and checkable.
 The unit of a piece of safety information is called a safety requirement, property, or tag.
-We also want these properties composable enough to piece together safety comments for readers, especially on 
+We want these properties composable enough to piece together safety comments for readers, especially on 
 rustdoc HTML pages as seen now. To solve the problem brought by evolution of safety requirements, these
-properties are versioned, and need semver checking.
+properties are also versioned, in need of semver checking.
 
 ///////////////////////////////// TODO: Below are not started yet /////////////////////////////////
 
