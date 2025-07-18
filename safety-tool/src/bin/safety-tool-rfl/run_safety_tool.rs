@@ -32,22 +32,24 @@ pub fn run(mut args: Vec<String>) -> Result<()> {
 }
 
 fn extra_rustc_args() -> Vec<String> {
-    let safety_lib = sysroot::lib();
+    let lib = sysroot::lib();
 
+    // safety-lib compiled on no-std target
     make_args(&[
-        // inject safety_lib dependency
+        // inject safety_macro and safety_lib dependency
         "-L",
-        safety_lib.as_str(),
+        lib.as_str(),
+        // Specify direct dependency to allow `use safety_macro` in crate root.
+        // The use extern crate syntax only works after --edition=2018.
+        "--extern=safety_macro",
+        // safety is compiled in linux/rust
+        "--extern=safety",
+        // inject rapx tool attr
+        "-Zcrate-attr=feature(register_tool)",
+        "-Zcrate-attr=register_tool(rapx)",
         // NOTE: the last -Zallow-features wins, meaning that specified by rfl
         // previously will be disregarded.
         // cc https://github.com/rust-lang/rust/issues/143312
         // "-Zallow-features=register_tool",
-        //
-        // Specify direct dependency to allow `use safety_macro` in crate root.
-        // The use extern crate syntax only works after --edition=2018.
-        "--extern=safety_macro",
-        // inject rapx tool attr
-        "-Zcrate-attr=feature(register_tool)",
-        "-Zcrate-attr=register_tool(rapx)",
     ])
 }

@@ -10,7 +10,7 @@ use std::{
 };
 
 pub fn dev() -> Result<()> {
-    // cp safety-parser's lib
+    // NOTE: this compiles safety-lib on host target
     run("safety-lib", CopyMode::Lib, "safety-lib")?;
     // cp safety-tool's bins
     run(".", CopyMode::Bin, "safety-tool")?;

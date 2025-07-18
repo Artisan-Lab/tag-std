@@ -2,6 +2,7 @@
 target/
 *.sqlite3
 *.rlib
+*.so
 *.log
 /linux
 /llvm*

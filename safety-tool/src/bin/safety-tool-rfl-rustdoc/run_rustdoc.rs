@@ -22,15 +22,21 @@ pub fn run(mut args: Vec<String>) -> Result<()> {
 }
 
 fn extra_rustc_args() -> Vec<String> {
-    let safety_lib = sysroot::lib();
+    let lib = sysroot::lib();
+    // safety-lib compiled on host target
+    let safety_lib = lib.join("libsafety_lib.rlib");
 
     make_args(&[
-        // inject safety_lib dependency
+        // inject safety_macro and safety_lib dependency
         "-L",
-        safety_lib.as_str(),
+        lib.as_str(),
         // Specify direct dependency to allow `use safety_macro` in crate root.
         // The use extern crate syntax only works after --edition=2018.
         "--extern=safety_macro",
+        // safety is compiled in linux/rust (on no_std target)
+        "--extern=safety=./rust/libsafety.rmeta",
+        // safety is compiled on host target
+        &format!("--extern=safety={safety_lib}"),
         // inject rapx tool attr
         // "-Zallow-features=register_tool",
         "-Zcrate-attr=feature(register_tool)",
