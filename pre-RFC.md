@@ -47,9 +47,9 @@ The unit of a piece of safety information is called a safety requirement, proper
   and `Prop(args, ...)` is a safety property. For safety propeties in libcore and libstd, refer to 
   [this document](https://github.com/Artisan-Lab/tag-std/blob/main/primitive-sp.md) and 
   [paper](https://arxiv.org/abs/2504.21312). For property types:
-  * precond denotes a safety requirement that must be satisfied before invoking an unsafe API; most unsafe APIs may have this
-  * hazard denotes invoking the unsafe API may temporarily leave the program in a vulnerable state; e.g. [`String::as_bytes_mut`]
-  * option denotes optional precondition for the unsafe API; if such condition is satisfied, they can ensure the safety invariant;
+  * **precond** denotes a safety requirement that must be satisfied before invoking an unsafe API; most unsafe APIs may have this
+  * **hazard** denotes invoking the unsafe API may temporarily leave the program in a vulnerable state; e.g. [`String::as_bytes_mut`]
+  * **option** denotes optional precondition for the unsafe API; if such condition is satisfied, they can ensure the safety invariant;
     e.g. see the following example of [`ptr::read`]
 
 [`String::as_bytes_mut`]: https://doc.rust-lang.org/std/string/struct.String.html#method.as_bytes_mut
@@ -101,7 +101,7 @@ Thus safety tags can be written as
 #[safety::precond::ValidPtr(src)]
 #[safety::precond::Aligned(src)]
 #[safety::precond::Init(src)]
-#[safety::option::Trait("T: Copy", memo = "description")]
+#[safety::option::Trait(T, Copy, memo = "description")]
 ///
 /// ## Ownership of the Returned Value
 /// ...
@@ -121,11 +121,12 @@ Safety tags will brings two effects:
 ## Discharge a safety property
 
 A common practice for calling unsafe functions are to leave a small piece of 
-safety comments, and repeat it or refer to the same comments. For example:
+safety comments, and repeat it or refer to the same comments. [For example][vec_deque]:
+
+[vec_deque]: https://github.com/rust-lang/rust/blob/ebd8557637b33cc09b6ee8273f3154d5d3af6a15/library/alloc/src/collections/vec_deque/into_iter.rs#L104
 
 ```rust
 // src: rust/library/alloc/src/collections/vec_deque/into_iter.rs
-// https://github.com/rust-lang/rust/blob/ebd8557637b33cc09b6ee8273f3154d5d3af6a15/library/alloc/src/collections/vec_deque/into_iter.rs#L104
 
 // impl<T, A: Allocator> Iterator for IntoIter<T, A>
 
@@ -176,15 +177,13 @@ reference system.
 ```rust
 // fn try_fold<B, F, R>(&mut self, mut init: B, mut f: F) -> R
 
-// Also tag #[safety::ref::try_fold] on try_fold::Guard::drop fn declaration.
-
 init = head.iter().map(|elem| {
     guard.consumed += 1;
 
     #[safety::discharges::ValidPtr(elem)]
     #[safety::discharges::Aligned(elem)]
     #[safety::discharges::Init(elem)]
-    #[safety::discharges::Trait("T: Copy", memo = "
+    #[safety::discharges::Trait(T, Copy, memo = "
       Because we incremented `guard.consumed`, the deque 
       effectively forgot the element, so we can take ownership.
     ")]
@@ -205,7 +204,7 @@ error: `ValidPtr`, `Aligned`, `Init` are not discharged,
 LLL | unsafe { ptr::read(elem) }
     | ^^^^^^^^^^^^^^^^^^^^^^^^^^ For this unsafe call.
     |
-    = NOTE: ValidPtr 👉 https://doc.rust-lang.org/std/ptr/index.html#safety 👉 
+    = NOTE: ValidPtr 👉 https://doc.rust-lang.org/std/ptr/index.html#safety
     = NOTE: Aligned 👉 https://doc.rust-lang.org/std/ptr/index.html#alignment
     = NOTE: Init 👉 The pointer must be initialized before calling `core::ptr::read`
 ```
