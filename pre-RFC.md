@@ -20,13 +20,12 @@ And here's a severe problem in review or audit as time goes by: when safety requ
 function callers and people are unaware of the change. This is quite a safety hazard and risk for downstream
 crates whose safety comments are out of date since the change from upstream API.
 
-So we need to improve the practice of writing safety comments by making it machine readable and checkable.
-The unit of a piece of safety information is called a safety requirement, property, or tag.
-We want these properties composable enough to piece together safety comments for readers, especially on 
-rustdoc HTML pages as seen now. To solve the problem brought by evolution of safety requirements, these
-properties are also versioned, in need of semver checking.
-
-///////////////////////////////// TODO: Below are not started yet /////////////////////////////////
+So we need to improve the practice of writing safety comments by making it machine readable and checkable 
+in the form of safety tags. We want these tags to be
+* accessible to read and write for human: if a tag is defined but missing on callsites, lints will be emitted 
+  to help the coder and reviewers assess safety requirements
+* composable enough to piece together safety comments for readers, especially on rustdoc HTML pages as seen today
+* versioned: tags are in need of semver checking to solve the problem brought by evolution of safety requirements
 
 # Guide-level explanation
 [guide-level-explanation]: #guide-level-explanation
