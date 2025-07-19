@@ -30,6 +30,49 @@ in the form of safety tags. We want these tags to be
 # Guide-level explanation
 [guide-level-explanation]: #guide-level-explanation
 
+
+Consider safety comments on [`std::ptr::read`](https://doc.rust-lang.org/std/ptr/fn.read.html):
+
+```rust
+/// # Safety
+///
+/// Behavior is undefined if any of the following conditions are violated:
+///
+/// * `src` must be [valid] for reads.
+///
+/// * `src` must be properly aligned. Use [`read_unaligned`] if this is not the
+///   case.
+///
+/// * `src` must point to a properly initialized value of type `T`.
+///
+/// Note that even if `T` has size `0`, the pointer must be properly aligned.
+/// 
+/// ## Ownership of the Returned Value
+///
+/// `read` creates a bitwise copy of `T`, regardless of whether `T` is [`Copy`].
+/// If `T` is not [`Copy`], using both the returned value and the value at
+/// `*src` can violate memory safety. Note that assigning to `*src` counts as a
+/// use because it will attempt to drop the value at `*src`.
+pub const unsafe fn read<T>(src: *const T) -> T { ... }
+```
+
+We can extract each safety property into a keyword, argument, and description:
+
+| Type    | Property | Argument  | Description                                                                                   |
+|---------|----------|-----------|-----------------------------------------------------------------------------------------------|
+| Precond | ValidPtr | src       | `*const T` mut be [valid]                                                                     |
+| Precond | Aligned  | src       | `*const T` must be [aligned][alignment] to `align_of::<T>()`                                  |
+| Precond | Init     | src       | `*const T` must be initialized                                                                |
+| Option  | Trait    | `T: Copy` | it's sound for `T: Copy`, but may not if T is not Copy; see "Ownership of the Returned Value" |
+
+[valid]: https://doc.rust-lang.org/std/ptr/index.html#safety
+[alignment]: https://doc.rust-lang.org/std/ptr/index.html#alignment
+
+The unit of a piece of safety information is called a safety requirement, property, or tag.
+
+
+///////////////////////////////// TODO: Below are not started yet /////////////////////////////////
+
 Explain the proposal as if it was already included in the language and you were teaching it to another Rust programmer. That generally means:
 
 - Introducing new named concepts.
