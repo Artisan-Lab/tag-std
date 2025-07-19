@@ -5,6 +5,12 @@
 
 A safety property mechanism that is standardized on writing safety documentation and propeties are auto checked.
 
+This RFC is at API-level, not compiler or language level, because we only introduce some attribute macros on 
+functions and expressions, which has been able to express today, but needs a linter tool to achieve the goal.
+
+And this PRF influences the whole crate ecosystem, especially on unsafe code practices, because we hope safety
+propeties from std and sibling crates are accessible to downstream crates, even for low-level no_std crates.
+
 # Motivation
 [motivation]: #motivation
 
