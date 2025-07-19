@@ -328,19 +328,24 @@ The section should return to the examples given in the previous section, and exp
 # Prior art
 [prior-art]: #prior-art
 
-Discuss prior art, both the good and the bad, in relation to this proposal.
-A few examples of what this can include are:
-
-- For language, library, cargo, tools, and compiler proposals: Does this feature exist in other programming languages and what experience have their community had?
-- For community proposals: Is this done by some other community and what were their experiences with it?
-- For other teams: What lessons can we learn from what other communities have done here?
-- Papers: Are there any published papers or great posts that discuss this? If you have some relevant papers to refer to, this can serve as a more detailed theoretical background.
-
-This section is intended to encourage you as an author to think about the lessons from other languages, provide readers of your RFC with a fuller picture.
-If there is no prior art, that is fine - your ideas are interesting to us whether they are brand new or if it is an adaptation from other languages.
-
-Note that while precedent set by other languages is some motivation, it does not on its own motivate an RFC.
-Please also take into consideration that rust sometimes intentionally diverges from common language features.
+* 2023-10: [Ability to call unsafe functions without curly brackets](https://internals.rust-lang.org/t/ability-to-call-unsafe-functions-without-curly-brackets/19635/22)
+  * this is a discussion about make single unsafe call simpler, so the idea evolved into tczajka's Pre-RFC
+  * but the idea and syntax from scottmcm's comments are very enlightening to my RFC
+* 2024-10: [Detect and Fix Overscope unsafe Block](https://internals.rust-lang.org/t/detect-and-fix-overscope-unsafe-block/21660/19) 
+  * the OP is about safe code scope in big unsafe block, which is not discussed in my RFC
+  * but scottmcm's comments are good inspiration for my RFC
+* 2024-12: [Pre-RFC: Unsafe reasons](https://internals.rust-lang.org/t/pre-rfc-unsafe-reasons/22093) proposed by chrefr
+  * good improvement on abstracting safety comments to single identifier that is machine readable and checkable,
+    but doesn't specify arguments and string interpolation to be more fine-grained on unsafe reasons
+  * big request on language and compiler change, while safety tags in my RFC is lightweight
+* 2025-02: [Pre-RFC: Single function call `unsafe`](https://internals.rust-lang.org/t/pre-rfc-single-function-call-unsafe/22343) proposed by tczajka
+  * single unsafe call is a good practice, but postfix `.unsafe` needs more compiler supports but doesn't suggest any improvement on safe comments 
+  * my RFC supports annotating safety tags on any expression including single calls
+* 2025-05: [Pre-RFC: Granular Unsafe Blocks - A more explicit and auditable approach](https://internals.rust-lang.org/t/pre-rfc-granular-unsafe-blocks-a-more-explicit-and-auditable-approach/23022) proposed by Redlintles
+  * safety categories suggested are too broad
+  * while safety propeties in my RFC are more granular and semantics-specifc
+* 2025-07: [Unsafe assertion invariants](https://internals.rust-lang.org/t/unsafe-assertion-invariants/23206)
+  * good idea to embed safety requirements/contract/information into doc comments, which is similar to one of the goals in my RFC
 
 # Unresolved questions
 [unresolved-questions]: #unresolved-questions
