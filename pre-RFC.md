@@ -9,7 +9,7 @@ This RFC is at API-level, not compiler or language level, because we only introd
 functions and expressions, which has been able to express today, but needs a linter tool to achieve the goal.
 
 And this PRF influences the whole crate ecosystem, especially on unsafe code practices, because we hope safety
-propeties from std and sibling crates are accessible to downstream crates, even for low-level no_std crates.
+propeties from std and sibling crates are accessible to downstream crates, even to low-level no_std crates.
 
 # Motivation
 [motivation]: #motivation
@@ -31,7 +31,8 @@ in the form of safety tags. We want these tags to be
 * accessible to read and write for human: if a tag is defined but missing on callsites, lints will be emitted 
   to help the coder and reviewers assess safety requirements
 * composable enough to piece together safety comments for readers, especially on rustdoc HTML pages as seen today
-* versioned: tags are in need of semver checking to solve the problem brought by evolution of safety requirements
+* versioned: revised tags are in need of checking throughout the whole dependency graph to solve the problem
+  brought by evolution of safety requirements
 
 # Guide-level explanation
 [guide-level-explanation]: #guide-level-explanation
@@ -114,7 +115,7 @@ pub const unsafe fn read<T>(src: *const T) -> T { ... }
 Safety tags will brings two effects:
 1. they are expanded to `#[doc]` comments, thus rendered through rustdoc on HTML pages
 2. they are collected by a linter tool which sees all tags in all crates involved, and analyzes each callsite
-   to emit what safety tags are missing. The tool supports property semver checking, meaning when a dependency
+   to emit what safety tags are missing. The tool supports property checking on revision, meaning when a dependency
    is updated, and its tags are modified, there will be a report about where infected tags locates and what
    differences are w.r.t. any component in safety propeties.
 
@@ -245,6 +246,37 @@ If referent is not defined or collides, hard error is emitted.
 
 Once safety propeties on referent changes, we can know all relevant places, and estimate
 safety requirements fulfillment on referrers.
+
+## Versions of a tag
+
+We should notice reference system handles two versions of tags from the above example!
+
+When a tag is newly introduced on an API, discharge detection applies.
+
+When a revised tag occurs on an API, discharge detection still applies, and a complete 
+report on tagged places including referencing places should be provided. If local tags
+are affected by the revised tag from upstream crate, propagation analysis should extend 
+from culprit crate to the whole dependency graph.
+
+It's worth noting that this is unlike [semver] checks on crate's APIs. Reason are 
+* core or similar builtin libraries are not versioned. Even if these crates are tied to 
+  specific rust toolchain, toolchain version doesn't and is unable to reflect version 
+  of builtin libraries.
+* adding a new tag breaks downstream crates due to discharge detection, while adding a 
+  new API is usually not a braking change.
+* tags are public across all crates, if an upstream tag is removed, all downstream crates 
+  need to remove it accordingly
+
+[semver]: https://doc.rust-lang.org/cargo/reference/semver.html
+
+So making tags versioned is a big challenge. On the one hand, we want tags to be part of 
+APIs and semver controlled, on the other hand, any change in tags results in high churn.
+
+This RFC suggests reporting diffs on versions of tags, in warnings or errors at user option,
+but doesn't provide any solution to churn. That's to say, it's unclear whether safety 
+propeties should be semver checked or not.
+
+## Better review and auditing experience
 
 ///////////////////////////////// TODO: Below are not started yet /////////////////////////////////
 
