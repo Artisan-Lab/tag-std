@@ -249,6 +249,8 @@ safety requirements fulfillment on referrers.
 
 ## Versions of a tag
 
+<a id="semver-tag"></a>
+
 We should notice reference system handles two versions of tags from the above example!
 
 When a tag is newly introduced on an API, discharge detection applies.
@@ -305,7 +307,15 @@ The section should return to the examples given in the previous section, and exp
 # Drawbacks
 [drawbacks]: #drawbacks
 
-Why should we *not* do this?
+* cover too many unsafe APIs
+  * need a lot of efforts on inital safety tags
+* semver compatibility churn (see [above](#semver-tag))
+* inadequacy of unsafe operation semantics
+  * frequent change on some safety propeties
+  * not sure if all safety propeties are composable
+* tools coupling
+  * it's less readable in source code around safety tags, and must turn to rustdoc or LSP server 
+    for help to know safety requirements in plain text
 
 # Rationale and alternatives
 [rationale-and-alternatives]: #rationale-and-alternatives
