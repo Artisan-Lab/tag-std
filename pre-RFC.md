@@ -29,10 +29,10 @@ crates whose safety comments are out of date since the change from upstream API.
 So we need to improve the practice of writing safety comments by making it machine readable and checkable 
 in the form of safety tags. We want these tags to be
 * accessible to read and write for human: if a tag is defined but missing on callsites, lints will be emitted 
-  to help the coder and reviewers assess safety requirements
-* composable enough to piece together safety comments for readers, especially on rustdoc HTML pages as seen today
+  to help the coder and reviewers assess safety requirements.
+* composable enough to piece together safety comments for readers, especially on rustdoc HTML pages as seen today.
 * versioned: revised tags are in need of checking throughout the whole dependency graph to solve the problem
-  brought by evolution of safety requirements
+  brought by evolution of safety requirements.
 
 # Guide-level explanation
 [guide-level-explanation]: #guide-level-explanation
@@ -40,18 +40,18 @@ in the form of safety tags. We want these tags to be
 ## Terms: requirement, property, and tag
 
 The unit of a piece of safety information is called a safety requirement, property, or tag. Nuances are
-* a safety requirement is descriptive in text
+* a safety requirement is descriptive in text.
 * a safety propety is structured and formalized to be made of a keyword (i.e. ident) of a type, arguments and short description;
-  ideally string interpolation is able to perform on it so that a property is as much reusable as possible
+  ideally string interpolation is able to perform on it so that a property is as much reusable as possible.
 * a safety tag is a [tool attribute](https://doc.rust-lang.org/reference/attributes.html#tool-attributes) in the form of 
   `#[safety::type::Prop(args, ...)]` where `safety` is a crate name or tool name, `type` is one of `{precond,hazard,option}`,
   and `Prop(args, ...)` is a safety property. For safety propeties in libcore and libstd, refer to 
   [this document](https://github.com/Artisan-Lab/tag-std/blob/main/primitive-sp.md) and 
   [paper](https://arxiv.org/abs/2504.21312). For property types:
-  * **precond** denotes a safety requirement that must be satisfied before invoking an unsafe API; most unsafe APIs may have this
-  * **hazard** denotes invoking the unsafe API may temporarily leave the program in a vulnerable state; e.g. [`String::as_bytes_mut`]
+  * **precond** denotes a safety requirement that must be satisfied before invoking an unsafe API; most unsafe APIs may have this.
+  * **hazard** denotes invoking the unsafe API may temporarily leave the program in a vulnerable state; e.g. [`String::as_bytes_mut`].
   * **option** denotes optional precondition for the unsafe API; if such condition is satisfied, they can ensure the safety invariant;
-    e.g. see the following example of [`ptr::read`]
+    e.g. see the following example of `ptr::read`.
 
 [`String::as_bytes_mut`]: https://doc.rust-lang.org/std/string/struct.String.html#method.as_bytes_mut
 [`ptr::read`]: https://doc.rust-lang.org/std/ptr/fn.read.html
@@ -113,7 +113,7 @@ pub const unsafe fn read<T>(src: *const T) -> T { ... }
 ```
 
 Safety tags will brings two effects:
-1. they are expanded to `#[doc]` comments, thus rendered through rustdoc on HTML pages
+1. they are expanded to `#[doc]` comments, thus rendered through rustdoc on HTML pages.
 2. they are collected by a linter tool which sees all tags in all crates involved, and analyzes each callsite
    to emit what safety tags are missing. The tool supports property checking on revision, meaning when a dependency
    is updated, and its tags are modified, there will be a report about where infected tags locates and what
@@ -265,7 +265,7 @@ It's worth noting that this is unlike [semver] checks on crate's APIs. Reason ar
 * adding a new tag breaks downstream crates due to discharge detection, while adding a 
   new API is usually not a braking change.
 * tags are public across all crates, if an upstream tag is removed, all downstream crates 
-  need to remove it accordingly
+  need to remove it accordingly.
 
 [semver]: https://doc.rust-lang.org/cargo/reference/semver.html
 
