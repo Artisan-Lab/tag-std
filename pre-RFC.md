@@ -14,10 +14,11 @@ This RFC has influences on the entire crate ecosystem, including the standard li
 
 To avoid the misuse of unsafe code, Rust developers are encouraged to provide clear safety comments for unsafe APIs. While these comments are generally human-readable, they can be ambiguous and laborious to write. Even the current best practices in the Rust standard library are somewhat ad hoc and informal. Moreover, safety comments are often repetitive and may be perceived as less important than the code itself, which makes them error-prone and increases the risk that reviewers may overlook inaccuracies or missing safety requirements.
 
-For instance, a severe problem might occur if safety requirements of an API are changed as time goes by, downstream API users may be unaware of the change and suffers security risks. Therefore, we need to improve the current practice of writing safety comments by making it checkable in the form of safety tags. We want these tags to be
-* Competible with existing safety documents: the safety tags are expressive to represent existing safety comments, especially in the form of rustdoc HTML pages as seen today.
-* Accessible to both developers and compiler tools: if a tag is defined but missing on callsites, lints will be emitted to help the coder and reviewers assess safety requirements.
-* Versioned: revised tags are in need of checking throughout the whole dependency graph to solve the problem brought by evolution of safety requirements.
+For instance, a severe problem may arise if the safety requirements of an API change over time: downstream users may be unaware of such changes and thus be exposed to security risks. Therefore, we propose to improve the current practice of writing safety comments by making them checkable through a system of safety tags. These tags are designed to be:
+
+* Compatible with existing safety documentation: Safety tags should be expressive enough to represent current safety comments, especially as rendered in today's rustdoc HTML pages.
+* Usable by compiler tools for safety checking: If a safety tag is declared for an unsafe API but not discharged at a callsite, lints should be emitted to warn developers about potentially overlooked safety requirements.
+Versioned: When safety tags are revised, the changes should be propagated and checked across the entire dependency graph to address issues caused by the evolution of safety requirements.
 
 # Guide-level explanation
 [guide-level-explanation]: #guide-level-explanation
