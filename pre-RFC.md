@@ -79,6 +79,7 @@ We can extract safety requirements above into propeties below:
 
 [valid]: https://doc.rust-lang.org/std/ptr/index.html#safety
 [alignment]: https://doc.rust-lang.org/std/ptr/index.html#alignment
+[`Copy`]: https://doc.rust-lang.org/std/marker/trait.Copy.html
 
 We can represent these safety requirements using safety tags as shown below.
 
@@ -113,28 +114,55 @@ safety comments, and repeat it or refer to the same comments. [For example][vec_
 
 // impl<T, A: Allocator> Iterator for IntoIter<T, A>
 
-// fn try_fold<B, F, R>(&mut self, mut init: B, mut f: F) -> R
-init = head.iter().map(|elem| {
-    guard.consumed += 1;
-    // SAFETY: Because we incremented `guard.consumed`, the
-    // deque effectively forgot the element, so we can take
-    // ownership
-    unsafe { ptr::read(elem) }
-})
-.try_fold(init, &mut f)?;
+fn try_fold<B, F, R>(&mut self, mut init: B, mut f: F) -> R {
+    struct Guard<'a, T, A: Allocator> { ... }
 
-tail.iter().map(|elem| {
-    guard.consumed += 1;
-    // SAFETY: Same as above.
-    unsafe { ptr::read(elem) }
-})
-.try_fold(init, &mut f)
+    impl<'a, T, A: Allocator> Drop for Guard<'a, T, A> {
+        fn drop(&mut self) { ... }
+    }
 
-// fn try_rfold<B, F, R>(&mut self, mut init: B, mut f: F) -> R
-// SAFETY: See `try_fold`'s safety comment.
-unsafe { ptr::read(elem) } // head
-// SAFETY: Same as above.
-unsafe { ptr::read(elem) } // tail
+    ...
+
+    init = head.iter().map(|elem| {
+        guard.consumed += 1;
+        // SAFETY: Because we incremented `guard.consumed`, the
+        // deque effectively forgot the element, so we can take
+        // ownership
+        unsafe { ptr::read(elem) }
+    })
+    .try_fold(init, &mut f)?;
+
+    tail.iter().map(|elem| {
+        guard.consumed += 1;
+        // SAFETY: Same as above.
+        unsafe { ptr::read(elem) }
+    })
+    .try_fold(init, &mut f)
+}
+
+fn try_rfold<B, F, R>(&mut self, mut init: B, mut f: F) -> R {
+    struct Guard<'a, T, A: Allocator> { ... }
+
+    impl<'a, T, A: Allocator> Drop for Guard<'a, T, A> {
+        fn drop(&mut self) { ... }
+    }
+
+    ...
+
+    init = tail.iter().map(|elem| {
+        guard.consumed += 1;
+        // SAFETY: See `try_fold`'s safety comment.
+        unsafe { ptr::read(elem) }
+    })
+    .try_rfold(init, &mut f)?;
+
+    head.iter().map(|elem| {
+        guard.consumed += 1;
+        // SAFETY: Same as above.
+        unsafe { ptr::read(elem) }
+    })
+    .try_rfold(init, &mut f)
+}
 ```
 
 There are potential issues in review or audit:
@@ -158,22 +186,26 @@ So we put up a solution to these problems via annotating `#[discharges]` on call
 reference system.
 
 ```rust
-// fn try_fold<B, F, R>(&mut self, mut init: B, mut f: F) -> R
+fn try_fold<B, F, R>(&mut self, mut init: B, mut f: F) -> R {
+    ...
 
-init = head.iter().map(|elem| {
-    guard.consumed += 1;
+    init = head.iter().map(|elem| {
+        guard.consumed += 1;
 
-    #[safety::discharges::ValidPtr(elem)]
-    #[safety::discharges::Aligned(elem)]
-    #[safety::discharges::Init(elem)]
-    #[safety::discharges::Trait(T, Copy, memo = "
-      Because we incremented `guard.consumed`, the deque 
-      effectively forgot the element, so we can take ownership.
-    ")]
-    #[safety::referent(try_fold)]
-    unsafe { ptr::read(elem) }
-})
-.try_fold(init, &mut f)?;
+        #[safety::discharges::ValidPtr(elem)]
+        #[safety::discharges::Aligned(elem)]
+        #[safety::discharges::Init(elem)]
+        #[safety::discharges::Trait(T, Copy, memo = "
+          Because we incremented `guard.consumed`, the deque 
+          effectively forgot the element, so we can take ownership.
+        ")]
+        #[safety::referent(try_fold)]
+        unsafe { ptr::read(elem) }
+    })
+    .try_fold(init, &mut f)?;
+
+    ...
+}
 ```
 
 `#[discharges]` must correspond to each safety property on the called unsafe API, if
@@ -196,38 +228,70 @@ To avoid verbosity, we propose `#[referent]` for entity definition and `#[ref]` 
 reference.
 
 ```rust
-// fn try_fold<B, F, R>(&mut self, mut init: B, mut f: F) -> R
+fn try_fold<B, F, R>(&mut self, mut init: B, mut f: F) -> R
+    ...
+    impl<'a, T, A: Allocator> Drop for Guard<'a, T, A> {
+        #[safety::ref::try_fold] // 💡
+        fn drop(&mut self) { ... }
+    }
+    
+    ...
 
-#[safety::ref::try_fold] fn try_fold::Guard::drop(&mut self) { ... }
+    init = head.iter().map(|elem| {
+        guard.consumed += 1;
 
-#[safety::discharges::ValidPtr(elem)]
-#[safety::discharges::Aligned(elem)]
-#[safety::discharges::Init(elem)]
-#[safety::discharges::Trait("T: Copy", memo = "
-  Because we incremented `guard.consumed`, the deque 
-  effectively forgot the element, so we can take ownership.
-")]
-#[safety::referent(try_fold)] // 👈 entity definition
-unsafe { ptr::read(elem) } // head
+        #[safety::discharges::ValidPtr(elem)]
+        #[safety::discharges::Aligned(elem)]
+        #[safety::discharges::Init(elem)]
+        #[safety::discharges::Trait(T, Copy, memo = "
+          Because we incremented `guard.consumed`, the deque 
+          effectively forgot the element, so we can take ownership.
+        ")]
+        #[safety::referent(try_fold)] // 👈 entity definition
+        unsafe { ptr::read(elem) }
+    })
+    .try_fold(init, &mut f)?;
 
-#[safety::ref::try_fold]
-unsafe { ptr::read(elem) } // tail
+    tail.iter().map(|elem| {
+        guard.consumed += 1;
 
-// fn try_rfold<B, F, R>(&mut self, mut init: B, mut f: F) -> R
+        #[safety::ref::try_fold] // 💡 No longer to write SAFETY: Same as above.
+        unsafe { ptr::read(elem) }
+    })
+    .try_fold(init, &mut f)
+}
 
-#[safety::ref::try_fold] fn try_rfold::Guard::drop(&mut self) { ... }
+fn try_rfold<B, F, R>(&mut self, mut init: B, mut f: F) -> R {
+    ...
+    impl<'a, T, A: Allocator> Drop for Guard<'a, T, A> {
+        #[safety::ref::try_fold] // 💡
+        fn drop(&mut self) { ... }
+    }
+    
+    ...
 
-#[safety::ref::try_fold]
-unsafe { ptr::read(elem) } // head
+    init = tail.iter().map(|elem| {
+            guard.consumed += 1;
+            
+            #[safety::ref::try_fold] // 💡 No longer to write SAFETY: See `try_fold`'s safety comment.
+            unsafe { ptr::read(elem) }
+        })
+        .try_rfold(init, &mut f)?;
 
-#[safety::ref::try_fold]
-unsafe { ptr::read(elem) } // tail
+    head.iter().map(|elem| {
+            guard.consumed += 1;
+            
+            #[safety::ref::try_fold] // 💡 No longer to write SAFETY: Same as above.
+            unsafe { ptr::read(elem) }
+        })
+        .try_rfold(init, &mut f)
+}
 ```
 
 If referent is not defined or collides, hard error is emitted.
 
-Once safety propeties on referent changes, we can know all relevant places, and estimate
-safety requirements fulfillment on referrers.
+Once safety propeties on referent changes, we can know all relevant places (e.g. lines with 💡 emoji),
+and estimate safety requirements fulfillment on referrers.
 
 ## Versions of a tag
 
@@ -320,7 +384,8 @@ At the moment, users must add these features in root module:
 #![register_tool(safety_tool)]
 ```
 
-or equivalently add them to [`--crate-attr`] compiler flag which also needs to stablize:
+or equivalently add them to [`--crate-attr`](https://github.com/rust-lang/rfcs/pull/3791) compiler flag
+which also needs to stablize:
 
 ```bash
 rustc --crate-attr="feature(register_tool)" --crate="register_tool(safety_tool)"
@@ -474,7 +539,7 @@ compiling safety-macro, its build.rs will read the project mapping, and auto gen
 
 [reflection-comptime]: https://github.com/rust-lang/rust-project-goals/pull/311
 
-We're trying to experiment on this though, as Asterinas OS want this.
+We're trying to experiment on this though, as Asterinas OS wants this.
 Feel free to drop by [tag-std#26](https://github.com/Artisan-Lab/tag-std/issues/26).
 
 ## Better development, review, and audit experience with more toolings
