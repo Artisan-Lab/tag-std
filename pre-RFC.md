@@ -18,7 +18,7 @@ For instance, a severe problem may arise if the safety requirements of an API ch
 
 * Compatible with existing safety documentation: Safety tags should be expressive enough to represent current safety comments, especially as rendered in today's rustdoc HTML pages.
 * Usable by compiler tools for safety checking: If a safety tag is declared for an unsafe API but not discharged at a callsite, lints should be emitted to warn developers about potentially overlooked safety requirements.
-Versioned: When safety tags are revised, the changes should be propagated and checked across the entire dependency graph to address issues caused by the evolution of safety requirements.
+* Versioned: When safety tags are revised, the changes should be propagated and checked across the entire dependency graph to address issues caused by the evolution of safety requirements.
 
 # Guide-level explanation
 [guide-level-explanation]: #guide-level-explanation
