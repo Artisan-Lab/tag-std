@@ -23,9 +23,9 @@ For instance, a severe problem may arise if the safety requirements of an API ch
 # Guide-level Explanation
 [guide-level-explanation]: #guide-level-explanation
 
-## Terms: Safety Requirements, Properties, and Tags
+## Terms: Safety Comments and Tags
 
-In the following document, we employ the term **safety requirements** to indicate informal textual descriptions of **safety properties** that must be satisfied to ensure safety when using an unsafe API. It is the current form of safety description employed by Rust. 
+In the following document, we employ the term **safety comments** to indicate informal textual descriptions of **safety properties** or **safety requirements** that must be satisfied to ensure safety when using an unsafe API. It is the current form of safety descriptions employed by Rust. 
 
 In contrast, **safety tags** describe safety properties with a formal languages, i.e., a [tool attribute] written in the form `#[safety::type::Prop(args, ...)]` where
   - `safety` is a crate name or tool name,
