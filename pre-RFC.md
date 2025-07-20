@@ -17,7 +17,7 @@ To avoid the misuse of unsafe code, Rust developers are encouraged to provide cl
 For instance, a severe problem may arise if the safety requirements of an API change over time: downstream users may be unaware of such changes and thus be exposed to security risks. Therefore, we propose to improve the current practice of writing safety comments by making them checkable through a system of safety tags. These tags are designed to be:
 
 * Compatible with existing safety documentation: Safety tags should be expressive enough to represent current safety comments, especially as rendered in today's rustdoc HTML pages.
-* Usable by compiler tools for safety checking: If a safety tag is declared for an unsafe API but not discharged at a callsite, lints should be emitted to warn developers about potentially overlooked safety requirements.
+* Usable by compiler tools for safety checking: If no safety tags are provided for an unsafe API, lints should be emitted to remind developers to provide safety requirements. If a safety tag is declared for an unsafe API but not discharged at a callsite, lints should be emitted to alert developers about potentially overlooked safety requirements.
 * Versioned: When safety tags are revised, the changes should be propagated and checked across the entire dependency graph to address issues caused by the evolution of safety requirements.
 
 # Guide-level Explanation
@@ -75,22 +75,22 @@ We can extract safety requirements above into propeties below:
 
 | Type    | Property | Arguments | Description                                                                              |
 |---------|----------|-----------|------------------------------------------------------------------------------------------|
-| Precond | ValidPtr | src       | `*const T` mut be [valid]                                                                |
-| Precond | Aligned  | src       | `*const T` must be [aligned][alignment] to `align_of::<T>()`                             |
-| Precond | Init     | src       | `*const T` must be initialized                                                           |
-| Option  | Trait    | T, Copy   | it's bitwise copy even for `T: !Copy`; see "Ownership of the Returned Value" for caveats |
+| Precond | ValidPtr | src       | `src` must be [valid] for reads. |
+| Precond | Aligned  | src       | `src` must be properly aligned.  |
+| Precond | Init     | src       | `src` must point to a properly initialized value of type `T`. |
+| Option  | Trait    | T, Copy   | create a bitwise copy of `T`, regardless of whether `T` is [`Copy`]. |
 
 [valid]: https://doc.rust-lang.org/std/ptr/index.html#safety
 [alignment]: https://doc.rust-lang.org/std/ptr/index.html#alignment
 
-Thus safety tags can be written as 
+We can represent these safety requirements using safety tags as shown below.
 
 ```rust
 /// # Safety
 #[safety::precond::ValidPtr(src)]
 #[safety::precond::Aligned(src)]
 #[safety::precond::Init(src)]
-#[safety::option::Trait(T, Copy, memo = "description")]
+#[safety::option::Trait(T, Copy)]
 ///
 /// ## Ownership of the Returned Value
 /// ...
@@ -101,11 +101,8 @@ pub const unsafe fn read<T>(src: *const T) -> T { ... }
 ```
 
 Safety tags will brings two effects:
-1. they are expanded to `#[doc]` comments, thus rendered through rustdoc on HTML pages.
-2. they are collected by a linter tool which sees all tags in all crates involved, and analyzes each callsite
-   to emit what safety tags are missing. The tool supports property checking on revision, meaning when a dependency
-   is updated, and its tags are modified, there will be a report about where infected tags locates and what
-   differences are w.r.t. any component in safety propeties.
+1. They will be expanded into `#[doc]` comments, which will be rendered through rustdoc on HTML pages.
+2. They will be collected and analyzed by a linter tool. If no safety tags are provided for an unsafe API, lints should be emitted to remind developers to provide safety requirements. If a safety tag is declared for an unsafe API but not discharged at a call site, lints should be emitted to alert developers about potentially overlooked safety requirements.
 
 ## Discharge a safety property
 
