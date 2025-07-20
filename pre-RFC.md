@@ -7,30 +7,17 @@ This RFC proposes a DSL-based mechanism for specifying safety properties, aiming
 
 This RFC operates at the API level rather than the compiler or language level, as it merely introduces attribute macros on functions and expressions that are already expressible today, but may require a linter tool to realize automated check.
 
-This RFC may have implications for the entire crate ecosystem, including the standard library and downstream crates.
+This RFC has influences on the entire crate ecosystem, including the standard library and downstream crates.
 
 # Motivation
 [motivation]: #motivation
 
-To avoid the misuse of unsafe code, Rust developers should provide clear safety comments for unsafe APIs.
+To avoid the misuse of unsafe code, Rust developers are encouraged to provide clear safety comments for unsafe APIs. While these comments are generally human-readable, they can be ambiguous and laborious to write. Even the current best practices in the Rust standard library are somewhat ad hoc and informal. Moreover, safety comments are often repetitive and may be perceived as less important than the code itself, which makes them error-prone and increases the risk that reviewers may overlook inaccuracies or missing safety requirements.
 
-While these safety comments are quite human readable, they can be interpreted differently from person to person.
-Even the current best practices in the Rust standard library are ad hoc and informal in some places.
-
-Besides, safety comments are sometimes tedious and repetitive to write, thus people just feel bothered to do or 
-simply leave a short note, but reviewers may neglect some unmentioned safety requirements.
-
-And here's a severe problem in review or audit as time goes by: when safety requirements changed on an API,
-function callers and people are unaware of the change. This is quite a safety hazard and risk for downstream
-crates whose safety comments are out of date since the change from upstream API.
-
-So we need to improve the practice of writing safety comments by making it machine readable and checkable 
-in the form of safety tags. We want these tags to be
-* accessible to read and write for human: if a tag is defined but missing on callsites, lints will be emitted 
-  to help the coder and reviewers assess safety requirements.
+For instance, here's a severe problem in review or audit as time goes by: when safety requirements changed on an API, function callers and people are unaware of the change. This is quite a safety hazard and risk for downstream crates whose safety comments are out of date since the change from upstream API. So we need to improve the practice of writing safety comments by making it machine readable and checkable in the form of safety tags. We want these tags to be
+* accessible to read and write for human: if a tag is defined but missing on callsites, lints will be emitted to help the coder and reviewers assess safety requirements.
 * composable enough to piece together safety comments for readers, especially on rustdoc HTML pages as seen today.
-* versioned: revised tags are in need of checking throughout the whole dependency graph to solve the problem
-  brought by evolution of safety requirements.
+* versioned: revised tags are in need of checking throughout the whole dependency graph to solve the problem brought by evolution of safety requirements.
 
 # Guide-level explanation
 [guide-level-explanation]: #guide-level-explanation
