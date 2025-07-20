@@ -278,19 +278,6 @@ This RFC suggests reporting diffs on versions of tags, in warnings or errors at 
 but doesn't provide any solution to churn. That's to say, it's unclear whether safety 
 propeties should be semver checked or not.
 
-///////////////////////////////// TODO: Below are not started yet /////////////////////////////////
-
-Explain the proposal as if it was already included in the language and you were teaching it to another Rust programmer. That generally means:
-
-- Introducing new named concepts.
-- Explaining the feature largely in terms of examples.
-- Explaining how Rust programmers should *think* about the feature, and how it should impact the way they use Rust. It should explain the impact as concretely as possible.
-- If applicable, provide sample error messages, deprecation warnings, or migration guidance.
-- If applicable, describe the differences between teaching this to existing Rust programmers and new Rust programmers.
-- Discuss how this impacts the ability to read, understand, and maintain Rust code. Code is read and modified far more often than written; will the proposed feature make code easier to maintain?
-
-For implementation-oriented RFCs (e.g. for compiler internals), this section should focus on how compiler contributors should think about the change, and give examples of its concrete impact. For policy RFCs, this section should provide an example-driven introduction to the policy, and explain its impact in concrete terms.
-
 # Reference-level explanation
 [reference-level-explanation]: #reference-level-explanation
 
@@ -318,39 +305,83 @@ The section should return to the examples given in the previous section, and exp
 # Rationale and alternatives
 [rationale-and-alternatives]: #rationale-and-alternatives
 
-- Why is this design the best in the space of possible designs?
-- What other designs have been considered and what is the rationale for not choosing them?
-- What is the impact of not doing this?
-- If this is a language proposal, could this be done in a library or macro instead? Does the proposed change make Rust code easier or harder to read, understand, and maintain?
+## Alternatives from URLO
+
+There are alternative discussion or Pre-RFCs on URLO:
+
+* 2023-10: [Ability to call unsafe functions without curly brackets](https://internals.rust-lang.org/t/ability-to-call-unsafe-functions-without-curly-brackets/19635/22)
+  * this is a discussion about make single unsafe call simpler, so the idea evolved into tczajka's Pre-RFC
+  * but the idea and syntax from scottmcm's comments are very enlightening to our RFC
+* 2024-10: [Detect and Fix Overscope unsafe Block](https://internals.rust-lang.org/t/detect-and-fix-overscope-unsafe-block/21660/19) 
+  * the OP is about safe code scope in big unsafe block, which is not discussed in our RFC
+  * but scottmcm's comments are good inspiration for our RFC
+* 2024-12: [Pre-RFC: Unsafe reasons](https://internals.rust-lang.org/t/pre-rfc-unsafe-reasons/22093) proposed by chrefr
+  * good improvement on abstracting safety comments to single identifier that is machine readable and checkable,
+    but doesn't specify arguments and string interpolation to be more fine-grained on unsafe reasons
+  * big request on language and compiler change, while safety tags in our RFC is lightweight
+* 2025-02: [Pre-RFC: Single function call `unsafe`](https://internals.rust-lang.org/t/pre-rfc-single-function-call-unsafe/22343) proposed by tczajka
+  * single unsafe call is a good practice, but postfix `.unsafe` needs more compiler supports but doesn't suggest any improvement on safe comments 
+  * our RFC supports annotating safety tags on any expression including single calls
+* 2025-05: [Pre-RFC: Granular Unsafe Blocks - A more explicit and auditable approach](https://internals.rust-lang.org/t/pre-rfc-granular-unsafe-blocks-a-more-explicit-and-auditable-approach/23022) proposed by Redlintles
+  * safety categories suggested are too broad
+  * while safety propeties in our RFC are more granular and semantics-specifc
+* 2025-07: [Unsafe assertion invariants](https://internals.rust-lang.org/t/unsafe-assertion-invariants/23206)
+  * good idea to embed safety requirements/contract/information into doc comments, which is similar to one of the goals in our RFC
+
+## Alternatives from Rust for Linux
+
+More importantly, our proposal is a big improvement to these proposals, which Rust for Linux care more about:
+* 2024-09: [Rust Safety Standard: Increasing the Correctness of unsafe Code][Rust Safety Standard] proposed by Benno Lossin
+  * this slides are about reasons and goals for safety documentation standardization, which our proposal tries to achieve
+  * it doesn't mention how the standard is implemented, but Predrag (see the next line) and we follow the spirit
+* 2024-10: [Automated checking of unsafe code requirements](https://hackmd.io/@qnR1-HVLRx-dekU5dvtvkw/SyUuR6SZgx) proposed by Predrag
+  * our proposal is greatly inspired by Predrag's, so many of it can apply to ours, such as structured comments,
+    entity reference, requirements discharge, and handling soundness hazard on safety rule changes. 
+  * the main difference is syntax: Predrag put up new syntax within doc and line comments, which is pretty human and machine readable,
+    but can be hard to implement as compiler just throws aways line comments so it's less handy to get safe rules on an expression
+    than [`stmt_expr_attributes`](https://github.com/rust-lang/rust/issues/15701).
+  * his proposal doesn't mention arguments support in safety rules, meaning we don't know how a pointer safety rule can apply to two
+    pointers function arguments without ambiguity.
+
+Originally, we only focus on libstd's common safety propeties ([paper]), but noticed the RustWeek meeting note
+[Function contracts and type invariants specification](https://hackmd.io/@qnR1-HVLRx-dekU5dvtvkw/SyUuR6SZgx) in zulipchat. 
+Thus [tag-std#3](https://github.com/Artisan-Lab/tag-std/issues/3) is opened to support Rust for Linux on safety standard.
+
+[Rust Safety Standard]: https://kangrejos.com/2024/Rust%20Safety%20Standard.pdf
+[paper]: https://arxiv.org/abs/2504.21312
 
 # Prior art
 [prior-art]: #prior-art
 
-* 2023-10: [Ability to call unsafe functions without curly brackets](https://internals.rust-lang.org/t/ability-to-call-unsafe-functions-without-curly-brackets/19635/22)
-  * this is a discussion about make single unsafe call simpler, so the idea evolved into tczajka's Pre-RFC
-  * but the idea and syntax from scottmcm's comments are very enlightening to my RFC
-* 2024-10: [Detect and Fix Overscope unsafe Block](https://internals.rust-lang.org/t/detect-and-fix-overscope-unsafe-block/21660/19) 
-  * the OP is about safe code scope in big unsafe block, which is not discussed in my RFC
-  * but scottmcm's comments are good inspiration for my RFC
-* 2024-12: [Pre-RFC: Unsafe reasons](https://internals.rust-lang.org/t/pre-rfc-unsafe-reasons/22093) proposed by chrefr
-  * good improvement on abstracting safety comments to single identifier that is machine readable and checkable,
-    but doesn't specify arguments and string interpolation to be more fine-grained on unsafe reasons
-  * big request on language and compiler change, while safety tags in my RFC is lightweight
-* 2025-02: [Pre-RFC: Single function call `unsafe`](https://internals.rust-lang.org/t/pre-rfc-single-function-call-unsafe/22343) proposed by tczajka
-  * single unsafe call is a good practice, but postfix `.unsafe` needs more compiler supports but doesn't suggest any improvement on safe comments 
-  * my RFC supports annotating safety tags on any expression including single calls
-* 2025-05: [Pre-RFC: Granular Unsafe Blocks - A more explicit and auditable approach](https://internals.rust-lang.org/t/pre-rfc-granular-unsafe-blocks-a-more-explicit-and-auditable-approach/23022) proposed by Redlintles
-  * safety categories suggested are too broad
-  * while safety propeties in my RFC are more granular and semantics-specifc
-* 2025-07: [Unsafe assertion invariants](https://internals.rust-lang.org/t/unsafe-assertion-invariants/23206)
-  * good idea to embed safety requirements/contract/information into doc comments, which is similar to one of the goals in my RFC
+Currently, there are efforts on introducing contracts and formal verification into Rust:
+* [contracts](https://rust-lang.github.io/rust-project-goals/2024h2/Contracts-and-invariants.html): the lang experiment has been
+  implemented since [rust#128044](https://github.com/rust-lang/rust/issues/128044).
+* [verify-rust-std] pursues applying formal verification tools to libstd. Also see Rust Foundation [announcement][vrs#ann],
+  project goals during [2024h2] and [2025h1].
+
+Our proposal "safety property system" also follows [design by contract](https://en.wikipedia.org/wiki/Design_by_contract), especially on
+* A clear metaphor to guide the design process
+* The connection with automatic software documentation
+
+Nonetheless, safety property is of static semantics, unlike other verification tools which tends to employ symbolic execution
+and be dynamic in some ways. Also, safety property is based on current safety comment practices, thus Rustaceans may feel 
+more familiar.
+
+[verify-rust-std]: https://github.com/model-checking/verify-rust-std
+[2024h1]: https://rust-lang.github.io/rust-project-goals/2024h2/std-verification.html
+[2025h1]: https://rust-lang.github.io/rust-project-goals/2025h1/std-contracts.html
+[vrs#ann]: https://foundation.rust-lang.org/news/rust-foundation-collaborates-with-aws-initiative-to-verify-rust-standard-libraries/
 
 # Unresolved questions
 [unresolved-questions]: #unresolved-questions
 
-- What parts of the design do you expect to resolve through the RFC process before this gets merged?
-- What parts of the design do you expect to resolve through the implementation of this feature before stabilization?
-- What related issues do you consider out of scope for this RFC that could be addressed in the future independently of the solution that comes out of this RFC?
+* semver of safety propeties: see [versions of a tag](#semver-tag) above.
+* order requirements on invocation: it's also common to clarify an unsafe operation must be performed once,
+  or some unsafe operation must be followed by or precede another. Our proposal may well support this by 
+  extending reference system and control-flow analysis. Tracked in [tag-std#29].
+* handle type erasure: we haven't think about calls through unsafe fn pointer or `dyn Trait`.
+
+[tag-std#29]: https://github.com/Artisan-Lab/tag-std/issues/29
 
 # Future possibilities
 [future-possibilities]: #future-possibilities
