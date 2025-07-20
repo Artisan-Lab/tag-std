@@ -41,7 +41,7 @@ See the following usage of `ptr::read` as an example.
 [`String::as_bytes_mut`]: https://doc.rust-lang.org/std/string/struct.String.html#method.as_bytes_mut
 [`ptr::read`]: https://doc.rust-lang.org/std/ptr/fn.read.html
 
-## Turn safety requirements into propeties and tags
+## Turn Safety Comments into Safety Tags
 
 Consider safety comments on [`ptr::read`]
 
@@ -101,7 +101,7 @@ Safety tags will brings two effects:
 1. They will be expanded into `#[doc]` comments, which will be rendered through rustdoc on HTML pages.
 2. They will be collected and analyzed by a linter tool. If no safety tags are provided for an unsafe API, lints should be emitted to remind developers to provide safety requirements. If a safety tag is declared for an unsafe API but not discharged at a call site, lints should be emitted to alert developers about potentially overlooked safety requirements.
 
-## Discharge a safety property
+## Discharge Safety Properties
 
 A common practice for calling unsafe functions are to leave a small piece of 
 safety comments, and repeat it or refer to the same comments. [For example][vec_deque]:
