@@ -25,12 +25,9 @@ For instance, a severe problem may arise if the safety requirements of an API ch
 
 ## Terms: Safety Requirements, Properties, and Tags
 
-We define a unit of safety-related information as a safety requirement, safety property, or safety tag, each with subtle distinctions:
-* **Safety requirement**: A free-form textual description of a condition that must be satisfied to ensure safety when using an unsafe API. It is the current form of safety description employed by Rust. 
-* **Safety property**: A structured and formalized representation of a safety requirement. It consists of:
-  - A keyword or an identifier indicating the kind of property,
-  - A list of arguments.
-* **Safety tag**: A [tool attribute] written in the form `#[safety::type::Prop(args, ...)]` where
+In the following document, we employ the term **safety requirements** to indicate informal textual descriptions of **safety properties** that must be satisfied to ensure safety when using an unsafe API. It is the current form of safety description employed by Rust. 
+
+In contrast, **safety tags** describe safety properties with a formal languages, i.e., a [tool attribute] written in the form `#[safety::type::Prop(args, ...)]` where
   - `safety` is a crate name or tool name,
   - `type` is one of `{precond, hazard, option}`,
       - precond denotes a safety requirement that must be satisfied before invoking an unsafe API. Most unsafe APIs carry at least one precondition.
