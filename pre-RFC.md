@@ -43,16 +43,17 @@ The unit of a piece of safety information is called a safety requirement, proper
 * a safety requirement is descriptive in text.
 * a safety propety is structured and formalized to be made of a keyword (i.e. ident) of a type, arguments and short description;
   ideally string interpolation is able to perform on it so that a property is as much reusable as possible.
-* a safety tag is a [tool attribute](https://doc.rust-lang.org/reference/attributes.html#tool-attributes) in the form of 
-  `#[safety::type::Prop(args, ...)]` where `safety` is a crate name or tool name, `type` is one of `{precond,hazard,option}`,
-  and `Prop(args, ...)` is a safety property. For safety propeties in libcore and libstd, refer to 
+* a safety tag is a [tool attribute] in the form of `#[safety::type::Prop(args, ...)]` where `safety` is
+  a crate name or tool name, `type` is one of `{precond,hazard,option}`, and `Prop(args, ...)` is a safety property.
+  For safety propeties in libcore and libstd, refer to 
   [this document](https://github.com/Artisan-Lab/tag-std/blob/main/primitive-sp.md) and 
-  [paper](https://arxiv.org/abs/2504.21312). For property types:
+  our ongoing [paper](https://arxiv.org/abs/2504.21312). For property types:
   * **precond** denotes a safety requirement that must be satisfied before invoking an unsafe API; most unsafe APIs may have this.
   * **hazard** denotes invoking the unsafe API may temporarily leave the program in a vulnerable state; e.g. [`String::as_bytes_mut`].
   * **option** denotes optional precondition for the unsafe API; if such condition is satisfied, they can ensure the safety invariant;
     e.g. see the following example of `ptr::read`.
 
+[tool attribute]: https://doc.rust-lang.org/reference/attributes.html#tool-attributes
 [`String::as_bytes_mut`]: https://doc.rust-lang.org/std/string/struct.String.html#method.as_bytes_mut
 [`ptr::read`]: https://doc.rust-lang.org/std/ptr/fn.read.html
 
@@ -172,7 +173,7 @@ There are potential issues in review or audit:
   `try_rfold` has its own `Guard::drop` impl, meaning we should check both `try_{r,}fold::Guard::drop`
   even when only single drop impl changes. 
 
-So we put up a solution to these problems via annotating `#[discharges]` on callsites and some form of 
+So we put up a solution to these problems via annotating `#[discharges]` on callsites and entity
 reference system.
 
 ```rust
@@ -251,7 +252,7 @@ safety requirements fulfillment on referrers.
 
 <a id="semver-tag"></a>
 
-We should notice reference system handles two versions of tags from the above example!
+We should notice entity reference system handles two versions of tags from the above example!
 
 When a tag is newly introduced on an API, discharge detection applies.
 
@@ -281,13 +282,77 @@ propeties should be semver checked or not.
 # Reference-level explanation
 [reference-level-explanation]: #reference-level-explanation
 
-This is the technical portion of the RFC. Explain the design in sufficient detail that:
+Since this RFC doesn't require too much new features from Rust compiler or language,
+implementations in this section are tool specific and focus on syntax.
 
-- Its interaction with other features is clear.
-- It is reasonably clear how the feature would be implemented.
-- Corner cases are dissected by example.
+Take one of safety tag on `ptr::read` as an example:
 
-The section should return to the examples given in the previous section, and explain more fully how the detailed proposal makes those examples work.
+```rust
+#[safety::precond::ValidPtr(src)]
+```
+
+It's a proc-macro, but reexported in a lib crate, becuase only root path is accessible
+in proc-macro crate. We have to reexport it in a nested module outside:
+
+```rust
+// proc-macro crate: safety_macro/src/lib.rs
+#[proc_macro_attribute]
+pub fn Precond_ValidPtr(attr: TokenStream, item: TokenStream) -> TokenStream { ... }
+
+// normal lib crate: safety_lib/src/lib.rs
+pub mod precond {
+    pub use safety_macro::Precond_ValidPtr as ValidPtr;
+}
+```
+
+The user can import the lib crate through Cargo.toml:
+
+```toml
+# The following means renaming safety-lib to safety as your dependency
+safety = { version = "0.0.1", package = "safety-lib" }
+```
+
+`#[safety::precond::ValidPtr]` now is available in your crate, and it's autocompleted
+by RA if you type `#[safety::]` or something.
+
+Thanks to proc-macro crate being host-target only, we can also make it work in no_std projects,
+and even non-Cargo projects like Rust for Linux. See [tag-std#24] if you're interested. 
+
+[tag-std#24]: https://github.com/Artisan-Lab/tag-std/pull/24
+
+The proc macro expands to two attributes:
+
+```rust
+#[doc = "`src` must be [valid] for reads.\n\n[valid]: https://doc.rust-lang.org/std/ptr/index.html#safety"]
+#[safety_tool::inner(property = ValidPtr(src), kind = "precond")]
+```
+
+* `#[doc]` is a safety comment, possibly with extra argument infomation interpolated into the text.
+* `#[safety_tool]` is a [tool attribute], and `inner(...)` all path segments following it is basically
+  verbatim passed to and interpreted by linter tool.
+
+The second attribute requires [register_tool](https://github.com/rust-lang/rfcs/pull/3808) to be stablized.
+At the moment, users must add these features in root module:
+
+```rust
+#![feature(register_tool)]
+#![register_tool(safety_tool)]
+```
+
+or equivalently add them to [`--crate-attr`] compiler flag which also needs to stablize:
+
+```bash
+rustc --crate-attr="feature(register_tool)" --crate="register_tool(safety_tool)"
+```
+
+For `#[discharges]`, more unstable features are required to support attributes on satements and expression:
+
+```rust
+#![feature(proc_macro_hygiene)]
+#![feature(stmt_expr_attributes)]
+```
+
+Details of implementation on reference entity system belongs to the linter tool.
 
 # Drawbacks
 [drawbacks]: #drawbacks
@@ -368,7 +433,7 @@ and be dynamic in some ways. Also, safety property is based on current safety co
 more familiar.
 
 [verify-rust-std]: https://github.com/model-checking/verify-rust-std
-[2024h1]: https://rust-lang.github.io/rust-project-goals/2024h2/std-verification.html
+[2024h2]: https://rust-lang.github.io/rust-project-goals/2024h2/std-verification.html
 [2025h1]: https://rust-lang.github.io/rust-project-goals/2025h1/std-contracts.html
 [vrs#ann]: https://foundation.rust-lang.org/news/rust-foundation-collaborates-with-aws-initiative-to-verify-rust-standard-libraries/
 
@@ -378,7 +443,7 @@ more familiar.
 * semver of safety propeties: see [versions of a tag](#semver-tag) above.
 * order requirements on invocation: it's also common to clarify an unsafe operation must be performed once,
   or some unsafe operation must be followed by or precede another. Our proposal may well support this by 
-  extending reference system and control-flow analysis. Tracked in [tag-std#29].
+  extending entity reference system and control-flow analysis. Tracked in [tag-std#29].
 * handle type erasure: we haven't think about calls through unsafe fn pointer or `dyn Trait`.
 
 [tag-std#29]: https://github.com/Artisan-Lab/tag-std/issues/29
