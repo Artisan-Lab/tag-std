@@ -3,13 +3,11 @@
 # Summary
 [summary]: #summary
 
-A safety property mechanism that is standardized on writing safety documentation and propeties are auto checked.
+This RFC proposes a DSL-based mechanism for specifying safety properties, aiming to standardize how safety descriptions are written in API documentation. On the one hand, it seeks to improve the ergonomics of writing safety descriptions; on the other hand, these safety properties can enable finer-grained unsafe code management and automated safety checking.
 
-This RFC is at API-level, not compiler or language level, because we only introduce some attribute macros on 
-functions and expressions, which has been able to express today, but needs a linter tool to achieve the goal.
+This RFC operates at the API level rather than the compiler or language level, as it merely introduces attribute macros on functions and expressions that are already expressible today, but may require a linter tool to realize automated check.
 
-And this PRF influences the whole crate ecosystem, especially on unsafe code practices, because we hope safety
-propeties from std and sibling crates are accessible to downstream crates, even to low-level no_std crates.
+This RFC may have implications for the entire crate ecosystem, including the standard library and downstream crates.
 
 # Motivation
 [motivation]: #motivation
