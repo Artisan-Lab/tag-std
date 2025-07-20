@@ -20,24 +20,25 @@ For instance, a severe problem may arise if the safety requirements of an API ch
 * Usable by compiler tools for safety checking: If a safety tag is declared for an unsafe API but not discharged at a callsite, lints should be emitted to warn developers about potentially overlooked safety requirements.
 * Versioned: When safety tags are revised, the changes should be propagated and checked across the entire dependency graph to address issues caused by the evolution of safety requirements.
 
-# Guide-level explanation
+# Guide-level Explanation
 [guide-level-explanation]: #guide-level-explanation
 
-## Terms: requirement, property, and tag
+## Terms: Safety Requirements, Properties, and Tags
 
-The unit of a piece of safety information is called a safety requirement, property, or tag. Nuances are
-* a safety requirement is descriptive in text.
-* a safety propety is structured and formalized to be made of a keyword (i.e. ident) of a type, arguments and short description;
-  ideally string interpolation is able to perform on it so that a property is as much reusable as possible.
-* a safety tag is a [tool attribute] in the form of `#[safety::type::Prop(args, ...)]` where `safety` is
-  a crate name or tool name, `type` is one of `{precond,hazard,option}`, and `Prop(args, ...)` is a safety property.
-  For safety propeties in libcore and libstd, refer to 
-  [this document](https://github.com/Artisan-Lab/tag-std/blob/main/primitive-sp.md) and 
-  our ongoing [paper](https://arxiv.org/abs/2504.21312). For property types:
-  * **precond** denotes a safety requirement that must be satisfied before invoking an unsafe API; most unsafe APIs may have this.
-  * **hazard** denotes invoking the unsafe API may temporarily leave the program in a vulnerable state; e.g. [`String::as_bytes_mut`].
-  * **option** denotes optional precondition for the unsafe API; if such condition is satisfied, they can ensure the safety invariant;
-    e.g. see the following example of `ptr::read`.
+We define a unit of safety-related information as a safety requirement, safety property, or safety tag, each with subtle distinctions:
+* **Safety requirement**: A free-form textual description of a condition that must be satisfied to ensure safety when using an unsafe API. It is the current form of safety description employed by Rust. 
+* **Safety property**: A structured and formalized representation of a safety requirement. It consists of:
+  - A keyword or an identifier indicating the kind of property,
+  - A list of arguments.
+* **Safety tag**: A [tool attribute] written in the form `#[safety::type::Prop(args, ...)]` where
+  - `safety` is a crate name or tool name,
+  - `type` is one of `{precond, hazard, option}`,
+      - precond denotes a safety requirement that must be satisfied before invoking an unsafe API. Most unsafe APIs carry at least one precondition.
+      - hazard denotes invoking the unsafe API may temporarily leave the program in a vulnerable state; e.g. [`String::as_bytes_mut`].
+      - option denotes an optional precondition for an unsafe API—conditions that are sufficient but not necessary to uphold the safety invariant. 
+  - `Prop(args, ...)` is a safety property instance. For safety propeties in libcore and libstd, refer to [this document](https://github.com/Artisan-Lab/tag-std/blob/main/primitive-sp.md) and our ongoing [paper](https://arxiv.org/abs/2504.21312).
+
+See the following usage of `ptr::read` as an example.
 
 [tool attribute]: https://doc.rust-lang.org/reference/attributes.html#tool-attributes
 [`String::as_bytes_mut`]: https://doc.rust-lang.org/std/string/struct.String.html#method.as_bytes_mut
