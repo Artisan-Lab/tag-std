@@ -278,8 +278,6 @@ This RFC suggests reporting diffs on versions of tags, in warnings or errors at 
 but doesn't provide any solution to churn. That's to say, it's unclear whether safety 
 propeties should be semver checked or not.
 
-## Better review and auditing experience
-
 ///////////////////////////////// TODO: Below are not started yet /////////////////////////////////
 
 Explain the proposal as if it was already included in the language and you were teaching it to another Rust programmer. That generally means:
@@ -359,24 +357,55 @@ The section should return to the examples given in the previous section, and exp
 
 ## Interaction with Rust type system
 
-About expression and trait solver.
+Arguments in a property can be any expression, and sometimes the type of argument must be known
+in analysis and doc comments:
 
-======================
+```rust
+// Syntax1: we don't need to query type if user is asked to provide it.
+//          But we're responsible to check the given type is valid!
+//          So this means we have to reach type systems anyway.
+#[safety::precond::Aligned(p, T)]
+// Syntax2: we must get type info from rustc.
+#[safety::precond::Aligned(p)]
+unsafe fn read<T>(src: *const T) {}
+```
 
-Think about what the natural extension and evolution of your proposal would
-be and how it would affect the language and project as a whole in a holistic
-way. Try to use this section as a tool to more fully consider all possible
-interactions with the project and language in your proposal.
-Also consider how this all fits into the roadmap for the project
-and of the relevant sub-team.
+The generic type `T` will be rendered in `#[doc]`, so it'd be tricky if the type needs 
+[normalization] or trait bounds analysis. It happens to be the case that `ptr::read`
+has a safety property `#[option::Trait(T, Copy)]`.
 
-This is also a good place to "dump ideas", if they are out of scope for the
-RFC you are writing but otherwise related.
+[normalization]: https://rustc-dev-guide.rust-lang.org/normalization.html
 
-If you have tried and cannot think of any future possibilities,
-you may simply state that you cannot think of anything.
+Because attributes on expression are only available in HIR, is type fully normalized at 
+this stage? I guess no.
 
-Note that having something written down in the future-possibilities section
-is not a reason to accept the current or a future RFC; such notes should be
-in the section on motivation or rationale in this or subsequent RFCs.
-The section merely provides additional information.
+Trait solver may be involved, due to trait bounds analysis in safety property: if we
+hope to do better on `#[option::Trait(T, Copy)]`, each call of read on non-Copy T should 
+requires a safety reason.
+
+## Dynamic safety properties
+
+The reason to have dynamically generated propeties is that we are unable to write 
+an attribute library that can meet all unsafe code.
+
+Low-level crates probably requires their own safety propeties more than libstd defines.
+
+The core idea is a project-aware configuration file, in toml or json format, mapping
+property name, arguments, and description (including string interpolation). When
+compiling safety-macro, its build.rs will read the project mapping, and auto generate macros.
+(Suppose we don't have [reflection and comptime][reflection-comptime] any time soon.)
+
+[reflection-comptime]: https://github.com/rust-lang/rust-project-goals/pull/311
+
+We're trying to experiment on this though, as Asterinas OS want this.
+Feel free to drop by [tag-std#26](https://github.com/Artisan-Lab/tag-std/issues/26).
+
+## Better development, review, and audit experience with more toolings
+
+We're also considering implmenting such tools for better experience:
+* a LSP server to analyze safety properties and offer safety attributes autocompletion
+* a [SARIF](https://sarifweb.azurewebsites.net/) adaptor and code scanning workflow
+on Github PR/Security ([e.g.][sarif-rs]).
+
+[sarif-rs]: https://psastras.github.io/sarif-rs/docs/getting-started/introduction/
+
