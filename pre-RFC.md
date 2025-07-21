@@ -275,15 +275,9 @@ Details of implementation on reference entity system belongs to the linter tool.
 # Drawbacks
 [drawbacks]: #drawbacks
 
-* cover too many unsafe APIs
-  * need a lot of efforts on inital safety tags
-* semver compatibility churn (see [above](#semver-tag))
-* inadequacy of unsafe operation semantics
-  * frequent change on some safety propeties
-  * not sure if all safety propeties are composable
-* tools coupling
-  * it's less readable in source code around safety tags, and must turn to rustdoc or LSP server 
-    for help to know safety requirements in plain text
+* This proposal applies to most unsafe APIs and requires significant effort to replace existing safety comments with safety tags. However, it can be implemented incrementally.
+* It is unclear whether all safety properties are composable, and some properties may change frequently in the early stages. Our initial investigation shows that the idea works well for the standard library.
+* Safety tags may be less readable than the original safety comments. However, their readability should be comparable when rendered in rustdoc or surfaced through the LSP server.
 
 # Rationale and alternatives
 [rationale-and-alternatives]: #rationale-and-alternatives
@@ -293,14 +287,13 @@ Details of implementation on reference entity system belongs to the linter tool.
 There are alternative discussion or Pre-RFCs on URLO:
 
 * 2023-10: [Ability to call unsafe functions without curly brackets](https://internals.rust-lang.org/t/ability-to-call-unsafe-functions-without-curly-brackets/19635/22)
-  * this is a discussion about make single unsafe call simpler, so the idea evolved into tczajka's Pre-RFC
-  * but the idea and syntax from scottmcm's comments are very enlightening to our RFC
+  * This is a discussion about make single unsafe call simpler, so the idea evolved into tczajka's Pre-RFC.
+  * But the idea and syntax from Scottmcm's comments are very enlightening to our RFC.
 * 2024-10: [Detect and Fix Overscope unsafe Block](https://internals.rust-lang.org/t/detect-and-fix-overscope-unsafe-block/21660/19) 
-  * the OP is about safe code scope in big unsafe block, which is not discussed in our RFC
-  * but scottmcm's comments are good inspiration for our RFC
+  * The OP is about safe code scope in big unsafe block, which is not discussed in our RFC.
+  * But scottmcm's comments are good inspiration for our RFC.
 * 2024-12: [Pre-RFC: Unsafe reasons](https://internals.rust-lang.org/t/pre-rfc-unsafe-reasons/22093) proposed by chrefr
-  * good improvement on abstracting safety comments to single identifier that is machine readable and checkable,
-    but doesn't specify arguments and string interpolation to be more fine-grained on unsafe reasons
+  * good improvement on abstracting safety comments to single identifier that is machine readable and checkable, but doesn't specify arguments and string interpolation to be more fine-grained on unsafe reasons
   * big request on language and compiler change, while safety tags in our RFC is lightweight
 * 2025-02: [Pre-RFC: Single function call `unsafe`](https://internals.rust-lang.org/t/pre-rfc-single-function-call-unsafe/22343) proposed by tczajka
   * single unsafe call is a good practice, but postfix `.unsafe` needs more compiler supports but doesn't suggest any improvement on safe comments 
