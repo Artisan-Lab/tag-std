@@ -158,8 +158,9 @@ The example above demonstrates several issues:
 
 * **Lack of clarity on safety requirements**: It is unclear whether the developer has considered all safety requirements for `ptr::read` and ensured they are satisfied. From the comments, we can see that only the `NotOwned` safety property is explicitly addressed.
 
-* **Comment dependency and maintenance burden**: When a piece of safety documentation is modified, all places that reference it must be reconsidered and updated accordingly. In this example, `try_rfold` refers to the safety comments inside `try_fold`. If the safety comment within `try_fold` changes, developers might forget to verify whether the new comment still applies to `try_rfold`.
-* **Implicit dependencies on unsafe behavior**: Developers may unknowingly change code that other safety assumptions rely on. For instance, the comment "the deque effectively forgot the element" depends on the behavior of Guard's Drop implementation. If `try_fold::Guard::drop` changes, developers must check whether the associated safety comments still hold. 
+* **Comment dependency and maintenance burden**: When a piece of safety documentation is modified, all places that reference it must be reconsidered and updated accordingly. In this example, `try_rfold` refers to the safety comments inside `try_fold`. If the safety comment within `try_fold` changes, developers might forget to verify whether the new comment still applies to `try_rfold`. (This is not the focus of this RFC)
+  
+* **Implicit dependencies on unsafe behavior**: Developers may unknowingly change code that other safety assumptions rely on. For instance, the comment "the deque effectively forgot the element" depends on the behavior of Guard's Drop implementation. If `try_fold::Guard::drop` changes, developers must check whether the associated safety comments still hold. (This RFC does not address this problem)
 
 To address these issues, we propose a solution based on annotating call sites with `#[discharges]` and introducing an entity reference system.
 
@@ -170,14 +171,14 @@ fn try_fold<B, F, R>(&mut self, mut init: B, mut f: F) -> R {
     init = head.iter().map(|elem| {
         guard.consumed += 1;
 
-        #[safety::discharges::ValidPtr(elem)]
-        #[safety::discharges::Aligned(elem)]
-        #[safety::discharges::Init(elem)]
-        #[safety::discharges::Trait(T, Copy, memo = "
+        #[safety::discharges::ValidPtr(elem, T, 1)]
+        #[safety::discharges::Aligned(elem, T)]
+        #[safety::discharges::Init(elem, T, 1)]
+        #[safety::discharges::NotOwned(elem, memo = "
           Because we incremented `guard.consumed`, the deque 
           effectively forgot the element, so we can take ownership.
         ")]
-        #[safety::referent(try_fold)]
+        #[safety::discharges::Alias(elem, head.iter())]
         unsafe { ptr::read(elem) }
     })
     .try_fold(init, &mut f)?;
@@ -202,30 +203,24 @@ LLL | unsafe { ptr::read(elem) }
     = NOTE: Init 👉 The pointer must be initialized before calling `core::ptr::read`
 ```
 
-To avoid verbosity, we propose `#[referent]` for entity definition and `#[ref]` for entity
-reference.
+## Optional Feature
+To reduce verbosity, we propose using `#[referent]` to define entities and `#[ref]` to reference them.
 
 ```rust
 fn try_fold<B, F, R>(&mut self, mut init: B, mut f: F) -> R
     ...
-    impl<'a, T, A: Allocator> Drop for Guard<'a, T, A> {
-        #[safety::ref::try_fold] // 💡
-        fn drop(&mut self) { ... }
-    }
-    
-    ...
-
     init = head.iter().map(|elem| {
         guard.consumed += 1;
 
-        #[safety::discharges::ValidPtr(elem)]
-        #[safety::discharges::Aligned(elem)]
-        #[safety::discharges::Init(elem)]
-        #[safety::discharges::Trait(T, Copy, memo = "
+        #[safety::referent(try_fold)] // 👈 entity definition
+        #[safety::discharges::ValidPtr(elem, T, 1)]
+        #[safety::discharges::Aligned(elem, T)]
+        #[safety::discharges::Init(elem, T, 1)]
+        #[safety::discharges::NotOwned(elem, memo = "
           Because we incremented `guard.consumed`, the deque 
           effectively forgot the element, so we can take ownership.
         ")]
-        #[safety::referent(try_fold)] // 👈 entity definition
+        #[safety::discharges::Alias(elem, head.iter())] 
         unsafe { ptr::read(elem) }
     })
     .try_fold(init, &mut f)?;
@@ -241,16 +236,9 @@ fn try_fold<B, F, R>(&mut self, mut init: B, mut f: F) -> R
 
 fn try_rfold<B, F, R>(&mut self, mut init: B, mut f: F) -> R {
     ...
-    impl<'a, T, A: Allocator> Drop for Guard<'a, T, A> {
-        #[safety::ref::try_fold] // 💡
-        fn drop(&mut self) { ... }
-    }
-    
-    ...
-
     init = tail.iter().map(|elem| {
             guard.consumed += 1;
-            
+
             #[safety::ref::try_fold] // 💡 No longer to write SAFETY: See `try_fold`'s safety comment.
             unsafe { ptr::read(elem) }
         })
@@ -258,7 +246,7 @@ fn try_rfold<B, F, R>(&mut self, mut init: B, mut f: F) -> R {
 
     head.iter().map(|elem| {
             guard.consumed += 1;
-            
+
             #[safety::ref::try_fold] // 💡 No longer to write SAFETY: Same as above.
             unsafe { ptr::read(elem) }
         })
@@ -266,10 +254,7 @@ fn try_rfold<B, F, R>(&mut self, mut init: B, mut f: F) -> R {
 }
 ```
 
-If referent is not defined or collides, hard error is emitted.
-
-Once safety propeties on referent changes, we can know all relevant places (e.g. lines with 💡 emoji),
-and estimate safety requirements fulfillment on referrers.
+Such annotations either enable the compiler to detect inconsistencies among safety properties or provide hints to remind developers to check other referring callsites.
 
 ## Versions of a tag
 
