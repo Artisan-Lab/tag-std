@@ -120,19 +120,10 @@ Currently, a common practice when calling unsafe functions is to leave a brief s
 // impl<T, A: Allocator> Iterator for IntoIter<T, A>
 
 fn try_fold<B, F, R>(&mut self, mut init: B, mut f: F) -> R {
-    struct Guard<'a, T, A: Allocator> { ... }
-
-    impl<'a, T, A: Allocator> Drop for Guard<'a, T, A> {
-        fn drop(&mut self) { ... }
-    }
-
     ...
-
     init = head.iter().map(|elem| {
         guard.consumed += 1;
-        // SAFETY: Because we incremented `guard.consumed`, the
-        // deque effectively forgot the element, so we can take
-        // ownership
+        // SAFETY: Because we incremented `guard.consumed`, the deque effectively forgot the element, so we can take ownership
         unsafe { ptr::read(elem) }
     })
     .try_fold(init, &mut f)?;
@@ -146,14 +137,7 @@ fn try_fold<B, F, R>(&mut self, mut init: B, mut f: F) -> R {
 }
 
 fn try_rfold<B, F, R>(&mut self, mut init: B, mut f: F) -> R {
-    struct Guard<'a, T, A: Allocator> { ... }
-
-    impl<'a, T, A: Allocator> Drop for Guard<'a, T, A> {
-        fn drop(&mut self) { ... }
-    }
-
     ...
-
     init = tail.iter().map(|elem| {
         guard.consumed += 1;
         // SAFETY: See `try_fold`'s safety comment.
