@@ -72,10 +72,12 @@ We can extract safety requirements above into propeties below:
 
 | Type    | Property | Arguments | Description                                                                              |
 |---------|----------|-----------|------------------------------------------------------------------------------------------|
-| Precond | ValidPtr | src       | `src` must be [valid] for reads. |
-| Precond | Aligned  | src       | `src` must be properly aligned.  |
-| Precond | Init     | src       | `src` must point to a properly initialized value of type `T`. |
-| Option  | Trait    | T, Copy   | create a bitwise copy of `T`, regardless of whether `T` is [`Copy`]. |
+| Precond | ValidPtr | src, T, 1 | `src` must be [valid] for reads (for 1 * sizeof(T) bytes). |
+| Precond | Aligned  | src, T    | `src` must be properly aligned (with T).  |
+| Precond | Init     | src, T, 1 | `src` must point to a properly initialized value of type `T`. 
+| Option  | Trait    | T, Copy   | If `T` is not [`Copy`], using both the returned value and the value at `*src` can violate memory safety. |
+| Precond | NotOwned  | src       | Further clarification: The memory pointed by src must not be owned if T is not copy, or the object hold by *src should not be automatically dropped |
+| Hazard | Alias  | src, ret      | Further clarification: The return value may incur aliases between src and the return value |
 
 [valid]: https://doc.rust-lang.org/std/ptr/index.html#safety
 [alignment]: https://doc.rust-lang.org/std/ptr/index.html#alignment
@@ -85,10 +87,14 @@ We can represent these safety requirements using safety tags as shown below.
 
 ```rust
 /// # Safety
-#[safety::precond::ValidPtr(src)]
-#[safety::precond::Aligned(src)]
-#[safety::precond::Init(src)]
-#[safety::option::Trait(T, Copy)]
+#[safety::precond::ValidPtr(src, T, 1)]
+#[safety::precond::Aligned(src, T)]
+#[safety::precond::Init(src, T, 1)]
+#[safety::{
+    precond::NotOwned(src),
+    option::Trait(T, Copy)
+}
+#[safety::precond::Alias(src, ret)]
 ///
 /// ## Ownership of the Returned Value
 /// ...
@@ -104,8 +110,7 @@ Safety tags will brings two effects:
 
 ## Discharge Safety Properties
 
-A common practice for calling unsafe functions are to leave a small piece of 
-safety comments, and repeat it or refer to the same comments. [For example][vec_deque]:
+Currently, a common practice when calling unsafe functions is to leave a brief safety comment explaining why it is safe to use the unsafe code. However, there is no clear guidance on safety justifications, and this practice is not mandatory. As a result, developers may end up repeatedly copying and pasting the same text or referring to the same comments. [For example][vec_deque]:
 
 [vec_deque]: https://github.com/rust-lang/rust/blob/ebd8557637b33cc09b6ee8273f3154d5d3af6a15/library/alloc/src/collections/vec_deque/into_iter.rs#L104
 
