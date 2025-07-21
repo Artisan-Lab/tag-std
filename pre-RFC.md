@@ -203,95 +203,10 @@ LLL | unsafe { ptr::read(elem) }
     = NOTE: Init 👉 The pointer must be initialized before calling `core::ptr::read`
 ```
 
-## Optional Feature
-To reduce verbosity, we propose using `#[referent]` to define entities and `#[ref]` to reference them.
-
-```rust
-fn try_fold<B, F, R>(&mut self, mut init: B, mut f: F) -> R
-    ...
-    init = head.iter().map(|elem| {
-        guard.consumed += 1;
-
-        #[safety::referent(try_fold)] // 👈 entity definition
-        #[safety::discharges::ValidPtr(elem, T, 1)]
-        #[safety::discharges::Aligned(elem, T)]
-        #[safety::discharges::Init(elem, T, 1)]
-        #[safety::discharges::NotOwned(elem, memo = "
-          Because we incremented `guard.consumed`, the deque 
-          effectively forgot the element, so we can take ownership.
-        ")]
-        #[safety::discharges::Alias(elem, head.iter())] 
-        unsafe { ptr::read(elem) }
-    })
-    .try_fold(init, &mut f)?;
-
-    tail.iter().map(|elem| {
-        guard.consumed += 1;
-
-        #[safety::ref::try_fold] // 💡 No longer to write SAFETY: Same as above.
-        unsafe { ptr::read(elem) }
-    })
-    .try_fold(init, &mut f)
-}
-
-fn try_rfold<B, F, R>(&mut self, mut init: B, mut f: F) -> R {
-    ...
-    init = tail.iter().map(|elem| {
-            guard.consumed += 1;
-
-            #[safety::ref::try_fold] // 💡 No longer to write SAFETY: See `try_fold`'s safety comment.
-            unsafe { ptr::read(elem) }
-        })
-        .try_rfold(init, &mut f)?;
-
-    head.iter().map(|elem| {
-            guard.consumed += 1;
-
-            #[safety::ref::try_fold] // 💡 No longer to write SAFETY: Same as above.
-            unsafe { ptr::read(elem) }
-        })
-        .try_rfold(init, &mut f)
-}
-```
-
-Such annotations either enable the compiler to detect inconsistencies among safety properties or provide hints to remind developers to check other referring callsites.
-
-## Versions of a tag
-
-<a id="semver-tag"></a>
-
-We should notice entity reference system handles two versions of tags from the above example!
-
-When a tag is newly introduced on an API, discharge detection applies.
-
-When a revised tag occurs on an API, discharge detection still applies, and a complete 
-report on tagged places including referencing places should be provided. If local tags
-are affected by the revised tag from upstream crate, propagation analysis should extend 
-from culprit crate to the whole dependency graph.
-
-It's worth noting that this is unlike [semver] checks on crate's APIs. Reason are 
-* core or similar builtin libraries are not versioned. Even if these crates are tied to 
-  specific rust toolchain, toolchain version doesn't and is unable to reflect version 
-  of builtin libraries.
-* adding a new tag breaks downstream crates due to discharge detection, while adding a 
-  new API is usually not a braking change.
-* tags are public across all crates, if an upstream tag is removed, all downstream crates 
-  need to remove it accordingly.
-
-[semver]: https://doc.rust-lang.org/cargo/reference/semver.html
-
-So making tags versioned is a big challenge. On the one hand, we want tags to be part of 
-APIs and semver controlled, on the other hand, any change in tags results in high churn.
-
-This RFC suggests reporting diffs on versions of tags, in warnings or errors at user option,
-but doesn't provide any solution to churn. That's to say, it's unclear whether safety 
-propeties should be semver checked or not.
-
-# Reference-level explanation
+# Reference-level Explanation
 [reference-level-explanation]: #reference-level-explanation
 
-Since this RFC doesn't require too much new features from Rust compiler or language,
-implementations in this section are tool specific and focus on syntax.
+Since this RFC does not require significant changes to the Rust compiler or language, the implementation details discussed in this section are tool-specific and primarily focus on syntax.
 
 Take one of safety tag on `ptr::read` as an example:
 
@@ -299,8 +214,7 @@ Take one of safety tag on `ptr::read` as an example:
 #[safety::precond::ValidPtr(src)]
 ```
 
-It's a proc-macro, but reexported in a lib crate, becuase only root path is accessible
-in proc-macro crate. We have to reexport it in a nested module outside:
+This is a procedural macro, but it is re-exported through a library crate because only the root path is accessible in a proc-macro crate. To work around this limitation, we re-export it from a nested module in an external crate.
 
 ```rust
 // proc-macro crate: safety_macro/src/lib.rs
@@ -313,18 +227,16 @@ pub mod precond {
 }
 ```
 
-The user can import the lib crate through Cargo.toml:
+Developers can import the lib crate through Cargo.toml:
 
 ```toml
-# The following means renaming safety-lib to safety as your dependency
+# This renames the dependency `safety-lib` as `safety` within your crate
 safety = { version = "0.0.1", package = "safety-lib" }
 ```
 
-`#[safety::precond::ValidPtr]` now is available in your crate, and it's autocompleted
-by RA if you type `#[safety::]` or something.
+`#[safety::precond::ValidPtr]` s is now available in your crate and will be autocompleted by Rust Analyzer when you type `#[safety::]` or similar. 
 
-Thanks to proc-macro crate being host-target only, we can also make it work in no_std projects,
-and even non-Cargo projects like Rust for Linux. See [tag-std#24] if you're interested. 
+The solution also works in no_std projects and even in non-Cargo environments like Rust for Linux. See [tag-std#24] for more details if you're interested.
 
 [tag-std#24]: https://github.com/Artisan-Lab/tag-std/pull/24
 
@@ -332,29 +244,26 @@ The proc macro expands to two attributes:
 
 ```rust
 #[doc = "`src` must be [valid] for reads.\n\n[valid]: https://doc.rust-lang.org/std/ptr/index.html#safety"]
-#[safety_tool::inner(property = ValidPtr(src), kind = "precond")]
+#[safety_tool::...]
 ```
 
 * `#[doc]` is a safety comment, possibly with extra argument infomation interpolated into the text.
-* `#[safety_tool]` is a [tool attribute], and `inner(...)` all path segments following it is basically
-  verbatim passed to and interpreted by linter tool.
+* `#[safety_tool]` is a [tool attribute]. For example, it can be expanded into a contract for tools like kani. This attribute requires the register_tool feature to be stabilized. Developers must enable the following features in the root module: 
 
-The second attribute requires [register_tool](https://github.com/rust-lang/rfcs/pull/3808) to be stablized.
-At the moment, users must add these features in root module:
+[register_tool]: https://github.com/rust-lang/rfcs/pull/3808
 
 ```rust
 #![feature(register_tool)]
 #![register_tool(safety_tool)]
 ```
 
-or equivalently add them to [`--crate-attr`](https://github.com/rust-lang/rfcs/pull/3791) compiler flag
-which also needs to stablize:
+or add them to [`--crate-attr`](https://github.com/rust-lang/rfcs/pull/3791) compiler flag:
 
 ```bash
 rustc --crate-attr="feature(register_tool)" --crate="register_tool(safety_tool)"
 ```
 
-For `#[discharges]`, more unstable features are required to support attributes on satements and expression:
+To support #[discharges], additional unstable features are required to allow attributes on statements and expressions:
 
 ```rust
 #![feature(proc_macro_hygiene)]
@@ -459,6 +368,90 @@ more familiar.
 
 # Future possibilities
 [future-possibilities]: #future-possibilities
+
+## Optional Feature
+To reduce verbosity, we propose using `#[referent]` to define entities and `#[ref]` to reference them.
+
+```rust
+fn try_fold<B, F, R>(&mut self, mut init: B, mut f: F) -> R
+    ...
+    init = head.iter().map(|elem| {
+        guard.consumed += 1;
+
+        #[safety::referent(try_fold)] // 👈 entity definition
+        #[safety::discharges::ValidPtr(elem, T, 1)]
+        #[safety::discharges::Aligned(elem, T)]
+        #[safety::discharges::Init(elem, T, 1)]
+        #[safety::discharges::NotOwned(elem, memo = "
+          Because we incremented `guard.consumed`, the deque 
+          effectively forgot the element, so we can take ownership.
+        ")]
+        #[safety::discharges::Alias(elem, head.iter())] 
+        unsafe { ptr::read(elem) }
+    })
+    .try_fold(init, &mut f)?;
+
+    tail.iter().map(|elem| {
+        guard.consumed += 1;
+
+        #[safety::ref::try_fold] // 💡 No longer to write SAFETY: Same as above.
+        unsafe { ptr::read(elem) }
+    })
+    .try_fold(init, &mut f)
+}
+
+fn try_rfold<B, F, R>(&mut self, mut init: B, mut f: F) -> R {
+    ...
+    init = tail.iter().map(|elem| {
+            guard.consumed += 1;
+
+            #[safety::ref::try_fold] // 💡 No longer to write SAFETY: See `try_fold`'s safety comment.
+            unsafe { ptr::read(elem) }
+        })
+        .try_rfold(init, &mut f)?;
+
+    head.iter().map(|elem| {
+            guard.consumed += 1;
+
+            #[safety::ref::try_fold] // 💡 No longer to write SAFETY: Same as above.
+            unsafe { ptr::read(elem) }
+        })
+        .try_rfold(init, &mut f)
+}
+```
+
+Such annotations either enable the compiler to detect inconsistencies among safety properties or provide hints to remind developers to check other referring callsites.
+
+## Versions of a tag
+
+<a id="semver-tag"></a>
+
+We should notice entity reference system handles two versions of tags from the above example!
+
+When a tag is newly introduced on an API, discharge detection applies.
+
+When a revised tag occurs on an API, discharge detection still applies, and a complete 
+report on tagged places including referencing places should be provided. If local tags
+are affected by the revised tag from upstream crate, propagation analysis should extend 
+from culprit crate to the whole dependency graph.
+
+It's worth noting that this is unlike [semver] checks on crate's APIs. Reason are 
+* core or similar builtin libraries are not versioned. Even if these crates are tied to 
+  specific rust toolchain, toolchain version doesn't and is unable to reflect version 
+  of builtin libraries.
+* adding a new tag breaks downstream crates due to discharge detection, while adding a 
+  new API is usually not a braking change.
+* tags are public across all crates, if an upstream tag is removed, all downstream crates 
+  need to remove it accordingly.
+
+[semver]: https://doc.rust-lang.org/cargo/reference/semver.html
+
+So making tags versioned is a big challenge. On the one hand, we want tags to be part of 
+APIs and semver controlled, on the other hand, any change in tags results in high churn.
+
+This RFC suggests reporting diffs on versions of tags, in warnings or errors at user option,
+but doesn't provide any solution to churn. That's to say, it's unclear whether safety 
+propeties should be semver checked or not.
 
 ## Interaction with Rust type system
 
