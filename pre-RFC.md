@@ -343,9 +343,9 @@ Details of implementation on reference entity system belongs to the linter tool.
 # Rationale and alternatives
 [rationale-and-alternatives]: #rationale-and-alternatives
 
-## Alternatives from URLO
+## Alternatives from IRLO
 
-There are alternative discussion or Pre-RFCs on URLO:
+There are alternative discussion or Pre-RFCs on IRLO:
 
 * 2023-10: [Ability to call unsafe functions without curly brackets](https://internals.rust-lang.org/t/ability-to-call-unsafe-functions-without-curly-brackets/19635/22)
   * This is a discussion about make single unsafe call simpler, so the idea evolved into tczajka's Pre-RFC.
@@ -354,16 +354,20 @@ There are alternative discussion or Pre-RFCs on URLO:
   * The OP is about safe code scope in big unsafe block, which is not discussed in our RFC.
   * But scottmcm's comments are good inspiration for our RFC.
 * 2024-12: [Pre-RFC: Unsafe reasons](https://internals.rust-lang.org/t/pre-rfc-unsafe-reasons/22093) proposed by chrefr
-  * good improvement on abstracting safety comments to single identifier that is machine readable and checkable, but doesn't specify arguments and string interpolation to be more fine-grained on unsafe reasons
-  * big request on language and compiler change, while safety tags in our RFC is lightweight
+  * This is a good improvement on abstracting safety comments into a single, machine-readable and
+    checkable identifier. However, it doesn't specify arguments and lacks more fine-grained string
+    interpolation for detailing unsafe reasons.
+  * It also requests big changes on language and compiler change, while safety tags in our RFC is lightweight
 * 2025-02: [Pre-RFC: Single function call `unsafe`](https://internals.rust-lang.org/t/pre-rfc-single-function-call-unsafe/22343) proposed by tczajka
-  * single unsafe call is a good practice, but postfix `.unsafe` needs more compiler supports but doesn't suggest any improvement on safe comments 
-  * our RFC supports annotating safety tags on any expression including single calls
+  * The practice of using a single unsafe call is good, but the postfix `.unsafe` requires more
+    compiler support and does not offer suggestions for improving safe comments.
+  * Our RFC, however, supports annotating safety tags on any expression, including single calls.
 * 2025-05: [Pre-RFC: Granular Unsafe Blocks - A more explicit and auditable approach](https://internals.rust-lang.org/t/pre-rfc-granular-unsafe-blocks-a-more-explicit-and-auditable-approach/23022) proposed by Redlintles
-  * safety categories suggested are too broad
-  * while safety propeties in our RFC are more granular and semantics-specifc
+  * The safety categories suggested are overly broad. In contrast, the safety properties outlined in
+    our RFC are more granular and semantics-specific.
 * 2025-07: [Unsafe assertion invariants](https://internals.rust-lang.org/t/unsafe-assertion-invariants/23206)
-  * good idea to embed safety requirements/contract/information into doc comments, which is similar to one of the goals in our RFC
+  * It’s a good idea to embed safety requirements into doc comments, which aligns with one of the
+    goals in our RFC.
 
 ## Alternatives from Rust for Linux
 
