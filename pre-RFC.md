@@ -3,7 +3,7 @@
 # Summary
 [summary]: #summary
 
-This RFC proposes a DSL-based mechanism for specifying safety properties, aiming to standardize how safety descriptions are written in API documentation. On the one hand, it seeks to improve the ergonomics of writing safety descriptions; on the other hand, these safety properties can enable finer-grained unsafe code management and automated safety checking.
+This RFC proposes a DSL (domain-specific language)-based mechanism for specifying safety properties, aiming to standardize how safety descriptions are written in API documentation. On the one hand, it seeks to improve the ergonomics of writing safety descriptions; on the other hand, these safety properties can enable finer-grained unsafe code management and automated safety checking.
 
 This RFC operates at the API level rather than the compiler or language level, as it merely introduces attribute macros on functions and expressions that are already expressible today, but may require a linter tool to realize automated check.
 
@@ -162,7 +162,7 @@ The example above demonstrates several issues:
   
 * **Implicit dependencies on unsafe behavior**: Developers may unknowingly change code that other safety assumptions rely on. For instance, the comment "the deque effectively forgot the element" depends on the behavior of Guard's Drop implementation. If `try_fold::Guard::drop` changes, developers must check whether the associated safety comments still hold. (This RFC does not address this problem)
 
-To address these issues, we propose a solution based on annotating call sites with `#[discharges]` and introducing an entity reference system.
+To address the issue, we propose a solution based on annotating callsites with `#[discharges]`.
 
 ```rust
 fn try_fold<B, F, R>(&mut self, mut init: B, mut f: F) -> R {
@@ -214,7 +214,7 @@ Take one of safety tag on `ptr::read` as an example:
 #[safety::precond::ValidPtr(src)]
 ```
 
-This is a procedural macro, but it is re-exported through a library crate because only the root path is accessible in a proc-macro crate. To work around this limitation, we re-export it from a nested module in an external crate.
+This is a procedural macro, and it is re-exported through a library crate because only the root path is accessible in a proc-macro crate. To work around this limitation, we re-export it from a nested module in an external crate.
 
 ```rust
 // proc-macro crate: safety_macro/src/lib.rs
@@ -244,11 +244,11 @@ The proc macro expands to two attributes:
 
 ```rust
 #[doc = "`src` must be [valid] for reads.\n\n[valid]: https://doc.rust-lang.org/std/ptr/index.html#safety"]
-#[safety_tool::...]
+#[safety_tool::kani::requires(kani::mem::can_dereference(ptr))]
 ```
 
 * `#[doc]` is a safety comment, possibly with extra argument infomation interpolated into the text.
-* `#[safety_tool]` is a [tool attribute]. For example, it can be expanded into a contract for tools like kani. This attribute requires the register_tool feature to be stabilized. Developers must enable the following features in the root module: 
+* `#[safety_tool]` is a [tool attribute] to be processed by external verification tools like kani. This attribute requires the register_tool feature to be stabilized. Developers must enable the following features in the root module: 
 
 [register_tool]: https://github.com/rust-lang/rfcs/pull/3808
 
