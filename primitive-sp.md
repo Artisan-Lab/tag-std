@@ -49,7 +49,7 @@ In practice, a safety property may correspond to a precondition, an optional pre
 |         | -  | - | option | [ptr::copy()](https://doc.rust-lang.org/std/ptr/fn.copy.html) |
 | III.5  | Unwrap(x, T) | unwrap(x) = T | precond | [Option::unwrap_unchecked()](https://doc.rust-lang.org/std/option/enum.Option.html#method.unwrap_unchecked)  |
 | III.6  | Typed(p, T) | typeof(*p) = T | precond | [Rc::from_raw()](https://doc.rust-lang.org/beta/std/rc/struct.Rc.html#method.from_raw) |
-| IV.1  | Ownning(p) | ownership(*p) = none | precond | [Box::from_raw()](https://doc.rust-lang.org/std/boxed/struct.Box.html#method.from_raw)  |
+| IV.1  | Owning(p) | ownership(*p) = none | precond | [Box::from_raw()](https://doc.rust-lang.org/std/boxed/struct.Box.html#method.from_raw)  |
 | IV.2  | Alias(p1, p2) | p1 = p2 | hazard | [pointer::as_mut()](https://doc.rust-lang.org/std/primitive.pointer.html#method.as_mut) |
 | IV.3  | Alive(p, l) | lifetime(*p) $\ge$ l | precond | [AtomicPtr::from_ptr()](https://doc.rust-lang.org/std/sync/atomic/struct.AtomicPtr.html#method.from_ptr)  |
 | V.1  | Pinned(p, l) | $$\forall t \in 0..l, \\&(*p)_0 = p_t$$ | hazard | [Pin::new_unchecked()](https://doc.rust-lang.org/std/pin/struct.Pin.html#method.new_unchecked)  |
@@ -233,7 +233,7 @@ This category relates to the core mechanism of Rust which aims to avoid shared m
 #### 3.4.1 Onwership
 Let one value has two owners at the same program point is vulnerable to double free. Refer to the traidional vulnerbility of [mem::forget()](https://doc.rust-lang.org/std/mem/fn.forget.html) compared to [ManuallyDrop](https://doc.rust-lang.org/std/mem/struct.ManuallyDrop.html). The property generally relates to convert a raw pointer to an ownership, and it can be represented as:
 
-**psp IV.1 Ownning(p)**:
+**psp IV.1 Owning(p)**:
 
 $$\text{ownership}(*p) = none $$
 
