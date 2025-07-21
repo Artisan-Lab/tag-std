@@ -90,7 +90,7 @@ We can represent these safety requirements using safety tags as shown below.
 #[safety::precond::ValidPtr(src, T, 1)]
 #[safety::precond::Aligned(src, T)]
 #[safety::precond::Init(src, T, 1)]
-#[safety::{
+#[safety::any{
     precond::NotOwned(src),
     option::Trait(T, Copy)
 }
