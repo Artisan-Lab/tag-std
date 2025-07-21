@@ -104,7 +104,7 @@ We can represent these safety requirements using safety tags as shown below.
 pub const unsafe fn read<T>(src: *const T) -> T { ... }
 ```
 
-Safety tags will brings two effects:
+Safety tags will take effect in two ways:
 1. They will be expanded into `#[doc]` comments, which will be rendered through rustdoc on HTML pages.
 2. They will be collected and analyzed by a linter tool. If no safety tags are provided for an unsafe API, lints should be emitted to remind developers to provide safety requirements. If a safety tag is declared for an unsafe API but not discharged at a call site, lints should be emitted to alert developers about potentially overlooked safety requirements.
 
@@ -154,25 +154,14 @@ fn try_rfold<B, F, R>(&mut self, mut init: B, mut f: F) -> R {
 }
 ```
 
-There are potential issues in review or audit:
-* Did the author know and confirm all safety requirements on `ptr::read` are fulfilled?
-  From the above comments, we're only sure that the `option::Trait(T, Copy)` property is 
-  considered, but unsure about other propeties.
-* When the try_fold's safety comments changed, people might miss checking if these referrers
-  are still appropriate. It depends on the author and reviewers to recall or find these places.
-  It's luckily not hard to do for the above example, as `fold` and `try_fold` are quite similar,
-  and both in the same module. However, it'd be really hard to find referrers across modules or 
-  even crates.
-* It's sad when a piece of code are changed without noticing a safety requirement relies upon it.
-  The above comment "the deque effectively forgot" is actually tied to Guard's drop implementation,
-  so ideally, if code inside `try_fold::Guard::drop` changes, people really ought to check these safety
-  comments still hold, while there is no comments on `Guard::drop` to indicate a relation to 
-  `ptr::read(elem)`. Not to mention that `try_rfold`'s safety comments refer to `try_fold`'s,
-  `try_rfold` has its own `Guard::drop` impl, meaning we should check both `try_{r,}fold::Guard::drop`
-  even when only single drop impl changes. 
+The example above demonstrates several issues:
 
-So we put up a solution to these problems via annotating `#[discharges]` on callsites and entity
-reference system.
+* **Lack of clarity on safety requirements**: It is unclear whether the developer has considered all safety requirements for `ptr::read` and ensured they are satisfied. From the comments, we can see that only the `NotOwned` safety property is explicitly addressed.
+
+* **Comment dependency and maintenance burden**: When a piece of safety documentation is modified, all places that reference it must be reconsidered and updated accordingly. In this example, `try_rfold` refers to the safety comments inside `try_fold`. If the safety comment within `try_fold` changes, developers might forget to verify whether the new comment still applies to `try_rfold`.
+* **Implicit dependencies on unsafe behavior**: Developers may unknowingly change code that other safety assumptions rely on. For instance, the comment "the deque effectively forgot the element" depends on the behavior of Guard's Drop implementation. If `try_fold::Guard::drop` changes, developers must check whether the associated safety comments still hold. 
+
+To address these issues, we propose a solution based on annotating call sites with `#[discharges]` and introducing an entity reference system.
 
 ```rust
 fn try_fold<B, F, R>(&mut self, mut init: B, mut f: F) -> R {
