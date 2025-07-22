@@ -379,7 +379,7 @@ more about:
     proposal tries to achieve
   * it doesn't mention how the standard is implemented, but Predrag (see the next line) and we
     follow the spirit
-* 2024-10: [Automated checking of unsafe code requirements](https://hackmd.io/@qnR1-HVLRx-dekU5dvtvkw/SyUuR6SZgx)
+* 2024-10: [Automated checking of unsafe code requirements]([https://hackmd.io/@qnR1-HVLRx-dekU5dvtvkw/SyUuR6SZgx](https://hackmd.io/@predrag/ByVBjIWlyx))
   proposed by Predrag
   * our proposal is greatly inspired by Predrag's, so many of it can apply to ours, such as
     structured comments, entity reference, requirements discharge, and handling soundness hazard on
