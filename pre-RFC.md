@@ -477,7 +477,12 @@ them.
 
 ```rust
 fn try_fold<B, F, R>(&mut self, mut init: B, mut f: F) -> R
+    impl<'a, T, A: Allocator> Drop for Guard<'a, T, A> {
+        #[safety::ref::try_fold] // 💡
+        fn drop(&mut self) { ... }
+    }
     ...
+
     init = head.iter().map(|elem| {
         guard.consumed += 1;
 
@@ -504,7 +509,12 @@ fn try_fold<B, F, R>(&mut self, mut init: B, mut f: F) -> R
 }
 
 fn try_rfold<B, F, R>(&mut self, mut init: B, mut f: F) -> R {
+    impl<'a, T, A: Allocator> Drop for Guard<'a, T, A> {
+        #[safety::ref::try_fold] // 💡
+        fn drop(&mut self) { ... }
+    }
     ...
+
     init = tail.iter().map(|elem| {
             guard.consumed += 1;
 
