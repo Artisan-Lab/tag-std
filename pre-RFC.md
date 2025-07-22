@@ -122,7 +122,7 @@ We can represent these safety requirements using safety tags as shown below.
     precond::NotOwned(src),
     option::Trait(T, Copy)
 }]
-#[safety::precond::Alias(src, ret)]
+#[safety::hazard::Alias(src, ret)]
 ///
 /// ## Ownership of the Returned Value
 /// ...
@@ -195,17 +195,17 @@ The example above demonstrates several issues:
 safety requirements for `ptr::read` and ensured they are satisfied. From the comments, we can see
 that only the `NotOwned` safety property is explicitly addressed.
 
-* **Comment dependency and maintenance burden**: When a piece of safety documentation is modified,
+* **Comment dependence and maintenance burden**: When a piece of safety documentation is modified,
 all places that reference it must be reconsidered and updated accordingly. In this example,
 `try_rfold` refers to the safety comments inside `try_fold`. If the safety comment within `try_fold`
 changes, developers might forget to verify whether the new comment still applies to `try_rfold`.
-(This is not the focus of this RFC, but see [future possibilities][#semver-tag] for our thought.)
+(This is not the focus of this RFC, but see [versions of a tag](#semver-tag]) for our thought.)
   
-* **Implicit dependencies on unsafe behavior**: Developers may unknowingly change code that other
+* **Implicit dependence on unsafe behavior**: Developers may unknowingly change code that other
 safety assumptions rely on. For instance, the comment "the deque effectively forgot the element"
 depends on the behavior of Guard's Drop implementation. If `try_fold::Guard::drop` changes,
 developers must check whether the associated safety comments still hold. (This RFC does not address
-this problem, but see [future-possibilities][#reference-entity] for our thought.)
+this problem, but see [Entity Reference System](#reference-entity) for our thought.)
 
 To address the issue, we propose a solution based on annotating callsites with `#[discharges]`.
 
