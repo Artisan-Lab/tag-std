@@ -248,6 +248,19 @@ LLL | unsafe { ptr::read(elem) }
     = NOTE: Init 👉 The pointer must be initialized before calling `core::ptr::read`
 ```
 
+Update: we're considering replace the verbose `#[safety::discharges]` syntax with `#[safety{}]`:
+
+```rust
+#[safety {
+  ValidPtr, Align, Init: "`self.head_tail()` returns two slices to live elements";
+  NotOwned: "because we incremented...";
+  Alias(elem, head.iter());
+}]
+unsafe { ptr::read(elem) }
+```
+
+see this [IRLO discussion](https://internals.rust-lang.org/t/pre-rfc-safety-property-system/23252/22).
+
 # Reference-level Explanation
 [reference-level-explanation]: #reference-level-explanation
 
