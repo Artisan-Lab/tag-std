@@ -199,7 +199,7 @@ that only the `NotOwned` safety property is explicitly addressed.
 all places that reference it must be reconsidered and updated accordingly. In this example,
 `try_rfold` refers to the safety comments inside `try_fold`. If the safety comment within `try_fold`
 changes, developers might forget to verify whether the new comment still applies to `try_rfold`.
-(This is not the focus of this RFC, but see [versions of a tag](#semver-tag]) for our thought.)
+(This is not the focus of this RFC, but see [versions of a tag](#semver-tag) for our thought.)
   
 * **Implicit dependence on unsafe behavior**: Developers may unknowingly change code that other
 safety assumptions rely on. For instance, the comment "the deque effectively forgot the element"
@@ -207,7 +207,7 @@ depends on the behavior of Guard's Drop implementation. If `try_fold::Guard::dro
 developers must check whether the associated safety comments still hold. (This RFC does not address
 this problem, but see [Entity Reference System](#reference-entity) for our thought.)
 
-To address the issue, we propose a solution based on annotating callsites with `#[discharges]`.
+To address the first issue, we propose a solution based on annotating `#[discharges]` on callsites.
 
 ```rust
 fn try_fold<B, F, R>(&mut self, mut init: B, mut f: F) -> R {
@@ -314,9 +314,8 @@ The proc macro expands to three attributes:
 * `#[doc]` is a safety comment, possibly with extra argument infomation interpolated into the text.
 * `#[kani]` is a [contract]. If the safety property has a countepart of external verification macro
   such as kani, we hope to support this feature in the future.
-* `#[safety_tool]` is a [tool attribute]. For example, it can be expanded into a contract for tools
-  like kani. This attribute requires the register_tool feature to be stabilized. Developers must
-  enable the following features in the root module: 
+* `#[safety_tool]` is a [tool attribute] registered by our linter. `register_tool` feature needs to
+  be stabilized, so developers must enable the following features in the root module: 
 
 [contract]: https://model-checking.github.io/kani/reference/experimental/contracts.html
 [register_tool]: https://github.com/rust-lang/rfcs/pull/3808
@@ -332,7 +331,7 @@ or add them to [`--crate-attr`](https://github.com/rust-lang/rfcs/pull/3791) com
 rustc --crate-attr="feature(register_tool)" --crate="register_tool(safety_tool)"
 ```
 
-To support #[discharges], additional unstable features are required to allow attributes on
+To support `#[discharges]`, additional unstable features are required to allow attributes on
 statements and expressions:
 
 ```rust
