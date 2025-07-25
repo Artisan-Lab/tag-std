@@ -23,6 +23,12 @@ impl MyStruct {
     #[safety::precond::InBound(self.ptr, u8, self.len)]
     #[safety::precond::ValidNum(self.len*sizeof(u8), [0,isize::MAX])]
     #[safety::hazard::Alias(self.ptr)]
+    #[safety {
+        Init(self.ptr, u8, self.len),
+        InBound(self.ptr, u8, self.len),
+        ValidNum(self.len*sizeof(u8), [0,isize::MAX]),
+        Alias(self.ptr)
+    }]
     pub unsafe fn get(&self) -> &mut [u8] {
         unsafe { std::slice::from_raw_parts_mut(self.ptr, self.len) }
     }

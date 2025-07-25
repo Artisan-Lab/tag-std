@@ -75,7 +75,7 @@ SELECT hash1, hash2, tool_attrs, def_path, function FROM hir
 
 #[test]
 fn test_db() -> Result<()> {
-    crate::logger::init();
+    safety_tool::logger::init();
     let mut db = Database::new("a.sqlite3")?;
     db.save_data([Data {
         hash: PrimaryKey { hash1: 1, hash2: 2 },
