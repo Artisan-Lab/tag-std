@@ -227,20 +227,6 @@ impl<'tcx> Calls<'tcx> {
             .filter(|call| self.tcx.fn_sig(call.def_id).skip_binder().safety().is_unsafe())
             .collect()
     }
-
-    fn print_source(&self) {
-        let src_map = &*rustc_span::source_map::get_source_map().unwrap();
-        for call in self.get_unsafe_calls() {
-            let span = hir_span(call.hir_id, self.tcx);
-            let snippet = src_map.span_to_snippet(span).unwrap();
-            let span_ahead = src_map
-                .lookup_line(span.lo())
-                .ok()
-                .and_then(|src_line| src_line.sf.get_line(src_line.line).map(|s| s.into_owned()))
-                .unwrap_or_default();
-            println!("##{span_ahead:?}##{snippet}\n");
-        }
-    }
 }
 
 pub fn get_calls<'tcx>(
@@ -250,7 +236,5 @@ pub fn get_calls<'tcx>(
 ) -> Calls<'tcx> {
     let mut calls = Calls { tcx, tyck, calls: Vec::new() };
     walk_expr(&mut calls, expr);
-    calls.print_source();
     calls
 }
-
