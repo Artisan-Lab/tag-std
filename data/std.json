@@ -829,7 +829,7 @@
 
     "core::ptr::mut_ptr::as_ref": {
         "0": [
-            "!Null | ",
+            "Null | ",
             "ValidPtr2Ref"
         ]
     },
