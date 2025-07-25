@@ -23,13 +23,13 @@ name = "safety_lib"
 required-features = ["rfl"]
 
 [dependencies]
-rusqlite = { version = "0.36.0", features = ["bundled", "jiff"] }
+rusqlite = { version = "0.37.0", features = ["bundled", "jiff"] }
 serde = { version = "1", features = ["derive"] }
 serde_json = { version = "1", features = ["preserve_order"] }
 prettyplease = "0.2"
 jiff = { version = "0.2", features = ["serde"] }
 annotate-snippets = "0.11.5"
-cargo_metadata = "0.20.0"
+cargo_metadata = "0.21.0"
 camino = "1.1.10"
 
 safety-parser = { path = "./safety-parser/", version = "0.2.0" }
