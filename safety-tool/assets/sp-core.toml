@@ -1,0 +1,159 @@
+package.name = "core"
+tool-version = "0.1.0"
+
+[tag.Alias]
+args = [ "p1", "p2" ]
+desc = "{p1} must not have other alias"
+expr = "p1 = p2"
+url = "https://github.com/Artisan-Lab/tag-std/blob/main/primitive-sp.md#342-alias"
+
+[tag.Align]
+args = [ "p", "T" ]
+desc = "pointer `{p}` must be properly aligned for type `{T}`"
+expr = "p % alignment(T) = 0"
+url = "https://doc.rust-lang.org/nightly/std/ptr/index.html#alignment"
+
+[tag.Alive]
+args = [ "p", "l" ]
+desc = "the reference of {p} must outlive the lifetime {l}"
+expr = "lifetime(∗ p) ≥ l"
+url = "https://github.com/Artisan-Lab/tag-std/blob/main/primitive-sp.md#343-lifetime"
+
+[tag.Allocated]
+args = [ "p", "T", "len", "A" ]
+desc = "the memory range `[{p}, {p} + sizeof({T})*{len})` must be allocated by allocator {A}"
+expr = "∀ i ∈ 0..sizeof(T)∗len, allocator(p + i) = A"
+url = "https://doc.rust-lang.org/nightly/std/ptr/index.html#allocation"
+
+[tag.Deref]
+args = [ "p", "T", "len" ]
+desc = "pointer {p} must be dereferencable in the sizeof({T})*{len} memory from it"
+expr = "Allocated(p, T, len, *) && InBound(p, T, len)"
+url = "https://doc.rust-lang.org/std/ptr/index.html#safety"
+
+[tag.InBound]
+args = [ "p", "T", "len" ]
+desc = "the pointer {p} and its offset up to sizeof({T})*{len} must point to a single allocated object"
+expr = "mem(p, p+ sizeof(T) * len) ∈ single allocated object"
+url = "https://github.com/Artisan-Lab/tag-std/blob/main/primitive-sp.md#321-allocation"
+
+[tag.Init]
+args = [ "p", "T", "len" ]
+desc = "the memory range [{p}, {p} + sizeof({T})*{len}] must be fully initialized for type T"
+expr = "∀ i ∈ 0..len, mem(p + sizeof(T) * i, p + sizeof(T) * (i+1)) = valid(T)"
+url = "https://github.com/Artisan-Lab/tag-std/blob/main/primitive-sp.md#333-initialization"
+
+[tag.Layout]
+args = [ "p", "layout" ]
+desc = "the memory pointed by {p} must remain consistent with {layout}"
+expr = "ValidNum(rem(p, layout.align), 0) && Allocated(p, u8, layout.size, heap)"
+url = "https://github.com/Artisan-Lab/tag-std/blob/main/primitive-sp.md#22-compound-sps-used-in-rustdoc"
+
+[tag.NoPadding]
+args = [ "T" ]
+desc = "type {T} must have no padding bytes"
+expr = "padding(T) != 0"
+url = "https://github.com/Artisan-Lab/tag-std/blob/main/primitive-sp.md#313-padding"
+
+[tag.NonNull]
+args = [ "p" ]
+desc = "pointer {} must not be null"
+expr = "p != 0"
+url = "https://github.com/Artisan-Lab/tag-std/blob/main/primitive-sp.md#32-pointer-validity"
+
+[tag.NonOverlap]
+args = [ "dst", "src", "T", "len" ]
+desc = "the memory ranges [{dst}, {dst} + sizeof({T})*{len}) and [{src}, {src} + sizeof({T})*{len}] must not overlap"
+expr = "|dst - src| ≥ sizeof(T) * len"
+url = "https://github.com/Artisan-Lab/tag-std/blob/main/primitive-sp.md#321-allocation"
+
+[tag.NonVolatile]
+args = [ "p", "T", "len" ]
+desc = "the memory access of [{p}, {p} + sizeof({T})*{len}] must be volatile"
+expr = "∄ another thread tid, tid.write(p, p+sizeof(T)*len)"
+url = "https://github.com/Artisan-Lab/tag-std/blob/main/primitive-sp.md#352-volatility"
+
+[tag.Opened]
+args = [ "fd" ]
+desc = "the file descriptor {fd} must be valid and open"
+expr = "∃ openfile()->fd && ∄ closefile(fd)"
+url = "https://github.com/Artisan-Lab/tag-std/blob/main/primitive-sp.md#353-opened-file"
+
+[tag.Owning]
+args = [ "p" ]
+desc = "the pointer {p} must hold exclusive ownership of its reference"
+expr = "ownership(*p) != none"
+url = "https://github.com/Artisan-Lab/tag-std/blob/main/primitive-sp.md#341-onwership"
+
+[tag.NonOwned]
+args = [ "p" ]
+desc = "the pointer {p} doesn't hold exclusive ownership of its reference"
+expr = "ownership(*p) = none"
+url = "https://github.com/Artisan-Lab/tag-std/blob/main/primitive-sp.md#341-onwership"
+
+[tag.Pinned]
+args = [ "p", "l" ]
+desc = "pointer {p} must remain at the same memory address for the duration of lifetime {l}"
+expr = "∀ t ∈ 0..l, &(∗p)0 = pt"
+url = "https://github.com/Artisan-Lab/tag-std/blob/main/primitive-sp.md#351-pin"
+
+[tag.Ptr2Ref]
+args = [ "p", "T" ]
+desc = "the reference conversion of the pointer {p} must be valid"
+expr = "Init(p, T, 1) && Align(p, T) && Alias(p, 0)"
+url = "https://github.com/Artisan-Lab/tag-std/blob/main/primitive-sp.md#22-compound-sps-used-in-rustdoc"
+
+[tag.Size]
+args = [ "T", "c" ]
+desc = "the size of type {T} should be {c}"
+expr = "sizeof(T) = c, c ∈ {num, unknown, any}"
+url = "https://github.com/Artisan-Lab/tag-std/blob/main/primitive-sp.md#312-size"
+
+[tag.Trait]
+args = [ "T", "trait", "property" ] # FIXME: extra property compared to primitive-sp doc
+desc = "if type {T} implements trait {trait}, the property {property} is mitigated"
+expr = "trait ∈ traitimpl(T)"
+url = "https://github.com/Artisan-Lab/tag-std/blob/main/primitive-sp.md#354-trait"
+
+[tag.Typed]
+args = [ "p", "T" ]
+desc = "the pointer {p} must point to a value of {T}"
+expr = "typeof(*p) = T"
+url = "https://github.com/Artisan-Lab/tag-std/blob/main/primitive-sp.md#334-unwrap"
+
+[tag.Unreachable]
+args = [  ]
+desc = "the current program point should not be reachable during execution"
+expr = "sat(cond()) = false"
+url = "https://github.com/Artisan-Lab/tag-std/blob/main/primitive-sp.md#355-unreachable"
+
+[tag.Unwrap]
+args = [ "x", "T", "target" ] # FIXME: extra target compared to desc
+desc = "the value {x} must be Some({T})"
+expr = "unwrap(x) = T"
+url = "https://github.com/Artisan-Lab/tag-std/blob/main/primitive-sp.md#334-unwrap"
+
+[tag.ValidCStr]
+args = [ "p", "len" ]
+desc = "the memory range [{p}, {p} + {len} + 1] must contain a valid C-style string"
+expr = "mem(p+len, p+len+1) = '\\0'"
+url = "https://github.com/Artisan-Lab/tag-std/blob/main/primitive-sp.md#332-string"
+
+[tag.ValidNum]
+args = [ "exp", "vrange" ]
+desc = "the value of {} must lie within the valid {}"
+expr = "exp ∈ vrange"
+url = "https://github.com/Artisan-Lab/tag-std/blob/main/primitive-sp.md#331-integer"
+
+[tag.ValidPtr]
+args = [ "p", "T", "len" ]
+desc = "pointer {p} must be valid for reading and writing the sizeof({T})*{n} memory from it"
+expr = "Size(T, 0) || (!Size(T,0) && Deref(p, T, len))"
+url = "https://doc.rust-lang.org/std/ptr/index.html#safety"
+
+[tag.ValidString]
+args = [ "arange" ]
+desc = "the memory range {arange} must contain valid UTF-8 bytes"
+expr = "mem(arange) ∈ utf-8"
+url = "https://github.com/Artisan-Lab/tag-std/blob/main/primitive-sp.md#332-string"
+
