@@ -8,3 +8,6 @@ pub mod property_attr;
 
 /// Parse `#[safety]`.
 pub mod safety;
+
+/// SP configuration, especially definitions.
+pub mod configuration;
