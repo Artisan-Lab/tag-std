@@ -10,12 +10,12 @@ fn parse_safety_attr() {
     // simplest SP
     let attr = parse_attr("#[safety { SP }]").unwrap();
     let sp = attr.args.property_reason().next().unwrap().0;
-    assert_eq!(sp.tag.name_type(), ["SP", DEFAULT_TYPE]);
+    assert_eq!(sp.tag.name_type(), ("SP", TagType::default()));
 
     // SP with path prefix and arguments
     let attr = parse_attr("#[safety { hazard.Alias(p, q) }]").unwrap();
     let sp = attr.args.property_reason().next().unwrap().0;
-    assert_eq!(sp.tag.name_type(), ["Alias", "hazard"]);
+    assert_eq!(sp.tag.name_type(), ("Alias", TagType::Hazard));
     let args: Vec<_> = sp
         .args
         .iter()

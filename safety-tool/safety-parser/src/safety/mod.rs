@@ -1,4 +1,4 @@
-use crate::{Str, configuration::DEFAULT_TYPE};
+use crate::{Str, configuration::TagType};
 use syn::{
     parse::{Parse, ParseStream},
     punctuated::Punctuated,
@@ -101,20 +101,20 @@ pub enum TagNameType {
     /// Single ident SP, default to `precond` type.
     SP(Str),
     /// Typed SP: `type.SP`
-    TypeSP { typ: Str, sp: Str },
+    TypeSP { typ: TagType, sp: Str },
 }
 
 impl Parse for TagNameType {
     fn parse(input: ParseStream) -> Result<Self> {
         let ident: Ident = input.parse()?;
-        let first = ident.to_string().into();
+        let first = ident.to_string();
         Ok(if input.peek(Token![.]) {
             let _: Token![.] = input.parse()?;
             let second: Ident = input.parse()?;
             let sp = second.to_string().into();
-            TagNameType::TypeSP { typ: first, sp }
+            TagNameType::TypeSP { typ: TagType::new(&first), sp }
         } else {
-            TagNameType::SP(first)
+            TagNameType::SP(first.into())
         })
     }
 }
@@ -127,17 +127,17 @@ impl TagNameType {
         }
     }
 
-    pub fn typ(&self) -> &str {
+    pub fn typ(&self) -> TagType {
         match self {
-            TagNameType::SP(_) => DEFAULT_TYPE,
-            TagNameType::TypeSP { typ, .. } => typ,
+            TagNameType::SP(_) => TagType::default(),
+            TagNameType::TypeSP { typ, .. } => *typ,
         }
     }
 
-    pub fn name_type(&self) -> [&str; 2] {
+    pub fn name_type(&self) -> (&str, TagType) {
         match self {
-            TagNameType::SP(sp) => [sp, DEFAULT_TYPE],
-            TagNameType::TypeSP { typ, sp } => [sp, typ],
+            TagNameType::SP(sp) => (sp, TagType::default()),
+            TagNameType::TypeSP { typ, sp } => (sp, *typ),
         }
     }
 }

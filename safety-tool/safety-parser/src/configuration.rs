@@ -40,12 +40,24 @@ pub struct Tag {
     pub url: OptStr,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Clone, Copy, Debug, Deserialize, Default, PartialEq, Eq)]
 #[serde(rename_all = "lowercase")]
 pub enum TagType {
+    #[default]
     Precond,
     Hazard,
     Option,
+}
+
+impl TagType {
+    pub fn new(s: &str) -> Self {
+        match s {
+            "precond" => Self::Precond,
+            "hazard" => Self::Hazard,
+            "option" => Self::Option,
+            _ => panic!("Only support: precond, hazard, and option."),
+        }
+    }
 }
 
 /// If types field doesn't exist, default to Precond.
