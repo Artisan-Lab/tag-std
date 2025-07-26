@@ -1,4 +1,7 @@
-use crate::{Str, configuration::TagType};
+use crate::{
+    Str,
+    configuration::{TagType, get_tag},
+};
 use syn::{
     parse::{Parse, ParseStream},
     punctuated::Punctuated,
@@ -58,6 +61,7 @@ impl Parse for PropertiesAndReason {
 
         while !input.cursor().eof() {
             let tag: TagNameType = input.parse()?;
+            tag.check_type();
             let sp = if input.peek(Paren) {
                 let content;
                 parenthesized!(content in input);
@@ -139,5 +143,15 @@ impl TagNameType {
             TagNameType::SP(sp) => (sp, TagType::default()),
             TagNameType::TypeSP { typ, sp } => (sp, *typ),
         }
+    }
+
+    /// Check if the tag in macro is wrongly specified.
+    pub fn check_type(&self) {
+        let (name, typ) = self.name_type();
+        let defined_types = &get_tag(name).types;
+        assert!(
+            defined_types.contains(&typ),
+            "For tag {name:?}, defined_types is {defined_types:?}, while user's {typ:?} doesn't exist."
+        );
     }
 }
