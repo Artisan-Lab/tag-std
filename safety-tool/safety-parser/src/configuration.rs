@@ -53,6 +53,8 @@ fn default_types() -> Box<[TagType]> {
     Box::new([TagType::Precond])
 }
 
+pub const DEFAULT_TYPE: &str = "precond";
+
 /// Paths to toml config. Pass one of these env vars:
 /// * if `SP_FILE` is specified, use that toml path
 /// * if `SP_DIR` is specified, use that path to find toml files

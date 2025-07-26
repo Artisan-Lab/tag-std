@@ -1,3 +1,4 @@
+use crate::{Str, configuration::DEFAULT_TYPE};
 use syn::{
     parse::{Parse, ParseStream},
     punctuated::Punctuated,
@@ -97,44 +98,45 @@ pub struct Property {
 #[derive(Debug)]
 pub enum TagNameType {
     /// Single ident SP, default to `precond` type.
-    SP(Ident),
+    SP(Str),
     /// Typed SP: `type.SP`
-    TypeSP { typ: Ident, dot: Token![.], sp: Ident },
+    TypeSP { typ: Str, sp: Str },
 }
 
 impl Parse for TagNameType {
     fn parse(input: ParseStream) -> Result<Self> {
         let ident: Ident = input.parse()?;
+        let first = ident.to_string().into();
         Ok(if input.peek(Token![.]) {
-            TagNameType::TypeSP { typ: ident, dot: input.parse()?, sp: input.parse()? }
+            let _: Token![.] = input.parse()?;
+            let second: Ident = input.parse()?;
+            let sp = second.to_string().into();
+            TagNameType::TypeSP { typ: first, sp }
         } else {
-            TagNameType::SP(ident)
+            TagNameType::SP(first)
         })
     }
 }
 
 impl TagNameType {
-    pub fn name(&self) -> String {
+    pub fn name(&self) -> &str {
         match self {
             TagNameType::SP(sp) => sp,
             TagNameType::TypeSP { sp, .. } => sp,
         }
-        .to_string()
     }
 
-    pub const DEFAULT_TYPE: &str = "precond";
-
-    pub fn typ(&self) -> String {
+    pub fn typ(&self) -> &str {
         match self {
-            TagNameType::SP(_) => Self::DEFAULT_TYPE.to_string(),
-            TagNameType::TypeSP { typ, .. } => typ.to_string(),
+            TagNameType::SP(_) => DEFAULT_TYPE,
+            TagNameType::TypeSP { typ, .. } => typ,
         }
     }
 
-    pub fn name_type(&self) -> [String; 2] {
+    pub fn name_type(&self) -> [&str; 2] {
         match self {
-            TagNameType::SP(sp) => [sp.to_string(), Self::DEFAULT_TYPE.to_string()],
-            TagNameType::TypeSP { typ, sp, .. } => [sp.to_string(), typ.to_string()],
+            TagNameType::SP(sp) => [sp, DEFAULT_TYPE],
+            TagNameType::TypeSP { typ, sp } => [sp, typ],
         }
     }
 }

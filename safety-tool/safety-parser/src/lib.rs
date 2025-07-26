@@ -11,3 +11,4 @@ pub mod safety;
 
 /// SP configuration, especially definitions.
 pub mod configuration;
+use configuration::Str;
