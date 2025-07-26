@@ -211,9 +211,9 @@ Example APIs: [BorrowedBuf::set_init()](https://doc.rust-lang.org/nightly/std/io
 
 Such safety properties relate to the monadic types, including [Option](https://doc.rust-lang.org/std/option/enum.Option.html) and [Result](https://doc.rust-lang.org/std/result/enum.Result.html), and they require the value after unwarpping should be of a particular type.
 
-**psp III.5 Unwrap(x, T, target)**:
+**psp III.5 Unwrap(x, T)**:
 
-$$\text{unwrap}(x) = target,\ s.t., \text{typeof}(target) \in \lbrace \text{Ok(T)}, \text{Err(E)}, \text{Some(T)}, \text{None} \rbrace $$
+$$\text{unwrap}(x) = T $$
 
 Example APIs: [Option::unwrap_unchecked()](https://doc.rust-lang.org/std/option/enum.Option.html#method.unwrap_unchecked), [Result::unwrap_unchecked()](https://doc.rust-lang.org/core/result/enum.Result.html#method.unwrap_unchecked), [Result::unwrap_err_unchecked()](https://doc.rust-lang.org/core/result/enum.Result.html#method.unwrap_err_unchecked)
 
@@ -221,7 +221,7 @@ Besides, some APIs accepts a raw pointer as the input and requires the raw point
 
 **psp III.6 Typed(p, T)**: 
 
-$$\text{sizeof}(*p) = T $$
+$$\text{typeof}(*p) = T $$
 
 Note that this may also concern the memory space ahead of p.
 
