@@ -40,15 +40,15 @@ impl Parse for SafetyAttrArgs {
 }
 
 impl SafetyAttrArgs {
-    pub fn property_reason(&self) -> impl Iterator<Item = (&Property, Option<&LitStr>)> {
-        self.args.iter().flat_map(|arg| arg.tags.iter().map(|prop| (prop, arg.desc.as_ref())))
+    pub fn property_reason(&self) -> impl Iterator<Item = (&Property, Option<&str>)> {
+        self.args.iter().flat_map(|arg| arg.tags.iter().map(|prop| (prop, arg.desc.as_deref())))
     }
 }
 
 #[derive(Debug)]
 pub struct PropertiesAndReason {
     pub tags: Vec<Property>,
-    pub desc: Option<LitStr>,
+    pub desc: Option<Str>,
 }
 
 impl Parse for PropertiesAndReason {
@@ -75,7 +75,8 @@ impl Parse for PropertiesAndReason {
             if input.peek(Token![:]) {
                 let _: Token![:] = input.parse()?;
                 // `:` isn't in args, thus parse desc
-                desc = Some(input.parse()?);
+                let s: LitStr = input.parse()?;
+                desc = Some(s.value().into());
                 break;
             }
             if input.peek(Token![;]) {
