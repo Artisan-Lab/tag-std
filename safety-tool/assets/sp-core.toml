@@ -5,6 +5,7 @@ tool-version = "0.1.0"
 args = [ "p1", "p2" ]
 desc = "{p1} must not have other alias"
 expr = "p1 = p2"
+types = [ "hazard" ]
 url = "https://github.com/Artisan-Lab/tag-std/blob/main/primitive-sp.md#342-alias"
 
 [tag.Align]
@@ -95,6 +96,7 @@ url = "https://github.com/Artisan-Lab/tag-std/blob/main/primitive-sp.md#341-onwe
 args = [ "p", "l" ]
 desc = "pointer {p} must remain at the same memory address for the duration of lifetime {l}"
 expr = "∀ t ∈ 0..l, &(∗p)0 = pt"
+types = [ "hazard" ]
 url = "https://github.com/Artisan-Lab/tag-std/blob/main/primitive-sp.md#351-pin"
 
 [tag.Ptr2Ref]
@@ -107,12 +109,14 @@ url = "https://github.com/Artisan-Lab/tag-std/blob/main/primitive-sp.md#22-compo
 args = [ "T", "c" ]
 desc = "the size of type {T} should be {c}"
 expr = "sizeof(T) = c, c ∈ {num, unknown, any}"
+types = [ "option" ]
 url = "https://github.com/Artisan-Lab/tag-std/blob/main/primitive-sp.md#312-size"
 
 [tag.Trait]
 args = [ "T", "trait", "property" ] # FIXME: extra property compared to primitive-sp doc
 desc = "if type {T} implements trait {trait}, the property {property} is mitigated"
 expr = "trait ∈ traitimpl(T)"
+types = [ "option" ]
 url = "https://github.com/Artisan-Lab/tag-std/blob/main/primitive-sp.md#354-trait"
 
 [tag.Typed]
@@ -155,5 +159,6 @@ url = "https://doc.rust-lang.org/std/ptr/index.html#safety"
 args = [ "arange" ]
 desc = "the memory range {arange} must contain valid UTF-8 bytes"
 expr = "mem(arange) ∈ utf-8"
+types = [ "precond", "hazard" ]
 url = "https://github.com/Artisan-Lab/tag-std/blob/main/primitive-sp.md#332-string"
 
