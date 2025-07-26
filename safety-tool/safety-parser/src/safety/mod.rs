@@ -1,5 +1,6 @@
+use proc_macro2::{TokenStream, TokenTree};
 use syn::{
-    parse::{Parse, ParseStream},
+    parse::{Parse, ParseStream, Parser},
     punctuated::Punctuated,
     token::Paren,
     *,
@@ -27,11 +28,41 @@ impl Parse for SafetyAttr {
 
 #[derive(Debug)]
 pub struct SafetyAttrArgs {
-    pub args: Punctuated<Property, Token![;]>,
+    pub args: Punctuated<PropertiesAndReason, Token![;]>,
 }
 impl Parse for SafetyAttrArgs {
     fn parse(input: ParseStream) -> Result<Self> {
         Ok(SafetyAttrArgs { args: Punctuated::parse_terminated(input)? })
+    }
+}
+
+#[derive(Debug)]
+pub struct PropertiesAndReason {
+    pub properties: Punctuated<Property, Token![,]>,
+    pub desc: Option<Description>,
+}
+
+impl Parse for PropertiesAndReason {
+    fn parse(input: ParseStream) -> Result<Self> {
+        Ok(PropertiesAndReason {
+            properties: input.step(|cursor| {
+                let mut tokens = TokenStream::new();
+                let mut rest = *cursor;
+                while let Some((tt, next)) = rest.token_tree() {
+                    if let TokenTree::Punct(punct) = &tt {
+                        let ch = punct.as_char();
+                        if ch == ':' || ch == ';' {
+                            // reached at `: "reason"` or `;`
+                            return Ok((Punctuated::parse_terminated.parse2(tokens)?, rest));
+                        }
+                    }
+                    tokens.extend([tt]);
+                    rest = next;
+                }
+                Ok((Punctuated::parse_terminated.parse2(tokens)?, rest))
+            })?,
+            desc: if input.peek(Token![:]) { Some(input.parse()?) } else { None },
+        })
     }
 }
 
@@ -41,9 +72,6 @@ pub struct Property {
     pub path: Path,
     /// Args in `SP(args)` such as `arg1, arg2`.
     pub args: Option<PropertyArgs>,
-    /// Other SPs in the group, such as `, SP2, SP3`.
-    pub group: Punctuated<Property, Token![,]>,
-    pub desc: Option<Description>,
 }
 
 impl Parse for Property {
@@ -51,13 +79,6 @@ impl Parse for Property {
         Ok(Property {
             path: input.parse()?,
             args: if input.peek(Paren) { Some(input.parse()?) } else { None },
-            group: if input.peek(Token![,]) {
-                input.parse::<Token![,]>()?;
-                Punctuated::parse_terminated(input)?
-            } else {
-                Default::default()
-            },
-            desc: if input.peek(Token![:]) { Some(input.parse()?) } else { None },
         })
     }
 }
@@ -92,10 +113,13 @@ impl Parse for Description {
 
 #[test]
 fn parse_safety_attr() {
+    let _: SafetyAttr = parse_str("#[safety {}]").unwrap();
+
     let attr = "#[safety { SP }]";
-    let sp: SafetyAttr = parse_str(attr).unwrap();
-    let arg = sp.args.args.first().unwrap();
-    let ident = arg.path.get_ident().unwrap();
+    let attr: SafetyAttr = parse_str(attr).unwrap();
+    let arg = attr.args.args.first().unwrap();
+    let sp = arg.properties.first().unwrap();
+    let ident = sp.path.get_ident().unwrap();
     assert_eq!(ident, "SP");
 }
 
@@ -115,8 +139,21 @@ fn parse_safety_args() {
 
     // grouped SPs
     _ = parse_args(r#" SP1, SP2: "reason" "#).unwrap();
-    // _ = parse_args(r#" SP1, SP2: "reason"; SP3 "#).unwrap();
+    _ = parse_args(r#" SP1, SP2: "reason"; SP3 "#).unwrap();
     _ = parse_args(r#" SP3; SP1, SP2: "reason" "#).unwrap();
     _ = parse_args(r#" SP3, SP4; SP1, SP2: "reason" "#).unwrap();
-    // _ = parse_args(r#" SP3; SP1, SP2: "reason"; SP4, "#).unwrap();
+    _ = parse_args(r#" SP3; SP1, SP2: "reason"; SP4 "#).unwrap();
+
+    // trailing punct
+    _ = parse_args(r#" SP1, SP2: "reason"; SP3; "#).unwrap();
+    _ = parse_args(r#" SP1, SP2: "reason"; SP3, "#).unwrap();
+
+    // arguments in single SP
+    _ = parse_args(r#" SP1(a) "#).unwrap();
+    _ = parse_args(r#" SP1(a, b) "#).unwrap();
+    _ = parse_args(r#" SP1(a, b, call()) "#).unwrap();
+
+    // arguments with other SPs
+    _ = parse_args(r#" SP1(a), SP2: "reason"; SP3 "#).unwrap();
+    let _ = parse_args(r#" SP(a, b): "reason"; SP1, SP2: "reason"; SP3, SP4 "#).unwrap();
 }
