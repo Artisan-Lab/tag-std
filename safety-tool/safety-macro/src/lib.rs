@@ -6,6 +6,7 @@ use safety_parser::{
         property::{Kind, PropertyName},
     },
     quote::{quote, quote_spanned},
+    safety::SafetyAttrArgs as AttrArgs,
     syn::{parse::Parser, punctuated::Punctuated, *},
 };
 
@@ -121,4 +122,28 @@ pub fn discharges(attr: TokenStream, item: TokenStream) -> TokenStream {
         #item
     }
     .into()
+}
+
+/// Tag SPs on an unsafe function item, or discharge SPs on an expression.
+///
+/// # Syntax Example
+///
+/// ```
+/// #![feature(proc_macro_hygiene)]
+/// # use safety_macro::safety;
+///
+/// // Tag SPs:
+/// #[safety { SP1 }] unsafe fn foo() {}
+/// #[safety { SP1, SP2 }] unsafe fn bar() {}
+///
+/// // Discharge SPs:
+/// #[safety { SP1 }] unsafe { foo() };
+/// #[safety { SP1: "reason" }] unsafe { foo() };
+/// #[safety { SP1, SP2: "shared reason" }] unsafe { bar() };
+/// #[safety { SP1: "reason1"; SP2: "reason2" }] unsafe { bar() };
+/// ```
+#[proc_macro_attribute]
+pub fn safety(attr: TokenStream, item: TokenStream) -> TokenStream {
+    let attr_args: AttrArgs = parse(attr).unwrap();
+    item
 }

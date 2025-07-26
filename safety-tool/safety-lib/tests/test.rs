@@ -21,6 +21,11 @@ fn snapshot(test: &str) {
 }
 
 #[test]
+fn safety_macro() {
+    snapshot("testcase_safety_macro");
+}
+
+#[test]
 fn memo_arg() {
     snapshot("testcase_memo_arg");
 }
