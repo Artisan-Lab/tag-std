@@ -5,26 +5,26 @@
 
 pub fn tag_expr() {
     unsafe {
-        #[rapx::tag_expr(property = Memo(Tag), kind = "memo")]
-        #[rapx::tag_expr(property = Align(), kind = "precond")]
+        #[rapx::tag_expr(Tag)]
+        #[rapx::tag_expr(Align)]
         call()
     };
 }
 
 pub fn tag_block() {
-    #[rapx::tag_block(property = Memo(Tag), kind = "memo")]
-    #[rapx::tag_block(property = Align(), kind = "precond")]
+    #[rapx::tag_block(Tag)]
+    #[rapx::tag_block(Align)]
     unsafe {
         call();
     }
 }
 
-#[rapx::inner(property = Memo(Tag), kind = "memo")]
-#[rapx::inner(property = Align(), kind = "precond")]
+#[rapx::inner(Tag)]
+#[rapx::inner(Align)]
 unsafe fn call() {}
 
-#[rapx::tag_unsafe_fn(property = Memo(Tag), kind = "memo")]
-#[rapx::tag_unsafe_fn(property = Align(), kind = "precond")]
+#[rapx::tag_unsafe_fn(Tag)]
+#[rapx::tag_unsafe_fn(Align)]
 pub unsafe fn tag_unsafe_fn() {
     call();
 }

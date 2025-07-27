@@ -124,14 +124,6 @@ fn unsafe_calls_panic_discharge_all_tagged_less() {
 }
 
 #[test]
-fn unsafe_calls_panic_discharge_all_tagged_less_fine() {
-    let [file, outfile] = &testcase("unsafe_calls_panic_discharge_all_tagged_less_fine");
-    // NOTE: for unset DISCHARGES_ALL_PROPERTIES,
-    // it's fine if non Memo properties are discharged or not.
-    fine(file, outfile, CompilationOptions::default());
-}
-
-#[test]
 fn unsafe_calls_panic_discharge_all_tagged_more() {
     // FIXME: distinguish discharge and definition tags.
     // cc https://github.com/os-checker/tag-std/issues/17

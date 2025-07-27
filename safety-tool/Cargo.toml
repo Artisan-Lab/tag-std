@@ -19,7 +19,7 @@ name = "unsafe_calls"
 required-features = ["std"]
 
 [[test]]
-name = "safety_lib"
+name = "safety_macro"
 required-features = ["rfl"]
 
 [dependencies]

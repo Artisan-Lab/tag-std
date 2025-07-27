@@ -6,14 +6,14 @@
 pub fn tag_expr() {
     let s = Struct::new();
     unsafe {
-        #[rapx::tag_expr(property = Memo(Tag), kind = "memo")]
+        #[rapx::tag_expr(Tag)]
         s.call()
     };
 }
 
 pub fn tag_block() {
     let s = Struct::new();
-    #[rapx::tag_block(property = Memo(Tag), kind = "memo")]
+    #[rapx::tag_block(Tag)]
     unsafe {
         s.call();
     }
@@ -26,11 +26,11 @@ impl Struct {
         Self {}
     }
 
-    #[rapx::inner(property = Memo(Tag), kind = "memo")]
+    #[rapx::inner(Tag)]
     unsafe fn call(&self) {}
 }
 
-#[rapx::tag_unsafe_fn(property = Memo(Tag), kind = "memo")]
+#[rapx::tag_unsafe_fn(Tag)]
 pub unsafe fn tag_unsafe_fn() {
     let s = Struct::new();
     s.call();

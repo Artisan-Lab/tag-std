@@ -37,6 +37,10 @@ pushd safety-macro
 cargo test
 popd
 
+# enable tag definitions
+rm $DATA_SQLITE3
+export SP_FILE=$PWD/assets/sp-core.toml
+
 # Test basic demo
 pushd ./tests/basic
 
