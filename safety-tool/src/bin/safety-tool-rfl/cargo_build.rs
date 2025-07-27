@@ -144,6 +144,7 @@ impl SafetyToolSysroot {
         for entry in fs::read_dir(&self.lib)? {
             let entry = entry?;
             let path = entry.path();
+            #[allow(clippy::collapsible_if)]
             if let Some(file_name) = path.file_name() {
                 if let Some(file_name) = file_name.to_str() {
                     if file_name == SO {
