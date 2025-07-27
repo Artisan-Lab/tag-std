@@ -5,16 +5,18 @@
 #![register_tool(rapx)]
 
 use demo::MyStruct;
-use safety_lib::safety;
+use safety_macro::safety;
 
 fn main() {
     let (p, l, _c) = Vec::new().into_raw_parts();
     let a = MyStruct::from(p, l);
     println!("{:?}", unsafe {
-        #[safety::discharges(Precond_Init, memo = "This is from a valid Vec object.")]
-        #[safety::discharges(Precond_InBound, memo = "This is from a valid Vec object.")]
-        #[safety::discharges(Precond_ValidNum, memo = "self.len is valid.")]
-        #[safety::discharges(Hazard_Alias, memo = "p is no longer used.")]
+        #[safety {
+            Init: "This is from a valid Vec object.";
+            InBound: "This is from a valid Vec object.";
+            ValidNum: "self.len is valid.";
+            hazard.Alias: "p is no longer used."
+        }]
         a.get()
     });
 }

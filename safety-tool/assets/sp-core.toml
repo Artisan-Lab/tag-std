@@ -145,7 +145,7 @@ url = "https://github.com/Artisan-Lab/tag-std/blob/main/primitive-sp.md#332-stri
 
 [tag.ValidNum]
 args = [ "exp", "vrange" ]
-desc = "the value of {} must lie within the valid {}"
+desc = "the value of {exp} must lie within the valid {vrange}"
 expr = "exp ∈ vrange"
 url = "https://github.com/Artisan-Lab/tag-std/blob/main/primitive-sp.md#331-integer"
 

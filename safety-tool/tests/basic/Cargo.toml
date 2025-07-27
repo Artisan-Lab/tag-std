@@ -4,4 +4,4 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-safety-lib = { path = "../../safety-lib" }
+safety-macro = { path = "../../safety-macro" }

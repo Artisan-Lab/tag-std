@@ -6,7 +6,7 @@ version = 4
 name = "demo"
 version = "0.1.0"
 dependencies = [
- "safety-lib",
+ "safety-macro",
 ]
 
 [[package]]
@@ -67,13 +67,6 @@ name = "ryu"
 version = "1.0.20"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "28d3b2b1366ec20994f1fd18c3c594f05c5dd4bc44d8bb0c1c632c8d6829481f"
-
-[[package]]
-name = "safety-lib"
-version = "0.2.1"
-dependencies = [
- "safety-macro",
-]
 
 [[package]]
 name = "safety-macro"

@@ -3,9 +3,9 @@
 #![allow(clippy::missing_safety_doc, clippy::mut_from_ref, internal_features)]
 #![feature(core_intrinsics)]
 
-use safety_lib::safety;
+use safety_macro::safety;
 
-#[safety::precond::Unreachable()]
+#[safety{ Unreachable }]
 pub unsafe fn test() -> ! {
     unsafe { std::intrinsics::unreachable() }
 }
@@ -19,15 +19,11 @@ impl MyStruct {
         MyStruct { ptr: p, len: l }
     }
 
-    #[safety::precond::Init(self.ptr, u8, self.len)]
-    #[safety::precond::InBound(self.ptr, u8, self.len)]
-    #[safety::precond::ValidNum(self.len*sizeof(u8), [0,isize::MAX])]
-    #[safety::hazard::Alias(self.ptr)]
     #[safety {
         Init(self.ptr, u8, self.len),
         InBound(self.ptr, u8, self.len),
         ValidNum(self.len*sizeof(u8), [0,isize::MAX]),
-        Alias(self.ptr)
+        hazard.Alias(self.ptr)
     }]
     pub unsafe fn get(&self) -> &mut [u8] {
         unsafe { std::slice::from_raw_parts_mut(self.ptr, self.len) }
