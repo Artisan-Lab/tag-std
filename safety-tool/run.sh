@@ -10,8 +10,6 @@ set -o pipefail
 export LD_LIBRARY_PATH=$(rustc --print sysroot)/lib
 # Don't emit rlib files.
 export STOP_COMPILATION=1
-# Check all properties are discharged.
-export DISCHARGES_ALL_PROPERTIES=1
 
 # ./run.sh -Fstd
 FEATURES=${1:-"std"}

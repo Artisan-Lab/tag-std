@@ -3,7 +3,7 @@ use rustc_data_structures::fx::FxIndexMap;
 use rustc_hir::{Attribute, HirId, def_id::DefId};
 use rustc_middle::ty::TyCtxt;
 use safety_parser::safety::parse_attr_and_get_properties;
-use std::{fmt, sync::LazyLock};
+use std::fmt;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct PrimaryKey {
@@ -151,12 +151,6 @@ impl Property {
 }
 
 fn push_properties(s: &str, v: &mut Vec<Property>) {
-    // `DISCHARGES_ALL_PROPERTIES=0` or unset will only check Memo properties.
-    // When the env var is set, all properties will be checked.
-    static DISCHARGES_ALL_PROPERTIES: LazyLock<bool> = LazyLock::new(|| {
-        std::env::var("DISCHARGES_ALL_PROPERTIES").map(|var| var != "0").unwrap_or(false)
-    });
-
     let properties = &*parse_attr_and_get_properties(s);
     let cap = properties.iter().map(|prop| prop.tags.len()).sum();
     v.reserve(cap);

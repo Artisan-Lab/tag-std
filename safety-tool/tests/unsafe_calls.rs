@@ -22,28 +22,15 @@ struct CompilationOptions<'a> {
     args: &'a [&'a str],
     envs: &'a [(&'a str, &'a str)],
     stop: bool,
-    discharges_all_properties: bool,
 }
 
 impl Default for CompilationOptions<'_> {
     fn default() -> Self {
-        Self {
-            args: &["--crate-type=lib"],
-            envs: &[],
-            stop: true,
-            discharges_all_properties: false,
-        }
-    }
-}
-
-impl CompilationOptions<'_> {
-    fn discharges_all_properties() -> Self {
-        CompilationOptions { discharges_all_properties: true, ..Default::default() }
+        Self { args: &["--crate-type=lib"], envs: &[], stop: true }
     }
 }
 
 const STOP_COMPILATION: &str = "STOP_COMPILATION";
-const DISCHARGES_ALL_PROPERTIES: &str = "DISCHARGES_ALL_PROPERTIES";
 
 fn compile(file: &str, opts: CompilationOptions) -> (&'static str, std::process::Output) {
     let exe = env!("CARGO_PKG_NAME");
@@ -57,12 +44,6 @@ fn compile(file: &str, opts: CompilationOptions) -> (&'static str, std::process:
         cmd.env(STOP_COMPILATION, "1");
     } else {
         cmd.env_remove(STOP_COMPILATION);
-    }
-
-    if opts.discharges_all_properties {
-        cmd.env(DISCHARGES_ALL_PROPERTIES, "1");
-    } else {
-        cmd.env_remove(DISCHARGES_ALL_PROPERTIES);
     }
 
     let output = cmd.output().unwrap();
@@ -120,7 +101,7 @@ fn unsafe_calls_panic_method() {
 #[test]
 fn unsafe_calls_panic_discharge_all_tagged_less() {
     let [file, outfile] = &testcase("unsafe_calls_panic_discharge_all_tagged_less");
-    should_panic(file, outfile, CompilationOptions::discharges_all_properties());
+    should_panic(file, outfile, Default::default());
 }
 
 #[test]
@@ -153,7 +134,7 @@ fn unsafe_calls_method() {
 #[test]
 fn unsafe_calls_discharge_all() {
     let [file, outfile] = &testcase("unsafe_calls_discharge_all");
-    fine(file, outfile, CompilationOptions::discharges_all_properties());
+    fine(file, outfile, Default::default());
 }
 
 #[test]
