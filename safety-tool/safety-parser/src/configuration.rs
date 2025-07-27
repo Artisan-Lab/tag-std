@@ -1,7 +1,11 @@
 //! Property definition through config file.
 use indexmap::IndexMap;
 use serde::Deserialize;
-use std::{env, fs, sync::LazyLock};
+use std::{
+    env::{self, var},
+    fs,
+    sync::LazyLock,
+};
 
 pub type Str = Box<str>;
 pub type OptStr = Option<Box<str>>;
@@ -65,16 +69,27 @@ fn default_types() -> Box<[TagType]> {
     Box::new([TagType::Precond])
 }
 
-pub const DEFAULT_TYPE: &str = "precond";
+/// Single toml config file path.
+pub const ENV_SP_FILE: &str = "SP_FILE";
+/// Folder where all toml files are searched.
+pub const ENV_SP_DIR: &str = "SP_DIR";
+
+/// If ENV_SP_DIR or ENV_SP_DIR is provided, check tag and emit `#[doc]` for each tag.
+/// If neither is provided, do nothing.
+pub fn config_exists() -> bool {
+    static EMIT: LazyLock<bool> =
+        LazyLock::new(|| var(ENV_SP_FILE).is_ok() || var(ENV_SP_DIR).is_ok());
+    *EMIT
+}
 
 /// Paths to toml config. Pass one of these env vars:
 /// * if `SP_FILE` is specified, use that toml path
 /// * if `SP_DIR` is specified, use that path to find toml files
 /// * if both are given, only respect `SP_FILE`
-fn toml_file_paths() -> Vec<String> {
-    if let Ok(file) = env::var("SP_FILE") {
+pub fn toml_file_paths() -> Vec<String> {
+    if let Ok(file) = env::var(ENV_SP_FILE) {
         vec![file]
-    } else if let Ok(dir) = env::var("SP_DIR") {
+    } else if let Ok(dir) = env::var(ENV_SP_DIR) {
         let mut files = Vec::new();
         for entry in
             fs::read_dir(&dir).unwrap_or_else(|e| panic!("Failed to read {dir} folder:\n{e}"))
@@ -121,17 +136,4 @@ pub static TAGS: LazyLock<IndexMap<Str, Key>> = LazyLock::new(|| {
 
 pub fn get_tag(name: &str) -> &'static Tag {
     &TAGS.get(name).unwrap_or_else(|| panic!("Tag {name:?} is not defined")).tag
-}
-
-#[test]
-fn string_interpolation() {
-    #[derive(serde::Serialize)]
-    struct Val {
-        a: u8,
-        b: &'static str,
-    }
-    let s = "{a}, {b}";
-    let mut template = tinytemplate::TinyTemplate::new();
-    template.add_template("", s).unwrap();
-    println!("rendered: {}", template.render("", &Val { a: 123, b: "hi" }).unwrap());
 }

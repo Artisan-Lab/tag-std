@@ -1,13 +1,18 @@
 use crate::{
     Str,
-    configuration::{TagType, get_tag},
+    configuration::{TagType, config_exists, get_tag},
 };
+use indexmap::IndexMap;
+use proc_macro2::TokenStream;
+use quote::quote;
 use syn::{
     parse::{Parse, ParseStream},
     punctuated::Punctuated,
     token::Paren,
     *,
 };
+
+mod utils;
 
 #[cfg(test)]
 mod tests;
@@ -50,7 +55,7 @@ impl SafetyAttrArgs {
 
 #[derive(Debug)]
 pub struct PropertiesAndReason {
-    pub tags: Vec<Property>,
+    pub tags: Box<[Property]>,
     pub desc: Option<Str>,
 }
 
@@ -61,11 +66,14 @@ impl Parse for PropertiesAndReason {
 
         while !input.cursor().eof() {
             let tag: TagNameType = input.parse()?;
-            tag.check_type();
+            if config_exists() {
+                tag.check_type();
+            }
             let sp = if input.peek(Paren) {
                 let content;
                 parenthesized!(content in input);
-                let args = Punctuated::parse_terminated(&content)?;
+                let args = Punctuated::<Expr, Token![,]>::parse_terminated(&content)?;
+                let args = args.into_iter().collect();
                 Property { tag, args }
             } else {
                 Property { tag, args: Default::default() }
@@ -88,7 +96,33 @@ impl Parse for PropertiesAndReason {
                 break;
             }
         }
-        Ok(PropertiesAndReason { tags, desc })
+        Ok(PropertiesAndReason { tags: tags.into(), desc })
+    }
+}
+
+impl PropertiesAndReason {
+    /// Generate
+    ///
+    /// ```text
+    /// /// Grouped desc
+    /// /// * SP1: desc
+    /// /// * SP2: desc
+    /// ```
+    pub fn gen_doc(&self) -> TokenStream {
+        let mut ts = TokenStream::default();
+        if let Some(desc) = self.desc.as_deref() {
+            ts.extend(quote! { #[doc = #desc] });
+        }
+        for tag in &self.tags {
+            let name = tag.tag.name();
+            let tokens = if let Some(desc) = tag.gen_doc() {
+                quote! { #[doc = concat!("* ", #name, ": ", #desc)] }
+            } else {
+                quote! { #[doc = concat!("* ", #name)] }
+            };
+            ts.extend(tokens);
+        }
+        ts
     }
 }
 
@@ -97,7 +131,30 @@ pub struct Property {
     /// `SP` or `type::SP`. Single `SP` means `precond::SP`.
     pub tag: TagNameType,
     /// Args in `SP(args)` such as `arg1, arg2`.
-    pub args: Punctuated<Expr, Token![,]>,
+    pub args: Box<[Expr]>,
+}
+
+impl Property {
+    /// Generate `#[doc]` for this property from its desc string interpolation.
+    /// None means SP is not defined with desc, thus nothing to generate.
+    pub fn gen_doc(&self) -> Option<String> {
+        let defined_tag = get_tag(self.tag.name());
+        // NOTE: this tolerates missing args, but position matters.
+        let args_len = self.args.len().min(defined_tag.args.len());
+
+        // map defined arg names to user inputs
+        let defined_args = defined_tag.args[..args_len].iter().map(|s| &**s);
+        let input_args = self.args[..args_len].iter().map(utils::expr_to_string);
+        let mut map_defined_arg_input_arg: IndexMap<_, _> = defined_args.zip(input_args).collect();
+        // if input arg is missing, defined arg will be an empty string
+        for defined_arg in &defined_tag.args {
+            if !map_defined_arg_input_arg.contains_key(&**defined_arg) {
+                map_defined_arg_input_arg.insert(defined_arg, String::new());
+            }
+        }
+
+        defined_tag.desc.as_deref().map(|desc| utils::template(desc, &map_defined_arg_input_arg))
+    }
 }
 
 #[derive(Debug)]

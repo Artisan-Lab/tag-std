@@ -1,3 +1,5 @@
+#![feature(register_tool)]
+#![register_tool(rapx)]
 #![allow(clippy::missing_safety_doc)]
 use safety_macro::safety;
 

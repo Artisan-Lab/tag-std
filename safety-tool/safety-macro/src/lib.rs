@@ -1,5 +1,6 @@
 use proc_macro::TokenStream;
 use safety_parser::{
+    configuration::config_exists,
     proc_macro2::{Ident, TokenStream as TokenStream2},
     property_attr::{
         FnItem, SafetyAttrArgs, parse_inner_attr_from_tokenstream,
@@ -130,6 +131,8 @@ pub fn discharges(attr: TokenStream, item: TokenStream) -> TokenStream {
 ///
 /// ```
 /// #![feature(proc_macro_hygiene)]
+/// #![feature(register_tool)]
+/// #![register_tool(rapx)]
 /// # use safety_macro::safety;
 ///
 /// // Tag SPs:
@@ -144,6 +147,24 @@ pub fn discharges(attr: TokenStream, item: TokenStream) -> TokenStream {
 /// ```
 #[proc_macro_attribute]
 pub fn safety(attr: TokenStream, item: TokenStream) -> TokenStream {
+    let mut ts = TokenStream::new();
+
+    // add registered tool attr
+    let tool_attr = {
+        let attr = TokenStream2::from(attr.clone());
+        TokenStream::from(quote! { #[rapx::inner(#attr)] })
+    };
+    ts.extend(tool_attr);
+
     let attr_args: AttrArgs = parse(attr).unwrap();
-    item
+
+    if config_exists() {
+        for tag in &attr_args.args {
+            ts.extend(TokenStream::from(tag.gen_doc()));
+        }
+    }
+
+    // add item or expression back
+    ts.extend(item);
+    ts
 }
