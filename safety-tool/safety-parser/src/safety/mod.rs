@@ -26,15 +26,24 @@ pub struct SafetyAttr {
 impl Parse for SafetyAttr {
     fn parse(input: ParseStream) -> Result<Self> {
         let mut attrs = Attribute::parse_outer(input)?;
-        assert!(attrs.len() == 1, "#[safety] must be single");
+
+        assert!(attrs.len() == 1, "Given input must be a single #[safety] attribute.");
         let attr = attrs.remove(0);
         drop(attrs);
 
-        let ident = attr.path().get_ident().unwrap();
-        assert_eq!(ident, "safety", "should pass a #[safety] macro here");
+        // We don't check attribute name. Normally, it's #[safety { ... }],
+        // but it can be #[path::to::safety {}], or #[reexported {}], or #[rapx::inner {}].
+
         let args = attr.parse_args()?;
         Ok(SafetyAttr { attr, args })
     }
+}
+
+/// Parse a full attribute such as `#[rapx::inner { ... }]` to get properties.
+pub fn parse_attr_and_get_properties(attr: &str) -> Box<[PropertiesAndReason]> {
+    let attr: SafetyAttr = parse_str(attr)
+        .unwrap_or_else(|e| panic!("Failed to parse {attr:?} as a safety attribute:\n{e}"));
+    attr.args.args.into_iter().collect()
 }
 
 #[derive(Debug)]

@@ -130,7 +130,7 @@ pub static TAGS: LazyLock<IndexMap<Str, Key>> = LazyLock::new(|| {
         }
     }
     map.sort_unstable_keys();
-    println!("Got {} tags.", map.len());
+    eprintln!("Got {} tags.", map.len());
     map
 });
 
