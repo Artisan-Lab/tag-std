@@ -52,5 +52,5 @@ jobs:
           path: linux/Documentation/output/rust/rustdoc/
 
       - name: Deploy to GitHub Pages
-        if: runner.os == 'Linux' && runner.arch == 'X64' && github.ref == 'refs/heads/main'
+        if: runner.os == 'Linux' && runner.arch == 'X64' 
         uses: actions/deploy-pages@v4
