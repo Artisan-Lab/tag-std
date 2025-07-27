@@ -175,7 +175,7 @@ crossfig::switch! {
             }
 
             fn visit_expr(&mut self, ex: &'tcx Expr<'tcx>) -> Self::Result {
-                self._visit_expr(ex)
+                self.inner_visit_expr(ex)
             }
         }
     }
