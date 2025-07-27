@@ -1,4 +1,3 @@
-pub mod configuration;
 pub mod logger;
 pub mod utils;
 
