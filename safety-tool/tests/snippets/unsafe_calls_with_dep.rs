@@ -5,7 +5,7 @@
 
 extern crate unsafe_calls;
 
-#[rapx::tag_unsafe_fn(property = Memo(Tag), kind = "memo")]
+#[rapx::tag_unsafe_fn(Tag)]
 fn use_tag_unsafe_fn() {
     unsafe { unsafe_calls::tag_unsafe_fn() }
 }

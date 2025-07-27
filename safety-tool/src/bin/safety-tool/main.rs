@@ -50,14 +50,13 @@ use stable_mir::{
 use std::ops::ControlFlow;
 
 mod analyze_hir;
-mod logger;
 
 use eyre::Result;
 #[macro_use]
 extern crate tracing;
 
 fn main() {
-    logger::init();
+    safety_tool::logger::init();
 
     let rustc_args: Vec<_> = std::env::args().collect();
 

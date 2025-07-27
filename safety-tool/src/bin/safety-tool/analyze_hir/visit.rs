@@ -175,7 +175,7 @@ crossfig::switch! {
             }
 
             fn visit_expr(&mut self, ex: &'tcx Expr<'tcx>) -> Self::Result {
-                self._visit_expr(ex)
+                self.inner_visit_expr(ex)
             }
         }
     }
@@ -190,14 +190,14 @@ crossfig::switch! {
             }
 
             fn visit_expr(&mut self, ex: &'tcx Expr<'tcx>) -> Self::Result {
-                self._visit_expr(ex)
+                self.inner_visit_expr(ex)
             }
         }
     }
 }
 
 impl<'tcx> Calls<'tcx> {
-    fn _visit_expr(&mut self, ex: &'tcx Expr<'tcx>) {
+    fn inner_visit_expr(&mut self, ex: &'tcx Expr<'tcx>) {
         let hir_id = ex.hir_id;
         match ex.kind {
             ExprKind::Path(QPath::Resolved(_opt_ty, path)) => {
@@ -220,6 +220,13 @@ impl<'tcx> Calls<'tcx> {
         }
         walk_expr(self, ex)
     }
+
+    pub fn get_unsafe_calls(&self) -> Vec<&Call> {
+        self.calls
+            .iter()
+            .filter(|call| self.tcx.fn_sig(call.def_id).skip_binder().safety().is_unsafe())
+            .collect()
+    }
 }
 
 pub fn get_calls<'tcx>(
@@ -230,13 +237,4 @@ pub fn get_calls<'tcx>(
     let mut calls = Calls { tcx, tyck, calls: Vec::new() };
     walk_expr(&mut calls, expr);
     calls
-}
-
-impl Calls<'_> {
-    pub fn get_unsafe_calls(&self) -> Vec<&Call> {
-        self.calls
-            .iter()
-            .filter(|call| self.tcx.fn_sig(call.def_id).skip_binder().safety().is_unsafe())
-            .collect()
-    }
 }

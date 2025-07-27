@@ -1,10 +1,10 @@
 stdout=
 ********* "unsafe_calls_with_dep" [Rlib] has reached 2 instances *********
 "use_tag_unsafe_fn" ("./tests/snippets/unsafe_calls_with_dep.rs:9:1: 9:23")
- => "#[rapx::tag_unsafe_fn(property = Memo(Tag), kind = \"memo\")]\n"
+ => "#[rapx::tag_unsafe_fn(Tag)]\n"
 
 "unsafe_calls::tag_unsafe_fn" ("./tests/snippets/unsafe_calls.rs:24:1: 24:30")
- => "#[rapx::tag_unsafe_fn(property = Memo(Tag), kind = \"memo\")]\n"
+ => "#[rapx::tag_unsafe_fn(Tag)]\n"
 
 
 stderr=

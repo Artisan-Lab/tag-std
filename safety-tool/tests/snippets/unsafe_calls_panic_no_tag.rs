@@ -3,7 +3,7 @@
 #![register_tool(rapx)]
 #![allow(dead_code)]
 
-#[rapx::inner(property = Memo(Tag), kind = "memo")]
+#[rapx::inner(Tag)]
 unsafe fn call() {}
 
 // No tag cases should really panic.

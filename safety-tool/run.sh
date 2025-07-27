@@ -10,8 +10,6 @@ set -o pipefail
 export LD_LIBRARY_PATH=$(rustc --print sysroot)/lib
 # Don't emit rlib files.
 export STOP_COMPILATION=1
-# Check all properties are discharged.
-export DISCHARGES_ALL_PROPERTIES=1
 
 # ./run.sh -Fstd
 FEATURES=${1:-"std"}
@@ -36,6 +34,10 @@ popd
 pushd safety-macro
 cargo test
 popd
+
+# enable tag definitions
+rm $DATA_SQLITE3
+export SP_FILE=$PWD/assets/sp-core.toml
 
 # Test basic demo
 pushd ./tests/basic

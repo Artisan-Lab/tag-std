@@ -17,6 +17,6 @@ impl Struct {
         Self {}
     }
 
-    #[rapx::inner(property = Memo(Tag), kind = "memo")]
+    #[rapx::inner(Tag)]
     unsafe fn call(&self) {}
 }

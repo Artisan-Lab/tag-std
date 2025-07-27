@@ -5,22 +5,22 @@
 
 pub fn tag_expr() {
     unsafe {
-        #[rapx::tag_expr(property = Memo(Tag), kind = "memo")]
+        #[rapx::tag_expr(Tag)]
         call()
     };
 }
 
 pub fn tag_block() {
-    #[rapx::tag_block(property = Memo(Tag), kind = "memo")]
+    #[rapx::tag_block(Tag)]
     unsafe {
         call();
     }
 }
 
-#[rapx::inner(property = Memo(Tag), kind = "memo")]
+#[rapx::inner(Tag)]
 unsafe fn call() {}
 
-#[rapx::tag_unsafe_fn(property = Memo(Tag), kind = "memo")]
+#[rapx::tag_unsafe_fn(Tag)]
 pub unsafe fn tag_unsafe_fn() {
     call();
 }

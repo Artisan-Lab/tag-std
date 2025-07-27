@@ -2,8 +2,8 @@ use super::super::{HirFn, is_tool_attr};
 use rustc_data_structures::fx::FxIndexMap;
 use rustc_hir::{Attribute, HirId, def_id::DefId};
 use rustc_middle::ty::TyCtxt;
-use safety_parser::property_attr::{parse_inner_attr_from_str, property::Kind, utils::expr_ident};
-use std::{fmt, sync::LazyLock};
+use safety_parser::safety::parse_attr_and_get_properties;
+use std::fmt;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct PrimaryKey {
@@ -151,23 +151,12 @@ impl Property {
 }
 
 fn push_properties(s: &str, v: &mut Vec<Property>) {
-    // `DISCHARGES_ALL_PROPERTIES=0` or unset will only check Memo properties.
-    // When the env var is set, all properties will be checked.
-    static DISCHARGES_ALL_PROPERTIES: LazyLock<bool> = LazyLock::new(|| {
-        std::env::var("DISCHARGES_ALL_PROPERTIES").map(|var| var != "0").unwrap_or(false)
-    });
-
-    if let Some(property) = parse_inner_attr_from_str(s) {
-        let property = if property.kind == Kind::Memo {
-            // `Memo(Prop)` or `Memo_Prop` are normalized to call expr
-            expr_ident(&property.expr[0]).to_string()
-        } else if *DISCHARGES_ALL_PROPERTIES {
-            property.kind_property()
-        } else {
-            return;
+    let properties = &*parse_attr_and_get_properties(s);
+    let cap = properties.iter().map(|prop| prop.tags.len()).sum();
+    v.reserve(cap);
+    for property in properties {
+        for tag in &property.tags {
+            v.push(Property { property: tag.tag.name().into() });
         }
-        .into_boxed_str();
-
-        v.push(Property { property });
     }
 }

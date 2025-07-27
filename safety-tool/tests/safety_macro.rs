@@ -44,7 +44,7 @@ fn init() {
 fn basic() -> Result<()> {
     init();
 
-    let args = make_args(&["tests/snippets/safety_lib_basic.rs"]);
+    let args = make_args(&["tests/snippets/safety_macro_basic.rs"]);
 
     execute(&GLOBAL.safety_tool_rfl, &args, vec![])?;
     Ok(())

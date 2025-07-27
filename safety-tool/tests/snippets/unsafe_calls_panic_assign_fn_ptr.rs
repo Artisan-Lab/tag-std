@@ -3,7 +3,7 @@
 #![register_tool(rapx)]
 #![allow(dead_code)]
 
-#[rapx::inner(property = Memo(Tag), kind = "memo")]
+#[rapx::inner(Tag)]
 unsafe fn call() {}
 
 // Indirect call expressions are not supported yet.
@@ -11,7 +11,7 @@ unsafe fn call() {}
 pub fn assign_fn_ptr() {
     let f: unsafe fn() = call;
     unsafe {
-        #[rapx::assign_fn_ptr(property = Memo(Tag), kind = "memo")]
+        #[rapx::assign_fn_ptr(Tag)]
         f()
     };
 }

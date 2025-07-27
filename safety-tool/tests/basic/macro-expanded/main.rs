@@ -9,7 +9,7 @@ use std::prelude::rust_2024::*;
 #[macro_use]
 extern crate std;
 use demo::MyStruct;
-use safety_lib::safety;
+use safety_macro::safety;
 fn main() {
     let (p, l, _c) = Vec::new().into_raw_parts();
     let a = MyStruct::from(p, l);
@@ -18,10 +18,17 @@ fn main() {
             format_args!(
                 "{0:?}\n",
                 unsafe {
-                    #[rapx::inner(property = Alias(), kind = "hazard")]
-                    #[rapx::inner(property = ValidNum(), kind = "precond")]
-                    #[rapx::inner(property = InBound(), kind = "precond")]
-                    #[rapx::inner(property = Init(), kind = "precond")] a.get()
+                    #[rapx::inner(
+                        Init:"This is from a valid Vec object.";InBound:"This is from a valid Vec object.";ValidNum:"self.len is valid.";Alias:"p is no longer used."
+                    )] ///This is from a valid Vec object.
+                    ///* Init: the memory range [,  + sizeof()*] must be fully initialized for type T
+                    ///This is from a valid Vec object.
+                    ///* InBound: the pointer  and its offset up to sizeof()* must point to a single allocated object
+                    ///self.len is valid.
+                    ///* ValidNum: the value of  must lie within the valid
+                    ///p is no longer used.
+                    ///* Alias:  must not have other alias
+                    a.get()
                 },
             ),
         );
