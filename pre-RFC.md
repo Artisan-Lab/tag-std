@@ -49,19 +49,36 @@ descriptions of safety properties or safety requirements that must be satisfied 
 when using an unsafe API. This is the current form of safety descriptions used in Rust.
 
 In contrast, **safety tags** represent safety properties using a formal language, i.e., a
-[tool attribute] written in the form `#[safety::type::Prop(args, ...)]` where
-- `safety` is a crate name or tool name,
-  - `type` is one of `{precond, hazard, option}`,
-      - precond denotes a safety requirement that must be satisfied before invoking an unsafe API.
-        Most unsafe APIs carry at least one precondition.
-      - hazard denotes invoking the unsafe API may temporarily leave the program in a vulnerable
-        state; e.g. [`String::as_bytes_mut`].
-      - option denotes an optional precondition for an unsafe API—conditions that are sufficient but
-        not necessary to uphold the safety invariant. 
-  - `Prop(args, ...)` is a safety property instance. For safety propeties in libcore and libstd,
-    refer to [this document][primitive-sp] and our ongoing [paper].
+[tool attribute] written in the form `#[safety { Prop: "reason" }]` where
+- `safety` is proc-macro,
+- `type` is one of `{precond, hazard, option}`,
+    - precond denotes a safety requirement that must be satisfied before invoking an unsafe API.
+      Most unsafe APIs carry at least one precondition.
+    - hazard denotes invoking the unsafe API may temporarily leave the program in a vulnerable
+      state; e.g. [`String::as_bytes_mut`].
+    - option denotes an optional precondition for an unsafe API—conditions that are sufficient but
+      not necessary to uphold the safety invariant. 
+- `Prop` is a safety property (SP) instance. For safety propeties in libcore and libstd,
+  refer to [this document][primitive-sp] and our ongoing [paper].
+    - multiple SPs can be grouped together by separating them with commas, such as `SP1, SP2`.
+- `: "reason"` is an *optional* string to clarify what SP means in the context.
+    -  when a reason string appears, use `;` to separate props like `SP1: ""; Sp2: ""`.
 
-See the following usage of `ptr::read` as an example.
+Here are some basic syntax examples:
+
+```rust
+#[safety { SP }]
+#[safety { SP1, SP2 }]
+
+#[safety { SP1: "reason" }]
+#[safety { SP1: "reason"; SP2: "reason" }]
+
+#[safety { SP1, SP2: "reason" }]
+#[safety { SP1, SP2: "reason"; SP3 }]
+#[safety { SP3; SP1, SP2: "reason" }]
+```
+
+See the following usage of `ptr::read` as a full example.
 
 [tool attribute]: https://doc.rust-lang.org/reference/attributes.html#tool-attributes
 [`String::as_bytes_mut`]: https://doc.rust-lang.org/std/string/struct.String.html#method.as_bytes_mut
@@ -114,21 +131,10 @@ We can extract safety requirements above into propeties below:
 We can represent these safety requirements using safety tags as shown below.
 
 ```rust
-/// # Safety
-#[safety::precond::ValidPtr(src, T, 1)]
-#[safety::precond::Aligned(src, T)]
-#[safety::precond::Init(src, T, 1)]
-#[safety::any{
-    precond::NotOwned(src),
-    option::Trait(T, Copy)
+#[safety {
+    ValidPtr, Aligned, Init, Alias,
+    any { NotOwned, Trait(T, Copy) }, 
 }]
-#[safety::hazard::Alias(src, ret)]
-///
-/// ## Ownership of the Returned Value
-/// ...
-///
-/// [valid]: https://doc.rust-lang.org/std/ptr/index.html#safety
-/// [aligned]: https://doc.rust-lang.org/std/ptr/index.html#alignment
 pub const unsafe fn read<T>(src: *const T) -> T { ... }
 ```
 
@@ -139,6 +145,55 @@ Safety tags will take effect in two ways:
    unsafe API, lints should be emitted to remind developers to provide safety requirements. If a
     safety tag is declared for an unsafe API but not discharged at a call site, lints should be
     emitted to alert developers about potentially overlooked safety requirements.
+
+<details>
+
+## Define Safety Properties in Toml Configuration
+
+SPs can be defined in TOML files to perform checks on user inputs and generate doc comments.
+
+An example definition of an SP is as follows:
+
+```toml
+[tag.Aligned]
+args = [ "p", "T" ]
+desc = "pointer `{p}` must be properly aligned for type `{T}`"
+expr = "p % alignment(T) = 0"
+url = "https://doc.rust-lang.org/nightly/std/ptr/index.html#alignment"
+```
+
+We defined a property called `Aligned`, which includes two arguments, a dynamic description derived
+from user input and some other fields. All fields are optional.
+
+When `#[safety { Aligned(src, T) }]` is used, a corresponding doc comment is generated:
+
+```rust
+#[doc = "pointer `src` must be properly aligned for type `T`"]
+```
+
+For detailed usage and examples, refer to [tag-std#35].
+
+![](https://github.com/user-attachments/assets/48ec3740-5a49-4afd-b17d-64bfc8b7e8e3)
+
+[tag-std#35]: https://github.com/Artisan-Lab/tag-std/pull/35
+
+## Safety Properties with Arguments for Verification
+
+We also support SPs with arguments, which are required in verification scenarios.
+
+```rust
+#[safety {
+    ValidPtr(src, T, 1), Aligned(src, T), Init(src, T, 1), Alias(src, ret),
+    any{ NotOwned(src), Trait(T, Copy) }
+}]
+pub const unsafe fn read<T>(src: *const T) -> T { ... }
+```
+
+Most users do not need to write these arguments, unless they are running additional experimental
+Safety Property Verification using RAPx (Rust Analysis Platform extended). For more details, see
+[this chapter] of the RAPx book.
+
+[RAPx-SP]: https://artisan-lab.github.io/RAPx-Book/6.4-unsafe.html
 
 ## Discharge Safety Properties
 
@@ -207,7 +262,7 @@ depends on the behavior of Guard's Drop implementation. If `try_fold::Guard::dro
 developers must check whether the associated safety comments still hold. (This RFC does not address
 this problem, but see [Entity Reference System](#reference-entity) for our thought.)
 
-To address the first issue, we propose a solution based on annotating `#[discharges]` on callsites.
+To address the first issue, we propose a solution based on annotating `#[safety {}]` on callsites.
 
 ```rust
 fn try_fold<B, F, R>(&mut self, mut init: B, mut f: F) -> R {
@@ -216,14 +271,11 @@ fn try_fold<B, F, R>(&mut self, mut init: B, mut f: F) -> R {
     init = head.iter().map(|elem| {
         guard.consumed += 1;
 
-        #[safety::discharges::ValidPtr(elem, T, 1)]
-        #[safety::discharges::Aligned(elem, T)]
-        #[safety::discharges::Init(elem, T, 1)]
-        #[safety::discharges::NotOwned(elem, memo = "
-          Because we incremented `guard.consumed`, the deque 
-          effectively forgot the element, so we can take ownership.
-        ")]
-        #[safety::discharges::Alias(elem, head.iter())]
+        #[safety {
+            ValidPtr, Aligned, Init, Alias,
+            NotOwned: "Because we incremented `guard.consumed`, the deque \
+              effectively forgot the element, so we can take ownership."
+        }]
         unsafe { ptr::read(elem) }
     })
     .try_fold(init, &mut f)?;
@@ -232,7 +284,7 @@ fn try_fold<B, F, R>(&mut self, mut init: B, mut f: F) -> R {
 }
 ```
 
-`#[discharges]` must correspond to each safety property on the called unsafe API, if
+`#[safety]` must correspond to each safety property on the called unsafe API, if
 any property is missing, the linter will emit warnings or errors:
 
 ```rust
@@ -248,19 +300,6 @@ LLL | unsafe { ptr::read(elem) }
     = NOTE: Init 👉 The pointer must be initialized before calling `core::ptr::read`
 ```
 
-Update: we're considering replace the verbose `#[safety::discharges]` syntax with `#[safety{}]`:
-
-```rust
-#[safety {
-  ValidPtr, Align, Init: "`self.head_tail()` returns two slices to live elements";
-  NotOwned: "because we incremented...";
-  Alias(elem, head.iter());
-}]
-unsafe { ptr::read(elem) }
-```
-
-see this [IRLO discussion](https://internals.rust-lang.org/t/pre-rfc-safety-property-system/23252/22).
-
 # Reference-level Explanation
 [reference-level-explanation]: #reference-level-explanation
 
@@ -270,38 +309,23 @@ implementation details discussed in this section are tool-specific and primarily
 Take one of safety tag on `ptr::read` as an example:
 
 ```rust
-#[safety::precond::ValidPtr(src)]
+use safety::safety;
+
+#[safety { ValidPtr }]
 ```
 
-This is a procedural macro, and it is re-exported through a library crate because only the root path
-is accessible in a proc-macro crate. To work around this limitation, we re-export it from a nested
-module in an external crate.
+#[safety] is a procedural macro imported into scope by a crate named `safety-macro`.
 
-```rust
-// proc-macro crate: safety_macro/src/lib.rs
-#[proc_macro_attribute]
-pub fn Precond_ValidPtr(attr: TokenStream, item: TokenStream) -> TokenStream { ... }
-
-// normal lib crate: safety_lib/src/lib.rs
-pub mod precond {
-    pub use safety_macro::Precond_ValidPtr as ValidPtr;
-}
-```
-
-Developers can import the lib crate through Cargo.toml:
+Since we don’t have permissions to the `safety` crate, users can rename our crate in their
+Cargo.toml file as follows:
 
 ```toml
-# This renames the dependency `safety-lib` as `safety` within your crate
-safety = { version = "0.0.1", package = "safety-lib" }
+# This renames the dependency `safety-macro` as `safety` within your crate.
+safety = { version = "0.3.0", package = "safety-macro" }
 ```
 
-`#[safety::precond::ValidPtr]` s is now available in your crate and will be autocompleted by Rust
-Analyzer when you type `#[safety::]` or similar. 
-
-The solution also works in no_std projects and even in non-Cargo environments like Rust for Linux.
-See [tag-std#24] for more details if you're interested.
-
-[tag-std#24]: https://github.com/Artisan-Lab/tag-std/pull/24
+Proc-macros can be directly used in `no_std` projects and even in non-Cargo environments, such as
+Rust for Linux, by passing the compiled `libsafety_macro.so` as a direct dependency.
 
 The proc macro expands to three attributes:
 
@@ -387,20 +411,20 @@ More importantly, our proposal is a big improvement to these proposals, which Ru
 more about:
 * 2024-09: [Rust Safety Standard: Increasing the Correctness of unsafe Code][Rust Safety Standard]
   proposed by Benno Lossin
-  * this slides are about reasons and goals for safety documentation standardization, which our
-    proposal tries to achieve
-  * it doesn't mention how the standard is implemented, but Predrag (see the next line) and we
-    follow the spirit
+  * This slides are about reasons and goals for safety documentation standardization, which our
+    proposal tries to achieve.
+  * It doesn't mention how the standard is implemented, but Predrag (see the next line) and we
+    follow the spirit.
 * 2024-10: [Automated checking of unsafe code requirements](https://hackmd.io/@predrag/ByVBjIWlyx)
   proposed by Predrag
-  * our proposal is greatly inspired by Predrag's, so many of it can apply to ours, such as
+  * Our proposal is greatly inspired by Predrag's, so many of it can apply to ours, such as
     structured comments, entity reference, requirements discharge, and handling soundness hazard on
     safety rule changes. 
-  * the main difference is syntax: Predrag put up new syntax within doc and line comments, which is
+  * The main difference is syntax: Predrag put up new syntax within doc and line comments, which is
     pretty human and machine readable, but can be hard to implement as compiler just throws aways
     line comments so it's less handy to get safe rules on an expression than
     [`stmt_expr_attributes`](https://github.com/rust-lang/rust/issues/15701).
-  * his proposal doesn't mention arguments support in safety rules, meaning we don't know how a
+  * His proposal doesn't mention arguments support in safety rules, meaning we don't know how a
     pointer safety rule can apply to two pointers function arguments without ambiguity.
 
 Originally, we only focus on libstd's common safety propeties ([paper]), but noticed the RustWeek
@@ -484,13 +508,12 @@ be semver checked or not.
 
 <a id="reference-entity"></a>
 
-To reduce verbosity, we propose using `#[referent]` to define entities and `#[ref]` to reference
-them.
+To reduce verbosity, we propose using `#[ref]` to bi-directional reference:
 
 ```rust
 fn try_fold<B, F, R>(&mut self, mut init: B, mut f: F) -> R
     impl<'a, T, A: Allocator> Drop for Guard<'a, T, A> {
-        #[safety::ref::try_fold] // 💡
+        #[ref(try_fold)] // 💡 ptr::read below relies on this drop impl
         fn drop(&mut self) { ... }
     }
     ...
@@ -498,15 +521,12 @@ fn try_fold<B, F, R>(&mut self, mut init: B, mut f: F) -> R
     init = head.iter().map(|elem| {
         guard.consumed += 1;
 
-        #[safety::referent(try_fold)] // 👈 entity definition
-        #[safety::discharges::ValidPtr(elem, T, 1)]
-        #[safety::discharges::Aligned(elem, T)]
-        #[safety::discharges::Init(elem, T, 1)]
-        #[safety::discharges::NotOwned(elem, memo = "
-          Because we incremented `guard.consumed`, the deque 
-          effectively forgot the element, so we can take ownership.
-        ")]
-        #[safety::discharges::Alias(elem, head.iter())] 
+        #[ref(try_fold)] // 💡
+        #[safety {
+            ValidPtr, Aligned, Init, Alias,
+            NotOwned: "Because we incremented `guard.consumed`, the deque \
+              effectively forgot the element, so we can take ownership."
+        }]
         unsafe { ptr::read(elem) }
     })
     .try_fold(init, &mut f)?;
@@ -514,7 +534,7 @@ fn try_fold<B, F, R>(&mut self, mut init: B, mut f: F) -> R
     tail.iter().map(|elem| {
         guard.consumed += 1;
 
-        #[safety::ref::try_fold] // 💡 No longer to write SAFETY: Same as above.
+        #[ref(try_fold)] // 💡 No longer to write SAFETY: Same as above.
         unsafe { ptr::read(elem) }
     })
     .try_fold(init, &mut f)
@@ -522,7 +542,7 @@ fn try_fold<B, F, R>(&mut self, mut init: B, mut f: F) -> R
 
 fn try_rfold<B, F, R>(&mut self, mut init: B, mut f: F) -> R {
     impl<'a, T, A: Allocator> Drop for Guard<'a, T, A> {
-        #[safety::ref::try_fold] // 💡
+        #[ref(try_fold)] // 💡
         fn drop(&mut self) { ... }
     }
     ...
@@ -530,7 +550,7 @@ fn try_rfold<B, F, R>(&mut self, mut init: B, mut f: F) -> R {
     init = tail.iter().map(|elem| {
             guard.consumed += 1;
 
-            #[safety::ref::try_fold] // 💡 No longer to write SAFETY: See `try_fold`'s safety comment.
+            #[ref(try_fold)] // 💡 No longer to write SAFETY: See `try_fold`'s safety comment.
             unsafe { ptr::read(elem) }
         })
         .try_rfold(init, &mut f)?;
@@ -538,7 +558,7 @@ fn try_rfold<B, F, R>(&mut self, mut init: B, mut f: F) -> R {
     head.iter().map(|elem| {
             guard.consumed += 1;
 
-            #[safety::ref::try_fold] // 💡 No longer to write SAFETY: Same as above.
+            #[ref(try_fold)] // 💡 No longer to write SAFETY: Same as above.
             unsafe { ptr::read(elem) }
         })
         .try_rfold(init, &mut f)
@@ -575,26 +595,6 @@ I guess no.
 Trait solver may be involved, due to trait bounds analysis in safety property: if we hope to do
 better on `#[option::Trait(T, Copy)]`, each call of read on non-Copy T should requires a safety
 reason.
-
-## Dynamic safety tag
-
-<a id="dynamic-safety-tag"></a>
-
-The reason to have dynamically generated propeties is that we are unable to write an attribute
-library that can meet all unsafe code.
-
-Low-level crates probably requires their own safety propeties more than libstd defines.
-
-The core idea is a project-aware configuration file, in toml or json format, mapping property name,
-arguments, description (including string interpolation) and possible other verification macros such
-as kani. When safety-macro is being compiled, its build.rs will read the project mapping, and auto
-generate macros. (Suppose we don't have [reflection and comptime][reflection-comptime] any time
-soon.)
-
-[reflection-comptime]: https://github.com/rust-lang/rust-project-goals/pull/311
-
-We're trying to experiment on this though, as Asterinas OS wants this. Feel free to drop by
-[tag-std#26](https://github.com/Artisan-Lab/tag-std/issues/26).
 
 ## Better experience with more tooling
 
