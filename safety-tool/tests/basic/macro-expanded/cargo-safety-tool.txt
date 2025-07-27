@@ -1,9 +1,9 @@
-********* "equivalent" [Rlib] has reached 0 instances *********
-********* "unicode_ident" [Rlib] has reached 12 instances *********
-********* "build_script_build" [Executable] has reached 156 instances *********
-********* "build_script_build" [Executable] has reached 71 instances *********
 ********* "build_script_build" [Executable] has reached 17 instances *********
+********* "unicode_ident" [Rlib] has reached 12 instances *********
+********* "build_script_build" [Executable] has reached 71 instances *********
+********* "build_script_build" [Executable] has reached 156 instances *********
 ********* "itoa" [Rlib] has reached 42 instances *********
+********* "equivalent" [Rlib] has reached 0 instances *********
 ********* "ryu" [Rlib] has reached 76 instances *********
 ********* "toml_writer" [Rlib] has reached 101 instances *********
 ********* "memchr" [Rlib] has reached 938 instances *********
