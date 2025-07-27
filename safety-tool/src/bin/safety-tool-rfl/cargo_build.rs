@@ -12,6 +12,7 @@ use std::{
 pub fn dev() -> Result<()> {
     // NOTE: this compiles safety-lib on host target
     run("safety-lib", CopyMode::Lib, "safety-lib")?;
+    SAFETY_TOOL_SYSROOT.copy_safety_macro()?;
     // cp safety-tool's bins
     run(".", CopyMode::Bin, "safety-tool")?;
     Ok(())
@@ -133,6 +134,28 @@ impl SafetyToolSysroot {
 
         let json: serde_json::Value = serde_json::from_str(&stdout)?;
         serde_json::to_writer_pretty(file, &json)?;
+        Ok(())
+    }
+
+    /// copy libsafety_macro*.so to libsafety_macro.so.
+    /// If libsafety_macro.so, do nothing.
+    fn copy_safety_macro(&self) -> Result<()> {
+        const SO: &str = "libsafety_macro.so";
+        for entry in fs::read_dir(&self.lib)? {
+            let entry = entry?;
+            let path = entry.path();
+            if let Some(file_name) = path.file_name() {
+                if let Some(file_name) = file_name.to_str() {
+                    if file_name == SO {
+                        return Ok(());
+                    }
+                    if file_name.starts_with("libsafety_macro") && file_name.ends_with(".so") {
+                        fs::copy(&path, self.lib.join(SO))?;
+                        return Ok(());
+                    }
+                }
+            }
+        }
         Ok(())
     }
 }

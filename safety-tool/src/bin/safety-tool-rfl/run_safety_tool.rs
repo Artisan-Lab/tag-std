@@ -33,6 +33,8 @@ pub fn run(mut args: Vec<String>) -> Result<()> {
 
 fn extra_rustc_args() -> Vec<String> {
     let lib = sysroot::lib();
+    // safety-macro compiled on host target
+    let safety_macro = lib.join("libsafety_macro.so");
 
     // safety-lib compiled on no-std target
     make_args(&[
@@ -43,7 +45,7 @@ fn extra_rustc_args() -> Vec<String> {
         // The use extern crate syntax only works after --edition=2018.
         "--extern=safety_macro",
         // safety is compiled in linux/rust
-        "--extern=safety",
+        &format!("--extern=safety={safety_macro}"),
         // inject rapx tool attr
         "-Zcrate-attr=feature(register_tool)",
         "-Zcrate-attr=register_tool(rapx)",

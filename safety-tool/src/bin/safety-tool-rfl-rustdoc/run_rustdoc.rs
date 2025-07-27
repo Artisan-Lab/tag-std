@@ -23,8 +23,8 @@ pub fn run(mut args: Vec<String>) -> Result<()> {
 
 fn extra_rustc_args() -> Vec<String> {
     let lib = sysroot::lib();
-    // safety-lib compiled on host target
-    let safety_lib = lib.join("libsafety_lib.rlib");
+    // safety-macro compiled on host target
+    let safety_macro = lib.join("libsafety_macro.so");
 
     make_args(&[
         // inject safety_macro and safety_lib dependency
@@ -36,7 +36,7 @@ fn extra_rustc_args() -> Vec<String> {
         // safety is compiled in linux/rust (on no_std target)
         "--extern=safety=./rust/libsafety.rmeta",
         // safety is compiled on host target
-        &format!("--extern=safety={safety_lib}"),
+        &format!("--extern=safety={safety_macro}"),
         // inject rapx tool attr
         // "-Zallow-features=register_tool",
         "-Zcrate-attr=feature(register_tool)",
