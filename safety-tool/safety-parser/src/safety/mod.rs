@@ -41,6 +41,7 @@ impl Parse for SafetyAttr {
 pub struct SafetyAttrArgs {
     pub args: Punctuated<PropertiesAndReason, Token![;]>,
 }
+
 impl Parse for SafetyAttrArgs {
     fn parse(input: ParseStream) -> Result<Self> {
         Ok(SafetyAttrArgs { args: Punctuated::parse_terminated(input)? })
@@ -157,12 +158,15 @@ impl Property {
     }
 }
 
+/// Typed SP: `type.SP`
 #[derive(Debug)]
-pub enum TagNameType {
-    /// Single ident SP, default to `precond` type.
-    SP(Str),
-    /// Typed SP: `type.SP`
-    TypeSP { typ: TagType, sp: Str },
+pub struct TagNameType {
+    /// Default tag type is the one in single defined_types.
+    //
+    /// Deserialization will fill the default tag type as Precond.
+    typ: Option<TagType>,
+    /// Single ident string.
+    name: Str,
 }
 
 impl Parse for TagNameType {
@@ -172,43 +176,49 @@ impl Parse for TagNameType {
         Ok(if input.peek(Token![.]) {
             let _: Token![.] = input.parse()?;
             let second: Ident = input.parse()?;
-            let sp = second.to_string().into();
-            TagNameType::TypeSP { typ: TagType::new(&first), sp }
+            let name = second.to_string().into();
+            TagNameType { name, typ: Some(TagType::new(&first)) }
         } else {
-            TagNameType::SP(first.into())
+            TagNameType { name: first.into(), typ: None }
         })
     }
 }
 
 impl TagNameType {
     pub fn name(&self) -> &str {
-        match self {
-            TagNameType::SP(sp) => sp,
-            TagNameType::TypeSP { sp, .. } => sp,
-        }
+        &self.name
     }
 
-    pub fn typ(&self) -> TagType {
-        match self {
-            TagNameType::SP(_) => TagType::default(),
-            TagNameType::TypeSP { typ, .. } => *typ,
-        }
+    // FIXME: no pinned default tag, because we want default tag to be
+    // the one in single defined_types. Deserialization will fill the
+    // default tag type as Precond.
+    pub fn typ(&self) -> Option<TagType> {
+        self.typ
     }
 
-    pub fn name_type(&self) -> (&str, TagType) {
-        match self {
-            TagNameType::SP(sp) => (sp, TagType::default()),
-            TagNameType::TypeSP { typ, sp } => (sp, *typ),
-        }
+    pub fn name_type(&self) -> (&str, Option<TagType>) {
+        (&self.name, self.typ)
     }
 
     /// Check if the tag in macro is wrongly specified.
     pub fn check_type(&self) {
         let (name, typ) = self.name_type();
         let defined_types = &get_tag(name).types;
-        assert!(
-            defined_types.contains(&typ),
-            "For tag {name:?}, defined_types is {defined_types:?}, while user's {typ:?} doesn't exist."
-        );
+        if let Some(typ) = typ {
+            assert!(
+                defined_types.contains(&typ),
+                "For tag {name:?}, defined_types is {defined_types:?}, \
+                 while user's {typ:?} doesn't exist."
+            );
+        } else {
+            assert_eq!(
+                defined_types.len(),
+                1,
+                "For tag {name:?} without explicit type, \
+                 the default type is the single defined type.\n\
+                 But defined_types has multiple types: {defined_types:?}.\n\
+                 So choose a type to be `type.{name}`."
+            );
+        }
     }
 }
