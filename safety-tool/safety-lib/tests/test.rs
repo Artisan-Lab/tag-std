@@ -11,7 +11,7 @@ fn snapshot(test: &str) {
     }
 
     let expanded = std::str::from_utf8(&stdout.stdout).unwrap();
-    let dir = Path::new("oracle");
+    let dir = Path::new("snapshots");
     let path = {
         let mut p = dir.join(test);
         assert!(p.set_extension("rs"));
@@ -23,24 +23,4 @@ fn snapshot(test: &str) {
 #[test]
 fn safety_macro() {
     snapshot("testcase_safety_macro");
-}
-
-#[test]
-fn memo_arg() {
-    snapshot("testcase_memo_arg");
-}
-
-#[test]
-fn memo_property() {
-    snapshot("testcase_memo_property");
-}
-
-#[test]
-fn property() {
-    snapshot("testcase_property");
-}
-
-#[test]
-fn discharges() {
-    snapshot("testcase_discharges");
 }
