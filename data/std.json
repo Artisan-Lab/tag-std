@@ -485,7 +485,6 @@
     },
     "core::ptr::non_null::as_ref": {
         "0": [
-            "!Null | ",
             "ValidPtr2Ref"
         ]
     },
@@ -686,7 +685,7 @@
 
     "core::ptr::const_ptr::as_ref": {
         "0": [
-            "!Null | ",
+            "Null | ",
             "ValidPtr2Ref"
         ]
     },
@@ -697,7 +696,7 @@
     },
     "core::ptr::const_ptr::as_uninit_ref": {
         "0": [
-            "!Null | ",
+            "Null | ",
             "ValidPtr2Ref"
         ]
     },
