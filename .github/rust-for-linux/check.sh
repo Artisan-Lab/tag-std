@@ -6,6 +6,7 @@ set -exou pipefail
 
 export SAFETY_TOOL_LOG=info
 export SAFETY_TOOL_LOG_FILE=$PWD/tag-std.log
+export SP_DIR=$PWD/safety-tool/assets/
 
 export DATA_SQLITE3=$PWD/linux/rust_safety.sqlite3
 KCONFIG=$PWD/linux/kernel/configs/rfl-for-rust-ci.config
