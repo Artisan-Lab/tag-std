@@ -1,5 +1,5 @@
 use expect_test::expect;
-use safety_tool::configuration::Configuration;
+use safety_parser::configuration::Configuration;
 
 const TOML: &str = r#"
 package.name = "core"
@@ -19,7 +19,12 @@ fn deserialize() {
 
 #[test]
 fn core() {
-    let s = &std::fs::read_to_string("assets/sp-core.toml").unwrap();
-    let toml: Configuration = toml::from_str(s).unwrap();
-    expect!["26"].assert_eq(&toml.tag.len().to_string());
+    let config = &Configuration::read_toml("assets/sp-core.toml");
+    expect!["26"].assert_eq(&config.tag.len().to_string());
+}
+
+#[test]
+fn rust_for_linux() {
+    let config = &Configuration::read_toml("assets/sp-rust-for-linux.toml");
+    expect!["1"].assert_eq(&config.tag.len().to_string());
 }
