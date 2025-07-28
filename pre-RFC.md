@@ -83,7 +83,7 @@ We can define the annotation language with context-free grammar as follows:
 SafetyAnnotation => '#' '[' 'safety' '{' SPUnits '}' ']'
 SPUnits => SPUnit (';' SPUnit)*
 SPUnit => SPItem (',' SPItem)*
-SPItem => ID Args: Reasons
+SPItem => ID Args ':' Reasons
 ID => ([a-z][A-Z])+
 Args => ε | '(' Arg (, Arg)* ')'
 Reasons => '"' Text '"'
