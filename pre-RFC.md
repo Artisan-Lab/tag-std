@@ -73,9 +73,20 @@ Here are some basic syntax examples:
 #[safety { SP1: "reason" }]
 #[safety { SP1: "reason"; SP2: "reason" }]
 
-#[safety { SP1, SP2: "reason" }]
-#[safety { SP1, SP2: "reason"; SP3 }]
-#[safety { SP3; SP1, SP2: "reason" }]
+#[safety { SP1, SP2: "shared reason for the two SPs" }]
+#[safety { SP1, SP2: "shared reason for the two SPs"; SP3 }]
+#[safety { SP3; SP1, SP2: "shared reason for the two SPs" }]
+```
+
+We can define the grammar with context-free language as follows:
+```text
+Safety Annotation => '#' '[' 'safety' '{' SP Units '}' ']'
+SP Units => SP Unit (';' SP Unit)*
+SP Unit => SP Item (',' SP Item)*
+SP Item => ID Args: Reasons
+ID => ([a-z][A-Z])+
+Args => ε | '(' Arg (, Arg)* ')'
+Reasons => '"' Text '"'
 ```
 
 See the following usage of `ptr::read` as a full example.
