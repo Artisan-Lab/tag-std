@@ -78,12 +78,12 @@ Here are some basic syntax examples:
 #[safety { SP3; SP1, SP2: "shared reason for the two SPs" }]
 ```
 
-We can define the grammar with context-free language as follows:
+We can define the annotation language with context-free grammar as follows:
 ```text
-Safety Annotation => '#' '[' 'safety' '{' SP Units '}' ']'
-SP Units => SP Unit (';' SP Unit)*
-SP Unit => SP Item (',' SP Item)*
-SP Item => ID Args: Reasons
+SafetyAnnotation => '#' '[' 'safety' '{' SPUnits '}' ']'
+SPUnits => SPUnit (';' SPUnit)*
+SPUnit => SPItem (',' SPItem)*
+SPItem => ID Args: Reasons
 ID => ([a-z][A-Z])+
 Args => ε | '(' Arg (, Arg)* ')'
 Reasons => '"' Text '"'
