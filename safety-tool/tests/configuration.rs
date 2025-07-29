@@ -2,8 +2,7 @@ use expect_test::expect;
 use safety_parser::configuration::Configuration;
 
 const TOML: &str = r#"
-package.name = "core"
-tool-version = "0.1.0"
+[tag.A]
 
 [tag.ValidPtr]
 args = [ "p", "T", "len" ]

@@ -12,7 +12,7 @@ pub type OptStr = Option<Box<str>>;
 
 #[derive(Debug, Deserialize)]
 pub struct Configuration {
-    pub package: Package,
+    pub package: Option<Package>,
     pub tag: IndexMap<Str, Tag>,
 }
 
@@ -29,13 +29,14 @@ impl Configuration {
 
 #[derive(Debug, Deserialize)]
 pub struct Package {
-    pub name: Box<str>,
+    pub name: Str,
     pub version: OptStr,
     pub crate_name: OptStr,
 }
 
 #[derive(Debug, Deserialize)]
 pub struct Tag {
+    #[serde(default)]
     pub args: Box<[Str]>,
     pub desc: OptStr,
     pub expr: OptStr,
