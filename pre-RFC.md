@@ -79,13 +79,15 @@ Here are some basic syntax examples:
 ```
 
 We can define the annotation language with context-free grammar as follows:
+
 ```text
 SafetyAnnotation => '#' '[' 'safety' '{' SPUnits '}' ']'
 SPUnits => SPUnit (';' SPUnit)*
-SPUnit => SPItem (',' SPItem)*
-SPItem => ID Args ':' Reasons
+SPUnit => SPItem (',' SPItem)* (':' Reasons)?
+SPItem => ID (Args)?
 ID => ([a-z][A-Z])+
-Args => ε | '(' Arg (, Arg)* ')'
+Args => '(' Arg (, Arg)* ')'
+Arg => expression
 Reasons => '"' Text '"'
 ```
 
