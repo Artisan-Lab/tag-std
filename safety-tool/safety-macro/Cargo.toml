@@ -1,6 +1,6 @@
 [package]
 name = "safety-macro"
-version = "0.3.0"
+version = "0.3.1"
 edition = "2024"
 authors = ["Artisan-Lab <xuh@fudan.edu.cn>"]
 description = "A macro for using safety tags defined in tag-std"
@@ -12,4 +12,4 @@ readme = "README.md"
 proc-macro = true
 
 [dependencies]
-safety-parser = { path = "../safety-parser", version = "0.3.0" }
+safety-parser = { path = "../safety-parser", version = "0.3.1" }
