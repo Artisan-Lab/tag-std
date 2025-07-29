@@ -1,5 +1,4 @@
 package.name = "core"
-tool-version = "0.1.0"
 
 [tag.Alias]
 args = [ "p1", "p2" ]
