@@ -1,0 +1,3 @@
+[tag.RustdocLinkToItem]
+args = [ "item" ]
+desc = "[`{item}`]"

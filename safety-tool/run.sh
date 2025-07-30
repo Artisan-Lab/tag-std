@@ -37,7 +37,7 @@ popd
 
 # enable tag definitions
 rm $DATA_SQLITE3
-export SP_FILE=$PWD/assets/sp-core.toml
+export SP_DIR=$PWD/assets
 
 # Test basic demo
 pushd ./tests/basic

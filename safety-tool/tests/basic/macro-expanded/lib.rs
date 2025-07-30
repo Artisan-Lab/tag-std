@@ -25,12 +25,15 @@ impl MyStruct {
         Init(self.ptr, u8, self.len),
         InBound(self.ptr, u8, self.len),
         ValidNum(self.len*sizeof(u8), [0, isize::MAX]),
-        Alias(self.ptr)
+        Alias(self.ptr),
+        RustdocLinkToItem("test")
     )]
     ///* Init: the memory range [self.ptr, self.ptr + sizeof(u8)*self.len] must be fully initialized for type T
     ///* InBound: the pointer self.ptr and its offset up to sizeof(u8)*self.len must point to a single allocated object
     ///* ValidNum: the value of self.len * sizeof(u8) must lie within the valid [0, isize :: MAX]
     ///* Alias: self.ptr must not have other alias
+    ///* RustdocLinkToItem: [`&quot;test&quot;`]
+    /// correct link: [`test`]
     pub unsafe fn get(&self) -> &mut [u8] {
         unsafe { std::slice::from_raw_parts_mut(self.ptr, self.len) }
     }
