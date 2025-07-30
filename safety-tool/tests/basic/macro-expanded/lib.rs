@@ -35,10 +35,10 @@ impl MyStruct {
     /**# Safety
 
 */
-    #[doc = "* Init: the memory range [self.ptr, self.ptr + sizeof(u8)*self.len] must be fully initialized for type T\n\n"]
-    #[doc = "* InBound: the pointer self.ptr and its offset up to sizeof(u8)*self.len must point to a single allocated object\n\n"]
-    #[doc = "* ValidNum: the value of self.len * sizeof(u8) must lie within the valid [0, isize :: MAX]\n\n"]
-    #[doc = "* Alias: self.ptr must not have other alias\n\n"]
+    #[doc = "* Init: the memory range `[self.ptr, self.ptr + sizeof(u8)*self.len]` must be fully initialized for type `u8`\n\n"]
+    #[doc = "* InBound: the pointer `self.ptr` and its offset up to `sizeof(u8)*self.len` must point to a single allocated object\n\n"]
+    #[doc = "* ValidNum: the value of `self.len * sizeof(u8)` must lie within the valid `[0, isize :: MAX]`\n\n"]
+    #[doc = "* Alias: `self.ptr` must not have other alias\n\n"]
     #[doc = "* RustdocLinkToItem: [`crate::test`]\n\n"]
     pub unsafe fn get(&self) -> &mut [u8] {
         unsafe { std::slice::from_raw_parts_mut(self.ptr, self.len) }

@@ -1,13 +1,13 @@
 ********* "equivalent" [Rlib] has reached 0 instances *********
-********* "unicode_ident" [Rlib] has reached 12 instances *********
 ********* "build_script_build" [Executable] has reached 17 instances *********
-********* "build_script_build" [Executable] has reached 71 instances *********
+********* "unicode_ident" [Rlib] has reached 12 instances *********
 ********* "itoa" [Rlib] has reached 42 instances *********
 ********* "build_script_build" [Executable] has reached 156 instances *********
+********* "build_script_build" [Executable] has reached 71 instances *********
 ********* "ryu" [Rlib] has reached 76 instances *********
 ********* "toml_writer" [Rlib] has reached 101 instances *********
-********* "memchr" [Rlib] has reached 938 instances *********
 ********* "hashbrown" [Rlib] has reached 236 instances *********
+********* "memchr" [Rlib] has reached 938 instances *********
 ********* "proc_macro2" [Rlib] has reached 1112 instances *********
 ********* "quote" [Rlib] has reached 506 instances *********
 ********* "winnow" [Rlib] has reached 618 instances *********
