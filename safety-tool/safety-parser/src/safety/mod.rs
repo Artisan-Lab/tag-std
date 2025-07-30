@@ -1,6 +1,6 @@
 use crate::{
     Str,
-    configuration::{TagType, config_exists, get_tag},
+    configuration::{TagType, config_exists, doc_option, get_tag},
 };
 use indexmap::IndexMap;
 use proc_macro2::TokenStream;
@@ -120,19 +120,32 @@ impl PropertiesAndReason {
     /// ```
     pub fn gen_doc(&self) -> TokenStream {
         let mut ts = TokenStream::default();
+
+        if doc_option().heading_safety_title && self.need_gen_doc() {
+            ts.extend(quote! { #[doc = "# Safety\n\n"] });
+        }
+
         if let Some(desc) = self.desc.as_deref() {
             ts.extend(quote! { #[doc = #desc] });
         }
+
+        let heading_tag = doc_option().heading_tag;
+
         for tag in &self.tags {
             let name = tag.tag.name();
-            let tokens = if let Some(desc) = tag.gen_doc() {
-                quote! { #[doc = concat!("* ", #name, ": ", #desc)] }
-            } else {
-                quote! { #[doc = concat!("* ", #name)] }
+            let tokens = match (heading_tag, tag.gen_doc()) {
+                (true, None) => quote! { #[doc = concat!("* ", #name)] },
+                (true, Some(desc)) => quote! { #[doc = concat!("* ", #name, ": ", #desc)] },
+                (false, None) => quote! {},
+                (false, Some(desc)) => quote! { #[doc = concat!("* ", #desc)] },
             };
             ts.extend(tokens);
         }
         ts
+    }
+
+    pub fn need_gen_doc(&self) -> bool {
+        self.desc.is_some() || !self.tags.is_empty()
     }
 }
 
