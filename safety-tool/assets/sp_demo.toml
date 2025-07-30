@@ -1,3 +1,5 @@
+doc.heading_safety_title = true
+
 [tag.RustdocLinkToItem]
 args = [ "item" ]
 desc = "[`{item}`]"

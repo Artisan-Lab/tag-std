@@ -1,6 +1,6 @@
 use crate::{
     Str,
-    configuration::{TagType, config_exists, get_tag},
+    configuration::{TagType, config_exists, doc_option, get_tag},
 };
 use indexmap::IndexMap;
 use proc_macro2::TokenStream;
@@ -120,9 +120,15 @@ impl PropertiesAndReason {
     /// ```
     pub fn gen_doc(&self) -> TokenStream {
         let mut ts = TokenStream::default();
+
+        if doc_option().heading_safety_title && self.need_gen_doc() {
+            ts.extend(quote! { #[doc = "# Safety\n\n"] });
+        }
+
         if let Some(desc) = self.desc.as_deref() {
             ts.extend(quote! { #[doc = #desc] });
         }
+
         for tag in &self.tags {
             let name = tag.tag.name();
             let tokens = if let Some(desc) = tag.gen_doc() {
@@ -133,6 +139,10 @@ impl PropertiesAndReason {
             ts.extend(tokens);
         }
         ts
+    }
+
+    pub fn need_gen_doc(&self) -> bool {
+        self.desc.is_some() || !self.tags.is_empty()
     }
 }
 

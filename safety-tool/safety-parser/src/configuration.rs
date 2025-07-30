@@ -75,8 +75,10 @@ fn default_types() -> Box<[TagType]> {
 #[derive(Clone, Copy, Debug, Deserialize, Default)]
 pub struct GenDocOption {
     /// Generate `/// Safety` at the beginning.
+    #[serde(default)]
     pub heading_safety_title: bool,
     /// Generate `Tag:` before `desc`.
+    #[serde(default)]
     pub heading_tag: bool,
 }
 
