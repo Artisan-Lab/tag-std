@@ -129,12 +129,15 @@ impl PropertiesAndReason {
             ts.extend(quote! { #[doc = #desc] });
         }
 
+        let heading_tag = doc_option().heading_tag;
+
         for tag in &self.tags {
             let name = tag.tag.name();
-            let tokens = if let Some(desc) = tag.gen_doc() {
-                quote! { #[doc = concat!("* ", #name, ": ", #desc)] }
-            } else {
-                quote! { #[doc = concat!("* ", #name)] }
+            let tokens = match (heading_tag, tag.gen_doc()) {
+                (true, None) => quote! { #[doc = concat!("* ", #name)] },
+                (true, Some(desc)) => quote! { #[doc = concat!("* ", #name, ": ", #desc)] },
+                (false, None) => quote! {},
+                (false, Some(desc)) => quote! { #[doc = concat!("* ", #desc)] },
             };
             ts.extend(tokens);
         }
