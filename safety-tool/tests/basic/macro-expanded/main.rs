@@ -20,29 +20,7 @@ fn main() {
                 unsafe {
                     #[rapx::inner(
                         Init:"This is from a valid Vec object.";InBound:"This is from a valid Vec object.";ValidNum:"self.len is valid.";Alias:"p is no longer used.";RustdocLinkToItem
-                    )] /**# Safety
-
-*/
-                    ///This is from a valid Vec object.
-                    #[doc = "* Init: the memory range [,  + sizeof()*] must be fully initialized for type T\n\n"]
-                    /**# Safety
-
-*/
-                    ///This is from a valid Vec object.
-                    #[doc = "* InBound: the pointer  and its offset up to sizeof()* must point to a single allocated object\n\n"]
-                    /**# Safety
-
-*/
-                    ///self.len is valid.
-                    #[doc = "* ValidNum: the value of  must lie within the valid \n\n"]
-                    /**# Safety
-
-*/
-                    ///p is no longer used.
-                    #[doc = "* Alias:  must not have other alias\n\n"] /**# Safety
-
-*/
-                    #[doc = "* RustdocLinkToItem: [``]\n\n"] a.get()
+                    )] a.get()
                 },
             ),
         );
