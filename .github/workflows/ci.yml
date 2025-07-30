@@ -5,9 +5,6 @@ on:
     branches:
   pull_request:
     branches:
-env:
-  # deploy demo doc
-  DOC: true
 
 jobs:
   build:
@@ -40,15 +37,11 @@ jobs:
         working-directory: safety-tool
         run: bash run.sh
 
-      - name: set DOC output # if: env.DOC won't work
-        id: doc
-        if: runner.os == 'Linux' && runner.arch == 'X64'
-        run: echo "DOC=${{ env.DOC }}" >> $GITHUB_OUTPUT
-
       - name: Upload static files as artifact
         uses: actions/upload-pages-artifact@v3
-        if: steps.doc.outputs.DOC == 'true'
         with:
+          # runner.os == 'Linux' && runner.arch == 'X64'
+          name: doc-${{ runner.os }}-${{ runner.arch }}
           path: safety-tool/tests/basic/target/doc/
 
   # Deployment job
@@ -63,9 +56,10 @@ jobs:
       id-token: write   # to verify the deployment originates from an appropriate source
 
     needs: build
-    if: needs.build.outputs.DOC == 'true'
     steps:
       - name: Deploy to GitHub Pages
-        if: runner.os == 'Linux' && runner.arch == 'X64' && github.ref == 'refs/heads/main'
+        if: true
         uses: actions/deploy-pages@v4
+        with:
+          artifact_name: doc-Linux-X64
 
