@@ -5,6 +5,9 @@ on:
     branches:
   pull_request:
     branches:
+env:
+  # deploy demo doc
+  DOC: true
 
 jobs:
   build:
@@ -34,4 +37,28 @@ jobs:
       - name: Run Tests
         working-directory: safety-tool
         run: bash run.sh
+
+      - name: Upload static files as artifact
+        uses: actions/upload-pages-artifact@v3
+        if: env.DOC == 'true'
+        with:
+          path: safety-tool/tests/basic/target/doc/
+
+  # Deployment job
+  deploy:
+    if: env.DOC == 'true'
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
+    permissions:
+      pages: write      # to deploy to Pages
+      id-token: write   # to verify the deployment originates from an appropriate source
+
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        if: runner.os == 'Linux' && runner.arch == 'X64' && github.ref == 'refs/heads/main'
+        uses: actions/deploy-pages@v4
 

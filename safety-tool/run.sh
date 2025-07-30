@@ -52,3 +52,4 @@ PREFIX=$PWD/
 CARGO_TERM_PROGRESS_WHEN=never $CARGO_SAFETY_TOOL | sed "s#$PREFIX##g" | tee macro-expanded/cargo-safety-tool.txt
 cargo expand --lib >macro-expanded/lib.rs
 cargo expand --bin demo >macro-expanded/main.rs
+cargo doc --no-deps
