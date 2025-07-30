@@ -24,25 +24,25 @@ fn main() {
 
 */
                     ///This is from a valid Vec object.
-                    #[doc = "* the memory range [,  + sizeof()*] must be fully initialized for type T\n\n"]
+                    #[doc = "* Init: the memory range [,  + sizeof()*] must be fully initialized for type T\n\n"]
                     /**# Safety
 
 */
                     ///This is from a valid Vec object.
-                    #[doc = "* the pointer  and its offset up to sizeof()* must point to a single allocated object\n\n"]
+                    #[doc = "* InBound: the pointer  and its offset up to sizeof()* must point to a single allocated object\n\n"]
                     /**# Safety
 
 */
                     ///self.len is valid.
-                    #[doc = "* the value of  must lie within the valid \n\n"]
+                    #[doc = "* ValidNum: the value of  must lie within the valid \n\n"]
                     /**# Safety
 
 */
                     ///p is no longer used.
-                    #[doc = "*  must not have other alias\n\n"] /**# Safety
+                    #[doc = "* Alias:  must not have other alias\n\n"] /**# Safety
 
 */
-                    #[doc = "* [``]\n\n"] a.get()
+                    #[doc = "* RustdocLinkToItem: [``]\n\n"] a.get()
                 },
             ),
         );
