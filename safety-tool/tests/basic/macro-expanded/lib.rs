@@ -9,7 +9,7 @@ use std::prelude::rust_2024::*;
 extern crate std;
 use safety_macro::safety;
 #[rapx::inner(Unreachable)]
-#[doc = "* Unreachable: the current program point should not be reachable during execution\n"]
+#[doc = "* Unreachable: the current program point should not be reachable during execution\n\n"]
 pub unsafe fn test() -> ! {
     unsafe { std::intrinsics::unreachable() }
 }
@@ -28,11 +28,11 @@ impl MyStruct {
         Alias(self.ptr),
         RustdocLinkToItem("crate::test")
     )]
-    #[doc = "* Init: the memory range [self.ptr, self.ptr + sizeof(u8)*self.len] must be fully initialized for type T\n"]
-    #[doc = "* InBound: the pointer self.ptr and its offset up to sizeof(u8)*self.len must point to a single allocated object\n"]
-    #[doc = "* ValidNum: the value of self.len * sizeof(u8) must lie within the valid [0, isize :: MAX]\n"]
-    #[doc = "* Alias: self.ptr must not have other alias\n"]
-    #[doc = "* RustdocLinkToItem: [`crate::test`]\n"]
+    #[doc = "* Init: the memory range [self.ptr, self.ptr + sizeof(u8)*self.len] must be fully initialized for type T\n\n"]
+    #[doc = "* InBound: the pointer self.ptr and its offset up to sizeof(u8)*self.len must point to a single allocated object\n\n"]
+    #[doc = "* ValidNum: the value of self.len * sizeof(u8) must lie within the valid [0, isize :: MAX]\n\n"]
+    #[doc = "* Alias: self.ptr must not have other alias\n\n"]
+    #[doc = "* RustdocLinkToItem: [`crate::test`]\n\n"]
     /// correct link: [`crate::test`]
     pub unsafe fn get(&self) -> &mut [u8] {
         unsafe { std::slice::from_raw_parts_mut(self.ptr, self.len) }

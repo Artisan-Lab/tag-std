@@ -14,6 +14,7 @@ pub fn template(desc: &str, map: &IndexMap<&str, String>) -> String {
     template.add_template("", desc).unwrap();
     let mut doc = template.render("", map).unwrap();
     doc.push('\n'); // add extra newline
+    doc.push('\n'); // add extra newline
     doc
 }
 

@@ -21,14 +21,14 @@ fn main() {
                     #[rapx::inner(
                         Init:"This is from a valid Vec object.";InBound:"This is from a valid Vec object.";ValidNum:"self.len is valid.";Alias:"p is no longer used.";RustdocLinkToItem
                     )] ///This is from a valid Vec object.
-                    #[doc = "* Init: the memory range [,  + sizeof()*] must be fully initialized for type T\n"]
+                    #[doc = "* Init: the memory range [,  + sizeof()*] must be fully initialized for type T\n\n"]
                     ///This is from a valid Vec object.
-                    #[doc = "* InBound: the pointer  and its offset up to sizeof()* must point to a single allocated object\n"]
+                    #[doc = "* InBound: the pointer  and its offset up to sizeof()* must point to a single allocated object\n\n"]
                     ///self.len is valid.
-                    #[doc = "* ValidNum: the value of  must lie within the valid \n"]
+                    #[doc = "* ValidNum: the value of  must lie within the valid \n\n"]
                     ///p is no longer used.
-                    #[doc = "* Alias:  must not have other alias\n"]
-                    #[doc = "* RustdocLinkToItem: [``]\n"] a.get()
+                    #[doc = "* Alias:  must not have other alias\n\n"]
+                    #[doc = "* RustdocLinkToItem: [``]\n\n"] a.get()
                 },
             ),
         );

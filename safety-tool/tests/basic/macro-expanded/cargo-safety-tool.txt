@@ -1,8 +1,8 @@
 ********* "equivalent" [Rlib] has reached 0 instances *********
 ********* "build_script_build" [Executable] has reached 71 instances *********
-********* "ryu" [Rlib] has reached 76 instances *********
 ********* "unicode_ident" [Rlib] has reached 12 instances *********
 ********* "itoa" [Rlib] has reached 42 instances *********
+********* "ryu" [Rlib] has reached 76 instances *********
 ********* "build_script_build" [Executable] has reached 17 instances *********
 ********* "build_script_build" [Executable] has reached 156 instances *********
 ********* "toml_writer" [Rlib] has reached 101 instances *********
