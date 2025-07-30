@@ -14,6 +14,8 @@ pub type OptStr = Option<Box<str>>;
 pub struct Configuration {
     pub package: Option<Package>,
     pub tag: IndexMap<Str, Tag>,
+    #[serde(default)]
+    pub doc: GenDocOption,
 }
 
 impl Configuration {
@@ -70,6 +72,25 @@ fn default_types() -> Box<[TagType]> {
     Box::new([TagType::Precond])
 }
 
+#[derive(Clone, Copy, Debug, Deserialize, Default)]
+pub struct GenDocOption {
+    /// Generate `/// Safety` at the beginning.
+    pub heading_safety_title: bool,
+    /// Generate `Tag:` before `desc`.
+    pub heading_tag: bool,
+}
+
+impl GenDocOption {
+    fn merge(&mut self, other: &Self) {
+        if other.heading_safety_title {
+            self.heading_safety_title = true;
+        }
+        if other.heading_tag {
+            self.heading_tag = true;
+        }
+    }
+}
+
 /// Single toml config file path.
 pub const ENV_SP_FILE: &str = "SP_FILE";
 /// Folder where all toml files are searched.
@@ -109,32 +130,52 @@ pub fn toml_file_paths() -> Vec<String> {
 
 /// Data shared in `#[safety]` proc macro.
 #[derive(Debug)]
-pub struct Key {
+struct Key {
     /// Tag defined in config file.
-    pub tag: Tag,
+    tag: Tag,
     /// File path where the tag is defined: we must be sure each tag only
     /// derives from single file path.
-    pub src: Str,
+    #[allow(dead_code)]
+    src: Str,
 }
 
-pub static TAGS: LazyLock<IndexMap<Str, Key>> = LazyLock::new(|| {
-    let configs: Vec<_> =
-        toml_file_paths().into_iter().map(|f| (Configuration::read_toml(&f), f)).collect();
+#[derive(Default)]
+struct Cache {
+    /// Defined tags.
+    map: IndexMap<Str, Key>,
+    /// Merged doc generation options: if any is true, set true.
+    doc: GenDocOption,
+}
+
+static CACHE: LazyLock<Cache> = LazyLock::new(|| {
+    let mut cache = Cache::default();
+
+    let configs: Vec<_> = toml_file_paths()
+        .into_iter()
+        .map(|f| (Configuration::read_toml(&f), f.into_boxed_str()))
+        .collect();
     let cap = configs.iter().map(|c| c.0.tag.len()).sum();
-    let mut map = IndexMap::with_capacity(cap);
+    cache.map.reserve(cap);
+
     for (config, path) in configs {
         for (name, tag) in config.tag {
-            if let Some(old) = map.get(&name) {
+            if let Some(old) = cache.map.get(&name) {
                 panic!("Tag {name:?} has been defined: {old:?}");
             }
-            _ = map.insert(name, Key { tag, src: (&*path).into() });
+            _ = cache.map.insert(name, Key { tag, src: path.clone() });
         }
+        cache.doc.merge(&config.doc);
     }
-    map.sort_unstable_keys();
-    eprintln!("Got {} tags.", map.len());
-    map
+
+    cache.map.sort_unstable_keys();
+    eprintln!("Got {} tags.", cache.map.len());
+    cache
 });
 
 pub fn get_tag(name: &str) -> &'static Tag {
-    &TAGS.get(name).unwrap_or_else(|| panic!("Tag {name:?} is not defined")).tag
+    &CACHE.map.get(name).unwrap_or_else(|| panic!("Tag {name:?} is not defined")).tag
+}
+
+pub fn doc_option() -> GenDocOption {
+    CACHE.doc
 }
