@@ -19,11 +19,13 @@ impl MyStruct {
         MyStruct { ptr: p, len: l }
     }
 
+    /// correct link: [`crate::test`]
     #[safety {
         Init(self.ptr, u8, self.len),
         InBound(self.ptr, u8, self.len),
         ValidNum(self.len*sizeof(u8), [0,isize::MAX]),
-        Alias(self.ptr)
+        Alias(self.ptr),
+        RustdocLinkToItem("crate::test")
     }]
     pub unsafe fn get(&self) -> &mut [u8] {
         unsafe { std::slice::from_raw_parts_mut(self.ptr, self.len) }

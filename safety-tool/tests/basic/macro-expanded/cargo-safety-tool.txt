@@ -1,14 +1,14 @@
-********* "build_script_build" [Executable] has reached 17 instances *********
-********* "unicode_ident" [Rlib] has reached 12 instances *********
+********* "equivalent" [Rlib] has reached 0 instances *********
 ********* "build_script_build" [Executable] has reached 71 instances *********
-********* "build_script_build" [Executable] has reached 156 instances *********
+********* "unicode_ident" [Rlib] has reached 12 instances *********
 ********* "itoa" [Rlib] has reached 42 instances *********
 ********* "ryu" [Rlib] has reached 76 instances *********
-********* "equivalent" [Rlib] has reached 0 instances *********
+********* "build_script_build" [Executable] has reached 17 instances *********
+********* "build_script_build" [Executable] has reached 156 instances *********
 ********* "toml_writer" [Rlib] has reached 101 instances *********
 ********* "memchr" [Rlib] has reached 938 instances *********
-********* "proc_macro2" [Rlib] has reached 1112 instances *********
 ********* "hashbrown" [Rlib] has reached 236 instances *********
+********* "proc_macro2" [Rlib] has reached 1112 instances *********
 ********* "quote" [Rlib] has reached 506 instances *********
 ********* "winnow" [Rlib] has reached 618 instances *********
 ********* "toml_parser" [Rlib] has reached 845 instances *********
@@ -21,16 +21,16 @@
 ********* "serde_json" [Rlib] has reached 1364 instances *********
 ********* "toml" [Rlib] has reached 2083 instances *********
 ********* "tinytemplate" [Rlib] has reached 542 instances *********
-********* "safety_parser" [Rlib] has reached 1798 instances *********
+********* "safety_parser" [Rlib] has reached 1801 instances *********
 ********* "safety_macro" [ProcMacro] has reached 76 instances *********
 ********* "demo" [Rlib] has reached 8 instances *********
 "test" ("src/lib.rs:9:1: 9:26")
  => "#[rapx::inner(Unreachable)]\n"
 
-"MyStruct::get" ("src/lib.rs:28:5: 28:42")
- => "#[rapx::inner(Init(self.ptr, u8, self.len), InBound(self.ptr, u8, self.len),\nValidNum(self.len*sizeof(u8), [0,isize::MAX]), Alias(self.ptr))]\n"
+"MyStruct::get" ("src/lib.rs:30:5: 30:42")
+ => "#[rapx::inner(Init(self.ptr, u8, self.len), InBound(self.ptr, u8, self.len),\nValidNum(self.len*sizeof(u8), [0,isize::MAX]), Alias(self.ptr),\nRustdocLinkToItem(\"crate::test\"))]\n"
 
 ********* "demo" [Executable] has reached 18 instances *********
-"demo::MyStruct::get" ("src/lib.rs:28:5: 28:42")
- => "#[rapx::inner(Init(self.ptr, u8, self.len), InBound(self.ptr, u8, self.len),\nValidNum(self.len*sizeof(u8), [0,isize::MAX]), Alias(self.ptr))]\n"
+"demo::MyStruct::get" ("src/lib.rs:30:5: 30:42")
+ => "#[rapx::inner(Init(self.ptr, u8, self.len), InBound(self.ptr, u8, self.len),\nValidNum(self.len*sizeof(u8), [0,isize::MAX]), Alias(self.ptr),\nRustdocLinkToItem(\"crate::test\"))]\n"
 

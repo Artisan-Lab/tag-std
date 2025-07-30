@@ -2,21 +2,13 @@ name: Check Rust for Linux
 
 on:
   push:
-  pull_request:
+  pull_request_target:
 
 env:
   CARGO_TERM_COLOR: always
 
 jobs:
   check:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment-ubuntu-latest.outputs.page_url }}
-    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
-    permissions:
-      pages: write      # to deploy to Pages
-      id-token: write   # to verify the deployment originates from an appropriate source
-
     strategy:
       matrix:
         os: [ubuntu-latest, ubuntu-24.04-arm]
@@ -47,10 +39,27 @@ jobs:
 
       - name: Upload static files as artifact
         uses: actions/upload-pages-artifact@v3
-        if: runner.os == 'Linux' && runner.arch == 'X64'
         with:
+          name: doc-${{ runner.os }}-${{ runner.arch }}
           path: linux/Documentation/output/rust/rustdoc/
 
+  # Deployment job
+  deploy:
+    if: false
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
+    permissions:
+      pages: write      # to deploy to Pages
+      id-token: write   # to verify the deployment originates from an appropriate source
+
+    needs: check
+    steps:
       - name: Deploy to GitHub Pages
-        if: runner.os == 'Linux' && runner.arch == 'X64' && github.ref == 'refs/heads/main'
         uses: actions/deploy-pages@v4
+        with:
+          # doc-Linux-X64 or doc-Linux-ARM64
+          artifact_name: doc-Linux-X64
+

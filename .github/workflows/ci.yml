@@ -3,7 +3,7 @@ name: Run Tests
 on:
   push:
     branches:
-  pull_request:
+  pull_request_target::
     branches:
 
 jobs:
@@ -13,6 +13,8 @@ jobs:
         os: [ubuntu-latest, ubuntu-24.04-arm]
       fail-fast: false
     runs-on: ${{ matrix.os }}
+    outputs:
+      doc: ${{ steps.set.outputs.doc }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -34,4 +36,30 @@ jobs:
       - name: Run Tests
         working-directory: safety-tool
         run: bash run.sh
+
+      - name: Upload static files as artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          name: doc-${{ runner.os }}-${{ runner.arch }}
+          path: safety-tool/tests/basic/target/doc/
+
+  # Deployment job
+  deploy:
+    if: true
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
+    permissions:
+      pages: write      # to deploy to Pages
+      id-token: write   # to verify the deployment originates from an appropriate source
+
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
+        with:
+          # doc-Linux-X64 or doc-Linux-ARM64
+          artifact_name: doc-Linux-X64
 

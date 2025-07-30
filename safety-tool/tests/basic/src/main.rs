@@ -15,7 +15,8 @@ fn main() {
             Init: "This is from a valid Vec object.";
             InBound: "This is from a valid Vec object.";
             ValidNum: "self.len is valid.";
-            Alias: "p is no longer used."
+            Alias: "p is no longer used.";
+            RustdocLinkToItem
         }]
         a.get()
     });

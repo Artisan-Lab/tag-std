@@ -37,7 +37,7 @@ popd
 
 # enable tag definitions
 rm $DATA_SQLITE3
-export SP_FILE=$PWD/assets/sp-core.toml
+export SP_DIR=$PWD/assets
 
 # Test basic demo
 pushd ./tests/basic
@@ -52,3 +52,4 @@ PREFIX=$PWD/
 CARGO_TERM_PROGRESS_WHEN=never $CARGO_SAFETY_TOOL | sed "s#$PREFIX##g" | tee macro-expanded/cargo-safety-tool.txt
 cargo expand --lib >macro-expanded/lib.rs
 cargo expand --bin demo >macro-expanded/main.rs
+cargo doc --no-deps
