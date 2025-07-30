@@ -55,7 +55,7 @@ jobs:
       pages: write      # to deploy to Pages
       id-token: write   # to verify the deployment originates from an appropriate source
 
-    needs: build
+    needs: check
     steps:
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v4
