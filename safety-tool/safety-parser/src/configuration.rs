@@ -155,7 +155,10 @@ pub fn crate_sp_paths() -> Option<Vec<String>> {
         let dir = Path::new(&*dir);
         let sp_file = dir.join(LOCAL_SP_FILE);
         let sp_dir = dir.join(LOCAL_SP_DIR);
-        // eprintln!("Try to read sp.toml from current crate folder: {path:?}");
+        // eprintln!(
+        //     "Try to read safety-tags.toml or safety-tags folder \
+        //      from current crate folder: {dir:?}"
+        // );
         if sp_file.exists() {
             return Some(vec![sp_file.to_str()?.to_owned()]);
         } else if sp_dir.exists() {
