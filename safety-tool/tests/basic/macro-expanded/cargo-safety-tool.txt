@@ -1,8 +1,8 @@
-********* "build_script_build" [Executable] has reached 17 instances *********
-********* "unicode_ident" [Rlib] has reached 12 instances *********
 ********* "equivalent" [Rlib] has reached 0 instances *********
-********* "itoa" [Rlib] has reached 42 instances *********
+********* "unicode_ident" [Rlib] has reached 12 instances *********
+********* "build_script_build" [Executable] has reached 17 instances *********
 ********* "build_script_build" [Executable] has reached 71 instances *********
+********* "itoa" [Rlib] has reached 42 instances *********
 ********* "build_script_build" [Executable] has reached 156 instances *********
 ********* "ryu" [Rlib] has reached 76 instances *********
 ********* "toml_writer" [Rlib] has reached 101 instances *********
@@ -21,8 +21,8 @@
 ********* "serde_json" [Rlib] has reached 1364 instances *********
 ********* "toml" [Rlib] has reached 2083 instances *********
 ********* "tinytemplate" [Rlib] has reached 542 instances *********
-********* "safety_parser" [Rlib] has reached 1935 instances *********
-********* "safety_macro" [ProcMacro] has reached 76 instances *********
+********* "safety_parser" [Rlib] has reached 2230 instances *********
+********* "safety_macro" [ProcMacro] has reached 164 instances *********
 ********* "demo" [Rlib] has reached 8 instances *********
 "test" ("src/lib.rs:9:1: 9:26")
  => "#[rapx::inner(Unreachable)]\n"

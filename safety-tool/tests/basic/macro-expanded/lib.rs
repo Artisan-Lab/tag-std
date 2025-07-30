@@ -31,6 +31,7 @@ impl MyStruct {
         Alias(self.ptr),
         RustdocLinkToItem("crate::test")
     )]
+    /// correct link: [`crate::test`]
     /**# Safety
 
 */
@@ -39,7 +40,6 @@ impl MyStruct {
     #[doc = "* ValidNum: the value of self.len * sizeof(u8) must lie within the valid [0, isize :: MAX]\n\n"]
     #[doc = "* Alias: self.ptr must not have other alias\n\n"]
     #[doc = "* RustdocLinkToItem: [`crate::test`]\n\n"]
-    /// correct link: [`crate::test`]
     pub unsafe fn get(&self) -> &mut [u8] {
         unsafe { std::slice::from_raw_parts_mut(self.ptr, self.len) }
     }

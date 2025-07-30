@@ -1,7 +1,8 @@
 use indexmap::IndexMap;
+use syn::{Expr, ExprLit, Lit};
 
-pub fn expr_to_string(expr: &syn::Expr) -> String {
-    if let syn::Expr::Lit(syn::ExprLit { lit: syn::Lit::Str(s), .. }) = expr {
+pub fn expr_to_string(expr: &Expr) -> String {
+    if let Expr::Lit(ExprLit { lit: Lit::Str(s), .. }) = expr {
         s.value()
     } else {
         let tokens = quote::quote! { #expr };
