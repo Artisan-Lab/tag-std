@@ -40,12 +40,12 @@ jobs:
       - name: Upload static files as artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # runner.os == 'Linux' && runner.arch == 'X64'
           name: doc-${{ runner.os }}-${{ runner.arch }}
           path: safety-tool/tests/basic/target/doc/
 
   # Deployment job
   deploy:
+    if: true
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -58,7 +58,6 @@ jobs:
     needs: build
     steps:
       - name: Deploy to GitHub Pages
-        if: true
         uses: actions/deploy-pages@v4
         with:
           # doc-Linux-X64 or doc-Linux-ARM64
