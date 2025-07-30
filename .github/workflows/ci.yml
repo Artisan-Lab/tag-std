@@ -16,6 +16,8 @@ jobs:
         os: [ubuntu-latest, ubuntu-24.04-arm]
       fail-fast: false
     runs-on: ${{ matrix.os }}
+    outputs:
+      doc: ${{ steps.set.outputs.doc }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -38,15 +40,19 @@ jobs:
         working-directory: safety-tool
         run: bash run.sh
 
+      - name: set DOC output # if: env.DOC won't work
+        id: doc
+        if: runner.os == 'Linux' && runner.arch == 'X64'
+        run: echo "DOC=${{ env.DOC }}" >> $GITHUB_OUTPUT
+
       - name: Upload static files as artifact
         uses: actions/upload-pages-artifact@v3
-        if: env.DOC == 'true'
+        if: steps.doc.outputs.DOC == 'true'
         with:
           path: safety-tool/tests/basic/target/doc/
 
   # Deployment job
   deploy:
-    if: env.DOC == 'true'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -57,6 +63,7 @@ jobs:
       id-token: write   # to verify the deployment originates from an appropriate source
 
     needs: build
+    if: needs.build.outputs.DOC == 'true'
     steps:
       - name: Deploy to GitHub Pages
         if: runner.os == 'Linux' && runner.arch == 'X64' && github.ref == 'refs/heads/main'
