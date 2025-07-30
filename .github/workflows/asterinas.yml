@@ -2,7 +2,7 @@ name: Check Asterinas
 
 on:
   push:
-  pull_request:
+  pull_request_target:
 
 env:
   CARGO_TERM_COLOR: always
