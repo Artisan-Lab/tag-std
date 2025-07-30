@@ -61,5 +61,6 @@ jobs:
         if: true
         uses: actions/deploy-pages@v4
         with:
+          # doc-Linux-X64 or doc-Linux-ARM64
           artifact_name: doc-Linux-X64
 

@@ -32,7 +32,7 @@ impl MyStruct {
     ///* InBound: the pointer self.ptr and its offset up to sizeof(u8)*self.len must point to a single allocated object
     ///* ValidNum: the value of self.len * sizeof(u8) must lie within the valid [0, isize :: MAX]
     ///* Alias: self.ptr must not have other alias
-    ///* RustdocLinkToItem: [`&quot;test&quot;`]
+    ///* RustdocLinkToItem: [`test`]
     /// correct link: [`test`]
     pub unsafe fn get(&self) -> &mut [u8] {
         unsafe { std::slice::from_raw_parts_mut(self.ptr, self.len) }
