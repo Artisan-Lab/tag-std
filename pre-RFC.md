@@ -204,7 +204,7 @@ pub const unsafe fn read<T>(src: *const T) -> T { ... }
 
 Most users do not need to write these arguments, unless they are running additional experimental
 Safety Property Verification using RAPx (Rust Analysis Platform extended). For more details, see
-[this chapter] of the RAPx book.
+[this chapter][RAPx-SP] of the RAPx book.
 
 [RAPx-SP]: https://artisan-lab.github.io/RAPx-Book/6.4-unsafe.html
 
@@ -521,7 +521,11 @@ be semver checked or not.
 
 <a id="reference-entity"></a>
 
-To reduce verbosity, we propose using `#[ref]` to bi-directional reference:
+To reduce verbosity, we propose `#[ref]` to bi-directional entity references.
+
+For [IntoIter][vec_deque] of VecDeque:
+
+[vec_deque]: https://github.com/rust-lang/rust/blob/ebd8557637b33cc09b6ee8273f3154d5d3af6a15/library/alloc/src/collections/vec_deque/into_iter.rs#L104
 
 ```rust
 fn try_fold<B, F, R>(&mut self, mut init: B, mut f: F) -> R
@@ -578,8 +582,9 @@ fn try_rfold<B, F, R>(&mut self, mut init: B, mut f: F) -> R {
 }
 ```
 
-Such annotations either enable the compiler to detect inconsistencies among safety properties or
-provide hints to remind developers to check other referring callsites.
+These `#[ref]` annotations act as cross-references that nudge developers to inspect every linked
+site. When either end or the code around it changes, reviewers are instantly aware of all affected
+locations and can verify that every referenced safety requirement is still satisfied.
 
 ## Interaction with Rust type system
 
