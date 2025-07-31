@@ -3,7 +3,7 @@ use quote::ToTokens;
 use std::mem::take;
 use syn::*;
 
-/// Since `#[safety}` is applied on unsafe function item and any expression,
+/// Since `#[safety]` is applied on unsafe function item and any expression,
 /// we have to fully parse to split attributes from them to insert our doc
 /// string to the tail of all attributes.
 pub fn split_attrs_and_rest(ts: TokenStream) -> Input {

@@ -151,7 +151,7 @@ impl PropertiesAndReason {
 
 #[derive(Debug)]
 pub struct Property {
-    /// `SP` or `type::SP`. Single `SP` means `precond::SP`.
+    /// `SP` or `type.SP`. The type of single `SP` is unkown until queried from definition.
     pub tag: TagNameType,
     /// Args in `SP(args)` such as `arg1, arg2`.
     pub args: Box<[Expr]>,
