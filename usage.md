@@ -28,9 +28,10 @@ default to `[]`
     `#[doc = "a b c"]` will be emitted through proc-macro and rendered in rustdoc
   * `sp-core.toml` and `sp-rust-for-linux.toml` under `safety-tool/safety-tool` are examples to show
   how SPs should be defined.
-* `SP_FILE=/path/to/single/toml` or `SP_DIR=/path/to/toml/foler` is recognized to enable code
-  relying on tag definitions, such as tag checking and rustdoc rendering for desc
-  * If both env var are given, only `SP_FILE` is used.
+* `CARGO_MANIFEST_DIR/safety-tags.toml` or `CARGO_MANIFEST_DIR/safety-tags/` or
+  `SP_FILE=/path/to/single/toml` or `SP_DIR=/path/to/toml/foler` is recognized to enable code
+  relying on tag definitions, such as tag checking and rustdoc rendering for desc.
+  * The first candidate wins.
   * All toml files under `SP_DIR` will be merged into a SP map: SP must be only defined once,
     meaning duplicated SP names will panic.
 

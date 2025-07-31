@@ -19,7 +19,7 @@ jobs:
         run: |
           git clone https://github.com/os-checker/tag-asterinas.git
           cd tag-asterinas
-          git checkout d0348c94
+          git checkout 37b2f61a
 
       - name: Install toolchain
         working-directory: safety-tool
