@@ -195,6 +195,9 @@ static CACHE: LazyLock<Cache> = LazyLock::new(|| {
 
     for (config, path) in configs {
         for (name, tag) in config.tag {
+            if &*name == "any" {
+                panic!("`any` is a builtin tag. Please remove it from spec.");
+            }
             if let Some(old) = cache.map.get(&name) {
                 panic!("Tag {name:?} has been defined: {old:?}");
             }
