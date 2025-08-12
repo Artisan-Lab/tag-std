@@ -1,36 +1,36 @@
 ********* "equivalent" [Rlib] has reached 0 instances *********
-********* "ryu" [Rlib] has reached 76 instances *********
-********* "toml_writer" [Rlib] has reached 101 instances *********
-********* "build_script_build" [Executable] has reached 17 instances *********
-********* "build_script_build" [Executable] has reached 71 instances *********
 ********* "unicode_ident" [Rlib] has reached 12 instances *********
 ********* "build_script_build" [Executable] has reached 156 instances *********
+********* "build_script_build" [Executable] has reached 17 instances *********
+********* "build_script_build" [Executable] has reached 71 instances *********
 ********* "itoa" [Rlib] has reached 42 instances *********
-********* "memchr" [Rlib] has reached 938 instances *********
-********* "hashbrown" [Rlib] has reached 236 instances *********
-********* "proc_macro2" [Rlib] has reached 1112 instances *********
+********* "ryu" [Rlib] has reached 76 instances *********
+********* "toml_writer" [Rlib] has reached 101 instances *********
+********* "memchr" [Rlib] has reached 752 instances *********
+********* "hashbrown" [Rlib] has reached 241 instances *********
+********* "proc_macro2" [Rlib] has reached 1060 instances *********
 ********* "quote" [Rlib] has reached 506 instances *********
 ********* "winnow" [Rlib] has reached 618 instances *********
 ********* "toml_parser" [Rlib] has reached 845 instances *********
 ********* "syn" [Rlib] has reached 6925 instances *********
-********* "serde_derive" [ProcMacro] has reached 3170 instances *********
-********* "serde" [Rlib] has reached 390 instances *********
+********* "serde_derive" [ProcMacro] has reached 3178 instances *********
+********* "serde" [Rlib] has reached 326 instances *********
 ********* "serde_spanned" [Rlib] has reached 21 instances *********
 ********* "toml_datetime" [Rlib] has reached 326 instances *********
-********* "indexmap" [Rlib] has reached 128 instances *********
-********* "serde_json" [Rlib] has reached 1364 instances *********
-********* "toml" [Rlib] has reached 2083 instances *********
-********* "tinytemplate" [Rlib] has reached 542 instances *********
-********* "safety_parser" [Rlib] has reached 2242 instances *********
+********* "indexmap" [Rlib] has reached 129 instances *********
+********* "serde_json" [Rlib] has reached 1437 instances *********
+********* "toml" [Rlib] has reached 2034 instances *********
+********* "tinytemplate" [Rlib] has reached 550 instances *********
+********* "safety_parser" [Rlib] has reached 2278 instances *********
 ********* "safety_macro" [ProcMacro] has reached 164 instances *********
 ********* "demo" [Rlib] has reached 8 instances *********
-"test" ("src/lib.rs:9:1: 9:26")
+"test" ("src/lib.rs:10:1: 10:26")
  => "#[rapx::inner(Unreachable)]\n"
 
-"MyStruct::get" ("src/lib.rs:30:5: 30:42")
- => "#[rapx::inner(Init(self.ptr, u8, self.len), InBound(self.ptr, u8, self.len),\nValidNum(self.len*sizeof(u8), [0,isize::MAX]), Alias(self.ptr),\nRustdocLinkToItem(\"crate::test\"))]\n"
+"MyStruct::get" ("src/lib.rs:32:5: 32:42")
+ => "#[rapx::inner(Init(self.ptr, u8, self.len), InBound(self.ptr, u8, self.len),\nValidNum(self.len*sizeof(u8), [0,isize::MAX]), Alias(self.ptr),\nRustdocLinkToItem(\"crate::test\"), any(Init, InBound))]\n"
 
 ********* "demo" [Executable] has reached 18 instances *********
-"demo::MyStruct::get" ("src/lib.rs:30:5: 30:42")
- => "#[rapx::inner(Init(self.ptr, u8, self.len), InBound(self.ptr, u8, self.len),\nValidNum(self.len*sizeof(u8), [0,isize::MAX]), Alias(self.ptr),\nRustdocLinkToItem(\"crate::test\"))]\n"
+"demo::MyStruct::get" ("src/lib.rs:32:5: 32:42")
+ => "#[rapx::inner(Init(self.ptr, u8, self.len), InBound(self.ptr, u8, self.len),\nValidNum(self.len*sizeof(u8), [0,isize::MAX]), Alias(self.ptr),\nRustdocLinkToItem(\"crate::test\"), any(Init, InBound))]\n"
 

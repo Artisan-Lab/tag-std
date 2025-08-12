@@ -164,6 +164,9 @@ pub fn crate_sp_paths() -> Option<Vec<String>> {
     None
 }
 
+/// `any` tag is denied in user's spec, and special in doc generation.
+pub const ANY: &str = "any";
+
 /// Data shared in `#[safety]` proc macro.
 #[derive(Debug)]
 struct Key {
@@ -195,7 +198,7 @@ static CACHE: LazyLock<Cache> = LazyLock::new(|| {
 
     for (config, path) in configs {
         for (name, tag) in config.tag {
-            if &*name == "any" {
+            if &*name == ANY {
                 panic!("`any` is a builtin tag. Please remove it from spec.");
             }
             if let Some(old) = cache.map.get(&name) {

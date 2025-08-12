@@ -3,6 +3,7 @@
 #![allow(clippy::missing_safety_doc, clippy::mut_from_ref, internal_features)]
 #![feature(core_intrinsics)]
 
+extern crate safety_macro;
 use safety_macro::safety;
 
 #[safety{ Unreachable }]
@@ -25,7 +26,8 @@ impl MyStruct {
         InBound(self.ptr, u8, self.len),
         ValidNum(self.len*sizeof(u8), [0,isize::MAX]),
         Alias(self.ptr),
-        RustdocLinkToItem("crate::test")
+        RustdocLinkToItem("crate::test"),
+        any ( Init, InBound )
     }]
     pub unsafe fn get(&self) -> &mut [u8] {
         unsafe { std::slice::from_raw_parts_mut(self.ptr, self.len) }

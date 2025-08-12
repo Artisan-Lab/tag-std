@@ -7,6 +7,7 @@
 use std::prelude::rust_2024::*;
 #[macro_use]
 extern crate std;
+extern crate safety_macro;
 use safety_macro::safety;
 #[rapx::inner(Unreachable)]
 /**# Safety
@@ -29,7 +30,8 @@ impl MyStruct {
         InBound(self.ptr, u8, self.len),
         ValidNum(self.len*sizeof(u8), [0, isize::MAX]),
         Alias(self.ptr),
-        RustdocLinkToItem("crate::test")
+        RustdocLinkToItem("crate::test"),
+        any(Init, InBound)
     )]
     /// correct link: [`crate::test`]
     /**# Safety
@@ -40,6 +42,7 @@ impl MyStruct {
     #[doc = "* ValidNum: the value of `self.len * sizeof(u8)` must lie within the valid `[0, isize :: MAX]`\n\n"]
     #[doc = "* Alias: `self.ptr` must not have other alias\n\n"]
     #[doc = "* RustdocLinkToItem: [`crate::test`]\n\n"]
+    #[doc = "* any: Only one of the following properties requires being satisfied:\n    * Init: the memory range `[,  + sizeof()*]` must be fully initialized for type ``\n\n    * InBound: the pointer `` and its offset up to `sizeof()*` must point to a single allocated object\n\n"]
     pub unsafe fn get(&self) -> &mut [u8] {
         unsafe { std::slice::from_raw_parts_mut(self.ptr, self.len) }
     }
