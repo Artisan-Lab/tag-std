@@ -3,7 +3,6 @@
 #![allow(clippy::missing_safety_doc, clippy::mut_from_ref, internal_features)]
 #![feature(core_intrinsics)]
 
-extern crate safety_macro;
 use safety_macro::safety;
 
 #[safety{ Unreachable }]

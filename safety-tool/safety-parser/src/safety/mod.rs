@@ -79,6 +79,7 @@ impl Parse for PropertiesAndReason {
             if config_exists() {
                 tag.check_type();
             }
+            // FIXME: parse braces for `any { ... }`
             let sp = if input.peek(Paren) {
                 let content;
                 parenthesized!(content in input);
@@ -189,7 +190,7 @@ impl Property {
             let mut doc =
                 "Only one of the following properties requires being satisfied:\n".to_owned();
             // validate SPs in `any(SP1, SP2, ...)` exist
-            for prop in utils::validate_any(&self.args) {
+            for prop in utils::parse_args_in_any_tag(&self.args) {
                 doc.push_str(&prop.gen_sp_in_any_doc());
             }
             return Some(doc);
@@ -211,6 +212,12 @@ impl Property {
         }
 
         defined_tag.desc.as_deref().map(|desc| utils::template(desc, &map_defined_arg_input_arg))
+    }
+
+    /// SPs in `any` tag. None means the tag is not `any` or empty args.
+    pub fn args_in_any_tag(&self) -> Option<Vec<PropertiesAndReason>> {
+        (self.tag.name() == ANY && !self.args.is_empty())
+            .then_some(utils::parse_args_in_any_tag(&self.args))
     }
 }
 
