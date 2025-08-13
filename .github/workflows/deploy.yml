@@ -41,10 +41,15 @@ jobs:
           workflow_conclusion: success
 
       - name: View site folder
-        run: tree -L 2 site
+        run: |
+          cd site && tree -L 2
+          cd demo && tar -xf artifact.tar && rm artifact.tar
+          cd ../asterinas && tar -xf artifact.tar && rm artifact.tar
+          cd ../rfl && tar -xf artifact.tar && rm artifact.tar
+          cd .. && tree -L 2
 
       - name: Copy index.html
-        run: cp .github/index site/index.html
+        run: cp .github/index.html site/index.html
 
       - name: Upload static files as artifact
         uses: actions/upload-pages-artifact@v3
