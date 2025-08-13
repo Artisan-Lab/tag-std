@@ -16,7 +16,7 @@ fn main() {
         ValidNum: "self.len is valid.";
         Alias: "p is no longer used.";
         RustdocLinkToItem,
-        Allocated
+        Alive
     }]
     let val = unsafe { a.get() };
     println!("{val:?}");

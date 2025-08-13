@@ -15,7 +15,7 @@ fn main() {
     let a = MyStruct::from(p, l);
     #[rapx::inner(
         Init:"This is from a valid Vec object.";InBound:"This is from a valid Vec object.";ValidNum:"self.len is valid.";Alias:"p is no longer used.";RustdocLinkToItem,
-        Allocated
+        Alive
     )]
     let val = unsafe { a.get() };
     {

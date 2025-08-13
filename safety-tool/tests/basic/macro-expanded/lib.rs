@@ -30,7 +30,7 @@ impl MyStruct {
         ValidNum(self.len*sizeof(u8), [0, isize::MAX]),
         Alias(self.ptr),
         RustdocLinkToItem("crate::test"),
-        any(Deref, Allocated)
+        any(Deref(self.ptr, u8, 1), Alive(self.ptr, _))
     )]
     /// correct link: [`crate::test`]
     /**# Safety
@@ -41,7 +41,7 @@ impl MyStruct {
     #[doc = "* ValidNum: the value of `self.len * sizeof(u8)` must lie within the valid `[0, isize :: MAX]`\n\n"]
     #[doc = "* Alias: `self.ptr` must not have other alias\n\n"]
     #[doc = "* RustdocLinkToItem: [`crate::test`]\n\n"]
-    #[doc = "* any: Only one of the following properties requires being satisfied:\n    * Deref: pointer `` must be dereferencable in the `sizeof()*` memory from it\n\n    * Allocated: the memory range `[,  + sizeof()*)` must be allocated by allocator ``\n\n"]
+    #[doc = "* any: Only one of the following properties requires being satisfied:\n    * Deref: pointer `self.ptr` must be dereferencable in the `sizeof(u8)*1` memory from it\n\n    * Alive: the reference of `self.ptr` must outlive the lifetime `_`\n\n"]
     pub unsafe fn get(&self) -> &mut [u8] {
         unsafe { std::slice::from_raw_parts_mut(self.ptr, self.len) }
     }
