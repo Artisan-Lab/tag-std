@@ -10,14 +10,14 @@ use safety_macro::safety;
 fn main() {
     let (p, l, _c) = Vec::new().into_raw_parts();
     let a = MyStruct::from(p, l);
-    println!("{:?}", unsafe {
-        #[safety {
-            Init: "This is from a valid Vec object.";
-            InBound: "This is from a valid Vec object.";
-            ValidNum: "self.len is valid.";
-            Alias: "p is no longer used.";
-            RustdocLinkToItem
-        }]
-        a.get()
-    });
+    #[safety {
+        Init: "This is from a valid Vec object.";
+        InBound: "This is from a valid Vec object.";
+        ValidNum: "self.len is valid.";
+        Alias: "p is no longer used.";
+        RustdocLinkToItem,
+        Allocated
+    }]
+    let val = unsafe { a.get() };
+    println!("{val:?}");
 }

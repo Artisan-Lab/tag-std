@@ -13,16 +13,12 @@ use safety_macro::safety;
 fn main() {
     let (p, l, _c) = Vec::new().into_raw_parts();
     let a = MyStruct::from(p, l);
+    #[rapx::inner(
+        Init:"This is from a valid Vec object.";InBound:"This is from a valid Vec object.";ValidNum:"self.len is valid.";Alias:"p is no longer used.";RustdocLinkToItem,
+        Allocated
+    )]
+    let val = unsafe { a.get() };
     {
-        ::std::io::_print(
-            format_args!(
-                "{0:?}\n",
-                unsafe {
-                    #[rapx::inner(
-                        Init:"This is from a valid Vec object.";InBound:"This is from a valid Vec object.";ValidNum:"self.len is valid.";Alias:"p is no longer used.";RustdocLinkToItem
-                    )] a.get()
-                },
-            ),
-        );
+        ::std::io::_print(format_args!("{0:?}\n", val));
     };
 }

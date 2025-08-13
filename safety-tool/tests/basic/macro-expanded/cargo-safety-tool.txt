@@ -1,7 +1,7 @@
 ********* "equivalent" [Rlib] has reached 0 instances *********
 ********* "build_script_build" [Executable] has reached 17 instances *********
-********* "build_script_build" [Executable] has reached 71 instances *********
 ********* "unicode_ident" [Rlib] has reached 12 instances *********
+********* "build_script_build" [Executable] has reached 71 instances *********
 ********* "build_script_build" [Executable] has reached 156 instances *********
 ********* "itoa" [Rlib] has reached 42 instances *********
 ********* "ryu" [Rlib] has reached 76 instances *********
@@ -28,5 +28,9 @@
  => "#[rapx::inner(Unreachable)]\n"
 
 "MyStruct::get" ("src/lib.rs:31:5: 31:42")
- => "#[rapx::inner(Init(self.ptr, u8, self.len), InBound(self.ptr, u8, self.len),\nValidNum(self.len*sizeof(u8), [0,isize::MAX]), Alias(self.ptr),\nRustdocLinkToItem(\"crate::test\"), any(Init, InBound))]\n"
+ => "#[rapx::inner(Init(self.ptr, u8, self.len), InBound(self.ptr, u8, self.len),\nValidNum(self.len*sizeof(u8), [0,isize::MAX]), Alias(self.ptr),\nRustdocLinkToItem(\"crate::test\"), any(Deref, Allocated))]\n"
+
+********* "demo" [Executable] has reached 18 instances *********
+"demo::MyStruct::get" ("src/lib.rs:31:5: 31:42")
+ => "#[rapx::inner(Init(self.ptr, u8, self.len), InBound(self.ptr, u8, self.len),\nValidNum(self.len*sizeof(u8), [0,isize::MAX]), Alias(self.ptr),\nRustdocLinkToItem(\"crate::test\"), any(Deref, Allocated))]\n"
 
