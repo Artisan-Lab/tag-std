@@ -120,8 +120,20 @@ fn any_err() {
 }
 
 #[test]
+fn any_err_2() {
+    let [file, outfile] = &testcase("any_err_2");
+    should_panic(file, outfile, Default::default());
+}
+
+#[test]
 fn any_ok() {
     let [file, outfile] = &testcase("any_ok");
+    fine(file, outfile, Default::default());
+}
+
+#[test]
+fn any_ok_2() {
+    let [file, outfile] = &testcase("any_ok_2");
     fine(file, outfile, Default::default());
 }
 

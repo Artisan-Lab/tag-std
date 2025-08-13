@@ -8,7 +8,7 @@ use quote::quote;
 use syn::{
     parse::{Parse, ParseStream},
     punctuated::Punctuated,
-    token::Paren,
+    token::{Brace, Paren},
     *,
 };
 
@@ -79,17 +79,20 @@ impl Parse for PropertiesAndReason {
             if config_exists() {
                 tag.check_type();
             }
-            // FIXME: parse braces for `any { ... }`
-            let sp = if input.peek(Paren) {
+            let args = if input.peek(Paren) {
                 let content;
                 parenthesized!(content in input);
                 let args = Punctuated::<Expr, Token![,]>::parse_terminated(&content)?;
-                let args = args.into_iter().collect();
-                Property { tag, args }
+                args.into_iter().collect()
+            } else if input.peek(Brace) {
+                let content;
+                braced!(content in input);
+                let args = Punctuated::<Expr, Token![,]>::parse_terminated(&content)?;
+                args.into_iter().collect()
             } else {
-                Property { tag, args: Default::default() }
+                Default::default()
             };
-            tags.push(sp);
+            tags.push(Property { tag, args });
 
             if input.peek(Token![,]) {
                 // consume `,` in multiple tags
