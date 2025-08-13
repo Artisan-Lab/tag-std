@@ -764,7 +764,7 @@ checksum = "28d3b2b1366ec20994f1fd18c3c594f05c5dd4bc44d8bb0c1c632c8d6829481f"
 
 [[package]]
 name = "safety-lib"
-version = "0.3.1"
+version = "0.3.5"
 dependencies = [
  "expect-test",
  "safety-macro",
@@ -773,14 +773,14 @@ dependencies = [
 
 [[package]]
 name = "safety-macro"
-version = "0.3.1"
+version = "0.3.5"
 dependencies = [
  "safety-parser",
 ]
 
 [[package]]
 name = "safety-parser"
-version = "0.3.1"
+version = "0.3.5"
 dependencies = [
  "indexmap",
  "proc-macro2",
@@ -793,7 +793,7 @@ dependencies = [
 
 [[package]]
 name = "safety-tool"
-version = "0.3.1"
+version = "0.3.5"
 dependencies = [
  "annotate-snippets",
  "assert_cmd",
