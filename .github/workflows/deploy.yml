@@ -1,14 +1,17 @@
 name: deploy-site
+# on:
+#   workflow_run:
+#     workflows: [Tests, Rust-for-Linux, Asterinas]
+#     types: [completed]
 on:
-  workflow_run:
-    workflows: [Tests, Rust-for-Linux, Asterinas]
-    types: [completed]
+  push:
+  pull_request_target:
 
 jobs:
   download:
     runs-on: ubuntu-latest
     # 只在前置 workflow 成功时才执行
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    # if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - name: Checkout tag-std
         uses: actions/checkout@v4
