@@ -1,4 +1,4 @@
-name: deploy-site
+name: Deploy Rustdoc
 # on:
 #   workflow_run:
 #     workflows: [Tests, Rust-for-Linux, Asterinas]
@@ -19,8 +19,9 @@ jobs:
       - name: Download demo docs
         uses: dawidd6/action-download-artifact@v2
         with:
-          name: rustdoc-demo-X64-docs
+          name: rustdoc-demo-X64
           path: site/demo
+          workflow: tests.yml
           workflow_conclusion: success
 
       - name: Download asterinas docs
@@ -28,17 +29,19 @@ jobs:
         with:
           name: rustdoc-asterinas
           path: site/asterinas
+          workflow: asterinas.yml
           workflow_conclusion: success
 
-      - name: Download rfl docs
+      - name: Download rust-for-linux docs
         uses: dawidd6/action-download-artifact@v2
         with:
           name: rustdoc-rfl-X64
           path: site/rfl
+          workflow: rust-for-linux.yml
           workflow_conclusion: success
 
       - name: View site folder
-        run: tree site -L2
+        run: tree -L 2 site
 
       - name: Copy index.html
         run: cp .github/index site/index.html
