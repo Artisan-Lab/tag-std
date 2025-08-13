@@ -217,7 +217,7 @@ impl Property {
     /// SPs in `any` tag. None means the tag is not `any` or empty args.
     pub fn args_in_any_tag(&self) -> Option<Vec<PropertiesAndReason>> {
         (self.tag.name() == ANY && !self.args.is_empty())
-            .then_some(utils::parse_args_in_any_tag(&self.args))
+            .then(|| utils::parse_args_in_any_tag(&self.args))
     }
 }
 

@@ -14,7 +14,11 @@ export STOP_COMPILATION=1
 # ./run.sh -Fstd
 FEATURES=${1:-"std"}
 
+# Switch toolchain
 ./gen_rust_toolchain_toml.rs ${FEATURES}
+
+# Remove data.sqlite3 the cache
+rm -f target/data.sqlite3 tests/basic/data.sqlite3
 
 cargo fmt --check --all
 cargo clippy -F${FEATURES} --workspace -- -D clippy::all

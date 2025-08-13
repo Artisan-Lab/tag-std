@@ -83,11 +83,15 @@ fn check_tag_state(
     hir_id: HirId,
     diagnostics: &mut Vec<Diagnostic>,
 ) {
-    let undischarged = tag_state.undischarged().join("\n");
-    if !undischarged.is_empty() {
+    let undischarged = tag_state.undischarged();
+    let len = undischarged.len();
+    let undischarged_str = undischarged.join("\n");
+    if len != 0 {
         let span_node = hir_span(hir_id, tcx);
         let span_body = tcx.source_span(hir_id.owner);
-        let title = format!("Tags are not discharged:\n{undischarged}");
+        let newline = if len == 1 { " " } else { "\n" };
+        let plural = if undischarged_str.matches(',').count() == 0 { "Tag is" } else { "Tags are" };
+        let title = format!("{plural} not discharged:{newline}{undischarged_str}");
 
         let anno_call =
             Level::Error.span(anno_span(span_body, span_node)).label("For this unsafe call.");

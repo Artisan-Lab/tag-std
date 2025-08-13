@@ -122,13 +122,15 @@ impl TagState {
             .vanilla
             .iter()
             .filter_map(|(sp, state)| (!*state).then_some(sp.as_str()))
-            .join(", ");
+            .format_with(", ", |sp, f| f(&format_args!("`{sp}`")))
+            .to_string();
         if !vanilla.is_empty() {
             v.push(vanilla);
         }
         for group in &self.group_of_any {
             if !group.values().any(|state| *state) {
-                v.push(group.keys().join(", "));
+                let any = group.keys().format_with(", or ", |sp, f| f(&format_args!("`{sp}`")));
+                v.push(any.to_string());
             }
         }
         v
