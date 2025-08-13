@@ -85,7 +85,12 @@ pub struct TagState {
     /// Each tag must be discharged.
     vanilla: FxIndexMap<Property, bool>,
     /// Any one of the tags must be discharged. `any` tag can be specified multiple times.
+    /// There won't be empty Map because [`args_in_any_tag`] never construct empty SP arguments.
+    ///
+    /// [`args_in_any_tag`]: safety_parser::safety::Property::args_in_any_tag
     group_of_any: Vec<FxIndexMap<Property, bool>>,
+    /// If undischarged is called once. This ensures undischarged diagnostics are emitted only once.
+    undischarged: bool,
 }
 
 impl TagState {
@@ -116,7 +121,22 @@ impl TagState {
         }
     }
 
-    pub fn undischarged(&self) -> Vec<String> {
+    // Returns true if there are SPs undischarged.
+    // Returns false if SPs are fully discharged:
+    // * each vanilla SP is discharged
+    // * and at least one SP in each group_of_any is discharged
+    // pub fn is_fully_discharged(&self) -> bool {
+    //     self.vanilla.values().all(|b| *b)
+    //         && self.group_of_any.iter().all(|g| g.values().any(|b| *b))
+    // }
+
+    pub fn undischarged(&mut self) -> Vec<String> {
+        if self.undischarged {
+            return Vec::new();
+        } else {
+            self.undischarged = true;
+        }
+
         let mut v = Vec::new();
         let vanilla = self
             .vanilla

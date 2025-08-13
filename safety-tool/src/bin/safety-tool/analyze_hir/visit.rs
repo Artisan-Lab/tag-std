@@ -43,11 +43,11 @@ impl Call {
 
             let properties = Property::new_with_hir_id(hir_id, tcx);
 
-            for tag in &properties {
-                tag_state.discharge(tag);
-            }
             let is_empty = properties.is_empty();
             if !is_empty {
+                for tag in &properties {
+                    tag_state.discharge(tag);
+                }
                 // only checks if Safety tags exist
                 check_tag_state(tcx, src_map, tag_state, hir_id, diagnostics);
             }
@@ -85,8 +85,8 @@ fn check_tag_state(
 ) {
     let undischarged = tag_state.undischarged();
     let len = undischarged.len();
-    let undischarged_str = undischarged.join("\n");
     if len != 0 {
+        let undischarged_str = undischarged.join("\n");
         let span_node = hir_span(hir_id, tcx);
         let span_body = tcx.source_span(hir_id.owner);
         let newline = if len == 1 { " " } else { "\n" };
