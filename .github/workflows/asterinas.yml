@@ -1,4 +1,4 @@
-name: Check Asterinas
+name: Asterinas
 
 on:
   push:
@@ -47,8 +47,6 @@ jobs:
 
   rustc-doc:
     runs-on: ubuntu-latest
-    # Sometimes it'd be convenient to look up hitory rustc internal API doc online.
-    if: false
     steps:
       - name: Checkout tag-std
         uses: actions/checkout@v4
@@ -80,20 +78,4 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           path: safety-tool/doc
-
-  # Deployment job
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
-    permissions:
-      pages: write      # to deploy to Pages
-      id-token: write   # to verify the deployment originates from an appropriate source
-
-    needs: rustc-doc
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          name: rustdoc-asterinas

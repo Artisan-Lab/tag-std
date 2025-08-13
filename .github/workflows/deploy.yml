@@ -1,0 +1,66 @@
+name: deploy-site
+on:
+  workflow_run:
+    workflows: [Tests, Rust-for-Linux, Asterinas]
+    types: [completed]
+
+jobs:
+  download:
+    runs-on: ubuntu-latest
+    # 只在前置 workflow 成功时才执行
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - name: Checkout tag-std
+        uses: actions/checkout@v4
+
+      - name: Download demo docs
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          name: rustdoc-demo-X64-docs
+          path: site/demo
+          workflow_conclusion: success
+
+      - name: Download asterinas docs
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          name: rustdoc-asterinas
+          path: site/asterinas
+          workflow_conclusion: success
+
+      - name: Download rfl docs
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          name: rustdoc-rfl-X64
+          path: site/rfl
+          workflow_conclusion: success
+
+      - name: View site folder
+        run: tree site -L2
+
+      - name: Copy index.html
+        run: cp .github/index site/index.html
+
+      - name: Upload static files as artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          name: site
+          path: site
+
+  # Deployment job
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
+    permissions:
+      pages: write      # to deploy to Pages
+      id-token: write   # to verify the deployment originates from an appropriate source
+
+    needs: download
+    steps:
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
+        with:
+          artifact_name: site
+
