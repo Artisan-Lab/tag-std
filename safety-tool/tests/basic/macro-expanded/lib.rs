@@ -30,7 +30,8 @@ impl MyStruct {
         ValidNum(self.len*sizeof(u8), [0, isize::MAX]),
         Alias(self.ptr),
         RustdocLinkToItem("crate::test"),
-        any(Deref(self.ptr, u8, 1), Alive(self.ptr, _))
+        any{Deref(self.ptr, u8, 1),
+        Alive(self.ptr, _)}
     )]
     /// correct link: [`crate::test`]
     /**# Safety

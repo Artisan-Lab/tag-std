@@ -26,7 +26,7 @@ impl MyStruct {
         ValidNum(self.len*sizeof(u8), [0,isize::MAX]),
         Alias(self.ptr),
         RustdocLinkToItem("crate::test"),
-        any ( Deref(self.ptr, u8, 1), Alive(self.ptr, _) )
+        any { Deref(self.ptr, u8, 1), Alive(self.ptr, _) }
     }]
     pub unsafe fn get(&self) -> &mut [u8] {
         unsafe { std::slice::from_raw_parts_mut(self.ptr, self.len) }
