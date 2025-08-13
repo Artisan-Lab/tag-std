@@ -59,6 +59,21 @@ is addressed as follows:
 unsafe { call() }
 ```
 
+## `any` to discharge at least one SP
+
+`any` tag is a builtin tag that expresses `or` logics in tag definitions on an API, and requires a
+subset of SP arguments to discharge.
+
+```rust
+#[safety { any { Deref(self.ptr, u8, 1), Alive(self.ptr, _) } }] // defsite
+unsafe fn get(&self) {}
+
+#[safety { Deref }] // callsite: at least one of SPs in `any` tag should be discharged
+unsafe { self.get() }
+```
+
+See [PR#48](https://github.com/Artisan-Lab/tag-std/pull/48) for more infomation.
+
 ## RustDoc Generation 
 
 The safety attribute can be automatically expanded into text descriptions once configuration is set.
