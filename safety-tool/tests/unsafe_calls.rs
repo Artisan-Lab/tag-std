@@ -113,6 +113,18 @@ fn unsafe_calls_panic_discharge_all_tagged_more() {
     // should_panic(file, outfile, CompilationOptions::discharges_all_properties());
 }
 
+#[test]
+fn any_err() {
+    let [file, outfile] = &testcase("any_err");
+    should_panic(file, outfile, Default::default());
+}
+
+#[test]
+fn any_ok() {
+    let [file, outfile] = &testcase("any_ok");
+    fine(file, outfile, Default::default());
+}
+
 fn fine(file: &str, outfile: &str, opts: CompilationOptions) {
     let (exe, output) = compile(file, opts);
     let stdout = std::str::from_utf8(&output.stdout).unwrap();
