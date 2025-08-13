@@ -1,6 +1,6 @@
 use crate::{
     Str,
-    configuration::{TagType, config_exists, doc_option, get_tag},
+    configuration::{ANY, TagType, config_exists, doc_option, get_tag},
 };
 use indexmap::IndexMap;
 use proc_macro2::TokenStream;
@@ -8,7 +8,7 @@ use quote::quote;
 use syn::{
     parse::{Parse, ParseStream},
     punctuated::Punctuated,
-    token::Paren,
+    token::{Brace, Paren},
     *,
 };
 
@@ -79,16 +79,20 @@ impl Parse for PropertiesAndReason {
             if config_exists() {
                 tag.check_type();
             }
-            let sp = if input.peek(Paren) {
+            let args = if input.peek(Paren) {
                 let content;
                 parenthesized!(content in input);
                 let args = Punctuated::<Expr, Token![,]>::parse_terminated(&content)?;
-                let args = args.into_iter().collect();
-                Property { tag, args }
+                args.into_iter().collect()
+            } else if input.peek(Brace) {
+                let content;
+                braced!(content in input);
+                let args = Punctuated::<Expr, Token![,]>::parse_terminated(&content)?;
+                args.into_iter().collect()
             } else {
-                Property { tag, args: Default::default() }
+                Default::default()
             };
-            tags.push(sp);
+            tags.push(Property { tag, args });
 
             if input.peek(Token![,]) {
                 // consume `,` in multiple tags
@@ -144,6 +148,25 @@ impl PropertiesAndReason {
         ts
     }
 
+    fn gen_sp_in_any_doc(&self) -> String {
+        let mut doc = String::new();
+        let heading_tag = doc_option().heading_tag;
+
+        for tag in &self.tags {
+            let name = tag.tag.name();
+            let item = match (heading_tag, tag.gen_doc()) {
+                (true, None) => format!("    * {name}"),
+                (true, Some(desc)) => format!("    * {name}: {desc}"),
+                (false, None) => String::new(),
+                (false, Some(desc)) => format!("    * {desc}"),
+            };
+            doc.push_str(&item);
+            doc.push('\n');
+        }
+        doc.pop();
+        doc
+    }
+
     pub fn need_gen_doc(&self) -> bool {
         self.desc.is_some() || !self.tags.is_empty()
     }
@@ -161,7 +184,22 @@ impl Property {
     /// Generate `#[doc]` for this property from its desc string interpolation.
     /// None means SP is not defined with desc, thus nothing to generate.
     pub fn gen_doc(&self) -> Option<String> {
-        let defined_tag = get_tag(self.tag.name());
+        let name = self.tag.name();
+
+        if name == ANY {
+            if self.args.is_empty() {
+                return None;
+            }
+            let mut doc =
+                "Only one of the following properties requires being satisfied:\n".to_owned();
+            // validate SPs in `any(SP1, SP2, ...)` exist
+            for prop in utils::parse_args_in_any_tag(&self.args) {
+                doc.push_str(&prop.gen_sp_in_any_doc());
+            }
+            return Some(doc);
+        }
+
+        let defined_tag = get_tag(name);
         // NOTE: this tolerates missing args, but position matters.
         let args_len = self.args.len().min(defined_tag.args.len());
 
@@ -177,6 +215,12 @@ impl Property {
         }
 
         defined_tag.desc.as_deref().map(|desc| utils::template(desc, &map_defined_arg_input_arg))
+    }
+
+    /// SPs in `any` tag. None means the tag is not `any` or empty args.
+    pub fn args_in_any_tag(&self) -> Option<Vec<PropertiesAndReason>> {
+        (self.tag.name() == ANY && !self.args.is_empty())
+            .then(|| utils::parse_args_in_any_tag(&self.args))
     }
 }
 
@@ -225,6 +269,10 @@ impl TagNameType {
     /// Check if the tag in macro is wrongly specified.
     pub fn check_type(&self) {
         let (name, typ) = self.name_type();
+        if name == ANY {
+            // FIXME: check SP args here
+            return;
+        }
         let defined_types = &get_tag(name).types;
         if let Some(typ) = typ {
             assert!(

@@ -1,7 +1,7 @@
 stdout=
 
 stderr=
-[1m[91merror[0m: [1m`Tag` is not discharged[0m
+[1m[91merror[0m: [1mTag is not discharged: `Tag`[0m
   [1m[94m-->[0m ./tests/snippets/unsafe_calls_panic_assign.rs:12:13
    [1m[94m|[0m
 [1m[94m12 |[0m     let f = call;

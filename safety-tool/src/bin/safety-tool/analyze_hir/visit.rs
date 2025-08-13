@@ -1,10 +1,10 @@
+use crate::analyze_hir::db::TagState;
+
 use super::{
     db::{Property, ToolAttrs},
     diagnostic::Diagnostic,
 };
 use annotate_snippets::*;
-use itertools::Itertools;
-use rustc_data_structures::fx::FxIndexMap;
 use rustc_hir::{
     def::{DefKind, Res},
     def_id::DefId,
@@ -32,35 +32,24 @@ impl Call {
         tool_attrs: &mut ToolAttrs,
         diagnostics: &mut Vec<Diagnostic>,
     ) {
-        let Some(tags_state) = tool_attrs.get_tags(self.def_id, tcx) else {
+        let Some(tag_state) = tool_attrs.get_tags(self.def_id, tcx) else {
             // No tool attrs to be checked.
             return;
         };
-        debug!(?tags_state);
+        debug!(?tag_state);
 
         let mut check = |hir_id: HirId| {
             debug!(?hir_id, ?fn_hir_id);
 
             let properties = Property::new_with_hir_id(hir_id, tcx);
 
-            for tag in &properties {
-                if let Some(state) = tags_state.get_mut(tag) {
-                    assert!(!*state, "{tag:?} has already been discharged");
-                    *state = true;
-                } else {
-                    // FIXME: a parent is allowed to have extra tags than
-                    // the current call, so is invalid_tag check necessary?
-                    //
-                    // let tags: Vec<_> = tags_state.keys().collect();
-                    // let title = format!("Tag {tag:?} doesn't belong to tags {tags:?}");
-                    // let render = gen_diagnosis_for_a_line(hir_span(hir_id, tcx), src_map, &title);
-                    // diagnostics.push(Diagnostic::invalid_tag(render));
-                }
-            }
             let is_empty = properties.is_empty();
             if !is_empty {
+                for tag in &properties {
+                    tag_state.discharge(tag);
+                }
                 // only checks if Safety tags exist
-                check_tag_state(tcx, src_map, tags_state, hir_id, diagnostics);
+                check_tag_state(tcx, src_map, tag_state, hir_id, diagnostics);
             }
             is_empty
         };
@@ -83,32 +72,26 @@ impl Call {
         }
 
         // make sure Safety tags are all discharged
-        check_tag_state(tcx, src_map, tags_state, self.hir_id, diagnostics);
+        check_tag_state(tcx, src_map, tag_state, self.hir_id, diagnostics);
     }
 }
 
 fn check_tag_state(
     tcx: TyCtxt,
     src_map: &SourceMap,
-    tags_state: &mut FxIndexMap<Property, bool>,
+    tag_state: &mut TagState,
     hir_id: HirId,
     diagnostics: &mut Vec<Diagnostic>,
 ) {
-    let mut n = 0;
-    let undischarged = tags_state
-        .iter()
-        .filter(|(_, state)| !*state)
-        .map(|(tag, _)| {
-            n += 1;
-            tag.as_str()
-        })
-        .format_with(", ", |tag, f| f(&format_args!("`{tag}`")))
-        .to_string();
-    if n != 0 {
+    let undischarged = tag_state.undischarged();
+    let len = undischarged.len();
+    if len != 0 {
+        let undischarged_str = undischarged.join("\n");
         let span_node = hir_span(hir_id, tcx);
         let span_body = tcx.source_span(hir_id.owner);
-        let is = if n == 1 { "is" } else { "are" };
-        let title = format!("{undischarged} {is} not discharged");
+        let newline = if len == 1 { " " } else { "\n" };
+        let plural = if undischarged_str.matches(',').count() == 0 { "Tag is" } else { "Tags are" };
+        let title = format!("{plural} not discharged:{newline}{undischarged_str}");
 
         let anno_call =
             Level::Error.span(anno_span(span_body, span_node)).label("For this unsafe call.");
@@ -139,17 +122,6 @@ fn gen_diagnosis_for_a_func(
     let msg = Level::Error.title(title).snippet(snippet.annotation(anno));
     Renderer::styled().render(msg).to_string().into()
 }
-
-// fn gen_diagnosis_for_a_line(span: Span, src_map: &SourceMap, title: &str) -> Box<str> {
-//     let src = src_map.span_to_snippet(span).unwrap();
-//     let file_and_line = src_map.lookup_line(span.lo()).unwrap();
-//     let line_start = file_and_line.line + 1; // adjust to starting from 1
-//     let origin = file_and_line.sf.name.prefer_local().to_string_lossy();
-//     let snippet = Snippet::source(&src).line_start(line_start).origin(&origin).fold(true);
-//
-//     let msg = Level::Error.title(title).snippet(snippet);
-//     Renderer::styled().render(msg).to_string().into()
-// }
 
 fn anno_span(span_body: Span, span_node: Span) -> Range<usize> {
     let body_lo = span_body.lo().0;
