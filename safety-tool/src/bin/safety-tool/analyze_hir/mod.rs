@@ -1,16 +1,13 @@
 use crate::is_tool_attr;
-use diagnostic_emit::EmitDiagnostics;
 use rustc_hir::{BodyId, FnSig, HirId, ImplItemKind, ItemKind, Node, def_id::LocalDefId};
 use rustc_middle::ty::TyCtxt;
 use rustc_span::Ident;
 
 mod db;
-mod diagnostic;
-mod diagnostic_emit;
+mod diagnostics;
 mod visit;
 
 pub fn analyze_hir(tcx: TyCtxt) {
-    let exit_and_emit = diagnostic::ExitAndEmit::new();
     let mut v_hir_fn = Vec::with_capacity(64);
 
     let def_items = tcx.hir_crate_items(()).definitions();
@@ -44,7 +41,7 @@ pub fn analyze_hir(tcx: TyCtxt) {
 
     let mut tool_attrs =
         db::get_all_tool_attrs(v_hir_fn.iter().filter_map(|f| f.to_data(tcx))).unwrap();
-    let mut diagnostics = EmitDiagnostics::new(tcx);
+    let mut diagnostics = diagnostics::EmitDiagnostics::new(tcx);
 
     for hir_fn in &v_hir_fn {
         let body_id = hir_fn.body;
@@ -68,18 +65,7 @@ pub fn analyze_hir(tcx: TyCtxt) {
         }
     }
 
-    let diagnostics = diagnostics.take_diagnostics();
-    if !diagnostics.is_empty() {
-        if exit_and_emit.should_emit() {
-            for diagnostic in &diagnostics {
-                eprintln!("{}\n", diagnostic.render)
-            }
-            diagnostic::total(&diagnostics);
-        }
-        if exit_and_emit.should_abort() {
-            std::process::abort()
-        }
-    }
+    diagnostics.emit();
 }
 
 #[allow(dead_code)]

@@ -2,7 +2,7 @@ use crate::analyze_hir::db::TagState;
 
 use super::{
     db::{Property, ToolAttrs},
-    diagnostic_emit::EmitDiagnostics,
+    diagnostics::EmitDiagnostics,
 };
 use rustc_hir::{
     def::{DefKind, Res},
