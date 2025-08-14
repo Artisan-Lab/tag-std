@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-  pull_request_target:
+  pull_request:
 
 jobs:
   tests:
@@ -16,4 +16,5 @@ jobs:
 
   deploy:
     needs: [tests, rust-for-linux, asterinas]
+    if: github.ref == 'refs/heads/main'
     uses: ./.github/workflows/deploy.yml
