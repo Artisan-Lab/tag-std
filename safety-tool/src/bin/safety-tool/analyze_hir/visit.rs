@@ -42,7 +42,7 @@ impl Call {
             if !is_empty {
                 for tag in &properties {
                     if let Err(err) = tag_state.discharge(tag) {
-                        diagnostics.push(hir_id, &err);
+                        diagnostics.push_duplicate_discharge(hir_id, &err);
                     }
                 }
                 // only checks if Safety tags exist
@@ -83,7 +83,7 @@ fn check_tag_state(tag_state: &mut TagState, hir_id: HirId, diagnostics: &mut Em
         let newline = if len == 1 { " " } else { "\n" };
         let plural = if undischarged_str.matches(',').count() == 0 { "Tag is" } else { "Tags are" };
         let title = format!("{plural} not discharged:{newline}{undischarged_str}");
-        diagnostics.push(hir_id, &title);
+        diagnostics.push_missing_discharge(hir_id, &title);
     }
 }
 

@@ -13,7 +13,9 @@ enum DiagnosticKind {
     // A non-existent tag is specified.
     // InvaidTag,
     /// A missing `#[discharges]` attribute on a call with context of source code.
-    MissingDischarges,
+    MissingDischarge,
+    /// The tag has been discharged.
+    DuplicatedDischarge,
 }
 
 struct Diagnostic {
@@ -22,12 +24,12 @@ struct Diagnostic {
 }
 
 impl Diagnostic {
-    // pub fn invalid_tag(render: Box<str>) -> Self {
-    //     Diagnostic { render, kind: DiagnosticKind::InvaidTag }
-    // }
+    fn missing_discharge(render: Box<str>) -> Self {
+        Diagnostic { render, kind: DiagnosticKind::MissingDischarge }
+    }
 
-    fn missing_discharges(render: Box<str>) -> Self {
-        Diagnostic { render, kind: DiagnosticKind::MissingDischarges }
+    pub fn duplicated_discharge(render: Box<str>) -> Self {
+        Diagnostic { render, kind: DiagnosticKind::DuplicatedDischarge }
     }
 }
 
@@ -126,9 +128,14 @@ impl<'tcx> EmitDiagnostics<'tcx> {
     }
 
     /// Add a diagnostic based on an unsafe call. Title is the first line of error msg.
-    pub fn push(&mut self, hir_id: HirId, title: &str) {
+    pub fn push_missing_discharge(&mut self, hir_id: HirId, title: &str) {
         let render = self.generate(hir_id, title);
-        self.diagnostics.push(Diagnostic::missing_discharges(render));
+        self.diagnostics.push(Diagnostic::missing_discharge(render));
+    }
+
+    pub fn push_duplicate_discharge(&mut self, hir_id: HirId, title: &str) {
+        let render = self.generate(hir_id, title);
+        self.diagnostics.push(Diagnostic::duplicated_discharge(render));
     }
 
     /// Emit diagnostics, respecting EXIT_AND_EMIT.
