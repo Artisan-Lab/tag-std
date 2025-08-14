@@ -11,55 +11,43 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Download demo docs
-        uses: dawidd6/action-download-artifact@v6
+        uses: actions/download-artifact@v5
         with:
           name: doc-demo-X64
           path: site/demo
-          workflow: tests.yml
-          workflow_conclusion: success
 
       - name: Download rustc doc required by verify-rust-std
-        uses: dawidd6/action-download-artifact@v6
+        uses: actions/download-artifact@v5
         with:
           name: rustc-std
           # site/std/rustc
           path: site/std
-          workflow: tests.yml
-          workflow_conclusion: success
 
       - name: Download asterinas docs
-        uses: dawidd6/action-download-artifact@v6
+        uses: actions/download-artifact@v5
         with:
           name: doc-asterinas
           path: site/asterinas
-          workflow: asterinas.yml
-          workflow_conclusion: success
 
       - name: Download rustc doc required by asterinas
-        uses: dawidd6/action-download-artifact@v6
+        uses: actions/download-artifact@v5
         with:
           name: rustc-asterinas
           # site/asterinas/rustc
           path: site/asterinas
-          workflow: asterinas.yml
-          workflow_conclusion: success
 
       - name: Download rust-for-linux docs
-        uses: dawidd6/action-download-artifact@v6
+        uses: actions/download-artifact@v5
         with:
           name: doc-rfl-X64
           path: site/rfl
-          workflow: rust-for-linux.yml
-          workflow_conclusion: success
 
       - name: Download rustc doc required by rust-for-linux
-        uses: dawidd6/action-download-artifact@v6
+        uses: actions/download-artifact@v5
         with:
           name: rustc-rfl
           # site/rfl/rustc
           path: site/rfl
-          workflow: rust-for-linux.yml
-          workflow_conclusion: success
 
       - name: View site folder
         run: tree -L 2 site
