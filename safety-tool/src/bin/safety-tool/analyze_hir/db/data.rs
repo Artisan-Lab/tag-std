@@ -107,18 +107,23 @@ impl TagState {
         );
     }
 
-    pub fn discharge(&mut self, prop: &Property) {
+    pub fn discharge(&mut self, prop: &Property) -> Result<(), String> {
         if let Some(state) = self.vanilla.get_mut(prop) {
-            assert!(!*state, "{prop:?} has already been discharged");
+            if *state {
+                return Err(format!("{prop:?} has already been discharged"));
+            }
             *state = true;
         } else {
             for group in &mut self.group_of_any {
                 if let Some(state) = group.get_mut(prop) {
-                    assert!(!*state, "{prop:?} has already been discharged");
+                    if *state {
+                        return Err(format!("{prop:?} has already been discharged"));
+                    }
                     *state = true;
                 }
             }
         }
+        Ok(())
     }
 
     // Returns true if there are SPs undischarged.

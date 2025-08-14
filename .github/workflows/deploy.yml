@@ -1,0 +1,81 @@
+name: Deploy Docs
+
+on:
+  workflow_call:
+
+jobs:
+  download:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout tag-std
+        uses: actions/checkout@v4
+
+      - name: Download demo docs
+        uses: actions/download-artifact@v5
+        with:
+          name: doc-demo-X64
+          path: site/demo
+
+      - name: Download rustc doc required by verify-rust-std
+        uses: actions/download-artifact@v5
+        with:
+          name: rustc-std
+          # site/std/rustc
+          path: site/std
+
+      - name: Download asterinas docs
+        uses: actions/download-artifact@v5
+        with:
+          name: doc-asterinas
+          path: site/asterinas
+
+      - name: Download rustc doc required by asterinas
+        uses: actions/download-artifact@v5
+        with:
+          name: rustc-asterinas
+          # site/asterinas/rustc
+          path: site/asterinas
+
+      - name: Download rust-for-linux docs
+        uses: actions/download-artifact@v5
+        with:
+          name: doc-rfl-X64
+          path: site/rfl
+
+      - name: Download rustc doc required by rust-for-linux
+        uses: actions/download-artifact@v5
+        with:
+          name: rustc-rfl
+          # site/rfl/rustc
+          path: site/rfl
+
+      - name: View site folder
+        run: tree -L 2 site
+
+      - name: Copy index.html
+        run: cp .github/index.html site/index.html
+
+      - name: Upload static files as artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          name: site
+          path: site
+
+  # Deployment job
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
+    permissions:
+      pages: write      # to deploy to Pages
+      id-token: write   # to verify the deployment originates from an appropriate source
+
+    needs: download
+    steps:
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
+        with:
+          artifact_name: site
+

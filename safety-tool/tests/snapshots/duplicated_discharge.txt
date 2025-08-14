@@ -1,0 +1,14 @@
+stdout=
+
+stderr=
+[1m[91merror[0m: [1m"Tag" has already been discharged[0m
+  [1m[94m-->[0m ./tests/snippets/duplicated_discharge.rs:8:5
+   [1m[94m|[0m
+[1m[94m 8 |[0m [1m[91m/[0m     unsafe {
+[1m[94m 9 |[0m [1m[91m|[0m         call()
+[1m[94m10 |[0m [1m[91m|[0m     }
+   [1m[94m|[0m [1m[91m|_____^[0m [1m[91mFor this unsafe call.[0m
+   [1m[94m|[0m
+
+[1m[31mTotal counts of diagnostics from safety-tool: {DuplicatedDischarge: 1}[0m
+
