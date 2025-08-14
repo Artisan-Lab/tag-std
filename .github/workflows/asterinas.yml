@@ -59,10 +59,12 @@ jobs:
           rustup show
 
       - name: Build ostd rustdoc
+        env:
+          RUSTDOCFLAGS: -Zunstable-options --generate-link-to-definition
         run: |
           git submodule update --init tag-asterinas
           cd tag-asterinas/ostd
-          cargo doc --no-deps --target x86_64-unknown-none
+          cargo doc --no-deps --target x86_64-unknown-none --document-private-items
 
       - name: Upload ostd rustdoc
         uses: actions/upload-artifact@v4
