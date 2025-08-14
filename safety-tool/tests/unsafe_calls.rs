@@ -114,6 +114,12 @@ fn unsafe_calls_panic_discharge_all_tagged_more() {
 }
 
 #[test]
+fn duplicated_discharge() {
+    let [file, outfile] = &testcase("duplicated_discharge");
+    should_panic(file, outfile, Default::default());
+}
+
+#[test]
 fn any_err() {
     let [file, outfile] = &testcase("any_err");
     should_panic(file, outfile, Default::default());
