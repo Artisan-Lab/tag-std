@@ -1,5 +1,4 @@
 use super::super::{HirFn, is_tool_attr};
-use crate::Result;
 use itertools::Itertools;
 use rustc_data_structures::fx::FxIndexMap;
 use rustc_hir::{Attribute, HirId, def_id::DefId};
@@ -108,15 +107,18 @@ impl TagState {
         );
     }
 
-    pub fn discharge(&mut self, prop: &Property) -> Result<()> {
-        let _span = error_span!("discharge", ?self).entered();
+    pub fn discharge(&mut self, prop: &Property) -> Result<(), String> {
         if let Some(state) = self.vanilla.get_mut(prop) {
-            ensure!(!*state, "{prop:?} has already been discharged");
+            if !*state {
+                return Err(format!("{prop:?} has already been discharged"));
+            }
             *state = true;
         } else {
             for group in &mut self.group_of_any {
                 if let Some(state) = group.get_mut(prop) {
-                    ensure!(!*state, "{prop:?} has already been discharged");
+                    if !*state {
+                        return Err(format!("{prop:?} has already been discharged"));
+                    }
                     *state = true;
                 }
             }

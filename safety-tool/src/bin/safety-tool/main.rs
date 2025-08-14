@@ -52,8 +52,6 @@ use std::ops::ControlFlow;
 
 #[macro_use]
 extern crate tracing;
-#[macro_use]
-extern crate eyre;
 
 mod analyze_hir;
 

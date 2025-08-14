@@ -42,9 +42,7 @@ impl Call {
             if !is_empty {
                 for tag in &properties {
                     if let Err(err) = tag_state.discharge(tag) {
-                        let title = format!("Failed to discharge `{tag}`.");
-                        eprintln!("\n{}\n{err:?}", diagnostics.generate(hir_id, &title));
-                        std::process::abort();
+                        diagnostics.push(hir_id, &err);
                     }
                 }
                 // only checks if Safety tags exist

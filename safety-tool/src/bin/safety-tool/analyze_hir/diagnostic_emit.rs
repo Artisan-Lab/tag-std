@@ -31,6 +31,7 @@ impl<'tcx> EmitDiagnostics<'tcx> {
         self.diagnostics
     }
 
+    #[must_use]
     pub fn generate(&mut self, hir_id: HirId, title: &str) -> Box<str> {
         let span_node = hir_span(hir_id, self.tcx);
         let span_body = self.tcx.source_span(hir_id.owner);
