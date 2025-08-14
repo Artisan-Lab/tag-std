@@ -11,7 +11,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Download demo docs
-        uses: dawidd6/action-download-artifact@v2
+        uses: dawidd6/action-download-artifact@v6
         with:
           name: doc-demo-X64
           path: site/demo
@@ -19,7 +19,7 @@ jobs:
           workflow_conclusion: success
 
       - name: Download rustc doc required by verify-rust-std
-        uses: dawidd6/action-download-artifact@v2
+        uses: dawidd6/action-download-artifact@v6
         with:
           name: rustc-std
           # site/std/rustc
@@ -28,7 +28,7 @@ jobs:
           workflow_conclusion: success
 
       - name: Download asterinas docs
-        uses: dawidd6/action-download-artifact@v2
+        uses: dawidd6/action-download-artifact@v6
         with:
           name: doc-asterinas
           path: site/asterinas
@@ -36,7 +36,7 @@ jobs:
           workflow_conclusion: success
 
       - name: Download rustc doc required by asterinas
-        uses: dawidd6/action-download-artifact@v2
+        uses: dawidd6/action-download-artifact@v6
         with:
           name: rustc-asterinas
           # site/asterinas/rustc
@@ -45,7 +45,7 @@ jobs:
           workflow_conclusion: success
 
       - name: Download rust-for-linux docs
-        uses: dawidd6/action-download-artifact@v2
+        uses: dawidd6/action-download-artifact@v6
         with:
           name: doc-rfl-X64
           path: site/rfl
@@ -53,7 +53,7 @@ jobs:
           workflow_conclusion: success
 
       - name: Download rustc doc required by rust-for-linux
-        uses: dawidd6/action-download-artifact@v2
+        uses: dawidd6/action-download-artifact@v6
         with:
           name: rustc-rfl
           # site/rfl/rustc
