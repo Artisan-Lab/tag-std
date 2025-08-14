@@ -37,6 +37,7 @@ jobs:
       - name: Check Linux Repo
         run: .github/rust-for-linux/check.sh
 
+      # FIXME: use https://github.com/actions/upload-artifact
       - name: Upload static files as artifact
         uses: actions/upload-pages-artifact@v3
         with:

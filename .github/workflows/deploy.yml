@@ -32,6 +32,14 @@ jobs:
           workflow: asterinas.yml
           workflow_conclusion: success
 
+      - name: Download rustc doc required by asterinas
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          name: rustc-asterinas
+          path: site/rustc/asterinas
+          workflow: asterinas.yml
+          workflow_conclusion: success
+
       - name: Download rust-for-linux docs
         uses: dawidd6/action-download-artifact@v2
         with:
@@ -46,7 +54,8 @@ jobs:
           cd demo && tar -xf artifact.tar && rm artifact.tar
           cd ../asterinas && tar -xf artifact.tar && rm artifact.tar
           cd ../rfl && tar -xf artifact.tar && rm artifact.tar
-          cd .. && tree -L 2
+          cd ../rust/asterinas && tar -xf artifact.tar && rm artifact.tar
+          cd ../.. && tree -L 2
 
       - name: Copy index.html
         run: cp .github/index.html site/index.html

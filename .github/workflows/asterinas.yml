@@ -58,6 +58,18 @@ jobs:
           ./gen_rust_toolchain_toml.rs asterinas
           rustup show
 
+      - name: Build ostd rustdoc
+        run: |
+          git submodule update --init tag-asterinas
+          cd tag-asterinas/ostd
+          cargo doc --no-deps --target x86_64-unknown-none
+
+      - name: Upload ostd rustdoc
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: tag-asterinas/target/x86_64-unknown-none/doc
+          name: rustdoc-asterinas
+
       - name: Install rustc internal docs
         working-directory: safety-tool
         run: |
@@ -73,9 +85,8 @@ jobs:
           # Move the docs to deployment path
           mv $TOOLCHAIN/share/doc/rust/html/rustc doc/rustc
 
-      - name: Upload static files as artifact
-        id: deployment
+      - name: Upload rustc AIP docs
         uses: actions/upload-pages-artifact@v3
         with:
           path: safety-tool/doc
-          name: rustdoc-asterinas
+          name: rustc-asterinas
