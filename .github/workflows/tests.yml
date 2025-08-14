@@ -35,7 +35,7 @@ jobs:
         run: bash run.sh
 
       - name: Upload static files as artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           # doc-demo-X64 or rustdoc-demo-ARM64
           name: doc-demo-${{ runner.arch }}
