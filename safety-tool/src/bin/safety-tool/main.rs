@@ -36,6 +36,7 @@ crossfig::switch! {
     }
 }
 
+use eyre::Result;
 use rustc_data_structures::fx::FxHashSet;
 use rustc_middle::ty::TyCtxt;
 use stable_mir::{
@@ -49,11 +50,12 @@ use stable_mir::{
 };
 use std::ops::ControlFlow;
 
-mod analyze_hir;
-
-use eyre::Result;
 #[macro_use]
 extern crate tracing;
+#[macro_use]
+extern crate eyre;
+
+mod analyze_hir;
 
 fn main() {
     safety_tool::logger::init();

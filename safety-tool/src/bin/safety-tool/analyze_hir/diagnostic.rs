@@ -9,7 +9,6 @@ pub enum DiagnosticKind {
 
 pub struct Diagnostic {
     pub render: Box<str>,
-    #[allow(dead_code)]
     pub kind: DiagnosticKind,
 }
 

@@ -2,9 +2,8 @@ use crate::analyze_hir::db::TagState;
 
 use super::{
     db::{Property, ToolAttrs},
-    diagnostic::Diagnostic,
+    diagnostic_emit::EmitDiagnostics,
 };
-use annotate_snippets::*;
 use rustc_hir::{
     def::{DefKind, Res},
     def_id::DefId,
@@ -12,8 +11,6 @@ use rustc_hir::{
     *,
 };
 use rustc_middle::ty::{TyCtxt, TypeckResults};
-use rustc_span::{Span, source_map::SourceMap};
-use std::ops::Range;
 
 #[derive(Debug)]
 pub struct Call {
@@ -27,16 +24,14 @@ impl Call {
     pub fn check_tool_attrs(
         &self,
         fn_hir_id: HirId,
-        tcx: TyCtxt,
-        src_map: &SourceMap,
         tool_attrs: &mut ToolAttrs,
-        diagnostics: &mut Vec<Diagnostic>,
+        diagnostics: &mut EmitDiagnostics,
     ) {
+        let tcx = diagnostics.tcx();
         let Some(tag_state) = tool_attrs.get_tags(self.def_id, tcx) else {
             // No tool attrs to be checked.
             return;
         };
-        debug!(?tag_state);
 
         let mut check = |hir_id: HirId| {
             debug!(?hir_id, ?fn_hir_id);
@@ -46,21 +41,20 @@ impl Call {
             let is_empty = properties.is_empty();
             if !is_empty {
                 for tag in &properties {
-                    tag_state.discharge(tag);
+                    if let Err(err) = tag_state.discharge(tag) {
+                        let title = format!("Failed to discharge `{tag}`.");
+                        eprintln!("\n{}\n{err:?}", diagnostics.generate(hir_id, &title));
+                        std::process::abort();
+                    }
                 }
                 // only checks if Safety tags exist
-                check_tag_state(tcx, src_map, tag_state, hir_id, diagnostics);
+                check_tag_state(tag_state, hir_id, diagnostics);
             }
             is_empty
         };
         check(self.hir_id);
 
-        crossfig::switch! {
-            crate::asterinas => { let parent_hirs = tcx.hir().parent_id_iter(self.hir_id); }
-            _ => { let parent_hirs = tcx.hir_parent_id_iter(self.hir_id); }
-        }
-
-        for parent in parent_hirs {
+        for parent in parent_hirs(tcx, self.hir_id) {
             let empty = check(parent);
             // Stop at first tool attrs or the function item.
             // For a function inside a nested module, hir_parent_id_iter
@@ -72,62 +66,27 @@ impl Call {
         }
 
         // make sure Safety tags are all discharged
-        check_tag_state(tcx, src_map, tag_state, self.hir_id, diagnostics);
+        check_tag_state(tag_state, self.hir_id, diagnostics);
     }
 }
 
-fn check_tag_state(
-    tcx: TyCtxt,
-    src_map: &SourceMap,
-    tag_state: &mut TagState,
-    hir_id: HirId,
-    diagnostics: &mut Vec<Diagnostic>,
-) {
+fn parent_hirs(tcx: TyCtxt, hir_id: HirId) -> impl Iterator<Item = HirId> {
+    crossfig::switch! {
+        crate::asterinas => { tcx.hir().parent_id_iter(hir_id) }
+        _ => { tcx.hir_parent_id_iter(hir_id) }
+    }
+}
+
+fn check_tag_state(tag_state: &mut TagState, hir_id: HirId, diagnostics: &mut EmitDiagnostics) {
     let undischarged = tag_state.undischarged();
     let len = undischarged.len();
     if len != 0 {
         let undischarged_str = undischarged.join("\n");
-        let span_node = hir_span(hir_id, tcx);
-        let span_body = tcx.source_span(hir_id.owner);
         let newline = if len == 1 { " " } else { "\n" };
         let plural = if undischarged_str.matches(',').count() == 0 { "Tag is" } else { "Tags are" };
         let title = format!("{plural} not discharged:{newline}{undischarged_str}");
-
-        let anno_call =
-            Level::Error.span(anno_span(span_body, span_node)).label("For this unsafe call.");
-        let render = gen_diagnosis_for_a_func(span_body, src_map, &title, anno_call);
-        diagnostics.push(Diagnostic::missing_discharges(render));
+        diagnostics.push(hir_id, &title);
     }
-}
-
-fn hir_span(hir_id: HirId, tcx: TyCtxt) -> Span {
-    crossfig::switch! {
-        crate::std => { tcx.hir_span(hir_id) }
-        _ => { tcx.hir().span(hir_id) }
-    }
-}
-
-fn gen_diagnosis_for_a_func(
-    span_body: Span,
-    src_map: &SourceMap,
-    title: &str,
-    anno: Annotation,
-) -> Box<str> {
-    let src_body = src_map.span_to_snippet(span_body).unwrap();
-    let file_and_line = src_map.lookup_line(span_body.lo()).unwrap();
-    let line_start = file_and_line.line + 1; // adjust to starting from 1
-    let origin = file_and_line.sf.name.prefer_local().to_string_lossy();
-    let snippet = Snippet::source(&src_body).line_start(line_start).origin(&origin).fold(true);
-
-    let msg = Level::Error.title(title).snippet(snippet.annotation(anno));
-    Renderer::styled().render(msg).to_string().into()
-}
-
-fn anno_span(span_body: Span, span_node: Span) -> Range<usize> {
-    let body_lo = span_body.lo().0;
-    let node_lo = span_node.lo().0;
-    let node_hi = span_node.hi().0;
-    (node_lo - body_lo) as usize..(node_hi - body_lo) as usize
 }
 
 pub struct Calls<'tcx> {
