@@ -1,47 +1,45 @@
-name: Rust-for-Linux
+name: Tests
 
 on:
   workflow_call:
 
-env:
-  CARGO_TERM_COLOR: always
-
 jobs:
-  check:
+  build:
     strategy:
       matrix:
         os: [ubuntu-latest, ubuntu-24.04-arm]
       fail-fast: false
     runs-on: ${{ matrix.os }}
+    outputs:
+      doc: ${{ steps.set.outputs.doc }}
     steps:
-      - name: Checkout tag-std
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
 
-      - name: Install deps required by linux
-        run: sudo apt-get install libelf-dev
+      - uses: dtolnay/rust-toolchain@nightly
 
-      - name: Install safety-tool
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-expand
+
+      - name: Install specified toolchain
         working-directory: safety-tool
         run: |
           rm -f rust-toolchain.toml
-          ./gen_rust_toolchain_toml.rs rfl
-          cargo install -F rfl --path . --locked
+          ./gen_rust_toolchain_toml.rs std
+          rustup show
 
-      - name: Download Linux Repo
-        run: .github/rust-for-linux/install.sh
+      - name: Run Tests
+        working-directory: safety-tool
+        run: bash run.sh
 
-      - name: make version
-        run:  make -v
-
-      - name: Check Linux Repo
-        run: .github/rust-for-linux/check.sh
-
-      - name: Upload kernel rustdoc
-        uses: actions/upload-artifact@v4
+      - name: Upload static files as artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          # doc-rfl-X64 or rustdoc-rfl-ARM64
-          name: doc-rfl-${{ runner.arch }}
-          path: linux/Documentation/output/rust/rustdoc/
+          # doc-demo-X64 or rustdoc-demo-ARM64
+          name: doc-demo-${{ runner.arch }}
+          path: safety-tool/tests/basic/target/doc/
 
   rustc-doc:
     runs-on: ubuntu-latest
@@ -53,7 +51,7 @@ jobs:
         working-directory: safety-tool
         run: |
           rm -f rust-toolchain.toml
-          ./gen_rust_toolchain_toml.rs rfl
+          ./gen_rust_toolchain_toml.rs std
           rustup show
 
       - name: Install rustc internal docs
@@ -75,4 +73,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           path: safety-tool/doc
-          name: rustc-rfl
+          name: rustc-std
