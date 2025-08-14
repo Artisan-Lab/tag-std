@@ -37,10 +37,43 @@ jobs:
       - name: Check Linux Repo
         run: .github/rust-for-linux/check.sh
 
-      # FIXME: use https://github.com/actions/upload-artifact
-      - name: Upload static files as artifact
-        uses: actions/upload-pages-artifact@v3
+      - name: Upload kernel rustdoc
+        uses: actions/upload-artifact@v4
         with:
           # rustdoc-rfl-X64 or rustdoc-rfl-ARM64
           name: rustdoc-rfl-${{ runner.arch }}
           path: linux/Documentation/output/rust/rustdoc/
+
+  rustc-doc:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout tag-std
+        uses: actions/checkout@v4
+
+      - name: Install toolchain
+        working-directory: safety-tool
+        run: |
+          rm -f rust-toolchain.toml
+          ./gen_rust_toolchain_toml.rs rfl
+          rustup show
+
+      - name: Install rustc internal docs
+        working-directory: safety-tool
+        run: |
+          rustup toolchain list -v
+          # Find toolchain path
+          export TOOLCHAIN=$(rustc --print sysroot)
+          echo "toolchain=\"$TOOLCHAIN\""
+          # Remove rustc book
+          rm $TOOLCHAIN/share/doc/rust/html/rustc -rf
+          # Download rustc API docs
+          rustup component add rustc-docs
+          mkdir doc
+          # Move the docs to deployment path
+          mv $TOOLCHAIN/share/doc/rust/html/rustc doc/rustc
+
+      - name: Upload rustc AIP docs
+        uses: actions/upload-artifact@v4
+        with:
+          path: safety-tool/doc
+          name: rustc-rfl
