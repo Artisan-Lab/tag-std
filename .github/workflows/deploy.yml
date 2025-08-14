@@ -54,7 +54,7 @@ jobs:
           cd demo && tar -xf artifact.tar && rm artifact.tar
           cd ../asterinas && tar -xf artifact.tar && rm artifact.tar
           cd ../rfl && tar -xf artifact.tar && rm artifact.tar
-          cd ../rust/asterinas && tar -xf artifact.tar && rm artifact.tar
+          cd ../rustc/asterinas && tar -xf artifact.tar && rm artifact.tar
           cd ../.. && tree -L 2
 
       - name: Copy index.html

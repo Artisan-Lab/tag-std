@@ -65,7 +65,7 @@ jobs:
           cargo doc --no-deps --target x86_64-unknown-none
 
       - name: Upload ostd rustdoc
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           path: tag-asterinas/target/x86_64-unknown-none/doc
           name: rustdoc-asterinas
@@ -86,7 +86,7 @@ jobs:
           mv $TOOLCHAIN/share/doc/rust/html/rustc doc/rustc
 
       - name: Upload rustc AIP docs
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           path: safety-tool/doc
           name: rustc-asterinas
