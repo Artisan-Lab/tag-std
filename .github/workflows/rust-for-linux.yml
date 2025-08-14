@@ -40,8 +40,8 @@ jobs:
       - name: Upload kernel rustdoc
         uses: actions/upload-artifact@v4
         with:
-          # rustdoc-rfl-X64 or rustdoc-rfl-ARM64
-          name: rustdoc-rfl-${{ runner.arch }}
+          # doc-rfl-X64 or rustdoc-rfl-ARM64
+          name: doc-rfl-${{ runner.arch }}
           path: linux/Documentation/output/rust/rustdoc/
 
   rustc-doc:

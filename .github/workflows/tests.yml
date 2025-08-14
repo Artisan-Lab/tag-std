@@ -39,8 +39,8 @@ jobs:
       - name: Upload static files as artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # rustdoc-demo-X64 or rustdoc-demo-ARM64
-          name: rustdoc-demo-${{ runner.arch }}
+          # doc-demo-X64 or rustdoc-demo-ARM64
+          name: doc-demo-${{ runner.arch }}
           path: safety-tool/tests/basic/target/doc/
 
   rustc-doc:
