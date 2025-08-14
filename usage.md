@@ -1,6 +1,6 @@
 # Usage of Safety Properties in a Rust Project
 
-## Import safety-lib
+## Import safety-macro
 
 Generally, we want to have `#[safety]` namespace available in each module, so rename safety-lib
 crate to safety as dependency in Cargo.toml:
@@ -92,6 +92,8 @@ The generated doc is:
 ```rust
 /// Aligned: pointer `ptr` must be properly aligned for type `T`.
 ```
+
+Another example of rendering safety docs:
 
 ![](https://github.com/user-attachments/assets/48ec3740-5a49-4afd-b17d-64bfc8b7e8e3)
 
