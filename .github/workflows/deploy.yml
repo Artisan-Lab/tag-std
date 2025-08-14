@@ -1,17 +1,11 @@
 name: Deploy Docs
+
 on:
-  workflow_run:
-    workflows: [Aggregate]
-    types: [completed]
-# on:
-#   push:
-#   pull_request_target:
+  workflow_call:
 
 jobs:
   download:
     runs-on: ubuntu-latest
-    # execute only if Aggregate workflow succeeds
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - name: Checkout tag-std
         uses: actions/checkout@v4

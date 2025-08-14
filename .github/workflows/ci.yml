@@ -1,0 +1,19 @@
+name: CI
+
+on:
+  push:
+  pull_request_target:
+
+jobs:
+  tests:
+    uses: ./.github/workflows/tests.yml
+
+  rust-for-linux:
+    uses: ./.github/workflows/rust-for-linux.yml
+
+  asterinas:
+    uses: ./.github/workflows/asterinas.yml
+
+  deploy:
+    needs: [tests, rust-for-linux, asterinas]
+    uses: ./.github/workflows/deploy.yml

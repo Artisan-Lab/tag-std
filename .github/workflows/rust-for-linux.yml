@@ -1,7 +1,7 @@
 name: Rust-for-Linux
 
 on:
-  push:
+  workflow_call:
 
 env:
   CARGO_TERM_COLOR: always

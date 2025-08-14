@@ -1,7 +1,7 @@
 name: Asterinas
 
 on:
-  push:
+  workflow_call:
 
 env:
   CARGO_TERM_COLOR: always
