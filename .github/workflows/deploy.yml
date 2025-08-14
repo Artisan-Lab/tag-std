@@ -27,7 +27,7 @@ jobs:
       - name: Download rustc doc required by rust-for-linux
         uses: dawidd6/action-download-artifact@v2
         with:
-          name: rustc-rfl
+          name: rustc-std
           # site/std/rustc
           path: site/std
           workflow: tests.yml
