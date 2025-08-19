@@ -2,3 +2,189 @@ package.name = "rfl"
 
 [tag.UserProperty]
 
+[tag.Null]
+args = [ "p" ]
+desc = "Pointer `{p}` must be null"
+expr = "p == 0"
+
+[tag.Empty]
+args = [ "l" ]
+desc = "Container `{l}` must be empty"
+expr = "l.len() == 0"
+
+#List(8):  mainly used in List module
+
+[tag.InList]
+args = [ "list", "val" ]
+desc = "The value {val} must be in List `{list}`"
+types = [ "precond" ]
+
+[tag.NonInList]
+args = [ "list", "val" ]
+desc = "The value {val} must not be in List `{list}`"
+types = [ "precond" ]
+
+[tag.Equal]
+args = [ "l", "r" ]
+desc = "Left val `{l}` must be equal to right val `{r}`"
+expr = "l == r"
+
+[tag.Access]
+args = [ "T", "ret_val", "type" ]
+desc = "The caller must have `{type}` access to `{T}` for the duration of the `{ret_val}`"
+
+[tag.Exist]
+args = [ "T", "val" ]
+desc = "An instance of `{T}` already exist for this value '{val}'"
+
+[tag.NonExist]
+args = [ "T", "val" ]
+desc = "An instance of `{T}` must not exist for this value '{val}'"
+
+[tag.Think_Exist]
+args = [ "T", "val", "model"]
+desc = "`{model}` thinks that there is an instance of `{T}` exist for this value `{val}`"
+
+[tag.Safety]
+args = ["val", "func"]
+desc = "The value `{val}` must satisfy the safety requirements of `{func}`"
+
+#Memory(10): Associated with write/read, asynchronization, memory
+
+[tag.NonDeallocated]
+args = [ "ptr", "a" ]
+desc = "The memory block pointer `{ptr}` points at is not deallocated during the lifetime `{a}`"
+
+[tag.Valid]
+args = [ "val", "a" ]
+desc = "The value `{val}` must be valid (for the duration of `{a}`)"
+
+[tag.Lock]
+args = [ "val", "type", "a"]
+desc = "The `{type}` of lock of value `{val}` is held for the duration of `{a}`"
+
+[tag.NonData_race]
+args = [ "loc" ]
+desc = "The memory block `{loc}` should not happen data race"
+
+[tag.Write]
+args = [ "dst", "len" ]
+desc = "The `{dst}` is valid for writing `{len}` bytes"
+
+[tag.Read]
+args = [ "src", "len" ]
+desc = "The `{src}` is valid for reading `{len}` bytes"
+
+[tag.GetDropped]
+args = [ "val", "event" ]
+desc = "The value `{val}` get dropped when `{event}` happen"
+
+[tag.NonDropped]
+args = [ "val", "event" ]
+desc = "The value `{val}` is not dropped when `{val}` is used in `{event}`"
+
+[tag.NonMutate]
+args = [ "ptr", "val" ]
+desc = "When value `{val}` is alive, the memory pointed by `{ptr}` must not be mutated"
+
+[tag.AllocatedSize]
+args = [ "addr", "maxsize" ]
+desc = "The pointer `{addr}` is a start address of memory block of size `{maxsize}`"
+
+#Type(10) : Associated with value, type
+
+[tag.NonZero]
+args = [ "val", "a" ]
+desc = "The value `{val}` remains not-zero for the duration of the lifetime `{a}`"
+
+
+[tag.Cast]
+args = [ "T", "U" ]
+desc = "`{T}` can be castable to `{U}`"
+
+[tag.ValidConvert]
+args = [ "T", "U" ]
+desc = "Any value of `{T}` can be converted into a valid `{U}`"
+
+[tag.ValidPtrUntil]
+args = [ "ptr", "a" ]
+desc = "The pointer `{ptr}` must be a valid pointer at least until the end of lifetime `{a}`"
+
+[tag.NonDangling]
+args = [ "ptr" ]
+desc = "This pointer `{ptr}` must not be dangling"
+
+[tag.RefIncrement]
+args = [ "val" ]
+desc = "The refcount of `{val}` is incremented"
+
+[tag.NonRefDrop]
+args = [ "val" ]
+desc = "The refcount of `{val}` is not dropped explicitly"
+
+[tag.Embedded]
+args = [ "field", "S" ]
+desc = "The `{field}` is embedded in `{S}`"
+
+[tag.NonMutRef]
+args = [ "val" ]
+desc = "There is no mutable reference to `{val}` created"
+
+[tag.Invariant]
+args = [ "ptr" ]
+desc = "The type invariants for *(`{ptr}`) must hold for the pointee of `{ptr}`"
+
+#Function Call(13): Associated with function call and mutil-thread
+
+[tag.CalledBy]
+args = [ "env" ]
+desc = "This function is only called by `{env}`"
+
+[tag.CalledBefore]
+args = [ "fn" ]
+desc = "This function is only be called once before `{fn}` is called"
+
+[tag.NonAccessable]
+args = [ "ptr" ]
+desc = "The pointee of `{ptr}` must not be accessed after this call"
+
+[tag.Mutex]
+args = [ "val", "fn", "type" ]
+desc = "Any call `{fn}` on `{val}` take mutex of `{type}`"
+
+[tag.AnyThread]
+args = [ "fn" ]
+desc = "Function `{fn}` can be called from any thread"
+
+[tag.CurThread]
+args = [ "fn" ]
+desc = "Function `{fn}` can only be called on the current thread"
+
+[tag.Associated]
+args = [ "val", "T" ]
+desc = "`{val}` is associated with a value of `{T}`"
+
+[tag.Free]
+args = [ "val" ]
+desc = "This value `{val}` will be realeased after this func"
+types = [ "hazard" ]
+
+[tag.CallBack]
+args = [ "val", "type" ]
+desc = "`{val}` must be passed by the corredponding callback in instance of `{type}`"
+
+[tag.NonConCurrent]
+args = [ "val" ]
+desc = "`{val}` should not be multily used by concurrent users"
+
+[tag.NonUsed]
+args = [ "val" ]
+desc = "This value `{val}` must not be used as args in any other func"
+
+[tag.Callonce]
+args = []
+desc = "This function can only call once"
+
+[tag.ReturnBy]
+args = [ "val", "fn" ]
+desc = "The `value {val}` is returned by a call to `{fn}`"
