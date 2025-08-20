@@ -26,8 +26,9 @@ rustup default $RUST_TOOLCHAIN
 export LD_LIBRARY_PATH=$(rustc --print sysroot)/lib
 
 pushd safety-tool
-# Switch toolchain
+
 ./gen_rust_toolchain_toml.rs rfl
+
 # Must enter safety-tool folder to respect rust toolchain to compile code.
 cargo install --path . --locked -Frfl
 # This should print `rustc 1.87.0 (17067e9ac 2025-05-09)`.

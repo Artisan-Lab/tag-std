@@ -30,8 +30,8 @@
     },
     "core::alloc::layout::for_value_raw": {
         "0": [
-          "Size",
-          "ValidSlice",
+          "Size |",
+          "ValidSlice |",
           "ValidTraitObj"
         ]
       },
@@ -398,7 +398,7 @@
             "ValidNum"
         ]
     },
-    "core::intrinsics::typed_swap": {
+    "core::intrinsics::typed_swap_nonoverlapping": {
         "0": [
             "ValidPtr",
             "NonOverlap"
@@ -507,8 +507,7 @@
     },
     "core::ptr::non_null::byte_offset": {
         "0": [
-            "InBounded",
-            "ValidNum"
+            "InBounded"
         ]
     },
     "core::ptr::non_null::byte_add": {
@@ -702,8 +701,7 @@
     },
     "core::ptr::const_ptr::offset": {
         "0": [
-            "InBounded",
-            "ValidNum"
+            "InBounded"
         ]
     },
     "core::ptr::const_ptr::add": {
@@ -720,8 +718,7 @@
     },
     "core::ptr::const_ptr::byte_offset": {
         "0": [
-            "InBounded",
-            "ValidNum"
+            "InBounded"
         ]
     },
     "core::ptr::const_ptr::offset_from": {
@@ -808,9 +805,8 @@
     },
     "core::ptr::const_ptr::as_uninit_slice": {
         "0": [
-            "!Null",
+            "Null | ",
             "ValidPtr",
-            "Init",
             "Alive",
             "Alias",
             "ValidNum",
@@ -879,8 +875,7 @@
     },
     "core::ptr::mut_ptr::byte_offset": {
         "0": [
-            "InBounded",
-            "ValidNum"
+            "InBounded"
         ]
     },
     "core::ptr::mut_ptr::offset_from": {
@@ -1372,7 +1367,6 @@
     },
     "core::task::wake::from_raw": {
         "0": [
-            "Allocated",
             "Allocated"
         ]
     },
