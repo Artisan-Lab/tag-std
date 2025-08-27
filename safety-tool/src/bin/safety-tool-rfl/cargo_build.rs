@@ -19,10 +19,14 @@ pub fn dev() -> Result<()> {
 }
 
 fn run(dir: &str, mode: CopyMode, prefix: &str) -> Result<()> {
+    // Pass extra `cargo build` arguments, like `-Fstd` to compile safety-tool.
+    let cargo_build_args = std::env::var("CARGO_BUILD_ARGS").unwrap_or_default();
+
     // Ensure the rendered field of JSON messages contains
     // embedded ANSI color codes for respecting rustc’s default color scheme
     let mut command = Command::new("cargo")
         .args(["build", "--message-format=json-diagnostic-rendered-ansi"])
+        .args(cargo_build_args.split_whitespace())
         .current_dir(dir)
         .stdout(Stdio::piped())
         .spawn()
