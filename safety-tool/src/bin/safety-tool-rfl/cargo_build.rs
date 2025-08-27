@@ -23,7 +23,11 @@ pub fn dev() -> Result<()> {
 
 fn run(dir: &str, mode: CopyMode, prefix: &str) -> Result<()> {
     // Pass extra `cargo build` arguments, like `-Fstd` to compile safety-tool.
-    let cargo_build_args = if verify_rust_std() { &["-Fstd"] } else { &["-Frfl"] };
+    let cargo_build_args: &[_] = match (dir == ".", verify_rust_std()) {
+        (true, true) => &["-Fstd"],
+        (true, false) => &["-Frfl"],
+        _ => &[],
+    };
 
     // Ensure the rendered field of JSON messages contains
     // embedded ANSI color codes for respecting rustc’s default color scheme
