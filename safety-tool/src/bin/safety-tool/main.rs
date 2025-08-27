@@ -11,9 +11,6 @@ extern crate rustc_hir_pretty;
 extern crate rustc_interface;
 extern crate rustc_middle;
 extern crate rustc_span;
-#[macro_use]
-extern crate rustc_smir;
-extern crate stable_mir;
 
 // NOTE: before compilation (i.e. calling `cargo build` or something)
 // `./gen_rust_toolchain_toml.rs $proj` should be run first
@@ -29,9 +26,15 @@ crossfig::alias! {
 
 crossfig::switch! {
     std => {
-        use rustc_smir::rustc_internal::internal;
+        #[macro_use]
+        extern crate rustc_public;
+        use rustc_public::rustc_internal::internal;
     }
     _ => {
+        #[macro_use]
+        extern crate rustc_smir;
+        extern crate stable_mir;
+        use stable_mir as rustc_public;
         use rustc_smir::rustc_internal::{self, internal};
     }
 }
@@ -39,7 +42,7 @@ crossfig::switch! {
 use eyre::Result;
 use rustc_data_structures::fx::FxHashSet;
 use rustc_middle::ty::TyCtxt;
-use stable_mir::{
+use rustc_public::{
     CompilerError, CrateDef, ItemKind,
     mir::{
         MirVisitor,
@@ -87,7 +90,7 @@ fn compilation_status() -> ControlFlow<()> {
 
 fn analyze(tcx: TyCtxt) {
     let mut reachability = Reachability::default();
-    let local_items = stable_mir::all_local_items();
+    let local_items = rustc_public::all_local_items();
     let functions = local_items.iter().filter(|item| matches!(item.kind(), ItemKind::Fn));
 
     for fun in functions {
@@ -101,7 +104,7 @@ fn analyze(tcx: TyCtxt) {
         reachability.add_instance(instance);
     }
 
-    let local_crate = stable_mir::local_crate();
+    let local_crate = rustc_public::local_crate();
     println!(
         "********* {name:?} {typ:?} has reached {len} instances *********",
         name = local_crate.name,
@@ -165,8 +168,9 @@ fn print_tag_std_attrs_through_internal_apis(tcx: TyCtxt<'_>, instance: &Instanc
     let def_id = internal(tcx, instance.def.def_id());
 
     crossfig::switch! {
+        crate::std => { let attrs = tcx.get_all_attrs(def_id).iter(); }
+        crate::rfl => { let attrs = tcx.get_all_attrs(def_id); }
         crate::asterinas => { let attrs = tcx.get_attrs_unchecked(def_id).iter(); }
-        _  => { let attrs = tcx.get_all_attrs(def_id); }
     }
 
     let tool_attrs = attrs.filter(|&attr| is_tool_attr(attr));

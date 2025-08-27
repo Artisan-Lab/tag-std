@@ -1,7 +1,10 @@
 use crate::{Result, Utf8Path, Utf8PathBuf};
 use cargo_metadata::{Artifact, CrateType, Message};
 use eyre::{Context, ContextCompat};
-use safety_tool::utils::sysroot::{self, CARGO_SAFETY_TOOL, SAFETY_TOOL, SAFETY_TOOL_RFL};
+use safety_tool::utils::{
+    sysroot::{self, CARGO_SAFETY_TOOL, SAFETY_TOOL, SAFETY_TOOL_RFL},
+    verify_rust_std,
+};
 use std::{
     fs,
     io::ErrorKind,
@@ -19,10 +22,18 @@ pub fn dev() -> Result<()> {
 }
 
 fn run(dir: &str, mode: CopyMode, prefix: &str) -> Result<()> {
+    // Pass extra `cargo build` arguments, like `-Fstd` to compile safety-tool.
+    let cargo_build_args: &[_] = match (dir == ".", verify_rust_std()) {
+        (true, true) => &["-Fstd"],
+        (true, false) => &["-Frfl"],
+        _ => &[],
+    };
+
     // Ensure the rendered field of JSON messages contains
     // embedded ANSI color codes for respecting rustc’s default color scheme
     let mut command = Command::new("cargo")
         .args(["build", "--message-format=json-diagnostic-rendered-ansi"])
+        .args(cargo_build_args)
         .current_dir(dir)
         .stdout(Stdio::piped())
         .spawn()
