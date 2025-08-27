@@ -24,5 +24,5 @@ popd
 # Check libcore
 pushd rapx-verify-rust-std/library/core
 cargo clean
-SAFETY_TOOL=safety-tool-rfl RUSTFLAGS=--cfg=rapx cargo safety-tool
+SAFETY_TOOL=safety-tool-rfl cargo safety-tool
 rm ../data.sqlite3

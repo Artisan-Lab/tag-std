@@ -41,6 +41,7 @@ fn extra_rustc_args() -> Vec<String> {
 
     // safety-lib compiled on no-std target
     let mut rustc_args = make_args(&[
+        "--cfg=rapx",
         // inject safety_macro and safety_lib dependency
         "-L",
         lib.as_str(),
