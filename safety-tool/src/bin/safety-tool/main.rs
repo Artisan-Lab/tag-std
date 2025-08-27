@@ -11,8 +11,6 @@ extern crate rustc_hir_pretty;
 extern crate rustc_interface;
 extern crate rustc_middle;
 extern crate rustc_span;
-#[macro_use]
-extern crate rustc_public;
 
 // NOTE: before compilation (i.e. calling `cargo build` or something)
 // `./gen_rust_toolchain_toml.rs $proj` should be run first
@@ -28,9 +26,15 @@ crossfig::alias! {
 
 crossfig::switch! {
     std => {
+        #[macro_use]
+        extern crate rustc_public;
         use rustc_public::rustc_internal::internal;
     }
     _ => {
+        #[macro_use]
+        extern crate rustc_smir;
+        extern crate stable_mir;
+        use stable_mir as rustc_public;
         use rustc_smir::rustc_internal::{self, internal};
     }
 }
@@ -164,11 +168,12 @@ fn print_tag_std_attrs_through_internal_apis(tcx: TyCtxt<'_>, instance: &Instanc
     let def_id = internal(tcx, instance.def.def_id());
 
     crossfig::switch! {
+        crate::std => { let attrs = tcx.get_all_attrs(def_id).iter(); }
+        crate::rfl => { let attrs = tcx.get_all_attrs(def_id); }
         crate::asterinas => { let attrs = tcx.get_attrs_unchecked(def_id).iter(); }
-        _  => { let attrs = tcx.get_all_attrs(def_id); }
     }
 
-    let tool_attrs = attrs.iter().filter(|&attr| is_tool_attr(attr));
+    let tool_attrs = attrs.filter(|&attr| is_tool_attr(attr));
     for attr in tool_attrs {
         println!(
             "{fn_name:?} ({span:?})\n => {attr:?}\n",
