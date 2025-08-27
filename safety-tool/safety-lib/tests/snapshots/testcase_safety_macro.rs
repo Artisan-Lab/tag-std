@@ -2,10 +2,10 @@
 #![feature(register_tool)]
 #![register_tool(rapx)]
 #![allow(clippy::missing_safety_doc)]
-#[prelude_import]
-use std::prelude::rust_2024::*;
 #[macro_use]
 extern crate std;
+#[prelude_import]
+use std::prelude::rust_2024::*;
 use safety_macro::safety;
 #[rapx::inner(SP)]
 pub unsafe fn vanilla1() {}

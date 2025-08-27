@@ -4,10 +4,10 @@
 #![feature(vec_into_raw_parts)]
 #![feature(register_tool)]
 #![register_tool(rapx)]
-#[prelude_import]
-use std::prelude::rust_2024::*;
 #[macro_use]
 extern crate std;
+#[prelude_import]
+use std::prelude::rust_2024::*;
 use demo::MyStruct;
 use safety_macro::safety;
 fn main() {
