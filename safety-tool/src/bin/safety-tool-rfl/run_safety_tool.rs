@@ -7,6 +7,11 @@ use safety_tool::utils::{
 // RUSTC_BOOTSTRAP=1 safety-tool tests/snippets/safety_lib_basic.rs -L target/safety-tool/lib/
 // -Zcrate-attr="feature(register_tool)" -Zcrate-attr="register_tool(rapx)" --crate-type=lib
 pub fn run(mut args: Vec<String>) -> Result<()> {
+    if args[0] == "--display-extra-rustc-args" {
+        println!("{}", extra_rustc_args().join(" "));
+        return Ok(());
+    }
+
     let bin_safety_tool = sysroot::bin_safety_tool();
     if matches!(&*args[0], "--version" | "-V" | "-Vv" | "-vV") {
         // linux will parse the version output

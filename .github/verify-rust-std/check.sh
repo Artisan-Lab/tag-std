@@ -17,6 +17,8 @@ cargo install --path . --locked -Fstd
 safety-tool --version
 # Generate bin and lib in target/safety-tool
 safety-tool-rfl build-dev
+# Display extra rustc args, containing safety_macro dynamic library
+safety-tool-rfl --display-extra-rustc-args
 popd
 
 # Check libcore
