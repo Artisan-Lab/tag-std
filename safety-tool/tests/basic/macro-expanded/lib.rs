@@ -3,10 +3,10 @@
 #![register_tool(rapx)]
 #![allow(clippy::missing_safety_doc, clippy::mut_from_ref, internal_features)]
 #![feature(core_intrinsics)]
-#[prelude_import]
-use std::prelude::rust_2024::*;
 #[macro_use]
 extern crate std;
+#[prelude_import]
+use std::prelude::rust_2024::*;
 use safety_macro::safety;
 #[rapx::inner(Unreachable)]
 /**# Safety

@@ -1,0 +1,28 @@
+name: Verify-Rust-Std
+
+on:
+  workflow_call:
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  check-verify-rust-std:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout tag-std
+        uses: actions/checkout@v4
+
+      - name: Init verify-rust-std submodule
+        run: git submodule update --init rapx-verify-rust-std
+
+      - name: Install toolchain
+        working-directory: safety-tool
+        run: |
+          rm -f rust-toolchain.toml
+          ./gen_rust_toolchain_toml.rs std
+          rustup show
+
+      - name: Check verify-rust-std
+        run: .github/verify-rust-std/check.sh
+

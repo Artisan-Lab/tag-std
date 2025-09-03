@@ -8,6 +8,9 @@ jobs:
   tests:
     uses: ./.github/workflows/tests.yml
 
+  verify-rust-std:
+    uses: ./.github/workflows/verify-rust-std.yml
+
   rust-for-linux:
     uses: ./.github/workflows/rust-for-linux.yml
 
