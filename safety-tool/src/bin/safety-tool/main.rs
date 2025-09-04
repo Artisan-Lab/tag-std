@@ -1,6 +1,10 @@
 #![feature(rustc_private)]
-#![feature(let_chains)]
-#![cfg_attr(feature = "asterinas", feature(integer_sign_cast))]
+
+crossfig::switch! {
+    std => { }
+    asterinas => { #![feature(integer_sign_cast)] }
+    _ => { #![feature(let_chains)] }
+}
 
 extern crate itertools;
 extern crate rustc_ast;
@@ -12,17 +16,8 @@ extern crate rustc_interface;
 extern crate rustc_middle;
 extern crate rustc_span;
 
-// NOTE: before compilation (i.e. calling `cargo build` or something)
-// `./gen_rust_toolchain_toml.rs $proj` should be run first
-// where $proj is one of std, rfl, or asterinas.
-crossfig::alias! {
-    // verify-rust-std
-    std: { #[cfg(feature = "std")] },
-    // Rust for Linux
-    rfl: { #[cfg(feature = "rfl")] },
-    // Asterinas OS
-    asterinas: { #[cfg(feature = "asterinas")] }
-}
+// Import conditional compilation of feature names. Used in [`crossfig::switch`].
+use safety_tool::{asterinas, std};
 
 crossfig::switch! {
     std => {
@@ -145,7 +140,7 @@ const REGISTER_TOOL: &str = "rapx";
 
 fn is_tool_attr(attr: &rustc_hir::Attribute) -> bool {
     crossfig::switch! {
-        crate::asterinas => {
+        asterinas => {
             if let rustc_hir::AttrKind::Normal(tool_attr) = &attr.kind
                 && tool_attr.path.segments[0].as_str() == REGISTER_TOOL
             {

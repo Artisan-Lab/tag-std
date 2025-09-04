@@ -1,3 +1,5 @@
+#![allow(stable_features)]
+// newer toolchain like required by std doesn't need this stablized feature
 #![feature(let_chains)]
 
 pub use proc_macro2;

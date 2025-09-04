@@ -63,7 +63,7 @@ impl Data {
     }
 }
 
-fn get_attrs(tcx: TyCtxt, hid: HirId) -> impl Iterator<Item = &Attribute> {
+fn get_attrs(tcx: TyCtxt<'_>, hid: HirId) -> impl Iterator<Item = &'_ Attribute> {
     crossfig::switch! {
         crate::asterinas => {
             tcx.hir_attrs(hid.owner).get(hid.local_id).iter()
