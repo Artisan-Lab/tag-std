@@ -13,7 +13,7 @@ use safety_macro::safety;
 fn main() {
     let (p, l, _c) = Vec::new().into_raw_parts();
     let a = MyStruct::from(p, l);
-    #[rapx::inner(
+    #[rapx::proof(
         Init:"This is from a valid Vec object.";InBound:"This is from a valid Vec object.";ValidNum:"self.len is valid.";Alias:"p is no longer used.";RustdocLinkToItem,
         Alive
     )]

@@ -32,7 +32,7 @@ pub fn safety(attr: TokenStream, item: TokenStream) -> TokenStream {
     // add registered tool attr
     let tool_attr = {
         let attr = TokenStream2::from(attr.clone());
-        quote! { #[rapx::inner(#attr)] }
+        quote! { #[rapx::proof(#attr)] }
     };
     ts.extend(tool_attr);
 
