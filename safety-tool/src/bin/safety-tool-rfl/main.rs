@@ -1,7 +1,4 @@
-crossfig::switch! {
-    safety_tool::std => {}
-    _ => { #![feature(let_chains)] }
-}
+#![cfg_attr(not(feature = "std"), feature(let_chains))]
 
 use cargo_metadata::camino::{Utf8Path, Utf8PathBuf};
 use eyre::Result;

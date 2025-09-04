@@ -1,10 +1,6 @@
 #![feature(rustc_private)]
-
-crossfig::switch! {
-    std => { }
-    asterinas => { #![feature(integer_sign_cast)] }
-    _ => { #![feature(let_chains)] }
-}
+#![cfg_attr(feature = "asterinas", feature(integer_sign_cast))]
+#![cfg_attr(not(feature = "std"), feature(let_chains))]
 
 extern crate itertools;
 extern crate rustc_ast;
@@ -16,8 +12,18 @@ extern crate rustc_interface;
 extern crate rustc_middle;
 extern crate rustc_span;
 
-// Import conditional compilation of feature names. Used in [`crossfig::switch`].
-use safety_tool::{asterinas, std};
+// Conditional compilation of feature names. Used in [`crossfig::switch`].
+// NOTE: before compilation (i.e. calling `cargo build` or something)
+// `./gen_rust_toolchain_toml.rs $proj` should be run first
+// where $proj is one of std, rfl, or asterinas.
+crossfig::alias! {
+    // verify-rust-std
+    std: { #[cfg(feature = "std")] },
+    // Rust for Linux
+    rfl: { #[cfg(feature = "rfl")] },
+    // Asterinas OS
+    asterinas: { #[cfg(feature = "asterinas")] }
+}
 
 crossfig::switch! {
     std => {
