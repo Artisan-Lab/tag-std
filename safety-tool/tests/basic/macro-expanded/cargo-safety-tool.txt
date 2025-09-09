@@ -25,12 +25,12 @@
 ********* "safety_macro" [ProcMacro] has reached 161 instances *********
 ********* "demo" [Rlib] has reached 8 instances *********
 "test" ("src/lib.rs:9:1: 9:26")
- => "#[rapx::inner(Unreachable)]\n"
+ => "#[rapx::proof(Unreachable)]\n"
 
 "MyStruct::get" ("src/lib.rs:31:5: 31:42")
- => "#[rapx::inner(Init(self.ptr, u8, self.len), InBound(self.ptr, u8, self.len),\nValidNum(self.len*sizeof(u8), [0,isize::MAX]), Alias(self.ptr),\nRustdocLinkToItem(\"crate::test\"), any\n{ Deref(self.ptr, u8, 1), Alive(self.ptr, _) })]\n"
+ => "#[rapx::proof(Init(self.ptr, u8, self.len), InBound(self.ptr, u8, self.len),\nValidNum(self.len*sizeof(u8), [0,isize::MAX]), Alias(self.ptr),\nRustdocLinkToItem(\"crate::test\"), any\n{ Deref(self.ptr, u8, 1), Alive(self.ptr, _) })]\n"
 
 ********* "demo" [Executable] has reached 18 instances *********
 "demo::MyStruct::get" ("src/lib.rs:31:5: 31:42")
- => "#[rapx::inner(Init(self.ptr, u8, self.len), InBound(self.ptr, u8, self.len),\nValidNum(self.len*sizeof(u8), [0,isize::MAX]), Alias(self.ptr),\nRustdocLinkToItem(\"crate::test\"), any\n{ Deref(self.ptr, u8, 1), Alive(self.ptr, _) })]\n"
+ => "#[rapx::proof(Init(self.ptr, u8, self.len), InBound(self.ptr, u8, self.len),\nValidNum(self.len*sizeof(u8), [0,isize::MAX]), Alias(self.ptr),\nRustdocLinkToItem(\"crate::test\"), any\n{ Deref(self.ptr, u8, 1), Alive(self.ptr, _) })]\n"
 
