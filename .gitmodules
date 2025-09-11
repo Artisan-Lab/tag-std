@@ -1,7 +1,6 @@
 [submodule "rapx-verify-rust-std"]
 	path = rapx-verify-rust-std
 	url = https://github.com/Artisan-Lab/rapx-verify-rust-std.git
-	branch = dev
 [submodule "tag-asterinas"]
 	path = tag-asterinas
 	url = https://github.com/Artisan-Lab/tag-asterinas.git
