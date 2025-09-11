@@ -1,6 +1,6 @@
 [package]
 name = "safety-tool"
-version = "0.3.6"
+version = "0.3.7"
 edition = "2024"
 authors = ["Artisan-Lab <xuh@fudan.edu.cn>"]
 description = "A tool for analyzing safety tags defined in tag-std"
