@@ -38,4 +38,5 @@ This sp describes the requirement of a funtion to be called once and only once i
 $$
 \textsf{F} Call(self) \wedge \Box(Call(self)\to\Box\neg Call(self))
 $$
+
 Example APIs: [Adterinas-crate::init()](https://github.com/asterinas/asterinas/blob/v0.16.0/ostd/src/lib.rs#L82)
