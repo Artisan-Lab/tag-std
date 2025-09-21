@@ -85,6 +85,11 @@ impl LanguageServer for Backend {
         let safety_attr = safety_parser::safety::parse_attr_and_get_properties(
             attr.as_deref().unwrap_or_default(),
         );
+        let safety_doc = safety_attr
+            .iter()
+            .map(|attr| attr.gen_doc().to_string())
+            .collect::<Vec<_>>()
+            .join("\n");
         let pos_end = {
             let mut pos = pos;
             pos.character += 1;
@@ -97,6 +102,8 @@ impl LanguageServer for Backend {
 ```rust
 attr = {attr:#?}
 safety = {safety_attr:?}
+
+{safety_doc}
 ```
 
 ```rust
