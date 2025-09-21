@@ -27,7 +27,12 @@ impl Parse for SafetyAttr {
     fn parse(input: ParseStream) -> Result<Self> {
         let mut attrs = Attribute::parse_outer(input)?;
 
-        assert!(attrs.len() == 1, "Given input must be a single #[safety] attribute.");
+        if attrs.len() != 1 {
+            return Err(syn::Error::new(
+                input.span(),
+                "Given input must be a single #[safety] attribute.",
+            ));
+        }
         let attr = attrs.remove(0);
         drop(attrs);
 
@@ -41,8 +46,7 @@ impl Parse for SafetyAttr {
 
 /// Parse a full attribute such as `#[rapx::inner { ... }]` to get properties.
 pub fn parse_attr_and_get_properties(attr: &str) -> Box<[PropertiesAndReason]> {
-    let attr: SafetyAttr = parse_str(attr)
-        .unwrap_or_else(|e| panic!("Failed to parse {attr:?} as a safety attribute:\n{e}"));
+    let Ok(attr) = parse_str::<SafetyAttr>(attr) else { return Box::new([]) };
     attr.args.args.into_iter().collect()
 }
 
