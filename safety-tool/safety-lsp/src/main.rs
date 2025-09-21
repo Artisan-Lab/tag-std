@@ -81,6 +81,7 @@ impl LanguageServer for Backend {
 
     async fn hover(&self, params: HoverParams) -> Result<Option<Hover>> {
         let pos = params.text_document_position_params.position;
+        let attr = self.rust.lock().unwrap().get_attr(pos);
         let pos_end = {
             let mut pos = pos;
             pos.character += 1;
@@ -89,6 +90,10 @@ impl LanguageServer for Backend {
         let range = Range { start: pos, end: pos_end };
         let text = format!(
             "# You're hovering!
+
+```rust
+attr = {attr:#?}
+```
 
 ```rust
 range = {range:?}
@@ -176,14 +181,8 @@ impl Rust {
                         let range = node.byte_range();
                         let attr = Attr {
                             byte_range: range.clone(),
-                            start_pos: Position {
-                                line: self.rope.byte_to_line(range.start) as u32,
-                                character: self.rope.byte_to_char(range.start) as u32,
-                            },
-                            end_pos: Position {
-                                line: self.rope.byte_to_line(range.end) as u32,
-                                character: self.rope.byte_to_char(range.end) as u32,
-                            },
+                            start_pos: byte_to_pos(range.start, &self.rope),
+                            end_pos: byte_to_pos(range.end, &self.rope),
                         };
                         let src = &self.text[range];
                         v.push(format!("src={src:?}\tattr={attr:?}"));
@@ -199,10 +198,26 @@ impl Rust {
         }
         Vec::new()
     }
+
+    /// Returns the attr if the cursor is in its pos scope.
+    fn get_attr(&self, pos: Position) -> Option<String> {
+        for attr in &self.attrs {
+            if pos >= attr.start_pos && pos <= attr.end_pos {
+                return Some(self.text[attr.byte_range.clone()].to_owned());
+            }
+        }
+        None
+    }
 }
 
 fn init_tree_sitter() -> Parser {
     let mut parser = Parser::new();
     parser.set_language(&tree_sitter_rust::LANGUAGE.into()).expect("Error loading Rust grammar");
     parser
+}
+
+fn byte_to_pos(byte: usize, rope: &Rope) -> Position {
+    let line = rope.byte_to_line(byte);
+    let character = byte - rope.line_to_byte(line);
+    Position { line: line as u32, character: character as u32 }
 }
