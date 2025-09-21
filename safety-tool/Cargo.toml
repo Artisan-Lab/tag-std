@@ -53,7 +53,7 @@ expect-test = "1.5.1"
 
 [workspace]
 members = ["safety-lib", "safety-macro", "safety-parser"]
-exclude = ["tests/basic"]
+exclude = ["safety-lsp", "tests/basic"]
 
 [package.metadata.rust-analyzer]
 rustc_private = true

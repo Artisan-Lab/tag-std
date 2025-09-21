@@ -1,0 +1,14 @@
+[package]
+name = "safety-lsp"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+tokio = { version = "1", features = ["io-util", "io-std", "macros", "rt-multi-thread", "time"] }
+tower-lsp-server = "0.22.1"
+
+tree-sitter = "0.25.9"
+tree-sitter-rust = "0.24.0"
+
+[build-dependencies]
+cc = "1.2.38"
