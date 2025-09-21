@@ -1,3 +1,4 @@
+use ropey::Rope;
 use std::sync::Mutex;
 use tower_lsp_server::jsonrpc::Result;
 use tower_lsp_server::lsp_types::*;
@@ -126,8 +127,11 @@ async fn main() {
 
 type ByteRange = std::ops::Range<usize>;
 
+#[derive(Debug)]
 struct Attr {
     byte_range: ByteRange,
+    start_pos: Position,
+    end_pos: Position,
 }
 
 struct Rust {
@@ -136,16 +140,25 @@ struct Rust {
     attrs: Vec<Attr>,
     /// Source code as a rust file.
     text: String,
+    /// Text rope.
+    rope: Rope,
     tree: Option<Tree>,
 }
 
 impl Rust {
     fn new() -> Self {
-        Rust { parser: init_tree_sitter(), attrs: Vec::new(), text: String::new(), tree: None }
+        Rust {
+            parser: init_tree_sitter(),
+            attrs: Vec::new(),
+            text: String::new(),
+            rope: Rope::new(),
+            tree: None,
+        }
     }
 
     fn update_node_tree(&mut self, text: String) -> String {
         self.tree = self.parser.parse(&text, None);
+        self.rope = Rope::from_str(&text);
         self.text = text;
         let tree = self.tree.as_ref().unwrap();
         format!("text={:?}\ntree={tree:?}\nroot_node={}", self.text, tree.root_node())
@@ -161,9 +174,20 @@ impl Rust {
                 let mut push = |node: tree_sitter::Node| {
                     if node.grammar_name() == "attribute_item" {
                         let range = node.byte_range();
-                        self.attrs.push(Attr { byte_range: range.clone() });
-                        let src = self.text[range].to_owned();
-                        v.push(src);
+                        let attr = Attr {
+                            byte_range: range.clone(),
+                            start_pos: Position {
+                                line: self.rope.byte_to_line(range.start) as u32,
+                                character: self.rope.byte_to_char(range.start) as u32,
+                            },
+                            end_pos: Position {
+                                line: self.rope.byte_to_line(range.end) as u32,
+                                character: self.rope.byte_to_char(range.end) as u32,
+                            },
+                        };
+                        let src = &self.text[range];
+                        v.push(format!("src={src:?}\tattr={attr:?}"));
+                        self.attrs.push(attr);
                     }
                 };
                 push(cursor.node());

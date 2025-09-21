@@ -9,6 +9,7 @@ tower-lsp-server = "0.22.1"
 
 tree-sitter = "0.25.9"
 tree-sitter-rust = "0.24.0"
+ropey = "1.6.1"
 
 [build-dependencies]
 cc = "1.2.38"
