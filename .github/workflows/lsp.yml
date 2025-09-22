@@ -8,19 +8,17 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, ubuntu-24.04-arm]
-        proj: [std, asterinas, rfl]
       fail-fast: false
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
-      - name: Install specified toolchain
-        working-directory: safety-tool
-        run: |
-          rm -f rust-toolchain.toml
-          ./gen_rust_toolchain_toml.rs ${{ matrix.proj }}
-          rustup show
 
-      - name: Build safety-lsp
-        working-directory: safety-tool/safety-lsp
-        run: cargo b
+      - name: Build safety-lsp for rust-for-linux
+        run: PROJ=rfl ./.github/lsp/build.sh
+
+      - name: Build safety-lsp for asterinas
+        run: PROJ=asterinas ./.github/lsp/build.sh
+
+      - name: Build safety-lsp for std
+        run: PROJ=std ./.github/lsp/build.sh
 
