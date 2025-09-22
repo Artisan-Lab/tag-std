@@ -52,8 +52,8 @@ assert_cmd = "2.0.17"
 expect-test = "1.5.1"
 
 [workspace]
-members = ["safety-lib", "safety-macro", "safety-parser"]
-exclude = ["safety-lsp", "tests/basic"]
+members = ["safety-lib", "safety-macro", "safety-parser", "safety-lsp"]
+exclude = ["tests/basic"]
 
 [package.metadata.rust-analyzer]
 rustc_private = true

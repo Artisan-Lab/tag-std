@@ -12,6 +12,3 @@ tree-sitter-rust = "0.24.0"
 ropey = "1.6.1"
 
 safety-parser = { path = "../safety-parser/" }
-
-[build-dependencies]
-cc = "1.2.38"
