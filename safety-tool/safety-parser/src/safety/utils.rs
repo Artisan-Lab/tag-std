@@ -1,5 +1,5 @@
 use super::PropertiesAndReason;
-use crate::configuration::config_exists;
+use crate::configuration::env::config_exists;
 use indexmap::IndexMap;
 use syn::{Expr, ExprLit, Lit};
 

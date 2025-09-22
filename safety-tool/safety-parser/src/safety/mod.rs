@@ -1,6 +1,6 @@
 use crate::{
     Str,
-    configuration::{ANY, TagType, config_exists, doc_option, get_tag, get_tag_opt},
+    configuration::{ANY, TagType, doc_option, env::config_exists, get_tag, get_tag_opt},
 };
 use indexmap::IndexMap;
 use proc_macro2::TokenStream;
