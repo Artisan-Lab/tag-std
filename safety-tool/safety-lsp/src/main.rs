@@ -81,12 +81,21 @@ impl LanguageServer for Backend {
 
     async fn hover(&self, params: HoverParams) -> Result<Option<Hover>> {
         let pos = params.text_document_position_params.position;
+
         let attr = self.rust.lock().unwrap().get_attr(pos);
         let safety_attr = safety_parser::safety::parse_attr_and_get_properties(
             attr.as_deref().unwrap_or_default(),
         );
-        let safety_doc =
+
+        let mut safety_doc =
             safety_attr.iter().map(|attr| attr.gen_hover_doc()).collect::<Vec<_>>().join("\n");
+        let tag_count = safety_attr.iter().map(|attr| attr.tags.len()).sum::<usize>();
+        match tag_count {
+            0 => (),
+            1 => safety_doc.insert_str(0, "# Safety Requirement\n\n"),
+            _ => safety_doc.insert_str(0, "# Safety Requirements\n\n"),
+        }
+
         let pos_end = {
             let mut pos = pos;
             pos.character += 1;

@@ -156,11 +156,8 @@ impl PropertiesAndReason {
     pub fn gen_hover_doc(&self) -> Box<str> {
         use std::fmt::Write;
 
-        let mut doc = match self.tags.len() {
-            0 => return Box::default(),
-            1 => String::from("# Safety Requirement\n\n"),
-            _ => String::from("# Safety Requirements\n\n"),
-        };
+        let mut doc = String::with_capacity(512);
+
         if let Some(desc) = &self.desc {
             doc.push_str(desc);
             doc.push_str("\n\n");
