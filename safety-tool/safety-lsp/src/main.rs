@@ -85,40 +85,19 @@ impl LanguageServer for Backend {
         let safety_attr = safety_parser::safety::parse_attr_and_get_properties(
             attr.as_deref().unwrap_or_default(),
         );
-        let safety_doc = safety_attr
-            .iter()
-            .map(|attr| attr.gen_doc().to_string())
-            .collect::<Vec<_>>()
-            .join("\n");
+        let safety_doc =
+            safety_attr.iter().map(|attr| attr.gen_hover_doc()).collect::<Vec<_>>().join("\n");
         let pos_end = {
             let mut pos = pos;
             pos.character += 1;
             pos
         };
         let range = Range { start: pos, end: pos_end };
-        let text = format!(
-            "# You're hovering!
-
-```rust
-attr = {attr:#?}
-safety = {safety_attr:?}
-
-{safety_doc}
-```
-
-```rust
-range = {range:?}
-```
-
-```rust
-params = {params:#?}
-```"
-        );
         Ok(Some(Hover {
             // render markdown string
             contents: HoverContents::Markup(MarkupContent {
                 kind: MarkupKind::Markdown,
-                value: text,
+                value: safety_doc,
             }),
             // possibly used to highlight text document in this range (no effect for neovim)
             range: Some(range),
