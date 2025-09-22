@@ -161,6 +161,10 @@ impl PropertiesAndReason {
             1 => String::from("# Safety Requirement\n\n"),
             _ => String::from("# Safety Requirements\n\n"),
         };
+        if let Some(desc) = &self.desc {
+            doc.push_str(desc);
+            doc.push_str("\n\n");
+        }
 
         for tag in &self.tags {
             let name = tag.tag.name();
