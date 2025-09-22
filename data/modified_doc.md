@@ -24,7 +24,7 @@
 |22| Rc::decrement_strong_count | Typed | 8 | [ PR_138303](https://github.com/rust-lang/rust/pull/138303) | Merged |
 |23| Rc::increment_strong_count_in | Typed | 8 | [ PR_138303](https://github.com/rust-lang/rust/pull/138303) | Merged |
 |24| Rc::decrement_strong_count_in | Typed | 8 | [ PR_138303](https://github.com/rust-lang/rust/pull/138303) | Merged |
-|25| Box::from_raw | Alias | 9 | [PR_139857](https://github.com/rust-lang/rust/pull/139857) | Pending |
-|26| Box::from_raw_in | Alias | 9 | [PR_139857](https://github.com/rust-lang/rust/pull/139857) | Pending |
-|27| Box::from_non_null | Alias | 9 | [PR_139857](https://github.com/rust-lang/rust/pull/139857) | Pending |
-|28| Box::from_non_null_in | Alias | 9 | [PR_139857](https://github.com/rust-lang/rust/pull/139857) | Pending |
+|25| Box::from_raw | Alias | 9 | [PR_146870](https://github.com/rust-lang/rust/pull/146870) | Pending |
+|26| Box::from_raw_in | Alias | 9 | [PR_146870](https://github.com/rust-lang/rust/pull/146870) | Pending |
+|27| Box::from_non_null | Alias | 9 | [PR_146870](https://github.com/rust-lang/rust/pull/146870) | Pending |
+|28| Box::from_non_null_in | Alias | 9 | [PR_146870](https://github.com/rust-lang/rust/pull/146870) | Pending |
