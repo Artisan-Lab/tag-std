@@ -1,6 +1,6 @@
 use crate::{
     Str,
-    configuration::{ANY, TagType, doc_option, env::config_exists, get_tag, get_tag_opt},
+    configuration::{ANY, TagType, doc_option, env::need_check, get_tag, get_tag_opt},
 };
 use indexmap::IndexMap;
 use proc_macro2::TokenStream;
@@ -80,7 +80,7 @@ impl Parse for PropertiesAndReason {
 
         while !input.cursor().eof() {
             let tag: TagNameType = input.parse()?;
-            if config_exists() {
+            if need_check() {
                 tag.check_type();
             }
             let args = if input.peek(Paren) {

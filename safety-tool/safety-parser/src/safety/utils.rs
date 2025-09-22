@@ -1,5 +1,5 @@
 use super::PropertiesAndReason;
-use crate::configuration::env::config_exists;
+use crate::configuration::env::need_check;
 use indexmap::IndexMap;
 use syn::{Expr, ExprLit, Lit};
 
@@ -14,7 +14,7 @@ pub fn expr_to_string(expr: &Expr) -> String {
 
 /// Each expr must be in the form of `SP(expr)`. Return `(SP string, &Tag)`.
 pub fn parse_args_in_any_tag(args: &[Expr]) -> Vec<PropertiesAndReason> {
-    let need_check = config_exists();
+    let need_check = need_check();
     let mut v_sp = Vec::with_capacity(args.len());
     for expr in args {
         let prop: PropertiesAndReason = syn::parse_quote!(#expr);
