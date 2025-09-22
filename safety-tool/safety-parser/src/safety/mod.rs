@@ -152,6 +152,28 @@ impl PropertiesAndReason {
         ts
     }
 
+    /// Safety doc rendered through LSP hover.
+    pub fn gen_hover_doc(&self) -> Box<str> {
+        use std::fmt::Write;
+
+        let mut doc = match self.tags.len() {
+            0 => return Box::default(),
+            1 => String::from("# Safety Requirement\n\n"),
+            _ => String::from("# Safety Requirements\n\n"),
+        };
+
+        for tag in &self.tags {
+            let name = tag.tag.name();
+            if let Some(desc) = tag.gen_doc() {
+                _ = writeln!(&mut doc, "* {name}: {desc}");
+            } else {
+                _ = writeln!(&mut doc, "* {name}");
+            }
+        }
+
+        doc.into()
+    }
+
     fn gen_sp_in_any_doc(&self) -> String {
         let mut doc = String::new();
         let heading_tag = doc_option().heading_tag;
