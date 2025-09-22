@@ -14,6 +14,22 @@ pub const LOCAL_SP_FILE: &str = "safety-tags.toml";
 /// SP folder to crate being compiled.
 pub const LOCAL_SP_DIR: &str = "safety-tags";
 
+struct Env {
+    config_exists: bool,
+}
+
+static ENV: LazyLock<Env> = LazyLock::new(|| Env {
+    config_exists: crate_sp_paths().is_some()
+        || var(ENV_SP_FILE).is_ok()
+        || var(ENV_SP_DIR).is_ok(),
+});
+
+/// If ENV_SP_DIR or ENV_SP_DIR is provided, check tag and emit `#[doc]` for each tag.
+/// If neither is provided, do nothing.
+pub fn config_exists() -> bool {
+    ENV.config_exists
+}
+
 fn list_toml_files(dir: &str) -> Vec<String> {
     let mut files = Vec::new();
     for entry in fs::read_dir(dir).unwrap_or_else(|e| panic!("Failed to read {dir} folder:\n{e}")) {
@@ -40,15 +56,6 @@ pub fn crate_sp_paths() -> Option<Vec<String>> {
         }
     }
     None
-}
-
-/// If ENV_SP_DIR or ENV_SP_DIR is provided, check tag and emit `#[doc]` for each tag.
-/// If neither is provided, do nothing.
-pub fn config_exists() -> bool {
-    static EMIT: LazyLock<bool> = LazyLock::new(|| {
-        crate_sp_paths().is_some() || var(ENV_SP_FILE).is_ok() || var(ENV_SP_DIR).is_ok()
-    });
-    *EMIT
 }
 
 /// Paths to toml config.
