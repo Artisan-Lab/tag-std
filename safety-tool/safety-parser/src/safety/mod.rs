@@ -1,6 +1,6 @@
 use crate::{
     Str,
-    configuration::{ANY, TagType, config_exists, doc_option, get_tag},
+    configuration::{ANY, TagType, config_exists, doc_option, get_tag, get_tag_opt},
 };
 use indexmap::IndexMap;
 use proc_macro2::TokenStream;
@@ -225,7 +225,7 @@ impl Property {
             return Some(doc);
         }
 
-        let defined_tag = get_tag(name);
+        let defined_tag = get_tag_opt(name)?;
         // NOTE: this tolerates missing args, but position matters.
         let args_len = self.args.len().min(defined_tag.args.len());
 

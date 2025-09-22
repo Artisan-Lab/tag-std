@@ -218,6 +218,10 @@ pub fn get_tag(name: &str) -> &'static Tag {
     &CACHE.map.get(name).unwrap_or_else(|| panic!("Tag {name:?} is not defined")).tag
 }
 
+pub fn get_tag_opt(name: &str) -> Option<&'static Tag> {
+    CACHE.map.get(name).map(|val| &val.tag)
+}
+
 pub fn doc_option() -> GenDocOption {
     CACHE.doc
 }
