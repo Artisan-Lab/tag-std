@@ -152,3 +152,13 @@ pub fn get_tag_opt(name: &str) -> Option<&'static Tag> {
 pub fn doc_option() -> GenDocOption {
     CACHE.doc
 }
+
+pub struct DefinedTag {
+    pub name: &'static str,
+    pub args: &'static Tag,
+}
+
+/// Get all tags defined in all spec TOMLs.
+pub fn get_tags() -> Box<[DefinedTag]> {
+    CACHE.map.iter().map(|(k, v)| DefinedTag { name: k, args: &v.tag }).collect()
+}
