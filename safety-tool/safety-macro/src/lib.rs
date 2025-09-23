@@ -1,6 +1,6 @@
 use proc_macro::TokenStream;
 use safety_parser::{
-    configuration::config_exists, proc_macro2::TokenStream as TokenStream2, quote::quote,
+    configuration::env::config_exists, proc_macro2::TokenStream as TokenStream2, quote::quote,
     safety::SafetyAttrArgs as AttrArgs, split_attrs::split_attrs_and_rest, syn,
 };
 

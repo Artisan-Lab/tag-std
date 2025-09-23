@@ -21,3 +21,6 @@ jobs:
     needs: [tests, rust-for-linux, asterinas]
     if: github.ref == 'refs/heads/main'
     uses: ./.github/workflows/deploy.yml
+
+  lsp:
+    uses: ./.github/workflows/lsp.yml

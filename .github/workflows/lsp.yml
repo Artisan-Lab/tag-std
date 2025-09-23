@@ -1,0 +1,27 @@
+name: safety-lsp
+
+on:
+  workflow_call:
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, ubuntu-24.04-arm]
+      fail-fast: false
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build safety-lsp for rust-for-linux
+        run: PROJ=rfl ./.github/lsp/build.sh
+
+      - name: Build safety-lsp for asterinas
+        run: PROJ=asterinas ./.github/lsp/build.sh
+
+      - name: Build safety-lsp for std
+        run: PROJ=std ./.github/lsp/build.sh
+

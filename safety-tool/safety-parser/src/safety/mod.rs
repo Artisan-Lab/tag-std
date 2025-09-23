@@ -1,6 +1,6 @@
 use crate::{
     Str,
-    configuration::{ANY, TagType, config_exists, doc_option, get_tag},
+    configuration::{ANY, TagType, doc_option, env::need_check, get_tag, get_tag_opt},
 };
 use indexmap::IndexMap;
 use proc_macro2::TokenStream;
@@ -27,7 +27,12 @@ impl Parse for SafetyAttr {
     fn parse(input: ParseStream) -> Result<Self> {
         let mut attrs = Attribute::parse_outer(input)?;
 
-        assert!(attrs.len() == 1, "Given input must be a single #[safety] attribute.");
+        if attrs.len() != 1 {
+            return Err(syn::Error::new(
+                input.span(),
+                "Given input must be a single #[safety] attribute.",
+            ));
+        }
         let attr = attrs.remove(0);
         drop(attrs);
 
@@ -41,8 +46,7 @@ impl Parse for SafetyAttr {
 
 /// Parse a full attribute such as `#[rapx::inner { ... }]` to get properties.
 pub fn parse_attr_and_get_properties(attr: &str) -> Box<[PropertiesAndReason]> {
-    let attr: SafetyAttr = parse_str(attr)
-        .unwrap_or_else(|e| panic!("Failed to parse {attr:?} as a safety attribute:\n{e}"));
+    let Ok(attr) = parse_str::<SafetyAttr>(attr) else { return Box::new([]) };
     attr.args.args.into_iter().collect()
 }
 
@@ -76,7 +80,7 @@ impl Parse for PropertiesAndReason {
 
         while !input.cursor().eof() {
             let tag: TagNameType = input.parse()?;
-            if config_exists() {
+            if need_check() {
                 tag.check_type();
             }
             let args = if input.peek(Paren) {
@@ -148,6 +152,29 @@ impl PropertiesAndReason {
         ts
     }
 
+    /// Safety doc rendered through LSP hover.
+    pub fn gen_hover_doc(&self) -> Box<str> {
+        use std::fmt::Write;
+
+        let mut doc = String::with_capacity(512);
+
+        if let Some(desc) = &self.desc {
+            doc.push_str(desc);
+            doc.push_str("\n\n");
+        }
+
+        for tag in &self.tags {
+            let name = tag.tag.name();
+            if let Some(desc) = tag.gen_doc() {
+                _ = writeln!(&mut doc, "* {name}: {desc}");
+            } else {
+                _ = writeln!(&mut doc, "* {name}");
+            }
+        }
+
+        doc.into()
+    }
+
     fn gen_sp_in_any_doc(&self) -> String {
         let mut doc = String::new();
         let heading_tag = doc_option().heading_tag;
@@ -199,7 +226,7 @@ impl Property {
             return Some(doc);
         }
 
-        let defined_tag = get_tag(name);
+        let defined_tag = get_tag_opt(name)?;
         // NOTE: this tolerates missing args, but position matters.
         let args_len = self.args.len().min(defined_tag.args.len());
 
