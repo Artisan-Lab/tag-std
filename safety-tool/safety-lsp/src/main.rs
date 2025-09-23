@@ -45,12 +45,11 @@ impl LanguageServer for Backend {
     async fn did_open(&self, params: DidOpenTextDocumentParams) {
         let text = params.text_document.text;
         let len = text.len();
-        let (tree, attrs) = {
-            let mut lock = self.rust.lock().unwrap();
-            let tree = lock.update_node_tree(text);
-            let attrs = lock.find_attrs();
+        let (tree, attrs) = self.with_rust(|r| {
+            let tree = r.update_node_tree(text);
+            let attrs = r.find_attrs();
             (tree, attrs)
-        };
+        });
         self.client
             .log_message(MessageType::INFO, format!("[did_open] document byte len={len}\t{tree}"))
             .await;
@@ -60,12 +59,11 @@ impl LanguageServer for Backend {
     async fn did_change(&self, params: DidChangeTextDocumentParams) {
         let text = params.content_changes.iter().map(|c| &*c.text).collect::<Vec<_>>().join("");
         let len = text.len();
-        let (tree, attrs) = {
-            let mut lock = self.rust.lock().unwrap();
-            let tree = lock.update_node_tree(text);
-            let attrs = lock.find_attrs();
+        let (tree, attrs) = self.with_rust(|r| {
+            let tree = r.update_node_tree(text);
+            let attrs = r.find_attrs();
             (tree, attrs)
-        };
+        });
         self.client
             .log_message(MessageType::INFO, format!("[did_change] document byte len={len}\t{tree}"))
             .await;
@@ -74,22 +72,20 @@ impl LanguageServer for Backend {
 
     async fn completion(&self, _: CompletionParams) -> Result<Option<CompletionResponse>> {
         self.client.log_message(MessageType::INFO, "[completion] trigger completion").await;
-        let response = self
-            .rust
-            .lock()
-            .unwrap()
-            .tags
-            .iter()
-            .map(|tag| CompletionItem {
-                label: tag.name.to_owned(),
-                detail: Some(tag.hover_detail()),
-                documentation: Some(Documentation::MarkupContent(MarkupContent {
-                    kind: MarkupKind::Markdown,
-                    value: tag.hover_documentation(),
-                })),
-                ..Default::default()
-            })
-            .collect();
+        let response = self.with_rust(|r| {
+            r.tags
+                .iter()
+                .map(|tag| CompletionItem {
+                    label: tag.name.to_owned(),
+                    detail: Some(tag.hover_detail()),
+                    documentation: Some(Documentation::MarkupContent(MarkupContent {
+                        kind: MarkupKind::Markdown,
+                        value: tag.hover_documentation(),
+                    })),
+                    ..Default::default()
+                })
+                .collect()
+        });
         Ok(Some(CompletionResponse::Array(response)))
         // Ok(Some(CompletionResponse::Array(vec![
         //     CompletionItem::new_simple("Hello".to_string(), "Some detail".to_string()),
@@ -100,7 +96,7 @@ impl LanguageServer for Backend {
     async fn hover(&self, params: HoverParams) -> Result<Option<Hover>> {
         let pos = params.text_document_position_params.position;
 
-        let attr = self.rust.lock().unwrap().get_attr(pos);
+        let attr = self.with_rust(|r| r.get_attr(pos));
         let safety_attr = safety_parser::safety::parse_attr_and_get_properties(
             attr.as_deref().unwrap_or_default(),
         );
@@ -135,6 +131,10 @@ impl LanguageServer for Backend {
 impl Backend {
     fn new(client: Client) -> Self {
         Backend { client, rust: Mutex::new(Rust::new()) }
+    }
+
+    fn with_rust<T>(&self, f: impl FnOnce(&mut Rust) -> T) -> T {
+        f(&mut *self.rust.lock().unwrap())
     }
 }
 
