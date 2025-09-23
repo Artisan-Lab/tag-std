@@ -13,18 +13,21 @@
 |11| intrinsic::volatile_copy_nonoverlapping_memory | Volatile / ValidPtr / Aligned / NonOverlap / Alias / CopyTrait | 5 | [PR_138309](https://github.com/rust-lang/rust/pull/138309) | Merged |
 |12| intrinsic::volatile_set_memory | Volatile / Typed / ValidPtr / Aligned | 5 | [PR_138309](https://github.com/rust-lang/rust/pull/138309) | Merged |
 |13| intrinsic::typed_swap_nonoverlapping | Typed / ValidPtr / Aligned | 5 |[PR_138309](https://github.com/rust-lang/rust/pull/138309) | Merged |
-|14| VaListImpl::arg | Bounded / Typed / Init | 6 | [PR_136969](https://github.com/rust-lang/rust/pull/136969) | Pending |
-|15| alloc::ffi::CStr::from_raw | Alias / Owning / Dangling | 7 | [PR_137714](https://github.com/rust-lang/rust/pull/137714) | Confirmed |
-|16| alloc::str::from_boxed_utf8_unchecked | ValidStr | 7 | [PR_137714](https://github.com/rust-lang/rust/pull/137714) | Confirmed |
-|17| Arc::increment_strong_count | Typed | 8 | [ PR_138303](https://github.com/rust-lang/rust/pull/138303) | Merged |
-|18| Arc::decrement_strong_count | Typed | 8 | [ PR_138303](https://github.com/rust-lang/rust/pull/138303) | Merged |
-|19| Arc::increment_strong_count_in | Typed | 8 | [ PR_138303](https://github.com/rust-lang/rust/pull/138303) | Merged |
-|20| Arc::decrement_strong_count_in | Typed | 8 | [ PR_138303](https://github.com/rust-lang/rust/pull/138303) | Merged |
-|21| Rc::increment_strong_count | Typed | 8 | [ PR_138303](https://github.com/rust-lang/rust/pull/138303) | Merged |
-|22| Rc::decrement_strong_count | Typed | 8 | [ PR_138303](https://github.com/rust-lang/rust/pull/138303) | Merged |
-|23| Rc::increment_strong_count_in | Typed | 8 | [ PR_138303](https://github.com/rust-lang/rust/pull/138303) | Merged |
-|24| Rc::decrement_strong_count_in | Typed | 8 | [ PR_138303](https://github.com/rust-lang/rust/pull/138303) | Merged |
-|25| Box::from_raw | Alias | 9 | [PR_146870](https://github.com/rust-lang/rust/pull/146870) | Pending |
-|26| Box::from_raw_in | Alias | 9 | [PR_146870](https://github.com/rust-lang/rust/pull/146870) | Pending |
-|27| Box::from_non_null | Alias | 9 | [PR_146870](https://github.com/rust-lang/rust/pull/146870) | Pending |
-|28| Box::from_non_null_in | Alias | 9 | [PR_146870](https://github.com/rust-lang/rust/pull/146870) | Pending |
+|14| alloc::ffi::CStr::from_raw | Alias / Owning / Dangling | 6 | [PR_137714](https://github.com/rust-lang/rust/pull/137714) | Merged |
+|15| alloc::str::from_boxed_utf8_unchecked | ValidStr | 6 | [PR_137714](https://github.com/rust-lang/rust/pull/137714) | Merged |
+|16| Arc::increment_strong_count | Typed | 7 | [ PR_138303](https://github.com/rust-lang/rust/pull/138303) | Merged |
+|17| Arc::decrement_strong_count | Typed | 7 | [ PR_138303](https://github.com/rust-lang/rust/pull/138303) | Merged |
+|18| Arc::increment_strong_count_in | Typed | 7 | [ PR_138303](https://github.com/rust-lang/rust/pull/138303) | Merged |
+|19| Arc::decrement_strong_count_in | Typed | 7 | [ PR_138303](https://github.com/rust-lang/rust/pull/138303) | Merged |
+|20| Rc::increment_strong_count | Typed | 7 | [ PR_138303](https://github.com/rust-lang/rust/pull/138303) | Merged |
+|21| Rc::decrement_strong_count | Typed | 7 | [ PR_138303](https://github.com/rust-lang/rust/pull/138303) | Merged |
+|22| Rc::increment_strong_count_in | Typed | 7 | [ PR_138303](https://github.com/rust-lang/rust/pull/138303) | Merged |
+|23| Rc::decrement_strong_count_in | Typed | 7 | [ PR_138303](https://github.com/rust-lang/rust/pull/138303) | Merged |
+|24| Box::from_raw | Alias | 8 | [PR_146870](https://github.com/rust-lang/rust/pull/146870) | Pending |
+|25| Box::from_raw_in | Alias | 8 | [PR_146870](https://github.com/rust-lang/rust/pull/146870) | Pending |
+|26| Box::from_non_null | Alias | 8 | [PR_146870](https://github.com/rust-lang/rust/pull/146870) | Pending |
+|27| Box::from_non_null_in | Alias | 8 | [PR_146870](https://github.com/rust-lang/rust/pull/146870) | Pending |
+|28| VaListImpl::arg | InBound / Typed / Init | 9 | [PR_146925](https://github.com/rust-lang/rust/pull/146925) | Pending |
+|29| intrinsic::va_copy | !Null / Allocated / Alias | 9 | [PR_146925](https://github.com/rust-lang/rust/pull/146925) | Pending |
+|30| VaListImpl::va_arg | InBound / Typed / Init | 9 | [PR_146925](https://github.com/rust-lang/rust/pull/146925) | Pending |
+|31| VaListImpl::va_end | Allocated | 9 | [PR_146925](https://github.com/rust-lang/rust/pull/146925) | Pending |
