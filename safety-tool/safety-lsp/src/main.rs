@@ -1,4 +1,5 @@
 use ropey::Rope;
+use safety_parser::configuration::{DefinedTag, get_tags};
 use std::sync::Mutex;
 use tower_lsp_server::jsonrpc::Result;
 use tower_lsp_server::lsp_types::*;
@@ -73,10 +74,27 @@ impl LanguageServer for Backend {
 
     async fn completion(&self, _: CompletionParams) -> Result<Option<CompletionResponse>> {
         self.client.log_message(MessageType::INFO, "[completion] trigger completion").await;
-        Ok(Some(CompletionResponse::Array(vec![
-            CompletionItem::new_simple("Hello".to_string(), "Some detail".to_string()),
-            CompletionItem::new_simple("Bye".to_string(), "More detail".to_string()),
-        ])))
+        let response = self
+            .rust
+            .lock()
+            .unwrap()
+            .tags
+            .iter()
+            .map(|tag| CompletionItem {
+                label: tag.name.to_owned(),
+                detail: Some(tag.hover_detail()),
+                documentation: Some(Documentation::MarkupContent(MarkupContent {
+                    kind: MarkupKind::Markdown,
+                    value: tag.hover_documentation(),
+                })),
+                ..Default::default()
+            })
+            .collect();
+        Ok(Some(CompletionResponse::Array(response)))
+        // Ok(Some(CompletionResponse::Array(vec![
+        //     CompletionItem::new_simple("Hello".to_string(), "Some detail".to_string()),
+        //     CompletionItem::new_simple("Bye".to_string(), "More detail".to_string()),
+        // ])))
     }
 
     async fn hover(&self, params: HoverParams) -> Result<Option<Hover>> {
@@ -147,6 +165,7 @@ struct Rust {
     /// Text rope.
     rope: Rope,
     tree: Option<Tree>,
+    tags: Box<[DefinedTag]>,
 }
 
 impl Rust {
@@ -157,6 +176,7 @@ impl Rust {
             text: String::new(),
             rope: Rope::new(),
             tree: None,
+            tags: get_tags(),
         }
     }
 
