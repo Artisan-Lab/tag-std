@@ -89,7 +89,7 @@ impl LanguageServer for Backend {
     async fn hover(&self, params: HoverParams) -> Result<Option<Hover>> {
         let pos = params.text_document_position_params.position;
 
-        let attr = self.with_rust(|r| r.get_attr(pos));
+        let attr = self.with_rust(|r| r.get_attr_str(pos));
         let safety_attr = safety_parser::safety::parse_attr_and_get_properties(
             attr.as_deref().unwrap_or_default(),
         );

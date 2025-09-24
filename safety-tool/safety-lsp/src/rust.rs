@@ -74,11 +74,16 @@ impl Rust {
         Vec::new()
     }
 
-    /// Returns the attr if the cursor is in its pos scope.
-    pub fn get_attr(&self, pos: Position) -> Option<String> {
+    /// Returns the attribute string if the cursor is in an attribute scope.
+    pub fn get_attr_str(&self, pos: Position) -> Option<String> {
+        self.get_attr_range(pos).map(|byte_range| self.text[byte_range].to_owned())
+    }
+
+    /// Returns the byte range for the document if the cursor is in an attribute scope.
+    pub fn get_attr_range(&self, pos: Position) -> Option<ByteRange> {
         for attr in &self.attrs {
             if pos >= attr.start_pos && pos <= attr.end_pos {
-                return Some(self.text[attr.byte_range.clone()].to_owned());
+                return Some(attr.byte_range.clone());
             }
         }
         None
