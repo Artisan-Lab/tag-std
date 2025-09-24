@@ -53,8 +53,13 @@ impl LanguageServer for Backend {
 
     async fn completion(&self, params: CompletionParams) -> Result<Option<CompletionResponse>> {
         let pos = params.text_document_position.position;
-        let response = self.with_rust(|r| {
-            r.for_each_tag(|tag| CompletionItem {
+        self.with_rust(|r| {
+            if r.get_attr_range(pos).is_none() {
+                // The cursor is not in an attribute, thus no completion.
+                return Ok(None);
+            }
+
+            let response = r.for_each_tag(|tag| CompletionItem {
                 label: tag.name.to_owned(),
                 label_details: Some(CompletionItemLabelDetails {
                     detail: None,
@@ -81,9 +86,10 @@ impl LanguageServer for Backend {
                     .into(),
                 ),
                 ..Default::default()
-            })
-        });
-        Ok(Some(CompletionResponse::Array(response)))
+            });
+
+            Ok(Some(CompletionResponse::Array(response)))
+        })
     }
 
     async fn hover(&self, params: HoverParams) -> Result<Option<Hover>> {
