@@ -44,30 +44,12 @@ impl LanguageServer for Backend {
 
     async fn did_open(&self, params: DidOpenTextDocumentParams) {
         let text = params.text_document.text;
-        let len = text.len();
-        let (tree, attrs) = self.with_rust(|r| {
-            let tree = r.update_node_tree(text);
-            let attrs = r.find_attrs();
-            (tree, attrs)
-        });
-        self.client
-            .log_message(MessageType::INFO, format!("[did_open] document byte len={len}\t{tree}"))
-            .await;
-        self.client.log_message(MessageType::INFO, format!("[did_open] attrs = {attrs:?}")).await;
+        self.update_document(text);
     }
 
     async fn did_change(&self, params: DidChangeTextDocumentParams) {
         let text = params.content_changes.iter().map(|c| &*c.text).collect::<Vec<_>>().join("");
-        let len = text.len();
-        let (tree, attrs) = self.with_rust(|r| {
-            let tree = r.update_node_tree(text);
-            let attrs = r.find_attrs();
-            (tree, attrs)
-        });
-        self.client
-            .log_message(MessageType::INFO, format!("[did_change] document byte len={len}\t{tree}"))
-            .await;
-        self.client.log_message(MessageType::INFO, format!("[did_open] attrs = {attrs:?}")).await;
+        self.update_document(text);
     }
 
     async fn completion(&self, params: CompletionParams) -> Result<Option<CompletionResponse>> {
@@ -114,6 +96,7 @@ impl LanguageServer for Backend {
         let pos = params.text_document_position_params.position;
 
         let attr = self.with_rust(|r| r.get_attr(pos));
+        self.client.log_message(MessageType::INFO, format!("[hover] {attr:?}")).await;
         let safety_attr = safety_parser::safety::parse_attr_and_get_properties(
             attr.as_deref().unwrap_or_default(),
         );
@@ -152,6 +135,13 @@ impl Backend {
 
     fn with_rust<T>(&self, f: impl FnOnce(&mut Rust) -> T) -> T {
         f(&mut *self.rust.lock().unwrap())
+    }
+
+    fn update_document(&self, text: String) {
+        self.with_rust(|r| {
+            _ = r.update_node_tree(text);
+            _ = r.find_attrs();
+        });
     }
 }
 
