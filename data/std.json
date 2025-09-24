@@ -1472,25 +1472,29 @@
     "alloc::boxed::from_raw": {
         "0": [
             "Allocated",
-            "Ownning"
+            "Ownning",
+            "Alias"
         ]
     },
     "alloc::boxed::from_non_null": {
         "0": [
             "Allocated",
-            "Ownning"
+            "Ownning",
+            "Alias"
         ]
     },
     "alloc::boxed::from_raw_in": {
         "0": [
             "Allocated",
-            "Ownning"
+            "Ownning",
+            "Alias"
         ]
     },
     "alloc::boxed::from_non_null_in": {
         "0": [
             "Allocated",
-            "Ownning"
+            "Ownning",
+            "Alias"
         ]
     },
     "alloc::boxed::downcast_unchecked": {
@@ -1526,7 +1530,8 @@
     "alloc::ffi::c_str::from_raw": {
         "0": [
             "Allocated",
-            "Ownning"
+            "Ownning",
+            "Alias"
         ]
     },
     "alloc::ffi::c_str::from_vec_with_nul_unchecked": {
@@ -1543,38 +1548,44 @@
         "0": [
             "Allocated",
             "Aligned",
-            "Ownning"
+            "Ownning",
+            "Typed"
         ]
     },
     "alloc::rc::increment_strong_count": {
         "0": [
             "Allocated",
-            "Allocated"
+            "Typed",
+            "Aligned"
         ]
     },
     "alloc::rc::decrement_strong_count": {
         "0": [
             "Allocated",
-            "Allocated"
+            "Typed",
+            "Aligned"
         ]
     },
     "alloc::rc::from_raw_in": {
         "0": [
             "Allocated",
             "Aligned",
-            "Ownning"
+            "Ownning",
+            "Typed"
         ]
     },
     "alloc::rc::increment_strong_count_in": {
         "0": [
             "Allocated",
-            "Allocated"
+            "Typed",
+            "Aligned"
         ]
     },
     "alloc::rc::decrement_strong_count_in": {
         "0": [
             "Allocated",
-            "Allocated"
+            "Typed",
+            "Aligned"
         ]
     },
     "alloc::rc::downcast_unchecked": {
@@ -1630,38 +1641,45 @@
     "alloc::sync::from_raw": {
         "0": [
             "Allocated",
-            "Aligned"
+            "Aligned",
+            "Ownning",
+            "Typed"
         ]
     },
     "alloc::sync::increment_strong_count": {
         "0": [
             "Allocated",
-            "Allocated"
+            "Typed",
+            "Aligned"
         ]
     },
     "alloc::sync::decrement_strong_count": {
         "0": [
             "Allocated",
-            "Allocated"
+            "Typed",
+            "Aligned"
         ]
     },
     "alloc::sync::from_raw_in": {
         "0": [
             "Allocated",
             "Aligned",
-            "Ownning"
+            "Ownning",
+            "Typed"
         ]
     },
     "alloc::sync::increment_strong_count_in": {
         "0": [
             "Allocated",
-            "Allocated"
+            "Typed",
+            "Aligned"
         ]
     },
     "alloc::sync::decrement_strong_count_in": {
         "0": [
             "Allocated",
-            "Allocated"
+            "Typed",
+            "Aligned"
         ]
     },
     "alloc::sync::downcast_unchecked": {
@@ -1907,7 +1925,9 @@
     },
     "core::ffi::va_list::arg": {
         "0": [
-            ""
+            "InBounded",
+            "Init",
+            "Typed"
         ]
     },
     "core::ffi::va_list::with_copy": {
