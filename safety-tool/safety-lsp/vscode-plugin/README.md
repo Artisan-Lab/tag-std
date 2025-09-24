@@ -1,6 +1,21 @@
 # Safety-tool LSP Client
 
-## Debug
+## What's this?
+
+This is [safety-tool]'s LSP client for vscode to support features like auto-completion and hover-doc.
+
+Its LSP [server] should be separately installed on your own to be available.
+
+[safety-tool]: https://github.com/Artisan-Lab/tag-std
+[server]: https://github.com/Artisan-Lab/tag-std/tree/main/safety-tool/safety-lsp
+
+![](https://github.com/user-attachments/assets/5c530183-ee86-4c48-aba9-b725c1c257b5)
+
+![](https://github.com/user-attachments/assets/593b7cd3-3584-41c4-8980-abd3de180f3b)
+
+## Development
+
+### Debug
 
 - Run `npm install` in this folder. This installs all necessary npm modules in both the client and server folder
 - Open VS Code on this folder.
@@ -9,7 +24,7 @@
 - Select `Launch Client` from the drop down (if it is not already).
 - Press ▷ to run the launch config (F5).
 
-## Publish
+### Publish
 
 Run `vsce publish` to publish this plugin to vscode marketplace.
 
