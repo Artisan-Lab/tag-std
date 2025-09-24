@@ -35,7 +35,8 @@ impl LanguageServer for Backend {
     }
 
     async fn initialized(&self, _: InitializedParams) {
-        self.client.log_message(MessageType::INFO, "[initialized] server initialized!").await;
+        let message = "[initialized] safety-tag server initialized!";
+        self.client.log_message(MessageType::INFO, message).await;
     }
 
     async fn shutdown(&self) -> Result<()> {
@@ -53,8 +54,6 @@ impl LanguageServer for Backend {
     }
 
     async fn completion(&self, params: CompletionParams) -> Result<Option<CompletionResponse>> {
-        self.client.log_message(MessageType::INFO, "[completion] trigger completion").await;
-        // self.client.log_message(MessageType::INFO, format!("{params:?}")).await;
         let pos = params.text_document_position.position;
         let response = self.with_rust(|r| {
             r.tags
@@ -96,7 +95,6 @@ impl LanguageServer for Backend {
         let pos = params.text_document_position_params.position;
 
         let attr = self.with_rust(|r| r.get_attr(pos));
-        self.client.log_message(MessageType::INFO, format!("[hover] {attr:?}")).await;
         let safety_attr = safety_parser::safety::parse_attr_and_get_properties(
             attr.as_deref().unwrap_or_default(),
         );
