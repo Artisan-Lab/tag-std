@@ -70,27 +70,44 @@ impl LanguageServer for Backend {
         self.client.log_message(MessageType::INFO, format!("[did_open] attrs = {attrs:?}")).await;
     }
 
-    async fn completion(&self, _: CompletionParams) -> Result<Option<CompletionResponse>> {
+    async fn completion(&self, params: CompletionParams) -> Result<Option<CompletionResponse>> {
         self.client.log_message(MessageType::INFO, "[completion] trigger completion").await;
+        // self.client.log_message(MessageType::INFO, format!("{params:?}")).await;
+        let pos = params.text_document_position.position;
         let response = self.with_rust(|r| {
             r.tags
                 .iter()
                 .map(|tag| CompletionItem {
                     label: tag.name.to_owned(),
+                    label_details: Some(CompletionItemLabelDetails {
+                        detail: None,
+                        // inline desc left-aligned
+                        description: Some("(safety tag)".to_owned()),
+                    }),
+                    kind: Some(CompletionItemKind::PROPERTY),
                     detail: Some(tag.hover_detail()),
                     documentation: Some(Documentation::MarkupContent(MarkupContent {
                         kind: MarkupKind::Markdown,
                         value: tag.hover_documentation(),
                     })),
+                    text_edit: Some(
+                        TextEdit::new(
+                            Range {
+                                start: Position {
+                                    line: pos.line,
+                                    character: pos.character.saturating_sub(1),
+                                },
+                                end: pos,
+                            },
+                            tag.hover_detail(),
+                        )
+                        .into(),
+                    ),
                     ..Default::default()
                 })
                 .collect()
         });
         Ok(Some(CompletionResponse::Array(response)))
-        // Ok(Some(CompletionResponse::Array(vec![
-        //     CompletionItem::new_simple("Hello".to_string(), "Some detail".to_string()),
-        //     CompletionItem::new_simple("Bye".to_string(), "More detail".to_string()),
-        // ])))
     }
 
     async fn hover(&self, params: HoverParams) -> Result<Option<Hover>> {
