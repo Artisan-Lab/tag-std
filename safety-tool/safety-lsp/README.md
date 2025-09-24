@@ -6,7 +6,20 @@
 
 ## Configuration for VSCode
 
-* set `SP_FILE=/path/to/safety-tool/assets/sp-core.toml` for individual rust file.
+* For `.vscode/settings.json`, `SP_FILE` starts from workspace root if it's a relative path:
+
+```json
+{
+  "safety-tool.env": {
+    "SP_FILE": "./ostd/safety-tags.toml"
+  }
+}
+```
+
+`SP_FILE` can also be a absolute path.
+
+`SP_DIR` is also supported, but only one of them should be specified.
+
 * `Ctrl+Space` to open hover doc panel of each completion candidate if the doc is not shown.
 
 ## Configuration for Neovim
