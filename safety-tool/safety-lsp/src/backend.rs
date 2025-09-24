@@ -133,7 +133,7 @@ impl Backend {
     }
 
     fn with_rust<T>(&self, f: impl FnOnce(&mut Rust) -> T) -> T {
-        f(&mut *self.rust.lock().unwrap())
+        f(&mut self.rust.lock().unwrap())
     }
 
     fn update_document(&self, text: String) {

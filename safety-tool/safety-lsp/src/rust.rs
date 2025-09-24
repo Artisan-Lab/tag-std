@@ -25,6 +25,7 @@ pub struct Rust {
 }
 
 impl Rust {
+    #[allow(clippy::new_without_default)]
     pub fn new() -> Self {
         Rust {
             parser: init_tree_sitter(),
