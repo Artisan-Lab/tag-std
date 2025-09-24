@@ -2,6 +2,8 @@
 
 ![](https://github.com/user-attachments/assets/5c530183-ee86-4c48-aba9-b725c1c257b5)
 
+![](https://github.com/user-attachments/assets/593b7cd3-3584-41c4-8980-abd3de180f3b)
+
 ## Configuration for VSCode
 
 * set `SP_FILE=/path/to/safety-tool/assets/sp-core.toml` for individual rust file.
