@@ -63,6 +63,14 @@ impl TagType {
             _ => panic!("Only support: precond, hazard, and option."),
         }
     }
+
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            TagType::Precond => "precond",
+            TagType::Hazard => "Hazard",
+            TagType::Option => "option",
+        }
+    }
 }
 
 /// If types field doesn't exist, default to Precond.
@@ -151,4 +159,49 @@ pub fn get_tag_opt(name: &str) -> Option<&'static Tag> {
 
 pub fn doc_option() -> GenDocOption {
     CACHE.doc
+}
+
+pub struct DefinedTag {
+    pub name: &'static str,
+    pub args: &'static Tag,
+}
+
+impl DefinedTag {
+    pub fn hover_detail(&self) -> String {
+        let name = self.name;
+        let args = &*self.args.args;
+        if args.is_empty() {
+            name.to_owned()
+        } else {
+            let args = args.join(", ");
+            format!("{name}({args})")
+        }
+    }
+
+    pub fn hover_documentation(&self) -> String {
+        use std::fmt::Write;
+
+        let DefinedTag { args: Tag { desc, expr, types, url, .. }, .. } = self;
+        let mut doc = String::new();
+
+        let types_field = if types.len() == 1 { "type" } else { "types" };
+        let types = types.iter().map(|t| t.as_str()).collect::<Vec<_>>().join(", ");
+        _ = writeln!(&mut doc, "**{types_field}**: {types}\n");
+
+        if let Some(desc) = desc {
+            _ = writeln!(&mut doc, "**desc**: {desc}\n");
+        }
+        if let Some(expr) = expr {
+            _ = writeln!(&mut doc, "**expr**: {expr}\n");
+        }
+        if let Some(url) = url {
+            _ = writeln!(&mut doc, "**url**: <{url}>");
+        }
+        doc
+    }
+}
+
+/// Get all tags defined in all spec TOMLs.
+pub fn get_tags() -> Box<[DefinedTag]> {
+    CACHE.map.iter().map(|(k, v)| DefinedTag { name: k, args: &v.tag }).collect()
 }

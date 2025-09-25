@@ -1,5 +1,27 @@
 # safety-lsp
 
+![](https://github.com/user-attachments/assets/5c530183-ee86-4c48-aba9-b725c1c257b5)
+
+![](https://github.com/user-attachments/assets/593b7cd3-3584-41c4-8980-abd3de180f3b)
+
+## Configuration for VSCode
+
+* For `.vscode/settings.json`, `SP_FILE` starts from workspace root if it's a relative path:
+
+```json
+{
+  "safety-tool.env": {
+    "SP_FILE": "./ostd/safety-tags.toml"
+  }
+}
+```
+
+`SP_FILE` can also be a absolute path.
+
+`SP_DIR` is also supported, but only one of them should be specified.
+
+* `Ctrl+Space` to open hover doc panel of each completion candidate if the doc is not shown.
+
 ## Configuration for Neovim
 
 ```lua
