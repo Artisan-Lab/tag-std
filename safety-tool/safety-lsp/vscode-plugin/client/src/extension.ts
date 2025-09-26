@@ -21,11 +21,13 @@ export function activate(_context: ExtensionContext) {
   const workspaceRoot = workspace.workspaceFolders?.[0]?.uri.fsPath;
 
   const run: Executable = {
-    command: "safety-lsp",
+    // `safety-lsp.env.SAFETY_LSP` can be set in .vscode/settings.json to point to a specific binary
+    command: extraEnv["SAFETY_LSP"] ?? "safety-lsp",
     options: {
       // Run safety-lsp under the first workspace root
       cwd: workspaceRoot,
-      // `SP_FILE` can be set in .vscode/settings.json to point to a spec TOML path starting from the workspace root
+      // `safety-lsp.env.SP_FILE` can be set in .vscode/settings.json to 
+      // point to a tag specification TOML path starting from the workspace root
       env: { SP_DISABLE_CHECK: 1, ...extraEnv },
     },
   };
