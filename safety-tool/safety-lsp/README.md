@@ -6,7 +6,7 @@
 
 ## Configuration for VSCode
 
-* For `.vscode/settings.json`, `SP_FILE` starts from workspace root if it's a relative path:
+1. For `.vscode/settings.json`, `SP_FILE` starts from workspace root if it's a relative path:
 
 ```json
 {
@@ -20,7 +20,18 @@
 
 `SP_DIR` is also supported, but only one of them should be specified.
 
-* `Ctrl+Space` to open hover doc panel of each completion candidate if the doc is not shown.
+2. For remote usage, `safety-lsp.env.SAFETY_LSP` should be set as vscode will fail to find
+  `safety-lsp` due to absence of bash env loading.
+
+```json
+{
+  "safety-tool.env": {
+    "SAFETY_LSP": "/path/to/safety-lsp"
+  }
+}
+```
+
+3. `Ctrl+Space` to open hover doc panel of each completion candidate if the doc is not shown.
 
 ## Configuration for Neovim
 
