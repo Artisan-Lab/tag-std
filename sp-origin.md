@@ -1,7 +1,7 @@
 ## Origin of Safety Properties
 This article explains the origin of safety properties, _i.e.,_ why there are so many safety properties that are not directly related to memory safety.
 In brief, there exists a core set of safety properties. 
-These properties give rise to other, derived properties depending on program semantics,which aligns with our
+These properties give rise to other, derived properties depending on program semantics, which aligns with our
 [tracing-based verification methodology](https://hxuhack.github.io/writting/unsafe-tracing).
 
 ### 1. Core Safety Properties
