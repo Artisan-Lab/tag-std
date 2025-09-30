@@ -20,7 +20,7 @@ Based on the core safety properties, additional safety properties can be derived
 Now, we explain how additional safety properties can be derived.
 We use raw pointer dereference as an example.
 When a raw pointer dereference is used as a left value, it requires the safety properties of `Dereferenceable` . 
-The following program introduces a new property, `ValidNum`, derived from `Dereferenceable`, because `x < 0` ensures no undefined behavior. 
+The following program introduces a new property, `ValidNum`, derived from `Dereferenceable`, because `x <= 0` ensures no undefined behavior. 
 ```rust
 #[safety::requires(ValidNum)]
 unsafe fn foo(p: *mut i32, x: i32) {
