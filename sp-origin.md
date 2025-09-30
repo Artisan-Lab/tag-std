@@ -12,7 +12,7 @@ These features give rise to safety properties specifically related to [`pointer 
 Other safety properties of the standard library defined in [primitive-sp](https://github.com/Artisan-Lab/tag-std/blob/main/primitive-sp.md) may also be considered core safety properties. 
 For example, `ValidNum` is unrelated to memory access, but it can serve as a core safety property when used to prevent integer overflow (_e.g.,_ in [usize::unchecked_add](https://doc.rust-lang.org/std/primitive.usize.html#method.unchecked_add)).
 Additionally, `ValidNum` can be used bound to memory access (_e.g.,_ in [slice::from_raw_parts()](https://doc.rust-lang.org/nightly/std/slice/fn.from_raw_parts.html)), which is considered a derived safety property. 
-Therefore, a safety property can be both a core safety property and a derived safety property. Furthermore, when developing operating systems, new core safety properties can be introduced, particularly those related to hardware access safety.
+Therefore, a safety property can be both a core safety property and a derived safety property. Furthermore, when developing operating systems, new core safety properties can be introduced, particularly those related to hardware access.
 
 Based on the core safety properties, additional safety properties can be derived.
 
