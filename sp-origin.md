@@ -1,6 +1,6 @@
 ## Origin of Safety Properties
 A safety property specifies a constraint that should be satisfied when using unsafe code in order to prevent undefined behavior. 
-This article explains the origin of safety properties and attempts to answer a question: why there are so many safety properties that are not directly related to memory safety.
+This article explains the origin of safety properties and attempts to answer a question: why there are so many safety properties, particularly those not directly related to memory safety.
 In brief, there exists a core set of safety properties. 
 These properties give rise to other, derived properties depending on program semantics, which aligns with our
 [tracing-based verification methodology](https://hxuhack.github.io/writting/unsafe-tracing).
