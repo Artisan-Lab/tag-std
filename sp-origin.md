@@ -34,5 +34,14 @@ In this way, we can compose programs to transform a safety property into any oth
 
 ### 3. Viability of the Tag-based Representation 
 
-Theoretically, the space of possible safety properties is unbounded, and they can be arbitrarily complex due to the Turing-complete nature of such programs.
+Theoretically, the space of possible safety properties is unbounded, and their complexity can be arbitrarily high due to the Turing-complete nature of such programs.
+A critical question arises: can such properties be represented using safe tags? The answer is yes, for two reasons.
+
+Firstly, the number of safety tags can in principle be unlimited, depending on the requirements, which is comparable to the number of safety properties. 
+Nevertheless, each crate only needs a finite set of safety tags.
+
+Secondly, safety tags serve as abbreviations of safety properties, which have already been shown to be expressible in natural language, as illustrated by those in the Rust standard library. This expressibility is possible because each function represents a meaningful abstraction rather than arbitrary randomized code. For example, Rust’s `String`-related features generally require the content to be valid [`UTF-8`](https://github.com/Artisan-Lab/tag-std/blob/main/primitive-sp.md),
+and operating on objects of `Monad` types in unchecked mode generally requires [`Unwrap`](https://github.com/Artisan-Lab/tag-std/blob/main/primitive-sp.md#334-unwrap).
+These are all high-level abstractions that reflect commonly used domain knowledge.
+This also explains why some safety properties are not explicit enough to be readily expanded into formal specifications, such as those associated with certain system-related APIs (_e.g.,_ [env::set_var()](https://doc.rust-lang.org/nightly/std/env/fn.set_var.html)) less common functions.
 
