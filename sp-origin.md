@@ -10,15 +10,16 @@ Accordingly, the unsafe intrinsic features of Rust, such as raw pointer derefere
 turning a raw pointer into a reference, access to static mutable variables, focus on memory access safety.
 These features give rise to safety properties specifically related to [`pointer validity`](https://github.com/Artisan-Lab/tag-std/blob/main/primitive-sp.md#32-pointer-validity), [`layout`](https://github.com/Artisan-Lab/tag-std/blob/main/primitive-sp.md#31-layout), and [alias](https://github.com/Artisan-Lab/tag-std/blob/main/primitive-sp.md#34-alias). 
 Other safety properties of the standard library defined in [primitive-sp](https://github.com/Artisan-Lab/tag-std/blob/main/primitive-sp.md) may also be considered core safety properties. 
-For example, `ValidNum` is unrelated to memory access, but it can serve as a core safety property when used to prevent integer overflow (_e.g.,_ [unchecked_add](https://doc.rust-lang.org/std/primitive.usize.html#method.unchecked_add))
-Additionally, `ValidNum` can be used bound to memory access, which is considered a derived safety property. 
-Therefore, a safety property can be both a core safety property and a derived safety property.
+For example, `ValidNum` is unrelated to memory access, but it can serve as a core safety property when used to prevent integer overflow (_e.g.,_in [usize::unchecked_add](https://doc.rust-lang.org/std/primitive.usize.html#method.unchecked_add)).
+Additionally, `ValidNum` can be used bound to memory access (_e.g.,_in [slice::from_raw_parts()](https://doc.rust-lang.org/nightly/std/slice/fn.from_raw_parts.html)), which is considered a derived safety property. 
+Therefore, a safety property can be both a core safety property and a derived safety property. Furthermore, when developing operating systems, new core safety properties can be introduced, particularly those related to hardware access safety.
 
-Furthermore, when developing operating systems, new core safety properties are introduced, particularly those related to hardware access safety.
-Other safety properties can be derived from these core properties. 
+Based on the core safety properties, additional safety properties can be derived.
 
 ### 2. Transformation of Safety Properties
-For example, raw pointer dereference as the left value requires the safety properties of `Dereferenceable` . 
+Now, we explain how additional safety properties can be derived.
+We use raw pointer dereference as an example.
+When a raw pointer dereference is used as a left value, it requires the safety properties of `Dereferenceable` . 
 The following program introduces a new property `ValidNum` based on `Dereferenceable`, because `x < 0` ensures no undefined behavior. 
 ```rust
 #[safety::requires(ValidNum)]
@@ -29,6 +30,9 @@ unsafe fn foo(p: *mut i32, x: i32) {
     }
 }
 ```
-In this way, we can transform a safety property into any other properties that are computable by a Turing machine.
+In this way, we can compose programs to transform a safety property into any other property.
 
-### 
+### 3. Viability of the Tag-based Representation 
+
+Theoretically, the space of possible safety properties is unbounded, and they can be arbitrarily complex due to the Turing-complete nature of such programs.
+
