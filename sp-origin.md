@@ -30,7 +30,7 @@ unsafe fn foo(p: *mut i32, x: i32) {
     }
 }
 ```
-In this way, we can compose programs to transform a safety property into any other property.
+In this way, we can compose programs to transform a safety property into any other property. 
 
 ### 3. Viability of the Tag-based Representation 
 
@@ -42,5 +42,6 @@ Nevertheless, each crate only needs a finite set of safety tags.
 
 Secondly, safety tags serve as abbreviations of safety properties, which have already been shown to be expressible in natural language, as illustrated by those in the Rust standard library. This expressibility is possible because each function represents a meaningful abstraction rather than arbitrary randomized code. For example, Rust’s `String`-related features generally require the memory content to be valid [`UTF-8`](https://github.com/Artisan-Lab/tag-std/blob/main/primitive-sp.md).
 `UTF-8` format is a well-known high-level abstraction.
-This also explains why some safety properties are not explicit enough, such as those associated with certain system-related APIs (_e.g.,_ [env::set_var()](https://doc.rust-lang.org/nightly/std/env/fn.set_var.html)) or other less common functions.
+This also explains why some safety properties are not explicit enough, such as those associated with certain system-related APIs (_e.g.,_ [env::set_var()](https://doc.rust-lang.org/nightly/std/env/fn.set_var.html)) or other less commonly used functions. 
+Furthermore, representing such safety properties with self-contained formal specifications is complicated, as it requires encoding the semantics of these abstractions and features.
 
