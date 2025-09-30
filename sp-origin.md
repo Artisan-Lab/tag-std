@@ -21,7 +21,7 @@ Based on the core safety properties, additional safety properties can be derived
 Now, we explain how additional safety properties can be derived.
 We use raw pointer dereference as an example.
 When a raw pointer dereference is used as a left value, it requires the safety property of `Dereferenceable`. 
-The following program introduces a new property, `ValidNum`, derived from `Dereferenceable`, because `x <= 0` ensures no undefined behavior. 
+The following program introduces a new property, `ValidNum`, derived from `Dereferenceable`, because `x <= 0` ensures no undefined behavior. Note that `Dereferenceable` and `ValidNum` are abbreviations of the safety properties originally described in natural language, namely safety tags.
 ```rust
 #[safety::requires(ValidNum)]
 unsafe fn foo(p: *mut i32, x: i32) {
@@ -35,7 +35,7 @@ In this way, we can compose programs to transform a safety property into any oth
 
 ### 3. Viability of the Tag-based Representation 
 
-Theoretically, the space of possible safety properties is unbounded, and their complexity can be arbitrarily high due to the Turing-complete nature of such programs. A critical question arises: can such properties be represented using safety tags, which are abbreviated forms of safety properties originally described in natural language. In the example above, both `Dereferenceable` and `ValidNum` are safety tags. 
+Theoretically, the space of possible safety properties is unbounded, and their complexity can be arbitrarily high due to the Turing-complete nature of such programs. A critical question arises: can such properties be represented using safety tags？ 
 
 The answer is yes, for two reasons.
 
