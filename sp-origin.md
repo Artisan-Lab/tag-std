@@ -1,5 +1,6 @@
 ## Origin of Safety Properties
-This article explains the origin of safety properties, _i.e.,_ why there are so many safety properties that are not directly related to memory safety.
+A safety property specifies a constraint that should be satisfied when using unsafe code in order to prevent undefined behavior. 
+This article explains the origin of safety properties and attempts to answer a question: why there are so many safety properties that are not directly related to memory safety.
 In brief, there exists a core set of safety properties. 
 These properties give rise to other, derived properties depending on program semantics, which aligns with our
 [tracing-based verification methodology](https://hxuhack.github.io/writting/unsafe-tracing).
@@ -19,7 +20,7 @@ Based on the core safety properties, additional safety properties can be derived
 ### 2. Transformation of Safety Properties
 Now, we explain how additional safety properties can be derived.
 We use raw pointer dereference as an example.
-When a raw pointer dereference is used as a left value, it requires the safety properties of `Dereferenceable` . 
+When a raw pointer dereference is used as a left value, it requires the safety property of `Dereferenceable`. 
 The following program introduces a new property, `ValidNum`, derived from `Dereferenceable`, because `x <= 0` ensures no undefined behavior. 
 ```rust
 #[safety::requires(ValidNum)]
@@ -34,8 +35,9 @@ In this way, we can compose programs to transform a safety property into any oth
 
 ### 3. Viability of the Tag-based Representation 
 
-Theoretically, the space of possible safety properties is unbounded, and their complexity can be arbitrarily high due to the Turing-complete nature of such programs.
-A critical question arises: can such properties be represented using safe tags? The answer is yes, for two reasons.
+Theoretically, the space of possible safety properties is unbounded, and their complexity can be arbitrarily high due to the Turing-complete nature of such programs. A critical question arises: can such properties be represented using safety tags, which are abbreviated forms of safety properties originally described in natural language. In the example above, both `Dereferenceable` and `ValidNum` are safety tags. 
+
+The answer is yes, for two reasons.
 
 Firstly, the number of safety tags can in principle be unlimited, depending on the requirements, which is comparable to the number of safety properties. 
 Nevertheless, each crate only needs a finite set of safety tags.
