@@ -47,3 +47,17 @@ fn string_interpolation() {
     template.add_template("", s).unwrap();
     println!("rendered: {}", template.render("", &Val { a: 123, b: "hi" }).unwrap());
 }
+
+#[test]
+#[should_panic]
+fn failed_to_find_value_c_from_path_c() {
+    #[derive(serde::Serialize)]
+    struct Val {
+        a: u8,
+        b: &'static str,
+    }
+    let s = "{a}, {b}, {c}";
+    let mut template = tinytemplate::TinyTemplate::new();
+    template.add_template("", s).unwrap();
+    println!("rendered: {}", template.render("", &Val { a: 123, b: "hi" }).unwrap());
+}

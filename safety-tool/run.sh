@@ -43,6 +43,10 @@ popd
 rm $DATA_SQLITE3
 export SP_DIR=$PWD/assets
 
+pushd safety-lsp
+cargo test
+popd
+
 # Test basic demo
 pushd ./tests/basic
 

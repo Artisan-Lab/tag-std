@@ -8,11 +8,25 @@ extern crate std;
 #[prelude_import]
 use std::prelude::rust_2024::*;
 use safety_macro::safety;
-#[rapx::proof(Unreachable)]
+#[rapx::proof(
+    Init(self.ptr, u8, self.len),
+    InBound(self.ptr, u8, self.len),
+    ValidNum(self.len*sizeof(u8), [0, isize::MAX]),
+    Alias(self.ptr),
+    RustdocLinkToItem("crate::test"),
+    any{Deref(self.ptr, u8, 1),
+    Alive(self.ptr, _)}
+)]
+/// correct link: [`crate::test`]
 /**# Safety
 
 */
-#[doc = "* Unreachable: the current program point should not be reachable during execution\n\n"]
+#[doc = "* Init: the memory range `[self.ptr, self.ptr + sizeof(u8)*self.len]` must be fully initialized for type `u8`\n\n"]
+#[doc = "* InBound: the pointer `self.ptr` and its offset up to `sizeof(u8)*self.len` must point to a single allocated object\n\n"]
+#[doc = "* ValidNum: the value of `self.len * sizeof(u8)` must lie within the valid `[0, isize :: MAX]`\n\n"]
+#[doc = "* Alias: `self.ptr` must not have other alias\n\n"]
+#[doc = "* RustdocLinkToItem: [`crate::test`]\n\n"]
+#[doc = "* any: Only one of the following properties requires being satisfied:\n    * Deref: pointer `self.ptr` must be dereferencable in the `sizeof(u8)*1` memory from it\n\n    * Alive: the reference of `self.ptr` must outlive the lifetime `_`\n\n"]
 pub unsafe fn test() -> ! {
     unsafe { std::intrinsics::unreachable() }
 }
@@ -25,24 +39,24 @@ impl MyStruct {
         MyStruct { ptr: p, len: l }
     }
     #[rapx::proof(
+        NonNull(self.ptr),
+        ValidPtr(self.ptr, u8, self.len),
         Init(self.ptr, u8, self.len),
-        InBound(self.ptr, u8, self.len),
-        ValidNum(self.len*sizeof(u8), [0, isize::MAX]),
+        Alive(self.ptr, _),
         Alias(self.ptr),
-        RustdocLinkToItem("crate::test"),
-        any{Deref(self.ptr, u8, 1),
-        Alive(self.ptr, _)}
+        Align(self.ptr, u8),
+        ValidNum(self.len*sizeof(u8), [0, isize::MAX]),
     )]
-    /// correct link: [`crate::test`]
     /**# Safety
 
 */
+    #[doc = "* NonNull: pointer `self.ptr` must not be null\n\n"]
+    #[doc = "* ValidPtr: pointer `self.ptr` must be valid for reading and writing the `sizeof(u8)*self.len` memory from it\n\n"]
     #[doc = "* Init: the memory range `[self.ptr, self.ptr + sizeof(u8)*self.len]` must be fully initialized for type `u8`\n\n"]
-    #[doc = "* InBound: the pointer `self.ptr` and its offset up to `sizeof(u8)*self.len` must point to a single allocated object\n\n"]
-    #[doc = "* ValidNum: the value of `self.len * sizeof(u8)` must lie within the valid `[0, isize :: MAX]`\n\n"]
+    #[doc = "* Alive: the reference of `self.ptr` must outlive the lifetime `_`\n\n"]
     #[doc = "* Alias: `self.ptr` must not have other alias\n\n"]
-    #[doc = "* RustdocLinkToItem: [`crate::test`]\n\n"]
-    #[doc = "* any: Only one of the following properties requires being satisfied:\n    * Deref: pointer `self.ptr` must be dereferencable in the `sizeof(u8)*1` memory from it\n\n    * Alive: the reference of `self.ptr` must outlive the lifetime `_`\n\n"]
+    #[doc = "* Align: pointer `self.ptr` must be properly aligned for type `u8`\n\n"]
+    #[doc = "* ValidNum: the value of `self.len * sizeof(u8)` must lie within the valid `[0, isize :: MAX]`\n\n"]
     pub unsafe fn get(&self) -> &mut [u8] {
         unsafe { std::slice::from_raw_parts_mut(self.ptr, self.len) }
     }

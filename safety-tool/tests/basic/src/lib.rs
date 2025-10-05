@@ -5,7 +5,15 @@
 
 use safety_macro::safety;
 
-#[safety{ Unreachable }]
+/// correct link: [`crate::test`]
+#[safety {
+    Init(self.ptr, u8, self.len),
+    InBound(self.ptr, u8, self.len),
+    ValidNum(self.len*sizeof(u8), [0,isize::MAX]),
+    Alias(self.ptr),
+    RustdocLinkToItem("crate::test"),
+    any { Deref(self.ptr, u8, 1), Alive(self.ptr, _) }
+}]
 pub unsafe fn test() -> ! {
     unsafe { std::intrinsics::unreachable() }
 }
@@ -19,16 +27,17 @@ impl MyStruct {
         MyStruct { ptr: p, len: l }
     }
 
-    /// correct link: [`crate::test`]
     #[safety {
+        NonNull(self.ptr),
+        ValidPtr(self.ptr, u8, self.len),
         Init(self.ptr, u8, self.len),
-        InBound(self.ptr, u8, self.len),
-        ValidNum(self.len*sizeof(u8), [0,isize::MAX]),
+        Alive(self.ptr, _),
         Alias(self.ptr),
-        RustdocLinkToItem("crate::test"),
-        any { Deref(self.ptr, u8, 1), Alive(self.ptr, _) }
+        Align(self.ptr, u8),
+        ValidNum(self.len*sizeof(u8), [0,isize::MAX]),
     }]
     pub unsafe fn get(&self) -> &mut [u8] {
+        // SAFETY: safety requirements are delegated to the caller.
         unsafe { std::slice::from_raw_parts_mut(self.ptr, self.len) }
     }
 }
