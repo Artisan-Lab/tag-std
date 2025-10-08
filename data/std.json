@@ -1415,8 +1415,7 @@
     },
     "alloc::alloc::alloc": {
         "0": [
-            "ValidNum",
-            "Init"
+            "ValidNum"
         ]
     },
     "alloc::alloc::dealloc": {
