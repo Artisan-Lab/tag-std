@@ -59,3 +59,42 @@ pub fn safety(attr: TokenStream, item: TokenStream) -> TokenStream {
     ts.extend(input.rest);
     ts.into()
 }
+
+/// Discharge SPs.
+///
+/// NOTE: there is no check on whether the annotated is an expression or not.
+///
+/// # Syntax Example
+///
+/// ```
+/// #![feature(stmt_expr_attributes)]
+/// #![feature(proc_macro_hygiene)]
+/// #![feature(register_tool)]
+/// #![register_tool(rapx)]
+/// # use safety_macro::{checked, safety};
+///
+/// // Tag SPs:
+/// #[safety { SP1 }] unsafe fn foo() {}
+/// #[safety { SP1, SP2 }] unsafe fn bar() {}
+///
+/// // Discharge SPs:
+/// #[checked { SP1 }] unsafe { foo() };
+/// #[checked { SP1: "reason" }] unsafe { foo() };
+/// #[checked { SP1, SP2: "shared reason" }] unsafe { bar() };
+/// #[checked { SP1: "reason1"; SP2: "reason2" }] unsafe { bar() };
+/// ```
+#[proc_macro_attribute]
+pub fn checked(attr: TokenStream, item: TokenStream) -> TokenStream {
+    let mut ts = TokenStream::new();
+
+    // Prepend the attribute above all attributes on the expression.
+    let tool_attr: TokenStream = {
+        // attr is all the arguments in #[check(args)]
+        let attr = TokenStream2::from(attr.clone());
+        quote! { #[rapx::checked(#attr)] }.into()
+    };
+    ts.extend(tool_attr);
+
+    ts.extend(item);
+    ts
+}
