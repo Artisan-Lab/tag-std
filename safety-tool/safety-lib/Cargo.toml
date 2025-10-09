@@ -1,6 +1,6 @@
 [package]
 name = "safety-lib"
-version = "0.3.7"
+version = "0.4.0"
 edition = "2024"
 authors = ["Artisan-Lab <xuh@fudan.edu.cn>"]
 description = "A lib for using safety tags defined in tag-std"
@@ -9,8 +9,8 @@ repository = "https://github.com/Artisan-Lab/tag-std"
 readme = "README.md"
 
 [dependencies]
-safety-macro = { path = "../safety-macro", version = "0.3.7" }
-safety-parser = { path = "../safety-parser", version = "0.3.7", optional = true }
+safety-macro = { path = "../safety-macro", version = "0.4.0" }
+safety-parser = { path = "../safety-parser", version = "0.4.0", optional = true }
 
 [features]
 default = []
