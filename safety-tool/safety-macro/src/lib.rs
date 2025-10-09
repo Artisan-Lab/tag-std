@@ -13,20 +13,14 @@ use safety_parser::{
 /// #![feature(proc_macro_hygiene)]
 /// #![feature(register_tool)]
 /// #![register_tool(rapx)]
-/// # use safety_macro::safety;
+/// # use safety_macro::requires;
 ///
 /// // Tag SPs:
-/// #[safety { SP1 }] unsafe fn foo() {}
-/// #[safety { SP1, SP2 }] unsafe fn bar() {}
-///
-/// // Discharge SPs:
-/// #[safety { SP1 }] unsafe { foo() };
-/// #[safety { SP1: "reason" }] unsafe { foo() };
-/// #[safety { SP1, SP2: "shared reason" }] unsafe { bar() };
-/// #[safety { SP1: "reason1"; SP2: "reason2" }] unsafe { bar() };
+/// #[requires { SP1 }] unsafe fn foo() {}
+/// #[requires { SP1, SP2 }] unsafe fn bar() {}
 /// ```
 #[proc_macro_attribute]
-pub fn safety(attr: TokenStream, item: TokenStream) -> TokenStream {
+pub fn requires(attr: TokenStream, item: TokenStream) -> TokenStream {
     let mut ts = TokenStream2::new();
 
     // add registered tool attr
@@ -71,11 +65,11 @@ pub fn safety(attr: TokenStream, item: TokenStream) -> TokenStream {
 /// #![feature(proc_macro_hygiene)]
 /// #![feature(register_tool)]
 /// #![register_tool(rapx)]
-/// # use safety_macro::{checked, safety};
+/// # use safety_macro::{checked, requires};
 ///
 /// // Tag SPs:
-/// #[safety { SP1 }] unsafe fn foo() {}
-/// #[safety { SP1, SP2 }] unsafe fn bar() {}
+/// #[requires { SP1 }] unsafe fn foo() {}
+/// #[requires { SP1, SP2 }] unsafe fn bar() {}
 ///
 /// // Discharge SPs:
 /// #[checked { SP1 }] unsafe { foo() };

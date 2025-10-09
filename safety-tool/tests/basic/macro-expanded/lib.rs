@@ -7,7 +7,7 @@
 extern crate std;
 #[prelude_import]
 use std::prelude::rust_2024::*;
-use safety_macro::safety;
+use safety_macro as safety;
 #[rapx::proof(
     Init(self.ptr, u8, self.len),
     InBound(self.ptr, u8, self.len),

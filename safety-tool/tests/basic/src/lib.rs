@@ -3,10 +3,10 @@
 #![allow(clippy::missing_safety_doc, clippy::mut_from_ref, internal_features)]
 #![feature(core_intrinsics)]
 
-use safety_macro::safety;
+use safety_macro as safety;
 
 /// correct link: [`crate::test`]
-#[safety {
+#[safety::requires {
     Init(self.ptr, u8, self.len),
     InBound(self.ptr, u8, self.len),
     ValidNum(self.len*sizeof(u8), [0,isize::MAX]),
@@ -27,7 +27,7 @@ impl MyStruct {
         MyStruct { ptr: p, len: l }
     }
 
-    #[safety {
+    #[safety::requires {
         NonNull(self.ptr),
         ValidPtr(self.ptr, u8, self.len),
         Init(self.ptr, u8, self.len),

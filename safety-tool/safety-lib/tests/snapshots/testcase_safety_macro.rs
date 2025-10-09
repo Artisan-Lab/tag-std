@@ -6,7 +6,7 @@
 extern crate std;
 #[prelude_import]
 use std::prelude::rust_2024::*;
-use safety_macro::safety;
+use safety_macro::requires;
 #[rapx::proof(SP)]
 pub unsafe fn vanilla1() {}
 #[rapx::proof(SP1, SP2)]

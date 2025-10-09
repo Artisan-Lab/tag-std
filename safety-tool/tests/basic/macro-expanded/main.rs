@@ -9,7 +9,7 @@ extern crate std;
 #[prelude_import]
 use std::prelude::rust_2024::*;
 use demo::MyStruct;
-use safety_macro::safety;
+use safety_macro as safety;
 fn main() {
     let (p, l, _c) = Vec::new().into_raw_parts();
     (
@@ -49,7 +49,7 @@ fn main() {
         },
     );
     let a = MyStruct::from(p, l);
-    #[rapx::proof(
+    #[rapx::checked(
         NonNull(
             p
         ):"Vec::new generate a dangling pointer, but it's not null";ValidPtr(
