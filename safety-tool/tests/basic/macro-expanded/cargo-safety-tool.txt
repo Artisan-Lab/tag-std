@@ -1,7 +1,7 @@
-********* "build_script_build" [Executable] has reached 17 instances *********
 ********* "equivalent" [Rlib] has reached 0 instances *********
-********* "build_script_build" [Executable] has reached 69 instances *********
 ********* "unicode_ident" [Rlib] has reached 12 instances *********
+********* "build_script_build" [Executable] has reached 17 instances *********
+********* "build_script_build" [Executable] has reached 69 instances *********
 ********* "build_script_build" [Executable] has reached 154 instances *********
 ********* "itoa" [Rlib] has reached 42 instances *********
 ********* "ryu" [Rlib] has reached 76 instances *********
@@ -22,7 +22,7 @@
 ********* "toml" [Rlib] has reached 2023 instances *********
 ********* "tinytemplate" [Rlib] has reached 550 instances *********
 ********* "safety_parser" [Rlib] has reached 2386 instances *********
-********* "safety_macro" [ProcMacro] has reached 161 instances *********
+********* "safety_macro" [ProcMacro] has reached 176 instances *********
 ********* "demo" [Rlib] has reached 8 instances *********
 "test" ("src/lib.rs:17:1: 17:26")
  => "#[rapx::proof(Init(self.ptr, u8, self.len), InBound(self.ptr, u8, self.len),\nValidNum(self.len*sizeof(u8), [0,isize::MAX]), Alias(self.ptr),\nRustdocLinkToItem(\"crate::test\"), any\n{ Deref(self.ptr, u8, 1), Alive(self.ptr, _) })]\n"

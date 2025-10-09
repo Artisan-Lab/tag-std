@@ -5,13 +5,13 @@
 #![register_tool(rapx)]
 
 use demo::MyStruct;
-use safety_macro::safety;
+use safety_macro as safety;
 
 fn main() {
     let (p, l, _c) = Vec::new().into_raw_parts();
     dbg!(p, l);
     let a = MyStruct::from(p, l);
-    #[safety {
+    #[safety::checked {
         NonNull(p): "Vec::new generate a dangling pointer, but it's not null";
         ValidPtr(p, u8, l): "l is zero in this case, and zero size access is always valid";
         Init(p, u8, l): "no element yet, so no need to initialize anything";

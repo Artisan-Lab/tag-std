@@ -9,9 +9,9 @@ use syn::*;
 pub fn split_attrs_and_rest(ts: TokenStream) -> Input {
     if let Ok(stmt) = parse2::<Stmt>(ts.clone()) {
         match stmt {
-            Stmt::Local(mut local) => Input::new(take(&mut local.attrs), local),
             Stmt::Item(item) => parse_item(item),
             Stmt::Expr(expr, _) => parse_expr(expr),
+            Stmt::Local(mut local) => Input::new(take(&mut local.attrs), local),
             Stmt::Macro(mut macro_) => Input::new(take(&mut macro_.attrs), macro_),
         }
     } else {

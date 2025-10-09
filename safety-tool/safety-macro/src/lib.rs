@@ -4,29 +4,11 @@ use safety_parser::{
     safety::SafetyAttrArgs as AttrArgs, split_attrs::split_attrs_and_rest, syn,
 };
 
-/// Tag SPs on an unsafe function item, or discharge SPs on an expression.
+/// This is a shared function to annotate SPs on caller and callee.
 ///
-/// # Syntax Example
-///
-/// ```
-/// #![feature(stmt_expr_attributes)]
-/// #![feature(proc_macro_hygiene)]
-/// #![feature(register_tool)]
-/// #![register_tool(rapx)]
-/// # use safety_macro::safety;
-///
-/// // Tag SPs:
-/// #[safety { SP1 }] unsafe fn foo() {}
-/// #[safety { SP1, SP2 }] unsafe fn bar() {}
-///
-/// // Discharge SPs:
-/// #[safety { SP1 }] unsafe { foo() };
-/// #[safety { SP1: "reason" }] unsafe { foo() };
-/// #[safety { SP1, SP2: "shared reason" }] unsafe { bar() };
-/// #[safety { SP1: "reason1"; SP2: "reason2" }] unsafe { bar() };
-/// ```
-#[proc_macro_attribute]
-pub fn safety(attr: TokenStream, item: TokenStream) -> TokenStream {
+/// When `#[safety]` is removed, this function should be put into `#[requires]`
+/// or renamed `requires_inner`.
+fn tag(attr: TokenStream, item: TokenStream) -> TokenStream {
     let mut ts = TokenStream2::new();
 
     // add registered tool attr
@@ -58,4 +40,90 @@ pub fn safety(attr: TokenStream, item: TokenStream) -> TokenStream {
     // push rest tokens
     ts.extend(input.rest);
     ts.into()
+}
+
+/// Tag SPs on an unsafe function item, or discharge SPs on an expression.
+///
+/// # Syntax Example
+///
+/// ```
+/// #![feature(stmt_expr_attributes)]
+/// #![feature(proc_macro_hygiene)]
+/// #![feature(register_tool)]
+/// #![register_tool(rapx)]
+/// # use safety_macro::safety;
+///
+/// // Tag SPs:
+/// #[safety { SP1 }] unsafe fn foo() {}
+/// #[safety { SP1, SP2 }] unsafe fn bar() {}
+///
+/// // Discharge SPs:
+/// #[safety { SP1 }] unsafe { foo() };
+/// #[safety { SP1: "reason" }] unsafe { foo() };
+/// #[safety { SP1, SP2: "shared reason" }] unsafe { bar() };
+/// #[safety { SP1: "reason1"; SP2: "reason2" }] unsafe { bar() };
+/// ```
+#[proc_macro_attribute]
+#[deprecated = "Use `#[requires]` instead."]
+pub fn safety(attr: TokenStream, item: TokenStream) -> TokenStream {
+    tag(attr, item)
+}
+
+/// Tag SPs on an unsafe function item.
+///
+/// # Syntax Example
+///
+/// ```
+/// #![feature(stmt_expr_attributes)]
+/// #![feature(proc_macro_hygiene)]
+/// #![feature(register_tool)]
+/// #![register_tool(rapx)]
+/// # use safety_macro::requires;
+///
+/// // Tag SPs:
+/// #[requires { SP1 }] unsafe fn foo() {}
+/// #[requires { SP1, SP2 }] unsafe fn bar() {}
+/// ```
+#[proc_macro_attribute]
+pub fn requires(attr: TokenStream, item: TokenStream) -> TokenStream {
+    tag(attr, item)
+}
+
+/// Discharge SPs.
+///
+/// NOTE: there is no check on whether the annotated is an expression or not.
+///
+/// # Syntax Example
+///
+/// ```
+/// #![feature(stmt_expr_attributes)]
+/// #![feature(proc_macro_hygiene)]
+/// #![feature(register_tool)]
+/// #![register_tool(rapx)]
+/// # use safety_macro::{checked, requires};
+///
+/// // Tag SPs:
+/// #[requires { SP1 }] unsafe fn foo() {}
+/// #[requires { SP1, SP2 }] unsafe fn bar() {}
+///
+/// // Discharge SPs:
+/// #[checked { SP1 }] unsafe { foo() };
+/// #[checked { SP1: "reason" }] unsafe { foo() };
+/// #[checked { SP1, SP2: "shared reason" }] unsafe { bar() };
+/// #[checked { SP1: "reason1"; SP2: "reason2" }] unsafe { bar() };
+/// ```
+#[proc_macro_attribute]
+pub fn checked(attr: TokenStream, item: TokenStream) -> TokenStream {
+    let mut ts = TokenStream::new();
+
+    // Prepend the attribute above all attributes on the expression.
+    let tool_attr: TokenStream = {
+        // attr is all the arguments in #[check(args)]
+        let attr = TokenStream2::from(attr.clone());
+        quote! { #[rapx::checked(#attr)] }.into()
+    };
+    ts.extend(tool_attr);
+
+    ts.extend(item);
+    ts
 }

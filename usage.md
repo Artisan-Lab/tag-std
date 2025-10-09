@@ -2,11 +2,11 @@
 
 ## Import safety-macro
 
-Generally, we want to have `#[safety]` namespace available in each module, so rename safety-lib
+Generally, we want to have `safety` namespace available in each module, so rename safety-lib
 crate to safety as dependency in Cargo.toml:
 
 ```toml
-safety = { version = "0.3.0", package = "safety-macro" }
+safety = { version = "0.4.0", package = "safety-macro" }
 ```
 
 ## Safety Property Definition
@@ -37,15 +37,12 @@ default to `[]`
 
 ## Unsafe API Annotation
 
-Each unsafe API is associated with one or more safety properties, each of which is represented as an
-attribute prefixed with the `safety` keyword. For example, the following three attributes declare
-three safety properties:
+Each unsafe API is associated with one or more safety properties. The following attributes declares
+three safety properties for the unsafe function:
 
 ```rust
-use safety::safety;
-
-#[safety { Align }] // lightweight tag 
-#[safety { Align(p, T) }] // or verfication tag
+#[safety::requires { Align }] // lightweight tag 
+#[safety::requires { Align(p, T) }] // or verfication tag
 pub unsafe fn foo<T>(p: T) { ... }
 ```
 
@@ -55,7 +52,7 @@ To facilitate reviewing the usage of unsafe APIs, developers can annotate how ea
 is addressed as follows: 
 
 ```rust
-#[safety { Align, CustomProperty: "reason is optional" }]
+#[safety::checked { Align, CustomProperty: "reason is optional" }]
 unsafe { call() }
 ```
 
@@ -65,10 +62,10 @@ unsafe { call() }
 subset of SP arguments to discharge.
 
 ```rust
-#[safety { any { Deref(self.ptr, u8, 1), Alive(self.ptr, _) } }] // defsite
+#[safety::requires { any { Deref(self.ptr, u8, 1), Alive(self.ptr, _) } }] // defsite
 unsafe fn get(&self) {}
 
-#[safety { Deref }] // callsite: at least one of SPs in `any` tag should be discharged
+#[safety::checked { Deref }] // callsite: at least one of SPs in `any` tag should be discharged
 unsafe { self.get() }
 ```
 
@@ -82,8 +79,7 @@ The safety attribute can be automatically expanded into text descriptions once c
 ```rust
 // SP_FILE=path/to/sp-core.toml
 
-use safety::safety;
-#[safety { Aligned(ptr, T) }]
+#[safety::requires { Aligned(ptr, T) }]
 pub unsafe fn foo<T>(ptr: T) { ... }
 ```
 

@@ -3,7 +3,7 @@
   "description": "A language server for safety-tool",
   "author": "zjp-CN",
   "license": "MIT",
-  "version": "0.3.7",
+  "version": "0.4.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/Artisan-Lab/tag-std"
