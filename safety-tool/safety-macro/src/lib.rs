@@ -4,23 +4,11 @@ use safety_parser::{
     safety::SafetyAttrArgs as AttrArgs, split_attrs::split_attrs_and_rest, syn,
 };
 
-/// Tag SPs on an unsafe function item, or discharge SPs on an expression.
+/// This is a shared function to annotate SPs on caller and callee.
 ///
-/// # Syntax Example
-///
-/// ```
-/// #![feature(stmt_expr_attributes)]
-/// #![feature(proc_macro_hygiene)]
-/// #![feature(register_tool)]
-/// #![register_tool(rapx)]
-/// # use safety_macro::requires;
-///
-/// // Tag SPs:
-/// #[requires { SP1 }] unsafe fn foo() {}
-/// #[requires { SP1, SP2 }] unsafe fn bar() {}
-/// ```
-#[proc_macro_attribute]
-pub fn requires(attr: TokenStream, item: TokenStream) -> TokenStream {
+/// When `#[safety]` is removed, this function should be put into `#[requires]`
+/// or renamed `requires_inner`.
+fn tag(attr: TokenStream, item: TokenStream) -> TokenStream {
     let mut ts = TokenStream2::new();
 
     // add registered tool attr
@@ -52,6 +40,53 @@ pub fn requires(attr: TokenStream, item: TokenStream) -> TokenStream {
     // push rest tokens
     ts.extend(input.rest);
     ts.into()
+}
+
+/// Tag SPs on an unsafe function item, or discharge SPs on an expression.
+///
+/// # Syntax Example
+///
+/// ```
+/// #![feature(stmt_expr_attributes)]
+/// #![feature(proc_macro_hygiene)]
+/// #![feature(register_tool)]
+/// #![register_tool(rapx)]
+/// # use safety_macro::safety;
+///
+/// // Tag SPs:
+/// #[safety { SP1 }] unsafe fn foo() {}
+/// #[safety { SP1, SP2 }] unsafe fn bar() {}
+///
+/// // Discharge SPs:
+/// #[safety { SP1 }] unsafe { foo() };
+/// #[safety { SP1: "reason" }] unsafe { foo() };
+/// #[safety { SP1, SP2: "shared reason" }] unsafe { bar() };
+/// #[safety { SP1: "reason1"; SP2: "reason2" }] unsafe { bar() };
+/// ```
+#[proc_macro_attribute]
+#[deprecated = "Use `#[requires]` instead."]
+pub fn safety(attr: TokenStream, item: TokenStream) -> TokenStream {
+    tag(attr, item)
+}
+
+/// Tag SPs on an unsafe function item.
+///
+/// # Syntax Example
+///
+/// ```
+/// #![feature(stmt_expr_attributes)]
+/// #![feature(proc_macro_hygiene)]
+/// #![feature(register_tool)]
+/// #![register_tool(rapx)]
+/// # use safety_macro::requires;
+///
+/// // Tag SPs:
+/// #[requires { SP1 }] unsafe fn foo() {}
+/// #[requires { SP1, SP2 }] unsafe fn bar() {}
+/// ```
+#[proc_macro_attribute]
+pub fn requires(attr: TokenStream, item: TokenStream) -> TokenStream {
+    tag(attr, item)
 }
 
 /// Discharge SPs.
