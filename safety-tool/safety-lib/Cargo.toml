@@ -9,7 +9,7 @@ repository = "https://github.com/Artisan-Lab/tag-std"
 readme = "README.md"
 
 [dependencies]
-safety-macro = { path = "../safety-macro", version = "0.4.0" }
+safety-macro = { path = "../safety-macro", version = "0.4.1" }
 safety-parser = { path = "../safety-parser", version = "0.4.0", optional = true }
 
 [features]
