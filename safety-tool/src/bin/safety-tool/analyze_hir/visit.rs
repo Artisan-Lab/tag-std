@@ -77,13 +77,9 @@ fn parent_hirs(tcx: TyCtxt, hir_id: HirId) -> impl Iterator<Item = HirId> {
 
 fn check_tag_state(tag_state: &mut TagState, hir_id: HirId, diagnostics: &mut EmitDiagnostics) {
     let undischarged = tag_state.undischarged();
-    let len = undischarged.len();
-    if len != 0 {
-        let undischarged_str = undischarged.join("\n");
-        let newline = if len == 1 { " " } else { "\n" };
-        let plural = if undischarged_str.matches(',').count() == 0 { "Tag is" } else { "Tags are" };
-        let title = format!("{plural} not discharged:{newline}{undischarged_str}");
-        diagnostics.push_missing_discharge(hir_id, &title);
+    let title = undischarged.title();
+    if !title.is_empty() {
+        diagnostics.push_missing_discharge(hir_id, &title, &undischarged.info());
     }
 }
 
