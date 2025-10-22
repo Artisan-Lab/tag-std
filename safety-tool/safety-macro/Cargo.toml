@@ -1,6 +1,6 @@
 [package]
 name = "safety-macro"
-version = "0.4.0"
+version = "0.4.1"
 edition = "2024"
 authors = ["Artisan-Lab <xuh@fudan.edu.cn>"]
 description = "A macro for using safety tags defined in tag-std"

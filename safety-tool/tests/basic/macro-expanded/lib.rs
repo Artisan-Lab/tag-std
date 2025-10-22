@@ -8,7 +8,7 @@ extern crate std;
 #[prelude_import]
 use std::prelude::rust_2024::*;
 use safety_macro as safety;
-#[rapx::proof(
+#[rapx::requires(
     Init(self.ptr, u8, self.len),
     InBound(self.ptr, u8, self.len),
     ValidNum(self.len*sizeof(u8), [0, isize::MAX]),
@@ -38,7 +38,7 @@ impl MyStruct {
     pub fn from(p: *mut u8, l: usize) -> MyStruct {
         MyStruct { ptr: p, len: l }
     }
-    #[rapx::proof(
+    #[rapx::requires(
         NonNull(self.ptr),
         ValidPtr(self.ptr, u8, self.len),
         Init(self.ptr, u8, self.len),

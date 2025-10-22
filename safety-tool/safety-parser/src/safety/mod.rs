@@ -1,6 +1,6 @@
 use crate::{
     Str,
-    configuration::{ANY, TagType, doc_option, env::need_check, get_tag, get_tag_opt},
+    configuration::{ANY, Tag, TagType, doc_option, env::need_check, get_tag, get_tag_opt},
 };
 use indexmap::IndexMap;
 use proc_macro2::TokenStream;
@@ -317,5 +317,10 @@ impl TagNameType {
                  So choose a type to be `type.{name}`."
             );
         }
+    }
+
+    /// Get specification of the tag in TOML.
+    pub fn get_spec(&self) -> Option<&'static Tag> {
+        get_tag_opt(&self.name)
     }
 }

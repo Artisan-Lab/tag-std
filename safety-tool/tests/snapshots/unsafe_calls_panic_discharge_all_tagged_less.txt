@@ -1,12 +1,15 @@
 stdout=
 
 stderr=
+Got 6 tags.
 [1m[91merror[0m: [1mTag is not discharged: `Align`[0m
  [1m[94m-->[0m ./tests/snippets/unsafe_calls_panic_discharge_all_tagged_less.rs:9:1
   [1m[94m|[0m
 [1m[94m9 |[0m pub unsafe fn tag_unsafe_fn() {
   [1m[94m|[0m [1m[91m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m [1m[91mFor this unsafe call.[0m
   [1m[94m|[0m
+  [1m[94m= info[0m: `Align(p, T)`: pointer `{p}` must be properly aligned for type `{T}`
+           See https://doc.rust-lang.org/nightly/std/ptr/index.html#alignment
 
 [1m[31mTotal counts of diagnostics from safety-tool: {MissingDischarge: 1}[0m
 

@@ -1,0 +1,20 @@
+[tag.SP1]
+desc = "Property1."
+
+[tag.SP2]
+desc = "Property2."
+
+[tag.SP3]
+desc = "Property3."
+
+[tag.SP4]
+desc = "Property4."
+
+[tag.Tag]
+desc = "Make sure this property is met."
+
+[tag.Align]
+args = ["p", "T"]
+desc = "pointer `{p}` must be properly aligned for type `{T}`"
+expr = "p % alignment(T) = 0"
+url = "https://doc.rust-lang.org/nightly/std/ptr/index.html#alignment"

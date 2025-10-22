@@ -1,12 +1,14 @@
 stdout=
 
 stderr=
+Got 6 tags.
 [1m[91merror[0m: [1mTag is not discharged: `Tag`[0m
  [1m[94m-->[0m ./tests/snippets/unsafe_calls_panic_method.rs:9:9
   [1m[94m|[0m
 [1m[94m9 |[0m         s.call();
   [1m[94m|[0m         [1m[91m^^^^^^^^[0m [1m[91mFor this unsafe call.[0m
   [1m[94m|[0m
+  [1m[94m= info[0m: `Tag`: Make sure this property is met.
 
 [1m[31mTotal counts of diagnostics from safety-tool: {MissingDischarge: 1}[0m
 

@@ -97,6 +97,7 @@ pub fn toml_file_paths() -> Vec<String> {
     } else if let Ok(dir) = env::var(ENV_SP_DIR) {
         list_toml_files(&dir)
     } else {
-        panic!("Environment variable `SP_FILE` or `SP_DIR` should be specified.");
+        eprintln!("Environment variable `SP_FILE` or `SP_DIR` should be specified.");
+        Vec::new()
     }
 }

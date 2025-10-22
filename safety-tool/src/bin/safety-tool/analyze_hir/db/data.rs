@@ -3,8 +3,11 @@ use itertools::Itertools;
 use rustc_data_structures::fx::FxIndexMap;
 use rustc_hir::{Attribute, HirId, def_id::DefId};
 use rustc_middle::ty::TyCtxt;
-use safety_parser::safety::{Property as SP, parse_attr_and_get_properties};
-use std::fmt;
+use safety_parser::{
+    configuration::Tag,
+    safety::{Property as SP, parse_attr_and_get_properties},
+};
+use std::{borrow::Cow, fmt};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct PrimaryKey {
@@ -135,29 +138,83 @@ impl TagState {
     //         && self.group_of_any.iter().all(|g| g.values().any(|b| *b))
     // }
 
-    pub fn undischarged(&mut self) -> Vec<String> {
+    pub fn undischarged(&mut self) -> Undischarged {
+        let mut undischarged = Undischarged::default();
         if self.undischarged {
-            return Vec::new();
+            return undischarged;
         } else {
             self.undischarged = true;
         }
 
-        let mut v = Vec::new();
         let vanilla = self
             .vanilla
             .iter()
-            .filter_map(|(sp, state)| (!*state).then_some(sp.as_str()))
+            .filter_map(|(sp, state)| {
+                if !*state {
+                    undischarged.v_sp.push(sp.clone());
+                    Some(sp.name())
+                } else {
+                    None
+                }
+            })
             .format_with(", ", |sp, f| f(&format_args!("`{sp}`")))
             .to_string();
         if !vanilla.is_empty() {
-            v.push(vanilla);
+            undischarged.v_tags_displayed.push(vanilla);
         }
+
         for group in &self.group_of_any {
+            let mut v_any_sp = Vec::with_capacity(group.len());
             if !group.values().any(|state| *state) {
-                let any = group.keys().format_with(", or ", |sp, f| f(&format_args!("`{sp}`")));
-                v.push(any.to_string());
+                let any = group.keys().format_with(", or ", |sp, f| {
+                    v_any_sp.push(sp.clone());
+                    f(&format_args!("`{sp}`"))
+                });
+                undischarged.v_tags_displayed.push(any.to_string());
+                undischarged.v_any_sp.push(v_any_sp);
             }
         }
+        undischarged
+    }
+}
+
+#[derive(Default)]
+pub struct Undischarged {
+    /// Each string is not mere tag name: it's a collection of tag names.
+    pub v_tags_displayed: Vec<String>,
+    /// Tags that should have been discharged individually.
+    pub v_sp: Vec<Property>,
+    /// Each element is a group of tags in `any` tag.
+    pub v_any_sp: Vec<Vec<Property>>,
+}
+
+impl Undischarged {
+    pub fn title(&self) -> String {
+        let len = self.v_tags_displayed.len();
+        if len == 0 {
+            return String::new();
+        }
+
+        let undischarged_str = self.v_tags_displayed.join("\n");
+        let newline = if len == 1 { " " } else { "\n" };
+        let plural = if undischarged_str.matches(',').count() == 0 { "Tag is" } else { "Tags are" };
+        format!("{plural} not discharged:{newline}{undischarged_str}")
+    }
+
+    pub fn info(&self) -> Vec<String> {
+        let capacity = self.v_sp.len() + self.v_any_sp.iter().map(|v| v.len()).sum::<usize>();
+        let mut v = Vec::with_capacity(capacity);
+
+        for sp in &self.v_sp {
+            v.push(format!("`{}`: {}", sp.name_with_args(), sp.info()));
+        }
+
+        for (idx, any) in self.v_any_sp.iter().enumerate() {
+            for sp in any {
+                v.push(format!("[any#{idx}] `{}`: {}", sp.name_with_args(), sp.info()));
+            }
+        }
+
         v
     }
 }
@@ -225,20 +282,49 @@ impl ToolAttrs {
     }
 }
 
-#[derive(Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[derive(Clone)]
 pub struct Property {
-    property: Box<str>,
+    // SP name. This represents a unique property, so spec is not involved
+    // when Self type is implemented basic traits.
+    name: Box<str>,
+    spec: Option<&'static Tag>,
+}
+
+impl std::hash::Hash for Property {
+    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+        self.name.hash(state);
+    }
+}
+
+impl Ord for Property {
+    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+        self.name.cmp(&other.name)
+    }
+}
+
+impl PartialOrd for Property {
+    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+        Some(self.cmp(other))
+    }
+}
+
+impl Eq for Property {}
+
+impl PartialEq for Property {
+    fn eq(&self, other: &Self) -> bool {
+        self.name == other.name
+    }
 }
 
 impl fmt::Display for Property {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        f.write_str(&self.property)
+        f.write_str(&self.name)
     }
 }
 
 impl fmt::Debug for Property {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        <str as fmt::Debug>::fmt(&self.property, f)
+        <str as fmt::Debug>::fmt(&self.name, f)
     }
 }
 
@@ -253,8 +339,31 @@ impl Property {
         v
     }
 
-    pub fn as_str(&self) -> &str {
-        &self.property
+    pub fn name(&self) -> &str {
+        &self.name
+    }
+
+    pub fn name_with_args(&self) -> Cow<'_, str> {
+        if let Some(tag) = &self.spec
+            && !tag.args.is_empty()
+        {
+            return format!("{}({})", self.name, tag.args.join(", ")).into();
+        }
+        self.name().into()
+    }
+
+    pub fn info(&self) -> Cow<'static, str> {
+        const SP_DESC: &str = "This SP has no description.";
+
+        if let Some(tag) = self.spec {
+            return match (&tag.desc, &tag.url) {
+                (Some(desc), None) => format!("{desc}").into(),
+                (Some(desc), Some(url)) => format!("{desc}\n See {url}",).into(),
+                (None, None) => SP_DESC.into(),
+                (None, Some(url)) => format!("See {url}").into(),
+            };
+        }
+        SP_DESC.into()
     }
 }
 
@@ -264,11 +373,11 @@ fn push_properties(s: &str, v: &mut Vec<Property>) {
     v.reserve(cap);
     for property in properties {
         for tag in &property.tags {
-            v.push(Property { property: tag.tag.name().into() });
+            v.push(to_prop(tag));
         }
     }
 }
 
 fn to_prop(sp: &SP) -> Property {
-    Property { property: sp.tag.name().into() }
+    Property { name: sp.tag.name().into(), spec: sp.tag.get_spec() }
 }

@@ -108,7 +108,7 @@ impl<'tcx> EmitDiagnostics<'tcx> {
     }
 
     #[must_use]
-    fn generate(&mut self, hir_id: HirId, title: &str) -> Box<str> {
+    fn generate(&mut self, hir_id: HirId, title: &str, info: &[String]) -> Box<str> {
         let span_node = hir_span(hir_id, self.tcx);
         let span_body = self.tcx.source_span(hir_id.owner);
 
@@ -123,18 +123,21 @@ impl<'tcx> EmitDiagnostics<'tcx> {
         let snippet = Snippet::source(&src_body).line_start(line_start).origin(&origin).fold(true);
 
         // Point out the problematic snippet.
-        let msg = Level::Error.title(title).snippet(snippet.annotation(anno_call));
+        let msg = Level::Error
+            .title(title)
+            .snippet(snippet.annotation(anno_call))
+            .footers(info.iter().map(|info| Level::Info.title(info)));
         Renderer::styled().render(msg).to_string().into()
     }
 
     /// Add a diagnostic based on an unsafe call. Title is the first line of error msg.
-    pub fn push_missing_discharge(&mut self, hir_id: HirId, title: &str) {
-        let render = self.generate(hir_id, title);
+    pub fn push_missing_discharge(&mut self, hir_id: HirId, title: &str, info: &[String]) {
+        let render = self.generate(hir_id, title, info);
         self.diagnostics.push(Diagnostic::missing_discharge(render));
     }
 
     pub fn push_duplicate_discharge(&mut self, hir_id: HirId, title: &str) {
-        let render = self.generate(hir_id, title);
+        let render = self.generate(hir_id, title, &[]);
         self.diagnostics.push(Diagnostic::duplicated_discharge(render));
     }
 

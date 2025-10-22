@@ -14,7 +14,7 @@ fn tag(attr: TokenStream, item: TokenStream) -> TokenStream {
     // add registered tool attr
     let tool_attr = {
         let attr = TokenStream2::from(attr.clone());
-        quote! { #[rapx::proof(#attr)] }
+        quote! { #[rapx::requires(#attr)] }
     };
     ts.extend(tool_attr);
 

@@ -8,3 +8,4 @@ stdout=
 
 
 stderr=
+Got 6 tags.
