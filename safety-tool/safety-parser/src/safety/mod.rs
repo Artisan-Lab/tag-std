@@ -318,4 +318,9 @@ impl TagNameType {
             );
         }
     }
+
+    /// Get `desc` field from the spec.
+    pub fn get_desc(&self) -> Option<&'static str> {
+        get_tag_opt(&self.name)?.desc.as_deref()
+    }
 }
