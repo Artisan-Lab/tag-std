@@ -9,6 +9,7 @@ Got 6 tags.
   [1m[94m|[0m [1m[91m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m [1m[91mFor this unsafe call.[0m
   [1m[94m|[0m
   [1m[94m= info[0m: `Align`: pointer `{p}` must be properly aligned for type `{T}`
+           See https://doc.rust-lang.org/nightly/std/ptr/index.html#alignment
 
 [1m[31mTotal counts of diagnostics from safety-tool: {MissingDischarge: 1}[0m
 

@@ -3,8 +3,11 @@ use itertools::Itertools;
 use rustc_data_structures::fx::FxIndexMap;
 use rustc_hir::{Attribute, HirId, def_id::DefId};
 use rustc_middle::ty::TyCtxt;
-use safety_parser::safety::{Property as SP, parse_attr_and_get_properties};
-use std::fmt;
+use safety_parser::{
+    configuration::Tag,
+    safety::{Property as SP, parse_attr_and_get_properties},
+};
+use std::{borrow::Cow, fmt};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct PrimaryKey {
@@ -203,12 +206,12 @@ impl Undischarged {
         let mut v = Vec::with_capacity(capacity);
 
         for sp in &self.v_sp {
-            v.push(format!("`{}`: {}", sp.property, sp.desc));
+            v.push(format!("`{}`: {}", sp.property, sp.info()));
         }
 
         for (idx, any) in self.v_any_sp.iter().enumerate() {
             for sp in any {
-                v.push(format!("[any#{idx}] `{}`: {}", sp.property, sp.desc));
+                v.push(format!("[any#{idx}] `{}`: {}", sp.property, sp.info()));
             }
         }
 
@@ -279,10 +282,38 @@ impl ToolAttrs {
     }
 }
 
-#[derive(Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[derive(Clone)]
 pub struct Property {
+    // SP name. This represents a unique property, so spec is not involved
+    // when Self type is implemented basic traits.
     property: Box<str>,
-    desc: &'static str,
+    spec: Option<&'static Tag>,
+}
+
+impl std::hash::Hash for Property {
+    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+        self.property.hash(state);
+    }
+}
+
+impl Ord for Property {
+    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+        self.property.cmp(&other.property)
+    }
+}
+
+impl PartialOrd for Property {
+    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+        Some(self.cmp(other))
+    }
+}
+
+impl Eq for Property {}
+
+impl PartialEq for Property {
+    fn eq(&self, other: &Self) -> bool {
+        self.property == other.property
+    }
 }
 
 impl fmt::Display for Property {
@@ -311,6 +342,20 @@ impl Property {
     pub fn as_str(&self) -> &str {
         &self.property
     }
+
+    pub fn info(&self) -> Cow<'static, str> {
+        const SP_DESC: &str = "This SP has no description.";
+
+        if let Some(tag) = self.spec {
+            return match (&tag.desc, &tag.url) {
+                (Some(desc), None) => format!("{desc}").into(),
+                (Some(desc), Some(url)) => format!("{desc}\n See {url}",).into(),
+                (None, None) => SP_DESC.into(),
+                (None, Some(url)) => format!("See {url}").into(),
+            };
+        }
+        SP_DESC.into()
+    }
 }
 
 fn push_properties(s: &str, v: &mut Vec<Property>) {
@@ -325,8 +370,5 @@ fn push_properties(s: &str, v: &mut Vec<Property>) {
 }
 
 fn to_prop(sp: &SP) -> Property {
-    Property {
-        property: sp.tag.name().into(),
-        desc: sp.tag.get_desc().unwrap_or("This SP has no description."),
-    }
+    Property { property: sp.tag.name().into(), spec: sp.tag.get_spec() }
 }

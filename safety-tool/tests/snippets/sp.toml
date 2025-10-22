@@ -14,5 +14,7 @@ desc = "Property4."
 desc = "Make sure this property is met."
 
 [tag.Align]
-args = [ "p", "T" ]
+args = ["p", "T"]
 desc = "pointer `{p}` must be properly aligned for type `{T}`"
+expr = "p % alignment(T) = 0"
+url = "https://doc.rust-lang.org/nightly/std/ptr/index.html#alignment"

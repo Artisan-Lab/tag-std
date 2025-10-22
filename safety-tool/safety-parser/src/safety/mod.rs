@@ -1,6 +1,6 @@
 use crate::{
     Str,
-    configuration::{ANY, TagType, doc_option, env::need_check, get_tag, get_tag_opt},
+    configuration::{ANY, Tag, TagType, doc_option, env::need_check, get_tag, get_tag_opt},
 };
 use indexmap::IndexMap;
 use proc_macro2::TokenStream;
@@ -319,8 +319,8 @@ impl TagNameType {
         }
     }
 
-    /// Get `desc` field from the spec.
-    pub fn get_desc(&self) -> Option<&'static str> {
-        get_tag_opt(&self.name)?.desc.as_deref()
+    /// Get specification of the tag in TOML.
+    pub fn get_spec(&self) -> Option<&'static Tag> {
+        get_tag_opt(&self.name)
     }
 }
