@@ -152,7 +152,7 @@ impl TagState {
             .filter_map(|(sp, state)| {
                 if !*state {
                     undischarged.v_sp.push(sp.clone());
-                    Some(sp.as_str())
+                    Some(sp.name())
                 } else {
                     None
                 }
@@ -286,19 +286,19 @@ impl ToolAttrs {
 pub struct Property {
     // SP name. This represents a unique property, so spec is not involved
     // when Self type is implemented basic traits.
-    property: Box<str>,
+    name: Box<str>,
     spec: Option<&'static Tag>,
 }
 
 impl std::hash::Hash for Property {
     fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
-        self.property.hash(state);
+        self.name.hash(state);
     }
 }
 
 impl Ord for Property {
     fn cmp(&self, other: &Self) -> std::cmp::Ordering {
-        self.property.cmp(&other.property)
+        self.name.cmp(&other.name)
     }
 }
 
@@ -312,19 +312,19 @@ impl Eq for Property {}
 
 impl PartialEq for Property {
     fn eq(&self, other: &Self) -> bool {
-        self.property == other.property
+        self.name == other.name
     }
 }
 
 impl fmt::Display for Property {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        f.write_str(&self.property)
+        f.write_str(&self.name)
     }
 }
 
 impl fmt::Debug for Property {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        <str as fmt::Debug>::fmt(&self.property, f)
+        <str as fmt::Debug>::fmt(&self.name, f)
     }
 }
 
@@ -339,17 +339,17 @@ impl Property {
         v
     }
 
-    pub fn as_str(&self) -> &str {
-        &self.property
+    pub fn name(&self) -> &str {
+        &self.name
     }
 
     pub fn name_with_args(&self) -> Cow<'_, str> {
         if let Some(tag) = &self.spec
             && !tag.args.is_empty()
         {
-            return format!("{}({})", self.property, tag.args.join(", ")).into();
+            return format!("{}({})", self.name, tag.args.join(", ")).into();
         }
-        self.as_str().into()
+        self.name().into()
     }
 
     pub fn info(&self) -> Cow<'static, str> {
@@ -379,5 +379,5 @@ fn push_properties(s: &str, v: &mut Vec<Property>) {
 }
 
 fn to_prop(sp: &SP) -> Property {
-    Property { property: sp.tag.name().into(), spec: sp.tag.get_spec() }
+    Property { name: sp.tag.name().into(), spec: sp.tag.get_spec() }
 }
