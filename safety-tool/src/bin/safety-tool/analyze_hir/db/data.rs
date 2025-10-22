@@ -203,12 +203,12 @@ impl Undischarged {
         let mut v = Vec::with_capacity(capacity);
 
         for sp in &self.v_sp {
-            v.push(format!("{}: {}", sp.property, sp.desc));
+            v.push(format!("`{}`: {}", sp.property, sp.desc));
         }
 
         for (idx, any) in self.v_any_sp.iter().enumerate() {
             for sp in any {
-                v.push(format!("[any#{idx}] {}: {}", sp.property, sp.desc));
+                v.push(format!("[any#{idx}] `{}`: {}", sp.property, sp.desc));
             }
         }
 
