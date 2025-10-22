@@ -1,7 +1,7 @@
 ********* "equivalent" [Rlib] has reached 0 instances *********
 ********* "unicode_ident" [Rlib] has reached 12 instances *********
-********* "build_script_build" [Executable] has reached 69 instances *********
 ********* "build_script_build" [Executable] has reached 17 instances *********
+********* "build_script_build" [Executable] has reached 69 instances *********
 ********* "build_script_build" [Executable] has reached 154 instances *********
 ********* "itoa" [Rlib] has reached 42 instances *********
 ********* "ryu" [Rlib] has reached 76 instances *********
@@ -21,7 +21,7 @@
 ********* "serde_json" [Rlib] has reached 1430 instances *********
 ********* "toml" [Rlib] has reached 2023 instances *********
 ********* "tinytemplate" [Rlib] has reached 550 instances *********
-********* "safety_parser" [Rlib] has reached 2386 instances *********
+********* "safety_parser" [Rlib] has reached 2389 instances *********
 ********* "safety_macro" [ProcMacro] has reached 176 instances *********
 ********* "demo" [Rlib] has reached 8 instances *********
 "test" ("src/lib.rs:17:1: 17:26")

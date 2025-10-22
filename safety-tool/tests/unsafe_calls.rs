@@ -26,7 +26,11 @@ struct CompilationOptions<'a> {
 
 impl Default for CompilationOptions<'_> {
     fn default() -> Self {
-        Self { args: &["--crate-type=lib"], envs: &[], stop: true }
+        Self {
+            args: &["--crate-type=lib"],
+            envs: &[("SP_FILE", "tests/snippets/sp.toml")],
+            stop: true,
+        }
     }
 }
 

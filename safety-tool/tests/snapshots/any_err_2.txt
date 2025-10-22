@@ -1,12 +1,15 @@
 stdout=
 
 stderr=
+Got 6 tags.
 [1m[91merror[0m: [1mTags are not discharged: `SP3`, or `SP4`[0m
  [1m[94m-->[0m ./tests/snippets/any_err_2.rs:9:9
   [1m[94m|[0m
 [1m[94m9 |[0m         call()
   [1m[94m|[0m         [1m[91m^^^^^^[0m [1m[91mFor this unsafe call.[0m
   [1m[94m|[0m
+  [1m[94m= info[0m: [any#0] `SP3`: Property3.
+  [1m[94m= info[0m: [any#0] `SP4`: Property4.
 
 [1m[31mTotal counts of diagnostics from safety-tool: {MissingDischarge: 1}[0m
 
