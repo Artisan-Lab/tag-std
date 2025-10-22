@@ -206,12 +206,12 @@ impl Undischarged {
         let mut v = Vec::with_capacity(capacity);
 
         for sp in &self.v_sp {
-            v.push(format!("`{}`: {}", sp.property, sp.info()));
+            v.push(format!("`{}`: {}", sp.name_with_args(), sp.info()));
         }
 
         for (idx, any) in self.v_any_sp.iter().enumerate() {
             for sp in any {
-                v.push(format!("[any#{idx}] `{}`: {}", sp.property, sp.info()));
+                v.push(format!("[any#{idx}] `{}`: {}", sp.name_with_args(), sp.info()));
             }
         }
 
@@ -341,6 +341,15 @@ impl Property {
 
     pub fn as_str(&self) -> &str {
         &self.property
+    }
+
+    pub fn name_with_args(&self) -> Cow<'_, str> {
+        if let Some(tag) = &self.spec
+            && !tag.args.is_empty()
+        {
+            return format!("{}({})", self.property, tag.args.join(", ")).into();
+        }
+        self.as_str().into()
     }
 
     pub fn info(&self) -> Cow<'static, str> {
