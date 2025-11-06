@@ -41,9 +41,9 @@ impl Project {
     /// Must update the value once toolchain is updated from submodules.
     fn channel(self) -> &'static str {
         match self {
-            Project::Std => "nightly-2025-08-26",
+            Project::Std => "nightly-2025-09-09",
             Project::RustForLinux => "1.87",
-            Project::Asterinas => "nightly-2025-02-01",
+            Project::Asterinas => "nightly-2025-02-10",
             Project::Default => todo!("Haven't decided which toolchain as default to support."),
         }
     }

@@ -2,6 +2,8 @@
 name = "safety-lsp"
 version = "0.4.0"
 edition = "2024"
+description = "A lib for using safety tags defined in tag-std"
+license = "MPL-2.0"
 
 [dependencies]
 tokio = { version = "1", features = [

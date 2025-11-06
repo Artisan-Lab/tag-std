@@ -1,0 +1,9 @@
+[package]
+name = "foo"
+version = "0.1.0"
+edition = "2024"
+
+[workspace]
+
+[dependencies]
+safety-macro = { version = "0.4.1" }
