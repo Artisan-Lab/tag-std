@@ -240,6 +240,6 @@ desc = "The value`{v}` must be valid for usage"
 args = [ "val" ]
 desc = "The returned object is only used to access a `{val}` within the task context that was active when this function was called"
 
-[tag.NonExist]
+[tag.NonInstance]
 args = [ "val", "a" ]
 desc = "For the duration of the lifetime '{a}', there must not exist a value '{val}'"

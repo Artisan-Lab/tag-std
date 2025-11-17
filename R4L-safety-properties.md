@@ -179,7 +179,7 @@ This property describes the requirement that a value is used exclusively in a sp
 
 **Example APIs**: [GlobalLock::new](https://rust.docs.kernel.org/kernel/sync/lock/struct.GlobalLock.html#method.new)
 
-### 3.7 NonExist(val, a)
+### 3.7 NonInstance(val, a)
 
 For the duration of the lifetime `'a`, there must not exist a value `val`.
 
@@ -373,7 +373,4 @@ If `input` is a function, `input` can only be called on the current thread. If `
 
 This property describes the requirement that a function or an instance must be used on the current thread and cannot be used from other threads.
 
-**Example APIs**: [SeqFile::from_raw](https://rust.docs.kernel.org/kernel/seq_file/struct.SeqFile.html#method.from_raw), [LocalFile::from_raw_file](https://rust.docs.kernel.org/kernel/fs/file/struct.LocalFile.html#method.from_raw_file) 
-
-
-
+**Example APIs**: [SeqFile::from_raw](https://rust.docs.kernel.org/kernel/seq_file/struct.SeqFile.html#method.from_raw), [LocalFile::from_raw_file](https://rust.docs.kernel.org/kernel/fs/file/struct.LocalFile.html#method.from_raw_file)
