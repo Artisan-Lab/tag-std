@@ -51,6 +51,7 @@ desc = "The value `{val}` must satisfy the safety requirements of `{func}`"
 
 #Memory(10): Associated with write/read, asynchronization, memory
 
+#Unused
 [tag.NonDeallocated]
 args = [ "ptr", "a" ]
 desc = "The memory block pointer `{ptr}` points at is not deallocated during the lifetime `{a}`"
@@ -59,9 +60,9 @@ desc = "The memory block pointer `{ptr}` points at is not deallocated during the
 args = [ "val", "a" ]
 desc = "The value `{val}` must be valid (for the duration of `{a}`)"
 
-[tag.Lock]
-args = [ "val", "type", "a"]
-desc = "The `{type}` of lock of value `{val}` is held for the duration of `{a}`"
+[tag.HoldLock]
+args = [ "lock", "a"]
+desc = "The corresponding lock `{lock}` is held for the duration of '`{a}`"
 
 [tag.NonData_race]
 args = [ "loc" ]
@@ -75,6 +76,7 @@ desc = "The `{dst}` is valid for writing `{len}` bytes"
 args = [ "src", "len" ]
 desc = "The `{src}` is valid for reading `{len}` bytes"
 
+#Unused
 [tag.GetDropped]
 args = [ "val", "event" ]
 desc = "The value `{val}` get dropped when `{event}` happen"
@@ -98,30 +100,36 @@ args = [ "val", "a" ]
 desc = "The value `{val}` remains not-zero for the duration of the lifetime `{a}`"
 
 
+#Unused
 [tag.Cast]
 args = [ "T", "U" ]
 desc = "`{T}` can be castable to `{U}`"
 
+#Unused
 [tag.ValidConvert]
 args = [ "T", "U" ]
 desc = "Any value of `{T}` can be converted into a valid `{U}`"
 
+#Unused
 [tag.ValidPtrUntil]
 args = [ "ptr", "a" ]
 desc = "The pointer `{ptr}` must be a valid pointer at least until the end of lifetime `{a}`"
 
+#Unused
 [tag.NonDangling]
 args = [ "ptr" ]
 desc = "This pointer `{ptr}` must not be dangling"
 
-[tag.RefIncrement]
-args = [ "val" ]
-desc = "The refcount of `{val}` is incremented"
+[tag.RefTransfer]
+args = [ "ptr", "ret" ]
+desc = "The caller must own a refcount on `{ptr}` that is transferred to the returned `{ret}`."
 
+#Unused
 [tag.NonRefDrop]
 args = [ "val" ]
 desc = "The refcount of `{val}` is not dropped explicitly"
 
+#Unused
 [tag.Embedded]
 args = [ "field", "S" ]
 desc = "The `{field}` is embedded in `{S}`"
@@ -140,14 +148,17 @@ desc = "The type invariants for *(`{ptr}`) must hold for the pointee of `{ptr}`"
 args = [ "env" ]
 desc = "This function is only called by `{env}`"
 
+#Unused
 [tag.CalledBefore]
 args = [ "fn" ]
 desc = "This function is only be called once before `{fn}` is called"
 
+#Unused
 [tag.NonAccessable]
 args = [ "ptr" ]
 desc = "The pointee of `{ptr}` must not be accessed after this call"
 
+#Unused
 [tag.Mutex]
 args = [ "val", "fn", "type" ]
 desc = "Any call `{fn}` on `{val}` take mutex of `{type}`"
@@ -164,6 +175,7 @@ desc = "Function `{fn}` can only be called on the current thread"
 args = [ "val", "T" ]
 desc = "`{val}` is associated with a value of `{T}`"
 
+#Unused
 [tag.Free]
 args = [ "val" ]
 desc = "This value `{val}` will be realeased after this func"
@@ -181,10 +193,53 @@ desc = "`{val}` should not be multily used by concurrent users"
 args = [ "val" ]
 desc = "This value `{val}` must not be used as args in any other func"
 
-[tag.Callonce]
+[tag.CallOnce]
 args = []
 desc = "This function can only call once"
 
 [tag.ReturnBy]
 args = [ "val", "fn" ]
 desc = "The `value {val}` is returned by a call to `{fn}`"
+
+#Unused
+[tag.Eq]
+args = [ "lhs", "rhs" ]
+desc = "If pointer, `{lhs}` and `{rhs}` point at the same memory; If object, `{lhs}` and `{rhs}` is equal"
+
+[tag.MayInvalid]
+args = [ "v" ]
+desc =  "The value `{v}` maybe invalidate during later usage"
+types = [ "hazard" ]
+
+
+[tag.ValidVma]
+args = [ "v", "l"]
+desc = "The vma `{v}` must be valid for the duration of '`{l}`. This means that the vma has been initialized and will not been freed when used."
+
+[tag.ContainerOf]
+args = [ "p", "C", "f" ]
+desc = "The pointer `{p}` points at a field `{f}` of container `{C}`"
+
+[tag.PostToFunc]
+args = [ "fn" ]
+desc = "The function taged by this sp can only be called after `{fn}` has been called"
+
+[tag.ValidFile]
+args = [ "f" ]
+desc = "The pointer `{f}` points at must be a valid file. This means that: This file has been opened and hasn't been closed. "
+
+[tag.ValidMemory]
+args = [ "addr", "s" ]
+desc = "The `{addr}` is the start of a valid memory region of size `{s}`"
+
+[tag.ValidInstance]
+args = [ "v" ]
+desc = "The value`{v}` must be valid for usage"
+
+[tag.ActiveContext]
+args = [ "val" ]
+desc = "The returned object is only used to access a `{val}` within the task context that was active when this function was called"
+
+[tag.NonExist]
+args = [ "val", "a" ]
+desc = "For the duration of the lifetime '{a}', there must not exist a value '{val}'"
