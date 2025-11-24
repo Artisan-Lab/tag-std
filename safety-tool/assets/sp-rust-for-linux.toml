@@ -1,7 +1,5 @@
 package.name = "rfl"
 
-[tag.UserProperty]
-
 #1. Synchronization(2)
 
 [tag.HoldLock]
