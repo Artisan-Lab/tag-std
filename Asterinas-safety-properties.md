@@ -59,9 +59,7 @@ $$
 
 Example APIs: [Adterinas-crate::init()](https://github.com/asterinas/asterinas/blob/v0.16.0/ostd/src/lib.rs#L82)
 
-### 2 Data Dependency
-
-#### 2.1 OriginateFrom(val, func)
+#### 1.5 OriginateFrom(val, func)
 
 This sp describes the requirement that `val` should originate from `func` (as its return value or processed by the function/macro). In addition to the order of execution, there are also dependencies of data here.
 
@@ -71,9 +69,9 @@ This sp describes the requirement that `val` should originate from `func` (as it
 
 Example APIs: [Asterinas-mm::ChildRef::from_pte()](https://github.com/asterinas/asterinas/blob/v0.16.0/ostd/src/mm/page_table/node/child.rs#L93)
 
-### 3 Value
+### 2 Value
 
-#### 3.1 Eq(lhs, rhs), Ne(lhs, rhs), Ge(lhs, rhs)
+#### 2.1 Eq(lhs, rhs), Ne(lhs, rhs), Ge(lhs, rhs)
 
 The sps describe the numerical magnitude relationship between `lhs` and `rhs`.
 
@@ -89,9 +87,9 @@ $$
 
 Example APIs: [Asterinas-mm::MetaSlot::drop_last_in_place()](https://github.com/asterinas/asterinas/blob/v0.16.0/ostd/src/mm/frame/meta.rs#L390)
 
-### 4 Valid
+### 3 Valid
 
-#### 4.1 ValidAccessAddr(addr, access)
+#### 3.1 ValidAccessAddr(addr, access)
 
 This sp describes the requirement that `access` to `addr` should be valid. Here `access` could be reading or writing at the address.
 
@@ -108,7 +106,7 @@ $$
 
 Example APIs: [Asterinas-fill_boot_info_ptr()](https://github.com/asterinas/asterinas/blob/v0.16.0/ostd/src/arch/x86/boot/smp.rs#L176)
 
-#### 4.2 ValidBaseAddr(addr, hardware)
+#### 3.2 ValidBaseAddr(addr, hardware)
 
 This sp describes the requirement that `addr` should be the valid base address of `hardware` such as an IOMMU, IO APIC, or HPET MMIO. Otherwise, any access to the hardware device can be unsafe.
 
@@ -122,7 +120,7 @@ $$
 
 Example APIs: [Asterinas-arch::iommu::fault::init()](https://github.com/asterinas/asterinas/blob/v0.16.0/ostd/src/arch/x86/iommu/fault.rs#L239)
 
-#### 4.3 ValidInstanceAddr(val, type)
+#### 3.3 ValidInstanceAddr(val, type)
 
 This sp describes the requirement that `addr` should point to a valid instance of `type`. The function usually directly manipulates the data at the address. Thus it is necessary to ensure the safety.
 
@@ -137,11 +135,11 @@ $$
 Example APIs: [Asterinas-mm::inc_frame_ref_count()](https://github.com/asterinas/asterinas/blob/v0.16.0/ostd/src/mm/frame/mod.rs#L325)
 
 
-### 5 Reference and Ownership
+### 4 Reference and Ownership
 
 In this section, the reference and ownership do not represent Rust's concepts, but represent similar abstract functions implemented in the OS. e.g., manage resources by conceptual reference and ownership.
 
-#### 5.1 RefHeld(val), RefUnheld(val)
+#### 4.1 RefHeld(val), RefUnheld(val)
 
 These sps describe the requirement that the abstract reference to `val` should have been held or not. The reference is usually implemented with reference count or just logically corresponding relation.
 
@@ -151,7 +149,7 @@ These sps describe the requirement that the abstract reference to `val` should h
 
 Example APIs: [Asterinas-mm::inc_frame_ref_count()](https://github.com/asterinas/asterinas/blob/v0.16.0/ostd/src/mm/frame/mod.rs#L325), [Asterinas-mm::page_table::node:\:child::Child::from_pte()](https://github.com/asterinas/asterinas/blob/v0.16.0/ostd/src/mm/page_table/node/child.rs#L93)
 
-#### 5.2 OwnedResource(val)
+#### 4.2 OwnedResource(val)
 
 This sp describes the requirement that `val` as a resource should be conceptually owned exclusively. Such resource can be port or other entities in the OS.
 
@@ -162,9 +160,9 @@ This sp describes the requirement that `val` as a resource should be conceptuall
 Example APIs: [Asterinas-arch::iommu::fault::init()](https://github.com/asterinas/asterinas/blob/v0.16.0/ostd/src/arch/x86/iommu/fault.rs#L239)
 
 
-### 6 Memory
+### 5 Memory
 
-#### 6.1 UserSpace(start, end)
+#### 5.1 UserSpace(start, end)
 
 This sp describes the requirement that the given memory range (`start`, `end`) should locate within the user space.
 
@@ -178,7 +176,7 @@ $$
 
 Example APIs: [Asterinas-mm::io::VmReader::from_user_space](https://github.com/asterinas/asterinas/blob/v0.16.0/ostd/src/mm/io.rs#L572)
 
-#### 6.2 KernelMemorySafe(operation)
+#### 5.2 KernelMemorySafe(operation)
 
 This sp describes the requirement that the operation should not affect kernel's memory safety. The sp is usually used for page table APIs where mapping or unmapping `operation` can cause memory problems. 
 
@@ -188,7 +186,7 @@ This sp describes the requirement that the operation should not affect kernel's 
 
 Example APIs: [Asterinas-mm::page_table::boot_pt::BootPageTable::map_base_page()](https://github.com/asterinas/asterinas/blob/v0.16.0/ostd/src/mm/page_table/boot_pt.rs#L164)
 
-#### 6.3 Section(val, section)
+#### 5.3 Section(val, section)
 
 This sp describes the reqirement that `val` should reside in the elf `section` within the memory layout.
 
