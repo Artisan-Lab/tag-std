@@ -100,7 +100,7 @@ This property describes the requirement that a value remains valid (not dropped)
 
 ### 3.2 NonMutate(ptr, val)
 
-When value `val` is alive, the memory pointed to by `ptr` must not be mutated.
+When value `val` is alive, the memory pointed at by `ptr` must not be mutated.
 
 **Formal Description**:
 
@@ -578,7 +578,7 @@ This property describes the requirement that no instance of a specific type wrap
 
 ### 7.7 Think_Exist(target, type)
 
-The tracking inside `type` must think that there is a `target` reference
+The tracking inside `type` must think that there is a `target` reference.
 
 **Usage**: precondition
 

@@ -1,115 +1,117 @@
 package.name = "rfl"
 
+[tag.UserProperty]
+
 #1. Synchronization(2)
 
 [tag.HoldLock]
 args = [ "lock", "a"]
-desc = "The corresponding lock `{lock}` is held for the duration of '`{a}`"
+desc = "The corresponding lock `{lock}` is held for the duration of lifetime '`{a}`."
 
 [tag.NonData_race]
 args = [ "loc" ]
-desc = "The memory block `{loc}` should not happen data race"
+desc = "The memory block `{loc}` should not have data races."
 
 #2. Memory Access(2)
 
 [tag.Write]
 args = [ "dst", "len" ]
-desc = "The `{dst}` is valid for writing `{len}` bytes"
+desc = "The pointer `{dst}` is valid for writing `{len}` bytes."
 
 [tag.Read]
 args = [ "src", "len" ]
-desc = "The `{src}` is valid for reading `{len}` bytes"
+desc = "The pointer `{src}` is valid for reading `{len}` bytes."
 
 #3. Non-Condition(8)
 
 [tag.NonDropped]
 args = [ "val", "event" ]
-desc = "The value `{val}` is not dropped when `{val}` is used in the context of `{event}`"
+desc = "The value `{val}` is not dropped when it is used in the context of `{event}`."
 
 [tag.NonMutate]
 args = [ "ptr", "val" ]
-desc = "When value `{val}` is alive, the memory pointed by `{ptr}` must not be mutated"
+desc = "When value `{val}` is alive, the memory pointed at by `{ptr}` must not be mutated."
 
 [tag.NonZero]
 args = [ "val", "a" ]
-desc = "The value `{val}` remains not-zero for the duration of the lifetime `{a}`"
+desc = "The value `{val}` remains non-zero for the duration of the lifetime `{a}`."
 
 [tag.NonMutRef]
 args = [ "val" ]
-desc = "There is no mutable reference to `{val}` created"
+desc = "There is no mutable reference to `{val}` created."
 
 [tag.NonConCurrent]
 args = [ "val" ]
-desc = "`{val}` should not be multily used by concurrent users"
+desc = "The value `{val}` should not be accessed concurrently by multiple users."
 
 [tag.NonUsed]
 args = [ "val" ]
-desc = "This value `{val}` must not be used as args in any other func"
+desc = "This value `{val}` must not be used as an argument in any other function."
 
 [tag.NonAccessable]
 args = [ "ptr" ]
-desc = "The pointee of `{ptr}` must not be accessed after this call"
+desc = "The pointee of `{ptr}` must not be accessed after this call."
 
 [tag.NonInstance]
 args = [ "val", "a" ]
-desc = "For the duration of the lifetime '{a}', there must not exist a value '{val}'"
+desc = "For the duration of the lifetime '{a}', there must not exist a value '{val}'."
 
 #4. Validity(7)
 
 [tag.Valid]
 args = [ "val", "a" ]
-desc = "The value `{val}` must be valid (for the duration of `{a}`)"
+desc = "The value `{val}` must be valid for the duration of `{a}`."
 
 [tag.MayInvalid]
 args = [ "v" ]
-desc =  "The value `{v}` maybe invalidate during later usage"
+desc =  "The value `{v}` may become invalid during later usage."
 types = [ "hazard" ]
 
 [tag.ValidVma]
 args = [ "v", "l"]
-desc = "The vma `{v}` must be valid for the duration of '`{l}`. This means that the vma has been initialized and will not been freed when used."
+desc = "The VMA `{v}` must be valid for the duration of '`{l}`."
 
 [tag.ValidFile]
 args = [ "f" ]
-desc = "The pointer `{f}` points at must be a valid file. This means that: This file has been opened and hasn't been closed. "
+desc = "The pointer `{f}` must point to a valid file."
 
 [tag.ValidMemory]
 args = [ "addr", "s" ]
 desc = "The address `{addr}` is the start of a valid memory region of size `{s}`."
 
 [tag.ValidCast]
-args = [ "T", "U" ]
-desc = "The pointer of type `{T}` and type `{U}` can be castable to each other and result in a valid value."
+args = [ "U", "T" ]
+desc = "The pointer of type `{U}` can be castbale to type `{T}` ,  and any value of type `{T}` written through such a pointer must result in a valid value."
 
 [tag.ValidInstance]
 args = [ "v" ]
-desc = "The value`{v}` must be valid for usage"
+desc = "The value`{v}` must be a valid instance for usage."
 
 #5. Control Flow(6)
 
 [tag.CalledBy]
 args = [ "env" ]
-desc = "This function is only called by `{env}`"
+desc = "This function is only called by the specified environment `{env}`."
 
 [tag.CallOnce]
 args = []
-desc = "This function can only call once"
+desc = "This function can only be called once."
 
 [tag.PostToFunc]
 args = [ "fn" ]
-desc = "The function taged by this sp can only be called after `{fn}` has been called"
+desc = "The function taged by this property can only be called after `{fn}` has been called."
 
 [tag.ReturnBy]
 args = [ "val", "fn" ]
-desc = "The `value {val}` is returned by a call to `{fn}`"
+desc = "The value `{val}` is returned by a call to function `{fn}`."
 
 [tag.AnyThread]
 args = [ "fn" ]
-desc = "Function `{fn}` can be called from any thread"
+desc = "Function `{fn}` can be called from any thread."
 
 [tag.CurThread]
-args = [ "fn" ]
-desc = "Function `{fn}` can only be called on the current thread"
+args = [ "input" ]
+desc = "The argument `{input}` can only be called or accessed on the current thread."
 
 #6. Miscellaneous(6)
 
@@ -119,19 +121,19 @@ desc = "The caller must own a refcount on `{ptr}` that is transferred to the ret
 
 [tag.Invariant]
 args = [ "ptr" ]
-desc = "The type invariants for *(`{ptr}`) must hold for the pointee of `{ptr}`"
+desc = "The type invariants for `*{ptr}` must hold for the pointee of `{ptr}`."
 
 [tag.ActiveContext]
 args = [ "val" ]
-desc = "The returned object is only used to access a `{val}` within the task context that was active when this function was called"
+desc = "The returned object is only used to access `{val}` within the task context that was active when this function was called."
 
 [tag.Associated]
 args = [ "val", "T" ]
-desc = "`{val}` is associated with a value of `{T}`"
+desc = "The value `{val}` is associated with a value of type `{T}`."
 
 [tag.ContainerOf]
 args = [ "p", "C", "f" ]
-desc = "The pointer `{p}` points at a field `{f}` of container `{C}`"
+desc = "The pointer `{p}` points at a field `{f}` of container `{C}`."
 
 [tag.FlagSet]
 args = [ "flag" ]
@@ -141,37 +143,37 @@ desc = "The flag `{flag}` must already have been set."
 
 [tag.Empty]
 args = [ "l" ]
-desc = "Container `{l}` must be empty"
+desc = "The container `{l}` must be empty."
 expr = "l.len() == 0"
 
 [tag.InList]
 args = [ "list", "val" ]
-desc = "The value {val} must be in List `{list}`"
+desc = "The value {val} must be in list `{list}`."
 types = [ "precond" ]
 
 [tag.NonInList]
 args = [ "list", "val" ]
-desc = "The value {val} must not be in List `{list}`"
+desc = "The value {val} must not be in the list `{list}`."
 types = [ "precond" ]
 
 [tag.Equal]
 args = [ "l", "r" ]
-desc = "Left val `{l}` must be equal to right val `{r}`"
+desc = "The left val `{l}` must be equal to the right val `{r}`."
 expr = "l == r"
 
 [tag.Null]
 args = [ "p" ]
-desc = "Pointer `{p}` must be null"
+desc = "The pointer `{p}` must be null."
 expr = "p == 0"
 
 [tag.NonExist]
 args = [ "T", "val" ]
-desc = "An instance of `{T}` must not exist for this value '{val}'"
+desc = "An instance of type `{T}` must not exist for value '{val}'."
 
 [tag.Think_Exist]
 args = [ "target", "type"]
-desc = "The tracking inside `{type}` must think that there is a `{target}` reference"
+desc = "The tracking inside `{type}` must think that there is a `{target}` reference."
 
 [tag.Access]
 args = [ "T", "ret_val", "type" ]
-desc = "The caller must have `{type}` access to `{T}` for the duration of the `{ret_val}`"
+desc = "The caller must have `{type}` access to `{T}` for the duration of `{ret_val}`."
