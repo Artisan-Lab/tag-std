@@ -25,5 +25,5 @@ fn core() {
 #[test]
 fn rust_for_linux() {
     let config = &Configuration::read_toml("assets/sp-rust-for-linux.toml");
-    expect!["54"].assert_eq(&config.tag.len().to_string());
+    expect!["40"].assert_eq(&config.tag.len().to_string());
 }
