@@ -1,6 +1,6 @@
 //! Property definition through config file.
 use indexmap::IndexMap;
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 use std::{fs, sync::LazyLock};
 
 pub mod env;
@@ -45,7 +45,7 @@ pub struct Tag {
     pub url: OptStr,
 }
 
-#[derive(Clone, Copy, Debug, Deserialize, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Deserialize, Serialize, Default, PartialEq, Eq)]
 #[serde(rename_all = "lowercase")]
 pub enum TagType {
     #[default]

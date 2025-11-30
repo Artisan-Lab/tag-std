@@ -5,9 +5,12 @@ use rustc_span::Ident;
 
 mod db;
 mod diagnostics;
+mod stat;
 mod visit;
 
 pub fn analyze_hir(tcx: TyCtxt) {
+    let mut stat = stat::new(tcx);
+    dbg!(&stat);
     let mut v_hir_fn = Vec::with_capacity(64);
 
     let def_items = tcx.hir_crate_items(()).definitions();

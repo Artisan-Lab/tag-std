@@ -1,6 +1,7 @@
 use super::PropertiesAndReason;
 use crate::configuration::env::need_check;
 use indexmap::IndexMap;
+use serde::{Deserializer, Serializer, ser::SerializeSeq};
 use syn::{Expr, ExprLit, Lit};
 
 pub fn expr_to_string(expr: &Expr) -> String {
@@ -10,6 +11,32 @@ pub fn expr_to_string(expr: &Expr) -> String {
         let tokens = quote::quote! { #expr };
         tokens.to_string()
     }
+}
+
+/// Serialize Expr as string in JSON.
+pub fn serialize_expr_to_str<S: Serializer>(
+    v_expr: &[Expr],
+    serializer: S,
+) -> Result<S::Ok, S::Error> {
+    let mut seq = serializer.serialize_seq(None)?;
+    for expr in v_expr {
+        let string = expr_to_string(expr);
+        seq.serialize_element(&string)?;
+    }
+    seq.end()
+}
+
+/// Deserialize string back to Expr from JSON.
+pub fn deserialize_str_to_expr<'de, D: Deserializer<'de>>(
+    deserializer: D,
+) -> Result<Box<[Expr]>, D::Error> {
+    let v = <Vec<String> as serde::Deserialize>::deserialize(deserializer)?;
+    Ok(v.iter()
+        .map(|string| {
+            syn::parse_str(string)
+                .unwrap_or_else(|err| panic!("Failed to parse Expression from `{string}`:\n{err}"))
+        })
+        .collect())
 }
 
 /// Each expr must be in the form of `SP(expr)`. Return `(SP string, &Tag)`.
