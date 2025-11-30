@@ -1,6 +1,8 @@
 use camino::Utf8PathBuf;
-use safety_parser::configuration::Cache;
-use safety_parser::safety::PropertiesAndReason;
+use safety_parser::{
+    configuration::Cache,
+    safety::{PropertiesAndReason, Property},
+};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -36,17 +38,35 @@ pub enum CrateType {
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Func {
     pub name: String,
-    pub tags: Tags,
+    pub tags: Vec<Tag>,
     pub path: Utf8PathBuf,
     pub span: String,
     pub unsafe_calls: Vec<Func>,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
-pub struct Tags {
+pub struct Tag {
     pub predicate: Predicate,
-    pub tag: PropertiesAndReason,
+    pub tag: TagType,
     pub doc: Option<String>,
+}
+
+impl Tag {
+    pub fn requires_vanilla(prop: Property) -> Tag {
+        Tag { predicate: Predicate::Requires, tag: TagType::Vanilla(prop), doc: None }
+    }
+
+    pub fn requires_any(props: Vec<PropertiesAndReason>) -> Tag {
+        Tag { predicate: Predicate::Requires, tag: TagType::Any(props), doc: None }
+    }
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub enum TagType {
+    /// Single tag.
+    Vanilla(Property),
+    /// A set of tags in built-in `any` tag
+    Any(Vec<PropertiesAndReason>),
 }
 
 #[derive(Debug, Deserialize, Serialize)]

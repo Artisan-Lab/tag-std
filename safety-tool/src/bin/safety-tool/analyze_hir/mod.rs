@@ -2,6 +2,7 @@ use crate::is_tool_attr;
 use rustc_hir::{BodyId, FnSig, HirId, ImplItemKind, ItemKind, Node, def_id::LocalDefId};
 use rustc_middle::ty::TyCtxt;
 use rustc_span::Ident;
+use safety_tool::stat::Stat;
 
 mod db;
 mod diagnostics;
@@ -10,7 +11,6 @@ mod visit;
 
 pub fn analyze_hir(tcx: TyCtxt) {
     let mut stat = stat::new(tcx);
-    dbg!(&stat);
     let mut v_hir_fn = Vec::with_capacity(64);
 
     let def_items = tcx.hir_crate_items(()).definitions();
@@ -43,7 +43,8 @@ pub fn analyze_hir(tcx: TyCtxt) {
     }
 
     let mut tool_attrs =
-        db::get_all_tool_attrs(v_hir_fn.iter().filter_map(|f| f.to_data(tcx))).unwrap();
+        db::get_all_tool_attrs(v_hir_fn.iter().filter_map(|f| f.to_data(tcx, &mut stat))).unwrap();
+    // dbg!(&stat);
     let mut diagnostics = diagnostics::EmitDiagnostics::new(tcx);
 
     for hir_fn in &v_hir_fn {
@@ -89,7 +90,7 @@ impl HirFn<'_> {
         }
     }
 
-    fn to_data(&self, tcx: TyCtxt) -> Option<db::Data> {
-        self.has_tool_attrs(tcx).then(|| db::Data::new(self, tcx))
+    fn to_data(&self, tcx: TyCtxt, stat: &mut Stat) -> Option<db::Data> {
+        self.has_tool_attrs(tcx).then(|| db::Data::new(self, tcx, stat))
     }
 }

@@ -7,6 +7,7 @@ use safety_parser::{
     configuration::Tag,
     safety::{Property as SP, parse_attr_and_get_properties},
 };
+use safety_tool::stat::Stat;
 use std::{borrow::Cow, fmt};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
@@ -39,7 +40,7 @@ pub struct Data {
 }
 
 impl Data {
-    pub fn new(hir_fn: &HirFn, tcx: TyCtxt) -> Self {
+    pub fn new(hir_fn: &HirFn, tcx: TyCtxt, stat: &mut Stat) -> Self {
         let def_id = hir_fn.local.to_def_id();
         let hash = PrimaryKey::new(def_id, tcx);
 
@@ -61,6 +62,11 @@ impl Data {
             def_path: tcx.def_path_debug_str(def_id),
             function,
         };
+
+        // Construct StatFunc
+        if !func.tool_attrs.is_empty() {
+            stat.funcs.push(crate::analyze_hir::stat::new_caller(hir_fn, tcx, &func.tool_attrs));
+        }
 
         Data { hash, func }
     }
