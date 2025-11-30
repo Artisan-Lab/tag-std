@@ -34,7 +34,7 @@ pub struct Package {
     pub crate_name: OptStr,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct Tag {
     #[serde(default)]
     pub args: Box<[Str]>,
@@ -78,7 +78,7 @@ fn default_types() -> Box<[TagType]> {
     Box::new([TagType::Precond])
 }
 
-#[derive(Clone, Copy, Debug, Deserialize, Default)]
+#[derive(Clone, Copy, Debug, Deserialize, Serialize, Default)]
 pub struct GenDocOption {
     /// Generate `/// Safety` at the beginning.
     #[serde(default)]
@@ -103,25 +103,24 @@ impl GenDocOption {
 pub const ANY: &str = "any";
 
 /// Data shared in `#[safety]` proc macro.
-#[derive(Debug)]
-struct Key {
+#[derive(Clone, Debug, Deserialize, Serialize)]
+pub struct Key {
     /// Tag defined in config file.
-    tag: Tag,
+    pub tag: Tag,
     /// File path where the tag is defined: we must be sure each tag only
     /// derives from single file path.
-    #[allow(dead_code)]
-    src: Str,
+    pub src: Str,
 }
 
-#[derive(Default)]
-struct Cache {
+#[derive(Clone, Debug, Default, Deserialize, Serialize)]
+pub struct Cache {
     /// Defined tags.
-    map: IndexMap<Str, Key>,
+    pub map: IndexMap<Str, Key>,
     /// Merged doc generation options: if any is true, set true.
-    doc: GenDocOption,
+    pub doc: GenDocOption,
 }
 
-static CACHE: LazyLock<Cache> = LazyLock::new(|| {
+pub static CACHE: LazyLock<Cache> = LazyLock::new(|| {
     let mut cache = Cache::default();
 
     let configs: Vec<_> = env::toml_file_paths()

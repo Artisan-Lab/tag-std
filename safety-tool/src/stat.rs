@@ -1,4 +1,5 @@
 use camino::Utf8PathBuf;
+use safety_parser::configuration::Cache;
 use safety_parser::safety::PropertiesAndReason;
 use serde::{Deserialize, Serialize};
 
@@ -6,7 +7,7 @@ use serde::{Deserialize, Serialize};
 pub struct Stat {
     #[serde(rename = "crate")]
     pub krate: Krate,
-    pub specs: Vec<Spec>,
+    pub specs: Cache,
     pub funcs: Vec<Func>,
     pub metrics: Metrics,
 }
@@ -31,9 +32,6 @@ pub enum CrateType {
     /// i.e. CrateType::*lib in rustc_session
     Lib,
 }
-
-#[derive(Debug, Deserialize, Serialize)]
-pub struct Spec {}
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Func {

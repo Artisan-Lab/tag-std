@@ -7,7 +7,7 @@ use safety_tool::stat::*;
 pub fn new(tcx: TyCtxt) -> Stat {
     Stat {
         krate: new_crate(tcx),
-        specs: Vec::new(),
+        specs: safety_parser::configuration::CACHE.clone(),
         funcs: Vec::new(),
         metrics: Metrics { coverage_rate: 0 },
     }
