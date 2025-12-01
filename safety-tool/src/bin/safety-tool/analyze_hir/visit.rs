@@ -11,7 +11,6 @@ use rustc_hir::{
 };
 use rustc_middle::ty::{TyCtxt, TypeckResults};
 use safety_parser::{safety::SafetyAttr, syn};
-use safety_tool::stat::Tag;
 
 #[derive(Debug, Clone, Copy)]
 pub struct Call {
@@ -66,6 +65,15 @@ impl Call {
 
         // make sure Safety tags are all discharged
         check_tag_state(tag_state, self.hir_id, diagnostics);
+    }
+
+    pub fn stat<'tcx>(
+        self,
+        caller: HirId,
+        tcx: TyCtxt<'tcx>,
+        tool_attrs: &mut ToolAttrs,
+    ) -> Option<CollectCalleeTags<'tcx>> {
+        CollectCalleeTags::new(self, caller, tcx, tool_attrs)
     }
 }
 
@@ -168,14 +176,14 @@ pub fn get_calls<'tcx>(
 // Collect tags on a callee, by bubbling up HIR nodes to find the nearest safety attributes.
 //
 // NOTE: the tags on the caller's signature aren't directly counted as the callee's tags.
-struct CollectCaleeTags<'tcx> {
+pub struct CollectCalleeTags<'tcx> {
     tcx: TyCtxt<'tcx>,
-    tags: Vec<Tag>,
+    tags: Vec<stat::Tag>,
     callee: Call,
     caller: HirId,
 }
 
-impl<'tcx> CollectCaleeTags<'tcx> {
+impl<'tcx> CollectCalleeTags<'tcx> {
     fn new(
         callee: Call,
         caller: HirId,
@@ -219,6 +227,11 @@ impl<'tcx> CollectCaleeTags<'tcx> {
                 break;
             }
         }
-        Some(CollectCaleeTags { tcx, tags, callee, caller })
+        Some(CollectCalleeTags { tcx, tags, callee, caller })
+    }
+
+    pub fn into_stat_func(self) -> stat::Func {
+        let hir_id = self.tcx.local_def_id_to_hir_id(self.callee.hir_id.owner);
+        stat::new_callee(hir_id, self.tcx, self.tags)
     }
 }

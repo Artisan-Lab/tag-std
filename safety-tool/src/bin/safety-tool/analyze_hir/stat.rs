@@ -1,9 +1,9 @@
 use camino::Utf8PathBuf;
-use rustc_hir::def_id::CrateNum;
+use rustc_hir::HirId;
 use rustc_middle::ty::TyCtxt;
 use rustc_session::config::CrateType as RawCrateType;
 use safety_parser::safety::{PropertiesAndReason, parse_attr_and_get_properties};
-use safety_tool::stat::*;
+pub use safety_tool::stat::*;
 
 pub fn new(tcx: TyCtxt) -> Stat {
     Stat {
@@ -15,7 +15,7 @@ pub fn new(tcx: TyCtxt) -> Stat {
 }
 
 fn new_crate(tcx: TyCtxt) -> Krate {
-    let local_crate = CrateNum::ZERO;
+    let local_crate = rustc_hir::def_id::LOCAL_CRATE;
 
     let name = tcx.crate_name(local_crate).to_string();
     let path = {
@@ -37,22 +37,16 @@ fn crate_type(v: &[RawCrateType]) -> CrateType {
     }
 }
 
-pub fn new_caller(f: &super::HirFn, tcx: TyCtxt, attrs: &[String]) -> Func {
-    let span = tcx.hir_span_with_body(f.hir_id);
+pub fn new_func(fn_hir_id: HirId, tcx: TyCtxt) -> Func {
+    let span = tcx.hir_span_with_body(fn_hir_id);
     let src_map = tcx.sess.source_map();
     let file_lines = src_map
         .span_to_lines(span)
         .unwrap_or_else(|err| panic!("Failed to know {span:?}:\n{err:?}"));
 
-    let mut tags = Vec::new();
-    for attr in attrs {
-        let props = parse_attr_and_get_properties(attr);
-        push_tag(props, &mut tags);
-    }
-
     Func {
-        name: tcx.def_path_str(f.local),
-        tags,
+        name: tcx.def_path_str(fn_hir_id.owner.to_def_id()),
+        tags: Vec::new(),
         path: file_lines.file.name.prefer_local().to_string().into(),
         span: {
             use std::fmt::Write;
@@ -70,6 +64,17 @@ pub fn new_caller(f: &super::HirFn, tcx: TyCtxt, attrs: &[String]) -> Func {
     }
 }
 
+pub fn new_caller(fn_hir_id: HirId, tcx: TyCtxt, attrs: &[String]) -> Func {
+    let mut func = new_func(fn_hir_id, tcx);
+
+    for attr in attrs {
+        let props = parse_attr_and_get_properties(attr);
+        push_tag(props, &mut func.tags);
+    }
+
+    func
+}
+
 /// Split a list of PropertiesAndReason into Tags.
 pub fn push_tag(props: impl IntoIterator<Item = PropertiesAndReason>, tags: &mut Vec<Tag>) {
     for prop in props {
@@ -85,4 +90,8 @@ pub fn push_tag(props: impl IntoIterator<Item = PropertiesAndReason>, tags: &mut
     }
 }
 
-// pub fn update_unsafe_calls(func: &mut Func, tcx: TyCtxt) {}
+pub fn new_callee(fn_hir_id: HirId, tcx: TyCtxt, tags: Vec<Tag>) -> Func {
+    let mut func = new_func(fn_hir_id, tcx);
+    func.tags = tags;
+    func
+}
