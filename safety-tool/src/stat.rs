@@ -4,14 +4,26 @@ use safety_parser::{
     safety::{PropertiesAndReason, Property},
 };
 use serde::{Deserialize, Serialize};
+use std::fmt;
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Deserialize, Serialize)]
 pub struct Stat {
     #[serde(rename = "crate")]
     pub krate: Krate,
     pub specs: Cache,
     pub funcs: Vec<Func>,
     pub metrics: Metrics,
+}
+
+impl fmt::Debug for Stat {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("Stat")
+            .field("krate", &self.krate)
+            // .field("specs", &self.specs)
+            .field("funcs", &self.funcs)
+            .field("metrics", &self.metrics)
+            .finish()
+    }
 }
 
 #[derive(Debug, Deserialize, Serialize)]

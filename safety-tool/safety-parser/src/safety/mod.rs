@@ -6,6 +6,7 @@ use indexmap::IndexMap;
 use proc_macro2::TokenStream;
 use quote::quote;
 use serde::{Deserialize, Serialize};
+use std::fmt;
 use syn::{
     parse::{Parse, ParseStream},
     punctuated::Punctuated,
@@ -200,7 +201,7 @@ impl PropertiesAndReason {
     }
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Deserialize, Serialize)]
 pub struct Property {
     /// `SP` or `type.SP`. The type of single `SP` is unkown until queried from definition.
     pub tag: TagNameType,
@@ -208,6 +209,14 @@ pub struct Property {
     #[serde(deserialize_with = "utils::deserialize_str_to_expr")]
     #[serde(serialize_with = "utils::serialize_expr_to_str")]
     pub args: Box<[Expr]>,
+}
+
+impl fmt::Debug for Property {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let args = &*self.args;
+        let args = quote! { #(#args),* }.to_string();
+        f.debug_struct("Property").field("tag", &self.tag).field("args", &args).finish()
+    }
 }
 
 impl Property {
