@@ -81,6 +81,7 @@ fn get_attrs(tcx: TyCtxt<'_>, hid: HirId) -> impl Iterator<Item = &'_ Attribute>
     }
 }
 
+/// Convert the tool attribute to string.
 fn opt_attribute_to_string(tcx: TyCtxt<'_>, attr: &rustc_hir::Attribute) -> Option<String> {
     is_tool_attr(attr).then(|| attribute_to_string(tcx, attr))
 }
@@ -386,4 +387,11 @@ fn push_properties(s: &str, v: &mut Vec<Property>) {
 
 fn to_prop(sp: &SP) -> Property {
     Property { name: sp.tag.name().into(), spec: sp.tag.get_spec() }
+}
+
+pub fn tool_attr_on_hir<'tcx>(
+    hir_id: HirId,
+    tcx: TyCtxt<'tcx>,
+) -> impl 'tcx + Iterator<Item = String> {
+    get_attrs(tcx, hir_id).filter_map(move |attr| opt_attribute_to_string(tcx, attr))
 }

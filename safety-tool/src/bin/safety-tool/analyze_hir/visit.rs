@@ -1,8 +1,7 @@
-use crate::analyze_hir::db::TagState;
-
-use super::{
-    db::{Property, ToolAttrs},
+use crate::analyze_hir::{
+    db::{Property, TagState, ToolAttrs, tool_attr_on_hir},
     diagnostics::EmitDiagnostics,
+    stat,
 };
 use rustc_hir::{
     def::{DefKind, Res},
@@ -11,8 +10,10 @@ use rustc_hir::{
     *,
 };
 use rustc_middle::ty::{TyCtxt, TypeckResults};
+use safety_parser::{safety::SafetyAttr, syn};
+use safety_tool::stat::Tag;
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 pub struct Call {
     /// function use id
     pub hir_id: HirId,
@@ -23,7 +24,7 @@ pub struct Call {
 impl Call {
     pub fn check_tool_attrs(
         &self,
-        fn_hir_id: HirId,
+        caller: HirId,
         tool_attrs: &mut ToolAttrs,
         diagnostics: &mut EmitDiagnostics,
     ) {
@@ -34,7 +35,7 @@ impl Call {
         };
 
         let mut check = |hir_id: HirId| {
-            debug!(?hir_id, ?fn_hir_id);
+            debug!(?hir_id, ?caller);
 
             let properties = Property::new_with_hir_id(hir_id, tcx);
 
@@ -58,7 +59,7 @@ impl Call {
             // For a function inside a nested module, hir_parent_id_iter
             // will pop up to the crate root, thus it's necessary to
             // stop when reaching the fn item.
-            if !empty || parent == fn_hir_id {
+            if !empty || parent == caller {
                 break;
             }
         }
@@ -162,4 +163,62 @@ pub fn get_calls<'tcx>(
     let mut calls = Calls { tcx, tyck, calls: Vec::new() };
     walk_expr(&mut calls, expr);
     calls
+}
+
+// Collect tags on a callee, by bubbling up HIR nodes to find the nearest safety attributes.
+//
+// NOTE: the tags on the caller's signature aren't directly counted as the callee's tags.
+struct CollectCaleeTags<'tcx> {
+    tcx: TyCtxt<'tcx>,
+    tags: Vec<Tag>,
+    callee: Call,
+    caller: HirId,
+}
+
+impl<'tcx> CollectCaleeTags<'tcx> {
+    fn new(
+        callee: Call,
+        caller: HirId,
+        tcx: TyCtxt<'tcx>,
+        tool_attrs: &mut ToolAttrs,
+    ) -> Option<Self> {
+        let Some(tag_state) = tool_attrs.get_tags(callee.def_id, tcx) else {
+            // No tool attrs to be checked on the callee.
+            return None;
+        };
+
+        let mut found_nearest_tags = false;
+        let mut tags = Vec::new();
+        // FIXME: the validity of attributes are not checked. Tags that do not target
+        // any calls should be warned.
+        for parent in parent_hirs(tcx, callee.hir_id) {
+            for attr_str in tool_attr_on_hir(parent, tcx) {
+                match syn::parse_str::<SafetyAttr>(&attr_str) {
+                    Ok(attr) => {
+                        let seg = &attr.attr.path().segments;
+                        if seg.first().map(|i| i.ident != "rapx").unwrap_or(true) {
+                            // Skip non rapx attributes.
+                            continue;
+                        }
+                        if let Some(path) = seg.last()
+                            && path.ident == "checked"
+                        {
+                            // FIXME: we should only push valid tags
+                            // for the callee through tag_state
+                            stat::push_tag(attr.args.args, &mut tags);
+                            found_nearest_tags = true;
+                        }
+                    }
+                    Err(err) => eprintln!("{attr_str} is not parsed as SafetyAttr: {err}"),
+                }
+            }
+            // Treat nearest parent tags as the call's tags.
+            // This can be problematic if we allow partial discharging,
+            // in which case we should continue bubbling up.
+            if found_nearest_tags {
+                break;
+            }
+        }
+        Some(CollectCaleeTags { tcx, tags, callee, caller })
+    }
 }

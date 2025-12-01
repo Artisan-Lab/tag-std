@@ -48,7 +48,7 @@ pub struct Func {
 pub struct Tag {
     pub predicate: Predicate,
     pub tag: TagType,
-    pub doc: Option<String>,
+    pub doc: Option<Box<str>>,
 }
 
 impl Tag {

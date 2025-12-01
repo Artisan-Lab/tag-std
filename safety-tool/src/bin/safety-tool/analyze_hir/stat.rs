@@ -2,7 +2,7 @@ use camino::Utf8PathBuf;
 use rustc_hir::def_id::CrateNum;
 use rustc_middle::ty::TyCtxt;
 use rustc_session::config::CrateType as RawCrateType;
-use safety_parser::safety::parse_attr_and_get_properties;
+use safety_parser::safety::{PropertiesAndReason, parse_attr_and_get_properties};
 use safety_tool::stat::*;
 
 pub fn new(tcx: TyCtxt) -> Stat {
@@ -47,17 +47,7 @@ pub fn new_caller(f: &super::HirFn, tcx: TyCtxt, attrs: &[String]) -> Func {
     let mut tags = Vec::new();
     for attr in attrs {
         let props = parse_attr_and_get_properties(attr);
-        for prop in props {
-            for tag in prop.tags {
-                if let Some(v_sp) = tag.args_in_any_tag() {
-                    let ele = safety_tool::stat::Tag::requires_any(v_sp);
-                    tags.push(ele);
-                } else {
-                    let ele = safety_tool::stat::Tag::requires_vanilla(tag);
-                    tags.push(ele);
-                }
-            }
-        }
+        push_tag(props, &mut tags);
     }
 
     Func {
@@ -80,4 +70,19 @@ pub fn new_caller(f: &super::HirFn, tcx: TyCtxt, attrs: &[String]) -> Func {
     }
 }
 
-pub fn update_unsafe_calls(func: &mut Func, tcx: TyCtxt) {}
+/// Split a list of PropertiesAndReason into Tags.
+pub fn push_tag(props: impl IntoIterator<Item = PropertiesAndReason>, tags: &mut Vec<Tag>) {
+    for prop in props {
+        for tag in prop.tags {
+            if let Some(v_sp) = tag.args_in_any_tag() {
+                let ele = safety_tool::stat::Tag::requires_any(v_sp);
+                tags.push(ele);
+            } else {
+                let ele = safety_tool::stat::Tag::requires_vanilla(tag);
+                tags.push(ele);
+            }
+        }
+    }
+}
+
+// pub fn update_unsafe_calls(func: &mut Func, tcx: TyCtxt) {}

@@ -2,7 +2,7 @@ mod storage;
 pub use storage::Database;
 
 mod data;
-pub use data::{Data, Func, PrimaryKey, Property, TagState, ToolAttrs};
+pub use data::{Data, Func, PrimaryKey, Property, TagState, ToolAttrs, tool_attr_on_hir};
 
 pub fn get_all_tool_attrs(iter: impl IntoIterator<Item = Data>) -> crate::Result<ToolAttrs> {
     // Recommend setting the DATA_SQLITE3 environment variable to an absolute path.
