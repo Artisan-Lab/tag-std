@@ -4,7 +4,7 @@ This document describes the safety properties used in Rust-for-Linux kernel code
 
 ## 1. Synchronization
 
-### 1.1 HoldLock(lock, a)
+### 1.1 LockHold(lock, a)
 
 The corresponding lock `lock` is held for the duration of lifetime `'a`.
 
@@ -36,9 +36,150 @@ This property describes the requirement that concurrent access to a memory locat
 
 **Example APIs**: [Page::read_raw](https://rust.docs.kernel.org/kernel/page/struct.Page.html#method.read_raw), [Page::write_raw](https://rust.docs.kernel.org/kernel/page/struct.Page.html#method.write_raw), [Page::fill_zero_raw](https://rust.docs.kernel.org/kernel/page/struct.Page.html#method.fill_zero_raw), [Page::copy_from_user_slice_raw](https://rust.docs.kernel.org/kernel/page/struct.Page.html#method.copy_from_user_slice_raw)
 
-## 2. Memory Access
+## 2. Non-Condition
 
-### 2.1 Write(dst, len)
+### 2.1 NonDropped(val, event)
+
+The value `val` is not dropped when it is used in the context of `event`.
+
+**Formal Description**:
+
+$$
+\forall t \in \text{time}(\text{event}), \text{dropped}(\text{val}, t) = \text{false}
+$$
+
+**Usage**: precondition
+
+This property describes the requirement that a value remains valid (not dropped) during a specific event or operation. It's crucial for preventing use-after-free errors.
+
+**Example APIs**: [Policy::set_clk](https://rust.docs.kernel.org/kernel/cpufreq/struct.Policy.html#method.set_clk), [Policy::set_freq_table](https://rust.docs.kernel.org/kernel/cpufreq/struct.Policy.html#method.set_freq_table)
+
+### 2.2 NonMutate(ptr, val)
+
+When value `val` is alive, the memory pointed at by `ptr` must not be mutated.
+
+**Formal Description**:
+
+$$
+\forall t \in \text{lifetime}(\text{val}), \text{mutated}(\text{ptr}, t) = \text{false}
+$$
+
+**Usage**: hazard
+
+This property enforces immutability of a memory location for the duration of another value's lifetime. This can be used when the memory location `ptr` points at can be mutated by both `val` and `ptr`, and then ensures the exclusive mutable access.
+
+**Example APIs**: [CStr::from_char_ptr](https://rust.docs.kernel.org/kernel/str/struct.CStr.html#method.from_char_ptr)
+
+### 2.3 NonZero(val, a)
+
+The value `val` remains non-zero for the duration of the lifetime `a`.
+
+**Formal Description**:
+
+$$
+\forall t \in \text{lifetime}(a), \text{val}_t \neq 0
+$$
+
+**Usage**: precondition
+
+This property describes the requirement that a value (typically a reference count or numeric value) does not become zero during a specific lifetime, preventing premature deallocation or invalid state.
+
+**Example APIs**: [Device::get_device](https://rust.docs.kernel.org/kernel/device/struct.Device.html#method.get_device), [MmWithUser::from_raw](https://rust.docs.kernel.org/kernel/mm/struct.MmWithUser.html#method.from_raw), [LocalFile::from_raw_file](https://rust.docs.kernel.org/kernel/fs/file/struct.LocalFile.html#method.from_raw_file), [ArcBorrow::from_raw](https://rust.docs.kernel.org/kernel/sync/struct.ArcBorrow.html#method.from_raw)
+
+### 2.4 NonMutRefNonMutRef(val)
+
+There is no mutable reference to `val` created.
+
+**Formal Description**:
+
+$$
+\nexists \text{ref}: \&\text{mut } T, \text{ref} \to \text{val}
+$$
+
+**Usage**: precondition
+
+This property describes the requirement that no mutable references exist to a value. This is used in the scene where the return value has exclusive mutable access or should keep the `val` immutable .
+
+**Example APIs**:  [ArcBorrow::new](https://rust.docs.kernel.org/src/kernel/sync/arc.rs.html#577)
+
+### 2.5 NonConCurrent(val)
+
+The value `val` should not be accessed concurrently by multiple users.
+
+**Formal Description**:
+
+$$
+\nexists t, \text{users}(\text{val}, t) > 1
+$$
+
+**Usage**: precondition
+
+This property requires exclusive access to a value, ensuring that it is not being accessed by multiple threads or contexts simultaneously.
+
+**Example APIs**: [Revocable::revoke_nosync](https://rust.docs.kernel.org/kernel/revocable/struct.Revocable.html#method.revoke_nosync)
+
+### 2.6 NonUsed(val)
+
+This value `val` must not be used as an argument in any other function.
+
+**Formal Description**:
+
+$$
+\nexists f , \text{val} \in \text{args}(f)
+$$
+
+**Usage**: precondition
+
+This property describes the requirement that a value is used exclusively in a specific context and should not been passed to other functions, preventing double-use.
+
+**Example APIs**: [GlobalLock::new](https://rust.docs.kernel.org/kernel/sync/lock/struct.GlobalLock.html#method.new)
+
+### 2.7 NonAccessable(ptr)
+
+The pointee of `ptr` must not be accessed after this call.
+
+**Formal Description**:
+
+$$
+\forall t > t_{\text{call}}, \text{access}(\text{ptr}, t) = \text{false}
+$$
+
+**Usage**: precondition
+
+This property describes the requirement that the memory pointed to by `ptr` must not be accessed after the function call returns. For now, this property is used to describe that the function will destroy the pointee of pointer and the pointee must not be accessed after the function returns.
+
+**Example APIs**: [ItemOperationsVTable](https://rust.docs.kernel.org/src/kernel/configfs.rs.html#446)
+
+### 2.8 NonInstance(val, a)
+
+For the duration of the lifetime `'a`, there must not exist a value `val`.
+
+**Formal Description**:
+
+$$
+\forall t \in \text{lifetime}('a), \exists(\text{val}, t) = \text{false}
+$$
+
+**Usage**: precondition
+
+This property describes the requirement that a particular value or instance does not exist during a specific lifetime,  preventing duplicate instances.
+
+**Example APIs**: [ArcBorrow::from_raw](https://rust.docs.kernel.org/kernel/sync/struct.ArcBorrow.html#method.from_raw)
+
+## 3. Validity
+
+This part expresses the requirement of function parameters. When values are passed as parameters, they need to be ensured that some conditions are met, and we use validity to describe this property.
+
+### 3.1 Valid(val, a)
+
+The value `val` must be valid for the duration of lifetime `'a`.
+
+**Usage**: precondition
+
+This property describes the general requirement that a value/pointer remains valid throughout a specified lifetime. In practical usage, we use concrete secondary safety properties to describe specific context, for example: ValidVma, ValidFile, ValidMemory
+
+
+### 3.2 ValidWrite(dst, len)
 
 The pointer `dst` is valid for writing `len` bytes.
 
@@ -59,7 +200,7 @@ This property describes the requirement that the memory region starting at `dst`
 
 **Example APIs**: [PolicyData::from_raw_mut](https://rust.docs.kernel.org/kernel/cpufreq/struct.PolicyData.html#method.from_raw_mut), [Policy::from_raw_mut](https://rust.docs.kernel.org/kernel/cpufreq/struct.Policy.html#method.from_raw_mut), [Cpumask::as_mut_ref](https://rust.docs.kernel.org/kernel/cpumask/struct.Cpumask.html#method.as_mut_ref), [CpumaskVar::from_raw_mut](https://rust.docs.kernel.org/kernel/cpumask/struct.CpumaskVar.html#method.from_raw_mut)
 
-### 2.2 Read(src, len)
+### 3.3 ValidRead(src, len)
 
 The pointer `src` is valid for reading `len` bytes.
 
@@ -80,149 +221,7 @@ This property describes the requirement that the memory region starting at `src`
 
 **Example APIs**: [CpumaskVar::from_raw](https://rust.docs.kernel.org/kernel/cpumask/struct.CpumaskVar.html#method.from_raw), [Table::from_raw](https://rust.docs.kernel.org/kernel/cpufreq/struct.Table.html#method.from_raw), [Policy::from_raw](https://rust.docs.kernel.org/kernel/cpufreq/struct.Policy.html#method.from_raw)
 
-## 3. Non-Condition
-
-### 3.1 NonDropped(val, event)
-
-The value `val` is not dropped when it is used in the context of `event`.
-
-**Formal Description**:
-
-$$
-\forall t \in \text{time}(\text{event}), \text{dropped}(\text{val}, t) = \text{false}
-$$
-
-**Usage**: precondition
-
-This property describes the requirement that a value remains valid (not dropped) during a specific event or operation. It's crucial for preventing use-after-free errors.
-
-**Example APIs**: [Policy::set_clk](https://rust.docs.kernel.org/kernel/cpufreq/struct.Policy.html#method.set_clk), [Policy::set_freq_table](https://rust.docs.kernel.org/kernel/cpufreq/struct.Policy.html#method.set_freq_table)
-
-### 3.2 NonMutate(ptr, val)
-
-When value `val` is alive, the memory pointed at by `ptr` must not be mutated.
-
-**Formal Description**:
-
-$$
-\forall t \in \text{lifetime}(\text{val}), \text{mutated}(\text{ptr}, t) = \text{false}
-$$
-
-**Usage**: hazard
-
-This property enforces immutability of a memory location for the duration of another value's lifetime. This can be used when the memory location `ptr` points at can be mutated by both `val` and `ptr`, and then ensures the exclusive mutable access.
-
-**Example APIs**: [CStr::from_char_ptr](https://rust.docs.kernel.org/kernel/str/struct.CStr.html#method.from_char_ptr)
-
-### 3.3 NonZero(val, a)
-
-The value `val` remains non-zero for the duration of the lifetime `a`.
-
-**Formal Description**:
-
-$$
-\forall t \in \text{lifetime}(a), \text{val}_t \neq 0
-$$
-
-**Usage**: precondition
-
-This property describes the requirement that a value (typically a reference count or numeric value) does not become zero during a specific lifetime, preventing premature deallocation or invalid state.
-
-**Example APIs**: [Device::get_device](https://rust.docs.kernel.org/kernel/device/struct.Device.html#method.get_device), [MmWithUser::from_raw](https://rust.docs.kernel.org/kernel/mm/struct.MmWithUser.html#method.from_raw), [LocalFile::from_raw_file](https://rust.docs.kernel.org/kernel/fs/file/struct.LocalFile.html#method.from_raw_file), [ArcBorrow::from_raw](https://rust.docs.kernel.org/kernel/sync/struct.ArcBorrow.html#method.from_raw)
-
-### 3.4 NonMutRef(val)
-
-There is no mutable reference to `val` created.
-
-**Formal Description**:
-
-$$
-\nexists \text{ref}: \&\text{mut } T, \text{ref} \to \text{val}
-$$
-
-**Usage**: precondition
-
-This property describes the requirement that no mutable references exist to a value. This is used in the scene where the return value has exclusive mutable access or should keep the `val` immutable .
-
-**Example APIs**:  ArcBorrow::new
-
-### 3.5 NonConCurrent(val)
-
-The value `val` should not be accessed concurrently by multiple users.
-
-**Formal Description**:
-
-$$
-\nexists t, \text{users}(\text{val}, t) > 1
-$$
-
-**Usage**: precondition
-
-This property requires exclusive access to a value, ensuring that it is not being accessed by multiple threads or contexts simultaneously.
-
-**Example APIs**: [Revocable::revoke_nosync](https://rust.docs.kernel.org/kernel/revocable/struct.Revocable.html#method.revoke_nosync)
-
-### 3.6 NonUsed(val)
-
-This value `val` must not be used as an argument in any other function.
-
-**Formal Description**:
-
-$$
-\nexists f , \text{val} \in \text{args}(f)
-$$
-
-**Usage**: precondition
-
-This property describes the requirement that a value is used exclusively in a specific context and should not been passed to other functions, preventing double-use.
-
-**Example APIs**: [GlobalLock::new](https://rust.docs.kernel.org/kernel/sync/lock/struct.GlobalLock.html#method.new)
-
-### 3.7 NonAccessable(ptr)
-
-The pointee of `ptr` must not be accessed after this call.
-
-**Formal Description**:
-
-$$
-\forall t > t_{\text{call}}, \text{access}(\text{ptr}, t) = \text{false}
-$$
-
-**Usage**: precondition
-
-This property describes the requirement that the memory pointed to by `ptr` must not be accessed after the function call returns. For now, this property is used to describe that the function will destroy the pointee of pointer and the pointee must not be accessed after the function returns.
-
-**Example APIs**: [ItemOperationsVTable](https://rust.docs.kernel.org/src/kernel/configfs.rs.html#446)
-
-### 3.8 NonInstance(val, a)
-
-For the duration of the lifetime `'a`, there must not exist a value `val`.
-
-**Formal Description**:
-
-$$
-\forall t \in \text{lifetime}('a), \exists(\text{val}, t) = \text{false}
-$$
-
-**Usage**: precondition
-
-This property describes the requirement that a particular value or instance does not exist during a specific lifetime,  preventing duplicate instances.
-
-**Example APIs**: [ArcBorrow::from_raw](https://rust.docs.kernel.org/kernel/sync/struct.ArcBorrow.html#method.from_raw)
-
-## 4. Validity
-
-This part expresses the requirement of function parameters. When values are passed as parameters, they need to be ensured that some conditions are met, and we use validity to describe this property.
-
-### 4.1 Valid(val, a)
-
-The value `val` must be valid for the duration of lifetime `'a`.
-
-**Usage**: precondition
-
-This property describes the general requirement that a value/pointer remains valid throughout a specified lifetime. In practical usage, we use concrete secondary safety properties to describe specific context, for example: ValidVma, ValidFile, ValidMemory
-
-### 4.2 MayInvalid(v)
+### 3.4 MayInvalid(v)
 
 The value `v` may become invalid during later usage.
 
@@ -232,7 +231,7 @@ This property highlights a potential hazard state where a value that is currentl
 
 **Example APIs**: [from_cpu](https://rust.docs.kernel.org/kernel/cpu/fn.from_cpu.html)
 
-### 4.3 ValidVma(v, l)
+### 3.5 ValidVma(v, l)
 
 The VMA `v` must be valid for the duration of lifetime `'l`.
 
@@ -246,7 +245,7 @@ This property describes the requirement that a Virtual Memory Area (VMA) is vali
 
 **Example APIs**: [VmaRef::from_raw](https://rust.docs.kernel.org/kernel/mm/virt/struct.VmaRef.html#method.from_raw), [VmaMixedMap::from_raw](https://rust.docs.kernel.org/kernel/mm/virt/struct.VmaMixedMap.html#method.from_raw)
 
-### 4.4 ValidFile(f)
+### 3.6 ValidFile(f)
 
 The pointer `f` must point to a valid file.
 
@@ -266,7 +265,7 @@ This property describes the requirement that a file pointer points to a valid fi
 
 **Example APIs**: [File::from_raw_file](https://rust.docs.kernel.org/kernel/fs/file/struct.File.html#method.from_raw_file), [LocalFile::from_raw_file](https://rust.docs.kernel.org/kernel/fs/file/struct.LocalFile.html#method.from_raw_file)
 
-### 4.5 ValidMemory(addr, s)
+### 3.7 ValidMemory(addr, s)
 
 The address `addr` is the start of a valid memory region of size `s`.
 
@@ -286,7 +285,7 @@ This property describes the requirement that a memory region is valid for access
 
 **Example APIs**: [Io::from_raw](https://rust.docs.kernel.org/kernel/io/struct.Io.html#method.from_raw)
 
-### 4.6 ValidCast(U, T)
+### 3.8 ValidCast(U, T)
 
 The pointer of type `U` can be castbale to type `T` ,  and any value of type `T` written through such a pointer must result in a valid value.
 
@@ -296,7 +295,7 @@ This property describes the requirement that the momory region of type `U` can b
 
 Example APIs: [pin_init::cast_init](https://rust.docs.kernel.org/pin_init/fn.cast_init.html), [pin_init::cast_pin_init](https://rust.docs.kernel.org/pin_init/fn.cast_pin_init.html)
 
-### 4.7 ValidInstance(v)
+### 3.9 ValidInstance(v)
 
 The value `v` must be a valid instance for usage.
 
@@ -309,11 +308,11 @@ This property describes the requirement that a value is a valid instance of its 
 - [ArcBorrow::new](https://rust.docs.kernel.org/src/kernel/sync/arc.rs.html#577) - requires valid Arc instance
 - [call_printk](https://rust.docs.kernel.org/src/kernel/print.rs.html#100) - requires valid format string instance
 
-## 5. Control Flow
+## 4. Control Flow
 
 This section describes safety properties related to function call contexts, execution order, and control flow constraints.
 
-### 5.1 CalledBy(env)
+### 4.1 CalledBy(env)
 
 This function is only called by the specified environment `env`.
 
@@ -333,7 +332,7 @@ This constraint reminds that the function is only called when certain preconditi
 - [CoherentAllocation::field_write](https://rust.docs.kernel.org/src/kernel/dma.rs.html#614) - CalledBy(dma_writ_macro)
 - [AttributeList::new](https://rust.docs.kernel.org/src/kernel/configfs.rs.html#700) - CalledBy(kernel::configfs_attrs_macro)
 
-### 5.2 CallOnce()
+### 4.2 CallOnce()
 
 This function can only be called once.
 
@@ -349,7 +348,7 @@ Calling such a function more than once would violate invariants or cause undefin
 
 **Example APIs**: [GlobalLock::init](https://rust.docs.kernel.org/kernel/sync/lock/global/struct.GlobalLock.html#method.init),  [Arc::from_raw](https://rust.docs.kernel.org/kernel/sync/struct.Arc.html#method.from_raw),  [GlobalLock::init](https://rust.docs.kernel.org/kernel/sync/struct.GlobalLock.html#method.init)
 
-### 5.3 PostToFunc(fn)
+### 4.3 PostToFunc(fn)
 
 The function tagged by this property can only be called after `fn` has been called.
 
@@ -363,23 +362,24 @@ This property describes an ordering constraint where one function must be called
 
 **Example APIs**:[File::as_ref](https://rust.docs.kernel.org/src/kernel/drm/file.rs.html#35)
 
-### 5.4 ReturnBy(val, fn)
+### 4.4 OriginateFrom(val, fn)
 
-The value `val` is returned by a call to function `fn`.
+The value `val` should originate from a call to function `fn`.
 
 **Formal Description**:
 
 $$
-\exists \text{call}(\text{fn}), \text{return}(\text{fn}) = \text{val}
+
+
 $$
 
 **Usage**: precondition
 
-This property describes the requirement that a value must be returned by a specific function. This is used in callback function and Arc-related implementation.
+This property describes the requirement that the value should originate from specific function (as its return value or processed by the function/macro). This is used in callback function and Arc-related implementation.
 
 **Example APIs**: [Adapter::soft_reset_callback](https://rust.docs.kernel.org/src/kernel/net/phy.rs.html#312), [Arc::from_raw](https://rust.docs.kernel.org/kernel/sync/struct.Arc.html#method.from_raw),  [ArcBorrow::from_raw](https://rust.docs.kernel.org/kernel/sync/struct.ArcBorrow.html#method.from_raw)
 
-### 5.5 AnyThread(fn)
+### 4.5 AnyThread(fn)
 
 Function `fn` can be called from any thread.
 
@@ -389,7 +389,7 @@ This property describes that a function is thread-safe and can be safely invoked
 
 **Example APIs**: [Device::get_device](https://rust.docs.kernel.org/kernel/device/struct.Device.html#method.get_device)
 
-### 5.6 CurThread(input)
+### 4.6 CurThread(input)
 
 If `input` is a function, `input` can only be called on the current thread. If `input` is an instance, `input` can only be accessed on the current thread.
 
@@ -399,11 +399,11 @@ This property describes the requirement that a function or an instance must be u
 
 **Example APIs**: [SeqFile::from_raw](https://rust.docs.kernel.org/kernel/seq_file/struct.SeqFile.html#method.from_raw), [LocalFile::from_raw_file](https://rust.docs.kernel.org/kernel/fs/file/struct.LocalFile.html#method.from_raw_file)
 
-## 6. Miscellaneous
+## 5. Miscellaneous
 
 This section describes a miscellany of safety properties, which contains different usage. Each safety property represents a specific requirement.
 
-### 6.1 RefTransfer(ptr, ret)
+### 5.1 RefTransfer(ptr, ret)
 
 The caller must own a refcount on `ptr` that is transferred to the returned `ret`.
 
@@ -418,7 +418,7 @@ In Rust-for-Linux, this safety property is used when converting raw pointers to 
 
 **Example APIs**: [OPP::from_raw_opp_owned](https://rust.docs.kernel.org/kernel/opp/struct.OPP.html#method.from_raw_opp_owned), [ARef::from_raw](https://rust.docs.kernel.org/kernel/sync/aref/struct.ARef.html#method.from_raw), [Request::aref_from_raw](https://rust.docs.kernel.org/src/kernel/block/mq/request.rs.html#68)
 
-### 6.2 Invariant(ptr)
+### 5.2 Invariant(ptr)
 
 The type invariants for `*ptr` must hold for the pointee of `ptr`.
 
@@ -428,7 +428,7 @@ This property describes the requirement that all type-specific invariants must h
 
 **Example APIs**:[Request::aref_from_raw](https://rust.docs.kernel.org/src/kernel/block/mq/request.rs.html#68)
 
-### 6.3 ActiveContext(val)
+### 5.3 ActiveContext(val)
 
 The returned object is only used to access `val` within the task context that was active when this function was called.
 
@@ -436,11 +436,9 @@ The returned object is only used to access `val` within the task context that wa
 
 This property describes the requirement that an object must only be used within the specific task context that was active when it was created. This property is a conclusion of safety requirement, as for now this property is just used to tag one unsafe function.
 
-**Example APIs**:
+**Example APIs**: [Task::current](https://rust.docs.kernel.org/kernel/task/struct.Task.html#method.current)
 
-- [Task::current](https://rust.docs.kernel.org/kernel/task/struct.Task.html#method.current)
-
-### 6.4 Associated(val, T)
+### 5.4 Associated(val, T)
 
 The value `val` is associated with a value of type `T`.
 
@@ -456,7 +454,7 @@ This property describes the requirement that a value must be associated with ano
 
 **Example APIs**:[MiscdeviceVTable::open](https://rust.docs.kernel.org/src/kernel/miscdevice.rs.html#204), [MiscdeviceVTable::release](https://rust.docs.kernel.org/src/kernel/miscdevice.rs.html#245), [MiscdeviceVTable::mmap](https://rust.docs.kernel.org/src/kernel/miscdevice.rs.html#303)
 
-### 6.5 ContainerOf(p, C, f)
+### 5.5 ContainerOf(p, C, f)
 
 The pointer `p` points at a field `f` of container `C`.
 
@@ -472,7 +470,7 @@ This property describes the requirement that a pointer must point to a specific 
 
 **Example APIs**: [Device::from_drm_device](https://rust.docs.kernel.org/src/kernel/drm/device.rs.html#145), [Attribute::show](https://rust.docs.kernel.org/src/kernel/configfs.rs.html#550), [Attribute::store](https://rust.docs.kernel.org/src/kernel/configfs.rs.html#583)
 
-### 6.6 FlagSet(flag)
+### 5.6 FlagSet(flag)
 
 The flag `flag` must already have been set.
 
@@ -482,11 +480,11 @@ This property describes the requirement that a specific flag or bit must be set 
 
 **Example APIs**: [VmaMixedMap::from_raw](https://rust.docs.kernel.org/kernel/mm/virt/struct.VmaMixedMap.html#method.from_raw)
 
-## 7. List Operations
+## 6. List Operations
 
 This section describes safety properties specific to linked list. The `list` module in Rust-for-Linux implements an **intrusive doubly-linked list**,  which use some `unsafe` markers to imply the possibly illegal operation.
 
-### 7.1 Empty(l)
+### 6.1 Empty(l)
 
 The container `l` must be empty.
 
@@ -502,7 +500,7 @@ This property describes the requirement that a container must be empty before pe
 
 **Example APIs**: [List::insert_inner](https://rust.docs.kernel.org/src/kernel/list.rs.html#489)
 
-### 7.2 InList(list, val)
+### 6.2 InList(list, val)
 
 The value `val` must be in the list `list`.
 
@@ -518,7 +516,7 @@ This property describes the requirement that a specific value must be a member o
 
 **Example APIs**: [List::remove_internal](https://rust.docs.kernel.org/src/kernel/list.rs.html#623), [List::remove_internal_inner](https://rust.docs.kernel.org/src/kernel/list.rs.html#637), [List::insert_inner](https://rust.docs.kernel.org/src/kernel/list.rs.html#489)
 
-### 7.3 NonInList(list, val)
+### 6.3 NonInList(list, val)
 
 The value `val` must not be in the list `list`.
 
@@ -534,7 +532,7 @@ This property describes the requirement that a specific value must not be a memb
 
 **Example APIs**: [List::remove](https://rust.docs.kernel.org/kernel/list/struct.List.html#method.remove)
 
-### 7.4 Equal(l, r)
+### 6.4 Equal(l, r)
 
 The left value `l` must be equal to the right value `r`.
 
@@ -550,7 +548,7 @@ This property describes the requirement that two values must be equal. In the co
 
 **Example APIs**: [List::remove_internal_inner](https://rust.docs.kernel.org/src/kernel/list.rs.html#637)
 
-### 7.5 Null(p)
+### 6.5 Null(p)
 
 The pointer `p` must be null.
 
@@ -566,7 +564,7 @@ This property describes the requirement that a pointer must be null.
 
 **Example APIs**: [List::insert_inner](https://rust.docs.kernel.org/src/kernel/list.rs.html#489)
 
-### 7.6 NonExist(T, val)
+### 6.6 NonExist(T, val)
 
 An instance of type `T` must not exist for value `val`.
 
@@ -576,7 +574,7 @@ This property describes the requirement that no instance of a specific type wrap
 
 **Example APIs**: [ListArc::from_raw](https://rust.docs.kernel.org/kernel/list/struct.ListArc.html#method.from_raw)
 
-### 7.7 Think_Exist(target, type)
+### 6.7 Think_Exist(target, type)
 
 The tracking inside `type` must think that there is a `target` reference.
 
@@ -586,7 +584,7 @@ This property originates from the `arc` module. There is a concept called `the t
 
 **Example APIs**: [ListArc::from_raw](https://rust.docs.kernel.org/kernel/list/struct.ListArc.html#method.from_raw)
 
-### 7.8 Access(T, ret_val, type)
+### 6.8 Access(T, ret_val, type)
 
 The caller must have `type` access to `T` for the duration of `ret_val`.
 
