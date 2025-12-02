@@ -1,3 +1,5 @@
+#![cfg_attr(not(feature = "std"), feature(let_chains))]
+
 pub mod logger;
 pub mod stat;
 pub mod utils;
