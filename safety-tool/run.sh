@@ -56,8 +56,11 @@ cargo clean
 unset STOP_COMPILATION
 
 # Analyze the lib and bin crates.
-PREFIX=$PWD/
-CARGO_TERM_PROGRESS_WHEN=never $CARGO_SAFETY_TOOL | sed "s#$PREFIX##g" | tee macro-expanded/cargo-safety-tool.txt
-cargo expand --lib >macro-expanded/lib.rs
-cargo expand --bin demo >macro-expanded/main.rs
+SP_OUT_DIR=$PWD/out
+EXPAND_DIR=$SP_OUT_DIR/macro-expanded
+rm -rf "$SP_OUT_DIR" # clear outputs
+mkdir -p "$EXPAND_DIR"
+$CARGO_SAFETY_TOOL # run safety-tool to check
+cargo expand --lib >"$EXPAND_DIR"/lib.rs
+cargo expand --bin demo >"$EXPAND_DIR"/main.rs
 cargo doc --no-deps
