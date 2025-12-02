@@ -48,7 +48,7 @@ cargo test
 popd
 
 # Test basic demo
-pushd ./tests/basic
+pushd ./tests/demo
 
 cargo clean
 
