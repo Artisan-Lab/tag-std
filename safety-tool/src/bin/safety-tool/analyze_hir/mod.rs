@@ -87,7 +87,7 @@ pub fn analyze_hir(tcx: TyCtxt) {
 
     diagnostics.emit();
     stat.update_metrics();
-    dbg!(&stat);
+    stat.write_to_file();
 }
 
 #[allow(dead_code)]

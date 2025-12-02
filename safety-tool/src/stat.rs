@@ -1,11 +1,11 @@
-use camino::Utf8PathBuf;
+use camino::{Utf8Path, Utf8PathBuf};
 use indexmap::IndexMap;
 use safety_parser::{
     configuration::{CACHE, GenDocOption, Key},
     safety::{PropertiesAndReason, Property},
 };
 use serde::{Deserialize, Serialize};
-use std::fmt;
+use std::{env, fmt, fs};
 
 #[derive(Deserialize, Serialize)]
 pub struct Stat {
@@ -41,6 +41,19 @@ impl Stat {
         // Update metrics.
         self.specs.update_metrics(&mut self.metrics);
     }
+
+    /// This method should be called after self is fully computed.
+    /// The write happens when at least 1 tag is used, and the
+    /// env var `SP_OUT_DIR` is set.
+    /// If the dir is not present, it'll be created.
+    pub fn write_to_file(&self) {
+        if self.metrics.used_tags != 0
+            && let Some(path) = self.krate.output_file_path()
+            && let Ok(file) = fs::File::create(path)
+        {
+            _ = serde_json::to_writer_pretty(file, self);
+        }
+    }
 }
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -50,6 +63,30 @@ pub struct Krate {
     #[serde(rename = "type")]
     pub typ: CrateType,
     pub version: String,
+}
+
+/// Read the env var `SP_OUT_DIR`. If the path doesn't exist,
+/// crrate it non-recursively.
+fn out_dir() -> Option<Utf8PathBuf> {
+    let out_dir = "SP_OUT_DIR";
+    let out_dir = env::var(out_dir).ok()?;
+    let out_dir = Utf8Path::new(&out_dir);
+    if !out_dir.exists() {
+        fs::create_dir(out_dir).ok()?;
+    }
+    out_dir.canonicalize_utf8().ok()
+}
+
+impl Krate {
+    fn output_file_path(&self) -> Option<Utf8PathBuf> {
+        let dir = out_dir()?;
+        let prefix = match self.typ {
+            CrateType::Bin => "bin-",
+            CrateType::Lib => "",
+        };
+        let file = format!("{prefix}{}.json", self.name);
+        Some(dir.join(file))
+    }
 }
 
 /// `TyCtxt::crate_type` returns a list:
