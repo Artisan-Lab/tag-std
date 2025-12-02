@@ -233,7 +233,6 @@ impl<'tcx> CollectCalleeTags<'tcx> {
     }
 
     pub fn into_stat_func(self) -> stat::Func {
-        let hir_id = self.tcx.local_def_id_to_hir_id(self.callee.hir_id.owner);
-        stat::new_callee(hir_id, self.tcx, self.tags)
+        stat::new_callee(self.callee.hir_id, self.callee.def_id, self.tcx, self.tags)
     }
 }

@@ -1,5 +1,5 @@
 use camino::Utf8PathBuf;
-use rustc_hir::HirId;
+use rustc_hir::{HirId, def_id::DefId};
 use rustc_middle::ty::TyCtxt;
 use rustc_session::config::CrateType as RawCrateType;
 use safety_parser::safety::{PropertiesAndReason, parse_attr_and_get_properties};
@@ -37,7 +37,7 @@ fn crate_type(v: &[RawCrateType]) -> CrateType {
     }
 }
 
-pub fn new_func(fn_hir_id: HirId, tcx: TyCtxt) -> Func {
+pub fn new_func(fn_hir_id: HirId, fn_def_id: DefId, tcx: TyCtxt) -> Func {
     let span = tcx.hir_span_with_body(fn_hir_id);
     let src_map = tcx.sess.source_map();
     let file_lines = src_map
@@ -45,7 +45,7 @@ pub fn new_func(fn_hir_id: HirId, tcx: TyCtxt) -> Func {
         .unwrap_or_else(|err| panic!("Failed to know {span:?}:\n{err:?}"));
 
     Func {
-        name: tcx.def_path_str(fn_hir_id.owner.to_def_id()),
+        name: tcx.def_path_str(fn_def_id),
         tags: Vec::new(),
         path: file_lines.file.name.prefer_local().to_string().into(),
         span: {
@@ -66,7 +66,9 @@ pub fn new_func(fn_hir_id: HirId, tcx: TyCtxt) -> Func {
 }
 
 pub fn new_caller(fn_hir_id: HirId, tcx: TyCtxt, attrs: &[String]) -> Func {
-    let mut func = new_func(fn_hir_id, tcx);
+    // The caller's hir node owner is itself.
+    let fn_def_id = fn_hir_id.owner.to_def_id();
+    let mut func = new_func(fn_hir_id, fn_def_id, tcx);
 
     for attr in attrs {
         let props = parse_attr_and_get_properties(attr);
@@ -91,8 +93,8 @@ pub fn push_tag(props: impl IntoIterator<Item = PropertiesAndReason>, tags: &mut
     }
 }
 
-pub fn new_callee(fn_hir_id: HirId, tcx: TyCtxt, tags: Vec<Tag>) -> Func {
-    let mut func = new_func(fn_hir_id, tcx);
+pub fn new_callee(fn_hir_id: HirId, fn_def_id: DefId, tcx: TyCtxt, tags: Vec<Tag>) -> Func {
+    let mut func = new_func(fn_hir_id, fn_def_id, tcx);
     func.tags = tags;
     func
 }
