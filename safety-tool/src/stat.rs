@@ -84,7 +84,7 @@ impl Specs {
         Specs { map, doc: cache.doc }
     }
 
-    pub fn get_usage_mut(&mut self, tag_name: &str) -> &mut Usage {
+    fn get_usage_mut(&mut self, tag_name: &str) -> &mut Usage {
         let val = self
             .map
             .get_mut(tag_name)
@@ -126,19 +126,19 @@ pub struct Usage {
 }
 
 impl Usage {
-    pub fn increment_type_vanilla(&mut self) {
+    fn increment_type_vanilla(&mut self) {
         self.types.entry(TagTypeUsage::Vanilla).and_modify(|c| *c += 1).or_insert(1);
     }
 
-    pub fn increment_type_any(&mut self) {
+    fn increment_type_any(&mut self) {
         self.types.entry(TagTypeUsage::Any).and_modify(|c| *c += 1).or_insert(1);
     }
 
-    pub fn increment_predicate(&mut self, predicate: Predicate) {
+    fn increment_predicate(&mut self, predicate: Predicate) {
         self.predicates.entry(predicate).and_modify(|c| *c += 1).or_insert(1);
     }
 
-    pub fn is_unused(&self) -> bool {
+    fn is_unused(&self) -> bool {
         self.types.is_empty() && self.predicates.is_empty()
     }
 }
