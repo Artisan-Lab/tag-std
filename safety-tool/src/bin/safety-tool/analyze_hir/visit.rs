@@ -204,7 +204,7 @@ impl<'tcx> CollectCalleeTags<'tcx> {
                 match syn::parse_str::<SafetyAttr>(&attr_str) {
                     Ok(attr) => {
                         let seg = &attr.attr.path().segments;
-                        if seg.first().map(|i| i.ident != "rapx").unwrap_or(true) {
+                        if seg.first().map(|i| i.ident != crate::REGISTER_TOOL).unwrap_or(true) {
                             // Skip non rapx attributes.
                             continue;
                         }
@@ -223,7 +223,9 @@ impl<'tcx> CollectCalleeTags<'tcx> {
             // Treat nearest parent tags as the call's tags.
             // This can be problematic if we allow partial discharging,
             // in which case we should continue bubbling up.
-            if found_nearest_tags {
+            // We don't include the caller tags here: callee must be
+            // discharged inside the function body.
+            if found_nearest_tags && parent == caller {
                 break;
             }
         }
