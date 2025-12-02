@@ -180,6 +180,7 @@ pub struct CollectCalleeTags<'tcx> {
     tcx: TyCtxt<'tcx>,
     tags: Vec<stat::Tag>,
     callee: Call,
+    #[allow(dead_code)]
     caller: HirId,
 }
 
@@ -190,7 +191,7 @@ impl<'tcx> CollectCalleeTags<'tcx> {
         tcx: TyCtxt<'tcx>,
         tool_attrs: &mut ToolAttrs,
     ) -> Option<Self> {
-        let Some(tag_state) = tool_attrs.get_tags(callee.def_id, tcx) else {
+        let Some(_tag_state) = tool_attrs.get_tags(callee.def_id, tcx) else {
             // No tool attrs to be checked on the callee.
             return None;
         };
