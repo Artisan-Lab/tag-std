@@ -51,11 +51,12 @@ pub fn new_func(fn_hir_id: HirId, tcx: TyCtxt) -> Func {
         span: {
             use std::fmt::Write;
             let mut buf = String::new();
+            // The line index stars from 0, while the first line in editors start from 1.
             match file_lines.lines.as_slice() {
                 [first, .., last] => {
-                    _ = write!(&mut buf, "{}:{}", first.line_index, last.line_index)
+                    _ = write!(&mut buf, "{}:{}", first.line_index + 1, last.line_index + 1)
                 }
-                [line] => _ = write!(&mut buf, "{}", line.line_index),
+                [line] => _ = write!(&mut buf, "{}", line.line_index + 1),
                 [] => (),
             }
             buf
