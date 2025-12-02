@@ -4,7 +4,7 @@ package.name = "rfl"
 
 #1. Synchronization(2)
 
-[tag.HoldLock]
+[tag.LockHold]
 args = [ "lock", "a"]
 desc = "The corresponding lock `{lock}` is held for the duration of lifetime '`{a}`."
 
@@ -12,17 +12,7 @@ desc = "The corresponding lock `{lock}` is held for the duration of lifetime '`{
 args = [ "loc" ]
 desc = "The memory block `{loc}` should not have data races."
 
-#2. Memory Access(2)
-
-[tag.Write]
-args = [ "dst", "len" ]
-desc = "The pointer `{dst}` is valid for writing `{len}` bytes."
-
-[tag.Read]
-args = [ "src", "len" ]
-desc = "The pointer `{src}` is valid for reading `{len}` bytes."
-
-#3. Non-Condition(8)
+#2. Non-Condition(8)
 
 [tag.NonDropped]
 args = [ "val", "event" ]
@@ -56,11 +46,19 @@ desc = "The pointee of `{ptr}` must not be accessed after this call."
 args = [ "val", "a" ]
 desc = "For the duration of the lifetime '{a}', there must not exist a value '{val}'."
 
-#4. Validity(7)
+#3. Validity(7)
 
 [tag.Valid]
 args = [ "val", "a" ]
 desc = "The value `{val}` must be valid for the duration of `{a}`."
+
+[tag.ValidWrite]
+args = [ "dst", "len" ]
+desc = "The pointer `{dst}` is valid for writing `{len}` bytes."
+
+[tag.ValidRead]
+args = [ "src", "len" ]
+desc = "The pointer `{src}` is valid for reading `{len}` bytes."
 
 [tag.MayInvalid]
 args = [ "v" ]
@@ -87,7 +85,7 @@ desc = "The pointer of type `{U}` can be castbale to type `{T}` ,  and any value
 args = [ "v" ]
 desc = "The value`{v}` must be a valid instance for usage."
 
-#5. Control Flow(6)
+#4. Control Flow(6)
 
 [tag.CalledBy]
 args = [ "env" ]
@@ -101,7 +99,7 @@ desc = "This function can only be called once."
 args = [ "fn" ]
 desc = "The function taged by this property can only be called after `{fn}` has been called."
 
-[tag.ReturnBy]
+[tag.OriginateFrom]
 args = [ "val", "fn" ]
 desc = "The value `{val}` is returned by a call to function `{fn}`."
 
@@ -113,7 +111,7 @@ desc = "Function `{fn}` can be called from any thread."
 args = [ "input" ]
 desc = "The argument `{input}` can only be called or accessed on the current thread."
 
-#6. Miscellaneous(6)
+#5. Miscellaneous(6)
 
 [tag.RefTransfer]
 args = [ "ptr", "ret" ]
@@ -139,7 +137,7 @@ desc = "The pointer `{p}` points at a field `{f}` of container `{C}`."
 args = [ "flag" ]
 desc = "The flag `{flag}` must already have been set."
 
-#7. List Operations(8)
+#6. List Operations(8)
 
 [tag.Empty]
 args = [ "l" ]

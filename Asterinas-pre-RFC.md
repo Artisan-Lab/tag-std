@@ -16,7 +16,6 @@ As a rising operating system emphasizing its special isolation method for unsafe
           unsafe {
               wrmsr(IA32_X2APIC_ESR, 0);
   ```
-
 - The provided safety comments may still be **incomplete or incorrect**, leading to potential misuse or misunderstanding. e.g., in [ostd::mm::frame::allocator::init()](https://github.com/asterinas/asterinas/blob/v0.16.1/ostd/src/mm/frame/allocator.rs#L199), the requirement is incomplete, and it must specify that the function must be called after `init_early_allocator`.
 
   ```rust
@@ -34,7 +33,7 @@ As a rising operating system emphasizing its special isolation method for unsafe
 
 #### Textual description: extensive and repetitive
 
-The current reliance on free-form comments for safety requirements has **maintainability and consistency challenges**. This approach sometimes results in verbose and repetitive documentation which introduce a significant maintenance burden. Any future change to a common safety invariant necessitates error-prone, manual updates to all affected comments, creating a risk that the documentation will fall out of sync with the code. 
+The current reliance on free-form comments for safety requirements has **maintainability and consistency challenges**. This approach sometimes results in verbose and repetitive documentation which introduce a significant maintenance burden. Any future change to a common safety invariant necessitates error-prone, manual updates to all affected comments, creating a risk that the documentation will fall out of sync with the code.
 
 #### More Precision: granularity and contracts
 
@@ -47,7 +46,7 @@ By moving towards a more structured system, we can:
 
 ### Design
 
-We propose checkable safety tags with a feasible safety tool to address the issues with four concrete gains:
+We propose checkable safety tags with a feasible safety tool to address the issues with three concrete gains:
 
 1. **Lightweight checking**. Our tool can check the unsafe APIs whether the safety requirements are fully provided and correctly constructed and whether all the safety requirements are  (with the help of discharge grammar).
 2. **Semantic granularity and reusability**. Each safety tag represents a single, precise safety primitive. This fine-grained approach makes safety contracts more explicit, easier to understand, and simpler to verify.  The tagging system also enables developers to reuse standardized safety primitives across different APIs, reducing duplication and ensuring consistent safety reasoning throughout the codebase.
@@ -64,10 +63,10 @@ In contrast, **safety tags** represent safety properties using a formal language
 - `type` is one of `{precond, hazard, option}`,
   - precond denotes a safety requirement that must be satisfied before invoking an unsafe API. Most unsafe APIs carry at least one precondition.
   - hazard denotes invoking the unsafe API may temporarily leave the program in a vulnerable state.
-  - option denotes an optional precondition for an unsafe API—conditions that are sufficient but not necessary to uphold the safety invariant. 
+  - option denotes an optional precondition for an unsafe API—conditions that are sufficient but not necessary to uphold the safety invariant.
 - `Prop` is a safety property (SP) instance. Multiple SPs can be grouped together by separating them with commas, such as `SP1, SP2`.
 - `: "reason"` is an *optional* string to clarify what SP means in the context.
-  -  when a reason string appears, use `;` to separate props like `SP1: ""; Sp2: ""`.
+  - when a reason string appears, use `;` to separate props like `SP1: ""; Sp2: ""`.
 
 Here are some basic syntax examples:
 
@@ -98,6 +97,7 @@ impl FaultEventRegisters {
 ```
 
 We can extract safety requirements above into two properties:
+
 
 | Type    | Property      | Arguments      | Description                                          |
 | ------- | ------------- | -------------- | ---------------------------------------------------- |
