@@ -86,6 +86,7 @@ pub fn analyze_hir(tcx: TyCtxt) {
     }
 
     diagnostics.emit();
+    stat.update_metrics();
     dbg!(&stat);
 }
 

@@ -8,9 +8,9 @@ pub use safety_tool::stat::*;
 pub fn new(tcx: TyCtxt) -> Stat {
     Stat {
         krate: new_crate(tcx),
-        specs: Spec::new(),
+        specs: Specs::new(),
         funcs: Vec::new(),
-        metrics: Metrics { coverage_rate: 0 },
+        metrics: Metrics::default(),
     }
 }
 
