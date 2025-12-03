@@ -625,6 +625,127 @@
   },
   "funcs": [
     {
+      "name": "MyStruct::get",
+      "safe": false,
+      "path": "src/lib.rs",
+      "span": "39:42",
+      "tags": [
+        {
+          "predicate": "Requires",
+          "tag": {
+            "Vanilla": {
+              "tag": {
+                "typ": null,
+                "name": "NonNull"
+              },
+              "args": [
+                "self . ptr"
+              ]
+            }
+          },
+          "doc": null
+        },
+        {
+          "predicate": "Requires",
+          "tag": {
+            "Vanilla": {
+              "tag": {
+                "typ": null,
+                "name": "ValidPtr"
+              },
+              "args": [
+                "self . ptr",
+                "u8",
+                "self . len"
+              ]
+            }
+          },
+          "doc": null
+        },
+        {
+          "predicate": "Requires",
+          "tag": {
+            "Vanilla": {
+              "tag": {
+                "typ": null,
+                "name": "Init"
+              },
+              "args": [
+                "self . ptr",
+                "u8",
+                "self . len"
+              ]
+            }
+          },
+          "doc": null
+        },
+        {
+          "predicate": "Requires",
+          "tag": {
+            "Vanilla": {
+              "tag": {
+                "typ": null,
+                "name": "Alive"
+              },
+              "args": [
+                "self . ptr",
+                "_"
+              ]
+            }
+          },
+          "doc": null
+        },
+        {
+          "predicate": "Requires",
+          "tag": {
+            "Vanilla": {
+              "tag": {
+                "typ": null,
+                "name": "Alias"
+              },
+              "args": [
+                "self . ptr"
+              ]
+            }
+          },
+          "doc": null
+        },
+        {
+          "predicate": "Requires",
+          "tag": {
+            "Vanilla": {
+              "tag": {
+                "typ": null,
+                "name": "Align"
+              },
+              "args": [
+                "self . ptr",
+                "u8"
+              ]
+            }
+          },
+          "doc": null
+        },
+        {
+          "predicate": "Requires",
+          "tag": {
+            "Vanilla": {
+              "tag": {
+                "typ": null,
+                "name": "ValidNum"
+              },
+              "args": [
+                "self . len * sizeof (u8)",
+                "[0 , isize :: MAX]"
+              ]
+            }
+          },
+          "doc": null
+        }
+      ],
+      "unsafe_calls": []
+    },
+    {
       "name": "test",
       "safe": false,
       "path": "src/lib.rs",
@@ -751,127 +872,6 @@
         }
       ],
       "unsafe_calls": []
-    },
-    {
-      "name": "MyStruct::get",
-      "safe": false,
-      "path": "src/lib.rs",
-      "span": "39:42",
-      "tags": [
-        {
-          "predicate": "Requires",
-          "tag": {
-            "Vanilla": {
-              "tag": {
-                "typ": null,
-                "name": "NonNull"
-              },
-              "args": [
-                "self . ptr"
-              ]
-            }
-          },
-          "doc": null
-        },
-        {
-          "predicate": "Requires",
-          "tag": {
-            "Vanilla": {
-              "tag": {
-                "typ": null,
-                "name": "ValidPtr"
-              },
-              "args": [
-                "self . ptr",
-                "u8",
-                "self . len"
-              ]
-            }
-          },
-          "doc": null
-        },
-        {
-          "predicate": "Requires",
-          "tag": {
-            "Vanilla": {
-              "tag": {
-                "typ": null,
-                "name": "Init"
-              },
-              "args": [
-                "self . ptr",
-                "u8",
-                "self . len"
-              ]
-            }
-          },
-          "doc": null
-        },
-        {
-          "predicate": "Requires",
-          "tag": {
-            "Vanilla": {
-              "tag": {
-                "typ": null,
-                "name": "Alive"
-              },
-              "args": [
-                "self . ptr",
-                "_"
-              ]
-            }
-          },
-          "doc": null
-        },
-        {
-          "predicate": "Requires",
-          "tag": {
-            "Vanilla": {
-              "tag": {
-                "typ": null,
-                "name": "Alias"
-              },
-              "args": [
-                "self . ptr"
-              ]
-            }
-          },
-          "doc": null
-        },
-        {
-          "predicate": "Requires",
-          "tag": {
-            "Vanilla": {
-              "tag": {
-                "typ": null,
-                "name": "Align"
-              },
-              "args": [
-                "self . ptr",
-                "u8"
-              ]
-            }
-          },
-          "doc": null
-        },
-        {
-          "predicate": "Requires",
-          "tag": {
-            "Vanilla": {
-              "tag": {
-                "typ": null,
-                "name": "ValidNum"
-              },
-              "args": [
-                "self . len * sizeof (u8)",
-                "[0 , isize :: MAX]"
-              ]
-            }
-          },
-          "doc": null
-        }
-      ],
-      "unsafe_calls": []
     }
   ],
   "metrics": {
@@ -886,14 +886,6 @@
         "as_vanilla": 2,
         "in_any": 0
       },
-      "Align": {
-        "occurence": 1,
-        "requires": 1,
-        "checked": 0,
-        "delegated": 0,
-        "as_vanilla": 1,
-        "in_any": 0
-      },
       "Alive": {
         "occurence": 2,
         "requires": 2,
@@ -901,6 +893,30 @@
         "delegated": 0,
         "as_vanilla": 1,
         "in_any": 1
+      },
+      "Init": {
+        "occurence": 2,
+        "requires": 2,
+        "checked": 0,
+        "delegated": 0,
+        "as_vanilla": 2,
+        "in_any": 0
+      },
+      "ValidNum": {
+        "occurence": 2,
+        "requires": 2,
+        "checked": 0,
+        "delegated": 0,
+        "as_vanilla": 2,
+        "in_any": 0
+      },
+      "Align": {
+        "occurence": 1,
+        "requires": 1,
+        "checked": 0,
+        "delegated": 0,
+        "as_vanilla": 1,
+        "in_any": 0
       },
       "Deref": {
         "occurence": 1,
@@ -918,14 +934,6 @@
         "as_vanilla": 1,
         "in_any": 0
       },
-      "Init": {
-        "occurence": 2,
-        "requires": 2,
-        "checked": 0,
-        "delegated": 0,
-        "as_vanilla": 2,
-        "in_any": 0
-      },
       "NonNull": {
         "occurence": 1,
         "requires": 1,
@@ -940,14 +948,6 @@
         "checked": 0,
         "delegated": 0,
         "as_vanilla": 1,
-        "in_any": 0
-      },
-      "ValidNum": {
-        "occurence": 2,
-        "requires": 2,
-        "checked": 0,
-        "delegated": 0,
-        "as_vanilla": 2,
         "in_any": 0
       },
       "ValidPtr": {

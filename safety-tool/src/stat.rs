@@ -40,6 +40,18 @@ impl Stat {
 
         // Update metrics.
         self.specs.update_metrics(&mut self.metrics);
+
+        // Sort.
+        self.sort();
+    }
+
+    fn sort(&mut self) {
+        // Sort by function name in alphabet order.
+        self.funcs.sort_unstable_by(|a, b| a.name.cmp(&b.name));
+        // Sort by occurence in descending order first and then by function name in alphabet order.
+        self.metrics.used.sort_unstable_by(|a_name, a_cov, b_name, b_cov| {
+            (b_cov.occurence, a_name).cmp(&(a_cov.occurence, b_name))
+        });
     }
 
     /// This method should be called after self is fully computed.
