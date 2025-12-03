@@ -5,6 +5,8 @@ on:
 
 env:
   CARGO_TERM_COLOR: always
+  # store stat json
+  SP_OUT_DIR: /tmp/sp-out
 
 jobs:
   check-verify-rust-std:
@@ -26,3 +28,8 @@ jobs:
       - name: Check verify-rust-std
         run: .github/verify-rust-std/check.sh
 
+      - name: Upload stat JSONs
+        uses: actions/upload-artifact@v4
+        with:
+          path: ${{env.SP_OUT_DIR }}
+          name: stat_verify-rust-std
