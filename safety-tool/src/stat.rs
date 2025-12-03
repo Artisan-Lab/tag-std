@@ -36,9 +36,13 @@ impl Stat {
             for callee in &func.unsafe_calls {
                 callee.update_specs(&mut self.specs);
             }
+            func.update_metrics(&mut self.metrics.funcs);
         }
 
-        // Update metrics.
+        // Merge metrics of funcs.
+        self.metrics.funcs.merge();
+
+        // Update metrics as per specs.
         self.specs.update_metrics(&mut self.metrics);
 
         // Sort.
@@ -52,6 +56,11 @@ impl Stat {
         self.metrics.used.sort_unstable_by(|a_name, a_cov, b_name, b_cov| {
             (b_cov.occurence, a_name).cmp(&(a_cov.occurence, b_name))
         });
+        // Sort by unsafe call counts.
+        self.metrics.funcs.safe.unsafe_calls.sort_unstable_keys();
+        self.metrics.funcs.r#unsafe.unsafe_calls.sort_unstable_keys();
+
+        // Tags in spec have been in alphabet order, and unused list are in the insertion order.
     }
 
     /// This method should be called after self is fully computed.
@@ -231,6 +240,26 @@ impl Func {
             }
         }
     }
+
+    fn update_metrics(&self, metrics_funcs: &mut MetricsFunctions) {
+        let m = if self.safe { &mut metrics_funcs.safe } else { &mut metrics_funcs.r#unsafe };
+        m.total.funcs += 1;
+
+        if !self.tags.is_empty() {
+            m.total.funcs_with_tags_declared += 1;
+        }
+        if self.unsafe_calls.iter().any(|c| !c.tags.is_empty()) {
+            m.total.funcs_with_tags_discharged += 1;
+        }
+
+        m.total.declared_tags += self.tags.len() as u16;
+        m.total.discharged_tags +=
+            self.unsafe_calls.iter().map(|c| c.tags.len() as u16).sum::<u16>();
+
+        let unsafe_calls = self.unsafe_calls.len() as u16;
+        m.total.unsafe_calls += unsafe_calls;
+        m.unsafe_calls.entry(unsafe_calls).and_modify(|c| *c += 1).or_insert(1);
+    }
 }
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -283,6 +312,7 @@ pub struct Metrics {
     pub coverage: MetricsCoverage,
     /// Unused tag names.
     pub unused: Vec<Box<str>>,
+    pub funcs: MetricsFunctions,
 }
 
 #[derive(Debug, Default, Deserialize, Serialize)]
@@ -331,5 +361,46 @@ impl MetricsCoverage {
         self.requires += detail.requires;
         self.checked += detail.checked;
         self.delegated += detail.delegated;
+    }
+}
+
+#[derive(Debug, Default, Deserialize, Serialize)]
+pub struct MetricsFunctions {
+    total: MetricsFuncsTotal,
+    safe: MetricsFuncs,
+    r#unsafe: MetricsFuncs,
+}
+
+impl MetricsFunctions {
+    fn merge(&mut self) {
+        self.total.merge(&self.safe.total);
+        self.total.merge(&self.r#unsafe.total);
+    }
+}
+
+#[derive(Debug, Default, Deserialize, Serialize)]
+pub struct MetricsFuncs {
+    total: MetricsFuncsTotal,
+    unsafe_calls: IndexMap<u16, u16>,
+}
+
+#[derive(Debug, Default, Deserialize, Serialize)]
+pub struct MetricsFuncsTotal {
+    funcs: u16,
+    funcs_with_tags_declared: u16,
+    funcs_with_tags_discharged: u16,
+    declared_tags: u16,
+    discharged_tags: u16,
+    unsafe_calls: u16,
+}
+
+impl MetricsFuncsTotal {
+    fn merge(&mut self, other: &Self) {
+        self.funcs += other.funcs;
+        self.funcs_with_tags_declared += other.funcs_with_tags_declared;
+        self.funcs_with_tags_discharged += other.funcs_with_tags_discharged;
+        self.declared_tags += other.declared_tags;
+        self.discharged_tags += other.discharged_tags;
+        self.unsafe_calls += other.unsafe_calls;
     }
 }

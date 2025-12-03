@@ -1,0 +1,2147 @@
+{
+  "crate": {
+    "name": "pin_init",
+    "path": "/home/runner/work/tag-std/tag-std/linux/rust/pin-init/src/lib.rs",
+    "type": "Lib",
+    "version": ""
+  },
+  "specs": {
+    "map": {
+      "Access": {
+        "item": {
+          "tag": {
+            "args": [
+              "T",
+              "ret_val",
+              "type"
+            ],
+            "desc": "The caller must have `{type}` access to `{T}` for the duration of `{ret_val}`.",
+            "expr": null,
+            "types": [
+              "precond"
+            ],
+            "url": null
+          },
+          "src": "/home/runner/work/tag-std/tag-std/safety-tool/assets/sp-rust-for-linux.toml"
+        },
+        "usage": {
+          "types": {},
+          "predicates": {}
+        }
+      },
+      "ActiveContext": {
+        "item": {
+          "tag": {
+            "args": [
+              "val"
+            ],
+            "desc": "The returned object is only used to access `{val}` within the task context that was active when this function was called.",
+            "expr": null,
+            "types": [
+              "precond"
+            ],
+            "url": null
+          },
+          "src": "/home/runner/work/tag-std/tag-std/safety-tool/assets/sp-rust-for-linux.toml"
+        },
+        "usage": {
+          "types": {},
+          "predicates": {}
+        }
+      },
+      "Alias": {
+        "item": {
+          "tag": {
+            "args": [
+              "p1",
+              "p2"
+            ],
+            "desc": "`{p1}` must not have other alias",
+            "expr": "p1 = p2",
+            "types": [
+              "hazard"
+            ],
+            "url": "https://github.com/Artisan-Lab/tag-std/blob/main/primitive-sp.md#342-alias"
+          },
+          "src": "/home/runner/work/tag-std/tag-std/safety-tool/assets/sp-core.toml"
+        },
+        "usage": {
+          "types": {},
+          "predicates": {}
+        }
+      },
+      "Align": {
+        "item": {
+          "tag": {
+            "args": [
+              "p",
+              "T"
+            ],
+            "desc": "pointer `{p}` must be properly aligned for type `{T}`",
+            "expr": "p % alignment(T) = 0",
+            "types": [
+              "precond"
+            ],
+            "url": "https://doc.rust-lang.org/nightly/std/ptr/index.html#alignment"
+          },
+          "src": "/home/runner/work/tag-std/tag-std/safety-tool/assets/sp-core.toml"
+        },
+        "usage": {
+          "types": {},
+          "predicates": {}
+        }
+      },
+      "Alive": {
+        "item": {
+          "tag": {
+            "args": [
+              "p",
+              "l"
+            ],
+            "desc": "the reference of `{p}` must outlive the lifetime `{l}`",
+            "expr": "lifetime(∗ p) ≥ l",
+            "types": [
+              "precond"
+            ],
+            "url": "https://github.com/Artisan-Lab/tag-std/blob/main/primitive-sp.md#343-lifetime"
+          },
+          "src": "/home/runner/work/tag-std/tag-std/safety-tool/assets/sp-core.toml"
+        },
+        "usage": {
+          "types": {},
+          "predicates": {}
+        }
+      },
+      "Allocated": {
+        "item": {
+          "tag": {
+            "args": [
+              "p",
+              "T",
+              "len",
+              "A"
+            ],
+            "desc": "the memory range `[{p}, {p} + sizeof({T})*{len})` must be allocated by allocator `{A}`",
+            "expr": "∀ i ∈ 0..sizeof(T)∗len, allocator(p + i) = A",
+            "types": [
+              "precond"
+            ],
+            "url": "https://doc.rust-lang.org/nightly/std/ptr/index.html#allocation"
+          },
+          "src": "/home/runner/work/tag-std/tag-std/safety-tool/assets/sp-core.toml"
+        },
+        "usage": {
+          "types": {
+            "Vanilla": 5
+          },
+          "predicates": {
+            "Requires": 5
+          }
+        }
+      },
+      "AnyThread": {
+        "item": {
+          "tag": {
+            "args": [
+              "fn"
+            ],
+            "desc": "Function `{fn}` can be called from any thread.",
+            "expr": null,
+            "types": [
+              "precond"
+            ],
+            "url": null
+          },
+          "src": "/home/runner/work/tag-std/tag-std/safety-tool/assets/sp-rust-for-linux.toml"
+        },
+        "usage": {
+          "types": {},
+          "predicates": {}
+        }
+      },
+      "Associated": {
+        "item": {
+          "tag": {
+            "args": [
+              "val",
+              "T"
+            ],
+            "desc": "The value `{val}` is associated with a value of type `{T}`.",
+            "expr": null,
+            "types": [
+              "precond"
+            ],
+            "url": null
+          },
+          "src": "/home/runner/work/tag-std/tag-std/safety-tool/assets/sp-rust-for-linux.toml"
+        },
+        "usage": {
+          "types": {},
+          "predicates": {}
+        }
+      },
+      "CallOnce": {
+        "item": {
+          "tag": {
+            "args": [],
+            "desc": "This function can only be called once.",
+            "expr": null,
+            "types": [
+              "precond"
+            ],
+            "url": null
+          },
+          "src": "/home/runner/work/tag-std/tag-std/safety-tool/assets/sp-rust-for-linux.toml"
+        },
+        "usage": {
+          "types": {},
+          "predicates": {}
+        }
+      },
+      "CalledBy": {
+        "item": {
+          "tag": {
+            "args": [
+              "env"
+            ],
+            "desc": "This function is only called by the specified environment `{env}`.",
+            "expr": null,
+            "types": [
+              "precond"
+            ],
+            "url": null
+          },
+          "src": "/home/runner/work/tag-std/tag-std/safety-tool/assets/sp-rust-for-linux.toml"
+        },
+        "usage": {
+          "types": {},
+          "predicates": {}
+        }
+      },
+      "ContainerOf": {
+        "item": {
+          "tag": {
+            "args": [
+              "p",
+              "C",
+              "f"
+            ],
+            "desc": "The pointer `{p}` points at a field `{f}` of container `{C}`.",
+            "expr": null,
+            "types": [
+              "precond"
+            ],
+            "url": null
+          },
+          "src": "/home/runner/work/tag-std/tag-std/safety-tool/assets/sp-rust-for-linux.toml"
+        },
+        "usage": {
+          "types": {},
+          "predicates": {}
+        }
+      },
+      "CurThread": {
+        "item": {
+          "tag": {
+            "args": [
+              "input"
+            ],
+            "desc": "The argument `{input}` can only be called or accessed on the current thread.",
+            "expr": null,
+            "types": [
+              "precond"
+            ],
+            "url": null
+          },
+          "src": "/home/runner/work/tag-std/tag-std/safety-tool/assets/sp-rust-for-linux.toml"
+        },
+        "usage": {
+          "types": {},
+          "predicates": {}
+        }
+      },
+      "Deref": {
+        "item": {
+          "tag": {
+            "args": [
+              "p",
+              "T",
+              "len"
+            ],
+            "desc": "pointer `{p}` must be dereferencable in the `sizeof({T})*{len}` memory from it",
+            "expr": "Allocated(p, T, len, *) && InBound(p, T, len)",
+            "types": [
+              "precond"
+            ],
+            "url": "https://doc.rust-lang.org/std/ptr/index.html#safety"
+          },
+          "src": "/home/runner/work/tag-std/tag-std/safety-tool/assets/sp-core.toml"
+        },
+        "usage": {
+          "types": {},
+          "predicates": {}
+        }
+      },
+      "Empty": {
+        "item": {
+          "tag": {
+            "args": [
+              "l"
+            ],
+            "desc": "The container `{l}` must be empty.",
+            "expr": "l.len() == 0",
+            "types": [
+              "precond"
+            ],
+            "url": null
+          },
+          "src": "/home/runner/work/tag-std/tag-std/safety-tool/assets/sp-rust-for-linux.toml"
+        },
+        "usage": {
+          "types": {},
+          "predicates": {}
+        }
+      },
+      "Equal": {
+        "item": {
+          "tag": {
+            "args": [
+              "l",
+              "r"
+            ],
+            "desc": "The left val `{l}` must be equal to the right val `{r}`.",
+            "expr": "l == r",
+            "types": [
+              "precond"
+            ],
+            "url": null
+          },
+          "src": "/home/runner/work/tag-std/tag-std/safety-tool/assets/sp-rust-for-linux.toml"
+        },
+        "usage": {
+          "types": {},
+          "predicates": {}
+        }
+      },
+      "FlagSet": {
+        "item": {
+          "tag": {
+            "args": [
+              "flag"
+            ],
+            "desc": "The flag `{flag}` must already have been set.",
+            "expr": null,
+            "types": [
+              "precond"
+            ],
+            "url": null
+          },
+          "src": "/home/runner/work/tag-std/tag-std/safety-tool/assets/sp-rust-for-linux.toml"
+        },
+        "usage": {
+          "types": {},
+          "predicates": {}
+        }
+      },
+      "InBound": {
+        "item": {
+          "tag": {
+            "args": [
+              "p",
+              "T",
+              "len"
+            ],
+            "desc": "the pointer `{p}` and its offset up to `sizeof({T})*{len}` must point to a single allocated object",
+            "expr": "mem(p, p+ sizeof(T) * len) ∈ single allocated object",
+            "types": [
+              "precond"
+            ],
+            "url": "https://github.com/Artisan-Lab/tag-std/blob/main/primitive-sp.md#321-allocation"
+          },
+          "src": "/home/runner/work/tag-std/tag-std/safety-tool/assets/sp-core.toml"
+        },
+        "usage": {
+          "types": {},
+          "predicates": {}
+        }
+      },
+      "InList": {
+        "item": {
+          "tag": {
+            "args": [
+              "list",
+              "val"
+            ],
+            "desc": "The value {val} must be in list `{list}`.",
+            "expr": null,
+            "types": [
+              "precond"
+            ],
+            "url": null
+          },
+          "src": "/home/runner/work/tag-std/tag-std/safety-tool/assets/sp-rust-for-linux.toml"
+        },
+        "usage": {
+          "types": {},
+          "predicates": {}
+        }
+      },
+      "Init": {
+        "item": {
+          "tag": {
+            "args": [
+              "p",
+              "T",
+              "len"
+            ],
+            "desc": "the memory range `[{p}, {p} + sizeof({T})*{len}]` must be fully initialized for type `{T}`",
+            "expr": "∀ i ∈ 0..len, mem(p + sizeof(T) * i, p + sizeof(T) * (i+1)) = valid(T)",
+            "types": [
+              "precond"
+            ],
+            "url": "https://github.com/Artisan-Lab/tag-std/blob/main/primitive-sp.md#333-initialization"
+          },
+          "src": "/home/runner/work/tag-std/tag-std/safety-tool/assets/sp-core.toml"
+        },
+        "usage": {
+          "types": {},
+          "predicates": {}
+        }
+      },
+      "Invariant": {
+        "item": {
+          "tag": {
+            "args": [
+              "ptr"
+            ],
+            "desc": "The type invariants for `*{ptr}` must hold for the pointee of `{ptr}`.",
+            "expr": null,
+            "types": [
+              "precond"
+            ],
+            "url": null
+          },
+          "src": "/home/runner/work/tag-std/tag-std/safety-tool/assets/sp-rust-for-linux.toml"
+        },
+        "usage": {
+          "types": {},
+          "predicates": {}
+        }
+      },
+      "Layout": {
+        "item": {
+          "tag": {
+            "args": [
+              "p",
+              "layout"
+            ],
+            "desc": "the memory pointed by `{p}` must remain consistent with `{layout}`",
+            "expr": "ValidNum(rem(p, layout.align), 0) && Allocated(p, u8, layout.size, heap)",
+            "types": [
+              "precond"
+            ],
+            "url": "https://github.com/Artisan-Lab/tag-std/blob/main/primitive-sp.md#22-compound-sps-used-in-rustdoc"
+          },
+          "src": "/home/runner/work/tag-std/tag-std/safety-tool/assets/sp-core.toml"
+        },
+        "usage": {
+          "types": {},
+          "predicates": {}
+        }
+      },
+      "LockHold": {
+        "item": {
+          "tag": {
+            "args": [
+              "lock",
+              "a"
+            ],
+            "desc": "The corresponding lock `{lock}` is held for the duration of lifetime '`{a}`.",
+            "expr": null,
+            "types": [
+              "precond"
+            ],
+            "url": null
+          },
+          "src": "/home/runner/work/tag-std/tag-std/safety-tool/assets/sp-rust-for-linux.toml"
+        },
+        "usage": {
+          "types": {},
+          "predicates": {}
+        }
+      },
+      "MayInvalid": {
+        "item": {
+          "tag": {
+            "args": [
+              "v"
+            ],
+            "desc": "The value `{v}` may become invalid during later usage.",
+            "expr": null,
+            "types": [
+              "hazard"
+            ],
+            "url": null
+          },
+          "src": "/home/runner/work/tag-std/tag-std/safety-tool/assets/sp-rust-for-linux.toml"
+        },
+        "usage": {
+          "types": {},
+          "predicates": {}
+        }
+      },
+      "NoPadding": {
+        "item": {
+          "tag": {
+            "args": [
+              "T"
+            ],
+            "desc": "type `{T}` must have no padding bytes",
+            "expr": "padding(T) != 0",
+            "types": [
+              "precond"
+            ],
+            "url": "https://github.com/Artisan-Lab/tag-std/blob/main/primitive-sp.md#313-padding"
+          },
+          "src": "/home/runner/work/tag-std/tag-std/safety-tool/assets/sp-core.toml"
+        },
+        "usage": {
+          "types": {},
+          "predicates": {}
+        }
+      },
+      "NonAccessable": {
+        "item": {
+          "tag": {
+            "args": [
+              "ptr"
+            ],
+            "desc": "The pointee of `{ptr}` must not be accessed after this call.",
+            "expr": null,
+            "types": [
+              "precond"
+            ],
+            "url": null
+          },
+          "src": "/home/runner/work/tag-std/tag-std/safety-tool/assets/sp-rust-for-linux.toml"
+        },
+        "usage": {
+          "types": {},
+          "predicates": {}
+        }
+      },
+      "NonConCurrent": {
+        "item": {
+          "tag": {
+            "args": [
+              "val"
+            ],
+            "desc": "The value `{val}` should not be accessed concurrently by multiple users.",
+            "expr": null,
+            "types": [
+              "precond"
+            ],
+            "url": null
+          },
+          "src": "/home/runner/work/tag-std/tag-std/safety-tool/assets/sp-rust-for-linux.toml"
+        },
+        "usage": {
+          "types": {},
+          "predicates": {}
+        }
+      },
+      "NonData_race": {
+        "item": {
+          "tag": {
+            "args": [
+              "loc"
+            ],
+            "desc": "The memory block `{loc}` should not have data races.",
+            "expr": null,
+            "types": [
+              "precond"
+            ],
+            "url": null
+          },
+          "src": "/home/runner/work/tag-std/tag-std/safety-tool/assets/sp-rust-for-linux.toml"
+        },
+        "usage": {
+          "types": {},
+          "predicates": {}
+        }
+      },
+      "NonDropped": {
+        "item": {
+          "tag": {
+            "args": [
+              "val",
+              "event"
+            ],
+            "desc": "The value `{val}` is not dropped when it is used in the context of `{event}`.",
+            "expr": null,
+            "types": [
+              "precond"
+            ],
+            "url": null
+          },
+          "src": "/home/runner/work/tag-std/tag-std/safety-tool/assets/sp-rust-for-linux.toml"
+        },
+        "usage": {
+          "types": {},
+          "predicates": {}
+        }
+      },
+      "NonExist": {
+        "item": {
+          "tag": {
+            "args": [
+              "T",
+              "val"
+            ],
+            "desc": "An instance of type `{T}` must not exist for value '{val}'.",
+            "expr": null,
+            "types": [
+              "precond"
+            ],
+            "url": null
+          },
+          "src": "/home/runner/work/tag-std/tag-std/safety-tool/assets/sp-rust-for-linux.toml"
+        },
+        "usage": {
+          "types": {},
+          "predicates": {}
+        }
+      },
+      "NonInList": {
+        "item": {
+          "tag": {
+            "args": [
+              "list",
+              "val"
+            ],
+            "desc": "The value {val} must not be in the list `{list}`.",
+            "expr": null,
+            "types": [
+              "precond"
+            ],
+            "url": null
+          },
+          "src": "/home/runner/work/tag-std/tag-std/safety-tool/assets/sp-rust-for-linux.toml"
+        },
+        "usage": {
+          "types": {},
+          "predicates": {}
+        }
+      },
+      "NonInstance": {
+        "item": {
+          "tag": {
+            "args": [
+              "val",
+              "a"
+            ],
+            "desc": "For the duration of the lifetime '{a}', there must not exist a value '{val}'.",
+            "expr": null,
+            "types": [
+              "precond"
+            ],
+            "url": null
+          },
+          "src": "/home/runner/work/tag-std/tag-std/safety-tool/assets/sp-rust-for-linux.toml"
+        },
+        "usage": {
+          "types": {},
+          "predicates": {}
+        }
+      },
+      "NonMutRef": {
+        "item": {
+          "tag": {
+            "args": [
+              "val"
+            ],
+            "desc": "There is no mutable reference to `{val}` created.",
+            "expr": null,
+            "types": [
+              "precond"
+            ],
+            "url": null
+          },
+          "src": "/home/runner/work/tag-std/tag-std/safety-tool/assets/sp-rust-for-linux.toml"
+        },
+        "usage": {
+          "types": {},
+          "predicates": {}
+        }
+      },
+      "NonMutate": {
+        "item": {
+          "tag": {
+            "args": [
+              "ptr",
+              "val"
+            ],
+            "desc": "When value `{val}` is alive, the memory pointed at by `{ptr}` must not be mutated.",
+            "expr": null,
+            "types": [
+              "precond"
+            ],
+            "url": null
+          },
+          "src": "/home/runner/work/tag-std/tag-std/safety-tool/assets/sp-rust-for-linux.toml"
+        },
+        "usage": {
+          "types": {},
+          "predicates": {}
+        }
+      },
+      "NonNull": {
+        "item": {
+          "tag": {
+            "args": [
+              "p"
+            ],
+            "desc": "pointer `{p}` must not be null",
+            "expr": "p != 0",
+            "types": [
+              "precond"
+            ],
+            "url": "https://github.com/Artisan-Lab/tag-std/blob/main/primitive-sp.md#32-pointer-validity"
+          },
+          "src": "/home/runner/work/tag-std/tag-std/safety-tool/assets/sp-core.toml"
+        },
+        "usage": {
+          "types": {},
+          "predicates": {}
+        }
+      },
+      "NonOverlap": {
+        "item": {
+          "tag": {
+            "args": [
+              "dst",
+              "src",
+              "T",
+              "len"
+            ],
+            "desc": "the memory ranges `[{dst}, {dst} + sizeof({T})*{len})` and `[{src}, {src} + sizeof({T})*{len}]` must not overlap",
+            "expr": "|dst - src| ≥ sizeof(T) * len",
+            "types": [
+              "precond"
+            ],
+            "url": "https://github.com/Artisan-Lab/tag-std/blob/main/primitive-sp.md#321-allocation"
+          },
+          "src": "/home/runner/work/tag-std/tag-std/safety-tool/assets/sp-core.toml"
+        },
+        "usage": {
+          "types": {},
+          "predicates": {}
+        }
+      },
+      "NonOwned": {
+        "item": {
+          "tag": {
+            "args": [
+              "p"
+            ],
+            "desc": "the pointer `{p}` doesn't hold exclusive ownership of its reference",
+            "expr": "ownership(*p) = none",
+            "types": [
+              "precond"
+            ],
+            "url": "https://github.com/Artisan-Lab/tag-std/blob/main/primitive-sp.md#341-onwership"
+          },
+          "src": "/home/runner/work/tag-std/tag-std/safety-tool/assets/sp-core.toml"
+        },
+        "usage": {
+          "types": {},
+          "predicates": {}
+        }
+      },
+      "NonUsed": {
+        "item": {
+          "tag": {
+            "args": [
+              "val"
+            ],
+            "desc": "This value `{val}` must not be used as an argument in any other function.",
+            "expr": null,
+            "types": [
+              "precond"
+            ],
+            "url": null
+          },
+          "src": "/home/runner/work/tag-std/tag-std/safety-tool/assets/sp-rust-for-linux.toml"
+        },
+        "usage": {
+          "types": {},
+          "predicates": {}
+        }
+      },
+      "NonVolatile": {
+        "item": {
+          "tag": {
+            "args": [
+              "p",
+              "T",
+              "len"
+            ],
+            "desc": "the memory access of `[{p}, {p} + sizeof({T})*{len}]` must be volatile",
+            "expr": "∄ another thread tid, tid.write(p, p+sizeof(T)*len)",
+            "types": [
+              "precond"
+            ],
+            "url": "https://github.com/Artisan-Lab/tag-std/blob/main/primitive-sp.md#352-volatility"
+          },
+          "src": "/home/runner/work/tag-std/tag-std/safety-tool/assets/sp-core.toml"
+        },
+        "usage": {
+          "types": {},
+          "predicates": {}
+        }
+      },
+      "NonZero": {
+        "item": {
+          "tag": {
+            "args": [
+              "val",
+              "a"
+            ],
+            "desc": "The value `{val}` remains non-zero for the duration of the lifetime `{a}`.",
+            "expr": null,
+            "types": [
+              "precond"
+            ],
+            "url": null
+          },
+          "src": "/home/runner/work/tag-std/tag-std/safety-tool/assets/sp-rust-for-linux.toml"
+        },
+        "usage": {
+          "types": {},
+          "predicates": {}
+        }
+      },
+      "Null": {
+        "item": {
+          "tag": {
+            "args": [
+              "p"
+            ],
+            "desc": "The pointer `{p}` must be null.",
+            "expr": "p == 0",
+            "types": [
+              "precond"
+            ],
+            "url": null
+          },
+          "src": "/home/runner/work/tag-std/tag-std/safety-tool/assets/sp-rust-for-linux.toml"
+        },
+        "usage": {
+          "types": {},
+          "predicates": {}
+        }
+      },
+      "Opened": {
+        "item": {
+          "tag": {
+            "args": [
+              "fd"
+            ],
+            "desc": "the file descriptor `{fd}` must be valid and open",
+            "expr": "∃ openfile()->fd && ∄ closefile(fd)",
+            "types": [
+              "precond"
+            ],
+            "url": "https://github.com/Artisan-Lab/tag-std/blob/main/primitive-sp.md#353-opened-file"
+          },
+          "src": "/home/runner/work/tag-std/tag-std/safety-tool/assets/sp-core.toml"
+        },
+        "usage": {
+          "types": {},
+          "predicates": {}
+        }
+      },
+      "OriginateFrom": {
+        "item": {
+          "tag": {
+            "args": [
+              "val",
+              "fn"
+            ],
+            "desc": "The value `{val}` is returned by a call to function `{fn}`.",
+            "expr": null,
+            "types": [
+              "precond"
+            ],
+            "url": null
+          },
+          "src": "/home/runner/work/tag-std/tag-std/safety-tool/assets/sp-rust-for-linux.toml"
+        },
+        "usage": {
+          "types": {},
+          "predicates": {}
+        }
+      },
+      "Owning": {
+        "item": {
+          "tag": {
+            "args": [
+              "p"
+            ],
+            "desc": "the pointer `{p}` must hold exclusive ownership of its reference",
+            "expr": "ownership(*p) != none",
+            "types": [
+              "precond"
+            ],
+            "url": "https://github.com/Artisan-Lab/tag-std/blob/main/primitive-sp.md#341-onwership"
+          },
+          "src": "/home/runner/work/tag-std/tag-std/safety-tool/assets/sp-core.toml"
+        },
+        "usage": {
+          "types": {},
+          "predicates": {}
+        }
+      },
+      "Pinned": {
+        "item": {
+          "tag": {
+            "args": [
+              "p",
+              "l"
+            ],
+            "desc": "pointer `{p}` must remain at the same memory address for the duration of lifetime `{l}`",
+            "expr": "∀ t ∈ 0..l, &(∗p)0 = pt",
+            "types": [
+              "hazard"
+            ],
+            "url": "https://github.com/Artisan-Lab/tag-std/blob/main/primitive-sp.md#351-pin"
+          },
+          "src": "/home/runner/work/tag-std/tag-std/safety-tool/assets/sp-core.toml"
+        },
+        "usage": {
+          "types": {
+            "Vanilla": 3
+          },
+          "predicates": {
+            "Requires": 3
+          }
+        }
+      },
+      "PostToFunc": {
+        "item": {
+          "tag": {
+            "args": [
+              "fn"
+            ],
+            "desc": "The function taged by this property can only be called after `{fn}` has been called.",
+            "expr": null,
+            "types": [
+              "precond"
+            ],
+            "url": null
+          },
+          "src": "/home/runner/work/tag-std/tag-std/safety-tool/assets/sp-rust-for-linux.toml"
+        },
+        "usage": {
+          "types": {},
+          "predicates": {}
+        }
+      },
+      "Ptr2Ref": {
+        "item": {
+          "tag": {
+            "args": [
+              "p",
+              "T"
+            ],
+            "desc": "the reference conversion of the pointer `{p}` must be valid",
+            "expr": "Init(p, T, 1) && Align(p, T) && Alias(p, 0)",
+            "types": [
+              "precond"
+            ],
+            "url": "https://github.com/Artisan-Lab/tag-std/blob/main/primitive-sp.md#22-compound-sps-used-in-rustdoc"
+          },
+          "src": "/home/runner/work/tag-std/tag-std/safety-tool/assets/sp-core.toml"
+        },
+        "usage": {
+          "types": {},
+          "predicates": {}
+        }
+      },
+      "RefTransfer": {
+        "item": {
+          "tag": {
+            "args": [
+              "ptr",
+              "ret"
+            ],
+            "desc": "The caller must own a refcount on `{ptr}` that is transferred to the returned `{ret}`.",
+            "expr": null,
+            "types": [
+              "precond"
+            ],
+            "url": null
+          },
+          "src": "/home/runner/work/tag-std/tag-std/safety-tool/assets/sp-rust-for-linux.toml"
+        },
+        "usage": {
+          "types": {},
+          "predicates": {}
+        }
+      },
+      "Size": {
+        "item": {
+          "tag": {
+            "args": [
+              "T",
+              "c"
+            ],
+            "desc": "the size of type `{T}` should be `{c}`",
+            "expr": "sizeof(T) = c, c ∈ {num, unknown, any}",
+            "types": [
+              "option"
+            ],
+            "url": "https://github.com/Artisan-Lab/tag-std/blob/main/primitive-sp.md#312-size"
+          },
+          "src": "/home/runner/work/tag-std/tag-std/safety-tool/assets/sp-core.toml"
+        },
+        "usage": {
+          "types": {},
+          "predicates": {}
+        }
+      },
+      "Think_Exist": {
+        "item": {
+          "tag": {
+            "args": [
+              "target",
+              "type"
+            ],
+            "desc": "The tracking inside `{type}` must think that there is a `{target}` reference.",
+            "expr": null,
+            "types": [
+              "precond"
+            ],
+            "url": null
+          },
+          "src": "/home/runner/work/tag-std/tag-std/safety-tool/assets/sp-rust-for-linux.toml"
+        },
+        "usage": {
+          "types": {},
+          "predicates": {}
+        }
+      },
+      "Trait": {
+        "item": {
+          "tag": {
+            "args": [
+              "T",
+              "trait",
+              "property"
+            ],
+            "desc": "if type `{T}` implements trait `{trait}`, the property `{property}` is mitigated",
+            "expr": "trait ∈ traitimpl(T)",
+            "types": [
+              "option"
+            ],
+            "url": "https://github.com/Artisan-Lab/tag-std/blob/main/primitive-sp.md#354-trait"
+          },
+          "src": "/home/runner/work/tag-std/tag-std/safety-tool/assets/sp-core.toml"
+        },
+        "usage": {
+          "types": {},
+          "predicates": {}
+        }
+      },
+      "Typed": {
+        "item": {
+          "tag": {
+            "args": [
+              "p",
+              "T"
+            ],
+            "desc": "the pointer `{p}` must point to a value of `{T}`",
+            "expr": "typeof(*p) = T",
+            "types": [
+              "precond"
+            ],
+            "url": "https://github.com/Artisan-Lab/tag-std/blob/main/primitive-sp.md#334-unwrap"
+          },
+          "src": "/home/runner/work/tag-std/tag-std/safety-tool/assets/sp-core.toml"
+        },
+        "usage": {
+          "types": {},
+          "predicates": {}
+        }
+      },
+      "Unreachable": {
+        "item": {
+          "tag": {
+            "args": [],
+            "desc": "the current program point should not be reachable during execution",
+            "expr": "sat(cond()) = false",
+            "types": [
+              "precond"
+            ],
+            "url": "https://github.com/Artisan-Lab/tag-std/blob/main/primitive-sp.md#355-unreachable"
+          },
+          "src": "/home/runner/work/tag-std/tag-std/safety-tool/assets/sp-core.toml"
+        },
+        "usage": {
+          "types": {},
+          "predicates": {}
+        }
+      },
+      "Unwrap": {
+        "item": {
+          "tag": {
+            "args": [
+              "x",
+              "T",
+              "target"
+            ],
+            "desc": "the value `{x}` must be `Some({T})`",
+            "expr": "unwrap(x) = T",
+            "types": [
+              "precond"
+            ],
+            "url": "https://github.com/Artisan-Lab/tag-std/blob/main/primitive-sp.md#334-unwrap"
+          },
+          "src": "/home/runner/work/tag-std/tag-std/safety-tool/assets/sp-core.toml"
+        },
+        "usage": {
+          "types": {},
+          "predicates": {}
+        }
+      },
+      "UserProperty": {
+        "item": {
+          "tag": {
+            "args": [],
+            "desc": null,
+            "expr": null,
+            "types": [
+              "precond"
+            ],
+            "url": null
+          },
+          "src": "/home/runner/work/tag-std/tag-std/safety-tool/assets/sp-rust-for-linux.toml"
+        },
+        "usage": {
+          "types": {},
+          "predicates": {}
+        }
+      },
+      "Valid": {
+        "item": {
+          "tag": {
+            "args": [
+              "val",
+              "a"
+            ],
+            "desc": "The value `{val}` must be valid for the duration of `{a}`.",
+            "expr": null,
+            "types": [
+              "precond"
+            ],
+            "url": null
+          },
+          "src": "/home/runner/work/tag-std/tag-std/safety-tool/assets/sp-rust-for-linux.toml"
+        },
+        "usage": {
+          "types": {},
+          "predicates": {}
+        }
+      },
+      "ValidCStr": {
+        "item": {
+          "tag": {
+            "args": [
+              "p",
+              "len"
+            ],
+            "desc": "the memory range `[{p}, {p} + {len} + 1]` must contain a valid C-style string",
+            "expr": "mem(p+len, p+len+1) = '\\0'",
+            "types": [
+              "precond"
+            ],
+            "url": "https://github.com/Artisan-Lab/tag-std/blob/main/primitive-sp.md#332-string"
+          },
+          "src": "/home/runner/work/tag-std/tag-std/safety-tool/assets/sp-core.toml"
+        },
+        "usage": {
+          "types": {},
+          "predicates": {}
+        }
+      },
+      "ValidCast": {
+        "item": {
+          "tag": {
+            "args": [
+              "U",
+              "T"
+            ],
+            "desc": "The pointer of type `{U}` can be castbale to type `{T}` ,  and any value of type `{T}` written through such a pointer must result in a valid value.",
+            "expr": null,
+            "types": [
+              "precond"
+            ],
+            "url": null
+          },
+          "src": "/home/runner/work/tag-std/tag-std/safety-tool/assets/sp-rust-for-linux.toml"
+        },
+        "usage": {
+          "types": {},
+          "predicates": {}
+        }
+      },
+      "ValidFile": {
+        "item": {
+          "tag": {
+            "args": [
+              "f"
+            ],
+            "desc": "The pointer `{f}` must point to a valid file.",
+            "expr": null,
+            "types": [
+              "precond"
+            ],
+            "url": null
+          },
+          "src": "/home/runner/work/tag-std/tag-std/safety-tool/assets/sp-rust-for-linux.toml"
+        },
+        "usage": {
+          "types": {},
+          "predicates": {}
+        }
+      },
+      "ValidInstance": {
+        "item": {
+          "tag": {
+            "args": [
+              "v"
+            ],
+            "desc": "The value`{v}` must be a valid instance for usage.",
+            "expr": null,
+            "types": [
+              "precond"
+            ],
+            "url": null
+          },
+          "src": "/home/runner/work/tag-std/tag-std/safety-tool/assets/sp-rust-for-linux.toml"
+        },
+        "usage": {
+          "types": {},
+          "predicates": {}
+        }
+      },
+      "ValidMemory": {
+        "item": {
+          "tag": {
+            "args": [
+              "addr",
+              "s"
+            ],
+            "desc": "The address `{addr}` is the start of a valid memory region of size `{s}`.",
+            "expr": null,
+            "types": [
+              "precond"
+            ],
+            "url": null
+          },
+          "src": "/home/runner/work/tag-std/tag-std/safety-tool/assets/sp-rust-for-linux.toml"
+        },
+        "usage": {
+          "types": {},
+          "predicates": {}
+        }
+      },
+      "ValidNum": {
+        "item": {
+          "tag": {
+            "args": [
+              "exp",
+              "vrange"
+            ],
+            "desc": "the value of `{exp}` must lie within the valid `{vrange}`",
+            "expr": "exp ∈ vrange",
+            "types": [
+              "precond"
+            ],
+            "url": "https://github.com/Artisan-Lab/tag-std/blob/main/primitive-sp.md#331-integer"
+          },
+          "src": "/home/runner/work/tag-std/tag-std/safety-tool/assets/sp-core.toml"
+        },
+        "usage": {
+          "types": {},
+          "predicates": {}
+        }
+      },
+      "ValidPtr": {
+        "item": {
+          "tag": {
+            "args": [
+              "p",
+              "T",
+              "len"
+            ],
+            "desc": "pointer `{p}` must be valid for reading and writing the `sizeof({T})*{len}` memory from it",
+            "expr": "Size(T, 0) || (!Size(T,0) && Deref(p, T, len))",
+            "types": [
+              "precond"
+            ],
+            "url": "https://doc.rust-lang.org/std/ptr/index.html#safety"
+          },
+          "src": "/home/runner/work/tag-std/tag-std/safety-tool/assets/sp-core.toml"
+        },
+        "usage": {
+          "types": {},
+          "predicates": {}
+        }
+      },
+      "ValidRead": {
+        "item": {
+          "tag": {
+            "args": [
+              "src",
+              "len"
+            ],
+            "desc": "The pointer `{src}` is valid for reading `{len}` bytes.",
+            "expr": null,
+            "types": [
+              "precond"
+            ],
+            "url": null
+          },
+          "src": "/home/runner/work/tag-std/tag-std/safety-tool/assets/sp-rust-for-linux.toml"
+        },
+        "usage": {
+          "types": {},
+          "predicates": {}
+        }
+      },
+      "ValidString": {
+        "item": {
+          "tag": {
+            "args": [
+              "arange"
+            ],
+            "desc": "the memory range `{arange}` must contain valid UTF-8 bytes",
+            "expr": "mem(arange) ∈ utf-8",
+            "types": [
+              "precond",
+              "hazard"
+            ],
+            "url": "https://github.com/Artisan-Lab/tag-std/blob/main/primitive-sp.md#332-string"
+          },
+          "src": "/home/runner/work/tag-std/tag-std/safety-tool/assets/sp-core.toml"
+        },
+        "usage": {
+          "types": {},
+          "predicates": {}
+        }
+      },
+      "ValidVma": {
+        "item": {
+          "tag": {
+            "args": [
+              "v",
+              "l"
+            ],
+            "desc": "The VMA `{v}` must be valid for the duration of '`{l}`.",
+            "expr": null,
+            "types": [
+              "precond"
+            ],
+            "url": null
+          },
+          "src": "/home/runner/work/tag-std/tag-std/safety-tool/assets/sp-rust-for-linux.toml"
+        },
+        "usage": {
+          "types": {},
+          "predicates": {}
+        }
+      },
+      "ValidWrite": {
+        "item": {
+          "tag": {
+            "args": [
+              "dst",
+              "len"
+            ],
+            "desc": "The pointer `{dst}` is valid for writing `{len}` bytes.",
+            "expr": null,
+            "types": [
+              "precond"
+            ],
+            "url": null
+          },
+          "src": "/home/runner/work/tag-std/tag-std/safety-tool/assets/sp-rust-for-linux.toml"
+        },
+        "usage": {
+          "types": {},
+          "predicates": {}
+        }
+      }
+    },
+    "doc": {
+      "heading_safety_title": false,
+      "heading_tag": false
+    }
+  },
+  "funcs": [
+    {
+      "name": "<ChainInit<I, F, T, E> as Init<T, E>>::__init",
+      "safe": false,
+      "path": "rust/pin-init/src/lib.rs",
+      "span": "1217:1224",
+      "tags": [
+        {
+          "predicate": "Requires",
+          "tag": {
+            "Vanilla": {
+              "tag": {
+                "typ": null,
+                "name": "Allocated"
+              },
+              "args": [
+                "slot",
+                "T",
+                "1",
+                "_"
+              ]
+            }
+          },
+          "doc": null
+        }
+      ],
+      "unsafe_calls": [
+        {
+          "name": "PinInit::__pinned_init",
+          "safe": false,
+          "path": "rust/pin-init/src/lib.rs",
+          "span": "1219",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "core::ptr::drop_in_place",
+          "safe": false,
+          "path": "rust/pin-init/src/lib.rs",
+          "span": "1223",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
+    },
+    {
+      "name": "<ChainInit<I, F, T, E> as PinInit<T, E>>::__pinned_init",
+      "safe": false,
+      "path": "rust/pin-init/src/lib.rs",
+      "span": "1234:1237",
+      "tags": [
+        {
+          "predicate": "Requires",
+          "tag": {
+            "Vanilla": {
+              "tag": {
+                "typ": null,
+                "name": "Allocated"
+              },
+              "args": [
+                "slot",
+                "T",
+                "1",
+                "_"
+              ]
+            }
+          },
+          "doc": null
+        },
+        {
+          "predicate": "Requires",
+          "tag": {
+            "Vanilla": {
+              "tag": {
+                "typ": null,
+                "name": "Pinned"
+              },
+              "args": [
+                "slot",
+                "_"
+              ]
+            }
+          },
+          "doc": null
+        }
+      ],
+      "unsafe_calls": [
+        {
+          "name": "Init::__init",
+          "safe": false,
+          "path": "rust/pin-init/src/lib.rs",
+          "span": "1236",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
+    },
+    {
+      "name": "<ChainPinInit<I, F, T, E> as PinInit<T, E>>::__pinned_init",
+      "safe": false,
+      "path": "rust/pin-init/src/lib.rs",
+      "span": "1108:1117",
+      "tags": [
+        {
+          "predicate": "Requires",
+          "tag": {
+            "Vanilla": {
+              "tag": {
+                "typ": null,
+                "name": "Allocated"
+              },
+              "args": [
+                "slot",
+                "T",
+                "1",
+                "_"
+              ]
+            }
+          },
+          "doc": null
+        },
+        {
+          "predicate": "Requires",
+          "tag": {
+            "Vanilla": {
+              "tag": {
+                "typ": null,
+                "name": "Pinned"
+              },
+              "args": [
+                "slot",
+                "_"
+              ]
+            }
+          },
+          "doc": null
+        }
+      ],
+      "unsafe_calls": [
+        {
+          "name": "PinInit::__pinned_init",
+          "safe": false,
+          "path": "rust/pin-init/src/lib.rs",
+          "span": "1110",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "core::ptr::drop_in_place",
+          "safe": false,
+          "path": "rust/pin-init/src/lib.rs",
+          "span": "1116",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
+    },
+    {
+      "name": "<T as Init<T, E>>::__init",
+      "safe": false,
+      "path": "rust/pin-init/src/lib.rs",
+      "span": "1403:1407",
+      "tags": [
+        {
+          "predicate": "Requires",
+          "tag": {
+            "Vanilla": {
+              "tag": {
+                "typ": null,
+                "name": "Allocated"
+              },
+              "args": [
+                "slot",
+                "T",
+                "1",
+                "_"
+              ]
+            }
+          },
+          "doc": null
+        }
+      ],
+      "unsafe_calls": [
+        {
+          "name": "core::ptr::mut_ptr::<impl *mut T>::write",
+          "safe": false,
+          "path": "rust/pin-init/src/lib.rs",
+          "span": "1405",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
+    },
+    {
+      "name": "<T as PinInit<T, E>>::__pinned_init",
+      "safe": false,
+      "path": "rust/pin-init/src/lib.rs",
+      "span": "1413:1416",
+      "tags": [
+        {
+          "predicate": "Requires",
+          "tag": {
+            "Vanilla": {
+              "tag": {
+                "typ": null,
+                "name": "Allocated"
+              },
+              "args": [
+                "slot",
+                "T",
+                "1",
+                "_"
+              ]
+            }
+          },
+          "doc": null
+        },
+        {
+          "predicate": "Requires",
+          "tag": {
+            "Vanilla": {
+              "tag": {
+                "typ": null,
+                "name": "Pinned"
+              },
+              "args": [
+                "slot",
+                "_"
+              ]
+            }
+          },
+          "doc": null
+        }
+      ],
+      "unsafe_calls": [
+        {
+          "name": "Init::__init",
+          "safe": false,
+          "path": "rust/pin-init/src/lib.rs",
+          "span": "1415",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
+    },
+    {
+      "name": "<T as __internal::HasInitData>::__init_data",
+      "safe": false,
+      "path": "rust/pin-init/src/__internal.rs",
+      "span": "128:130",
+      "tags": [],
+      "unsafe_calls": []
+    },
+    {
+      "name": "<__internal::AllData<T> as core::clone::Clone>::clone",
+      "safe": true,
+      "path": "rust/pin-init/src/__internal.rs",
+      "span": "112:114",
+      "tags": [],
+      "unsafe_calls": []
+    },
+    {
+      "name": "<__internal::AlwaysFail<T> as PinInit<T, ()>>::__pinned_init",
+      "safe": false,
+      "path": "rust/pin-init/src/__internal.rs",
+      "span": "289:291",
+      "tags": [],
+      "unsafe_calls": []
+    },
+    {
+      "name": "<__internal::AlwaysFail<T> as core::default::Default>::default",
+      "safe": true,
+      "path": "rust/pin-init/src/__internal.rs",
+      "span": "282:284",
+      "tags": [],
+      "unsafe_calls": []
+    },
+    {
+      "name": "<__internal::DropGuard<T> as core::ops::Drop>::drop",
+      "safe": true,
+      "path": "rust/pin-init/src/__internal.rs",
+      "span": "243:247",
+      "tags": [],
+      "unsafe_calls": [
+        {
+          "name": "core::ptr::drop_in_place",
+          "safe": false,
+          "path": "rust/pin-init/src/__internal.rs",
+          "span": "246",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
+    },
+    {
+      "name": "<__internal::InitClosure<F, T, E> as Init<T, E>>::__init",
+      "safe": false,
+      "path": "rust/pin-init/src/__internal.rs",
+      "span": "32:34",
+      "tags": [],
+      "unsafe_calls": []
+    },
+    {
+      "name": "<__internal::InitClosure<F, T, E> as PinInit<T, E>>::__pinned_init",
+      "safe": false,
+      "path": "rust/pin-init/src/__internal.rs",
+      "span": "44:46",
+      "tags": [],
+      "unsafe_calls": []
+    },
+    {
+      "name": "<__internal::StackInit<T> as core::ops::Drop>::drop",
+      "safe": true,
+      "path": "rust/pin-init/src/__internal.rs",
+      "span": "147:153",
+      "tags": [],
+      "unsafe_calls": [
+        {
+          "name": "core::mem::MaybeUninit::<T>::assume_init_drop",
+          "safe": false,
+          "path": "rust/pin-init/src/__internal.rs",
+          "span": "151",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
+    },
+    {
+      "name": "<core::cell::UnsafeCell<T> as Wrapper<T>>::pin_init",
+      "safe": true,
+      "path": "rust/pin-init/src/lib.rs",
+      "span": "1609:1612",
+      "tags": [],
+      "unsafe_calls": [
+        {
+          "name": "cast_pin_init",
+          "safe": false,
+          "path": "rust/pin-init/src/lib.rs",
+          "span": "1611",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
+    },
+    {
+      "name": "<core::mem::MaybeUninit<T> as Wrapper<T>>::pin_init",
+      "safe": true,
+      "path": "rust/pin-init/src/lib.rs",
+      "span": "1616:1619",
+      "tags": [],
+      "unsafe_calls": [
+        {
+          "name": "cast_pin_init",
+          "safe": false,
+          "path": "rust/pin-init/src/lib.rs",
+          "span": "1618",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
+    },
+    {
+      "name": "__internal::AlwaysFail::<T>::new",
+      "safe": true,
+      "path": "rust/pin-init/src/__internal.rs",
+      "span": "276:278",
+      "tags": [],
+      "unsafe_calls": []
+    },
+    {
+      "name": "__internal::DropGuard::<T>::new",
+      "safe": false,
+      "path": "rust/pin-init/src/__internal.rs",
+      "span": "236:238",
+      "tags": [],
+      "unsafe_calls": []
+    },
+    {
+      "name": "__internal::OnlyCallFromDrop::new",
+      "safe": false,
+      "path": "rust/pin-init/src/__internal.rs",
+      "span": "260:262",
+      "tags": [],
+      "unsafe_calls": []
+    },
+    {
+      "name": "__internal::StackInit::<T>::init",
+      "safe": true,
+      "path": "rust/pin-init/src/__internal.rs",
+      "span": "171:187",
+      "tags": [],
+      "unsafe_calls": [
+        {
+          "name": "core::mem::MaybeUninit::<T>::assume_init_drop",
+          "safe": false,
+          "path": "rust/pin-init/src/__internal.rs",
+          "span": "179",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "PinInit::__pinned_init",
+          "safe": false,
+          "path": "rust/pin-init/src/__internal.rs",
+          "span": "182",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "core::mem::MaybeUninit::<T>::assume_init_mut",
+          "safe": false,
+          "path": "rust/pin-init/src/__internal.rs",
+          "span": "186",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
+    },
+    {
+      "name": "__internal::StackInit::<T>::uninit",
+      "safe": true,
+      "path": "rust/pin-init/src/__internal.rs",
+      "span": "162:167",
+      "tags": [],
+      "unsafe_calls": []
+    },
+    {
+      "name": "cast_init",
+      "safe": false,
+      "path": "rust/pin-init/src/lib.rs",
+      "span": "1301:1308",
+      "tags": [],
+      "unsafe_calls": [
+        {
+          "name": "init_from_closure",
+          "safe": false,
+          "path": "rust/pin-init/src/lib.rs",
+          "span": "1304",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "Init::__init",
+          "safe": false,
+          "path": "rust/pin-init/src/lib.rs",
+          "span": "1304",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
+    },
+    {
+      "name": "cast_pin_init",
+      "safe": false,
+      "path": "rust/pin-init/src/lib.rs",
+      "span": "1285:1292",
+      "tags": [],
+      "unsafe_calls": [
+        {
+          "name": "pin_init_from_closure",
+          "safe": false,
+          "path": "rust/pin-init/src/lib.rs",
+          "span": "1288",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "PinInit::__pinned_init",
+          "safe": false,
+          "path": "rust/pin-init/src/lib.rs",
+          "span": "1288",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
+    },
+    {
+      "name": "init_array_from_fn",
+      "safe": true,
+      "path": "rust/pin-init/src/lib.rs",
+      "span": "1329:1355",
+      "tags": [],
+      "unsafe_calls": [
+        {
+          "name": "core::ptr::mut_ptr::<impl *mut T>::add",
+          "safe": false,
+          "path": "rust/pin-init/src/lib.rs",
+          "span": "1340",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "Init::__init",
+          "safe": false,
+          "path": "rust/pin-init/src/lib.rs",
+          "span": "1343",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "core::ptr::drop_in_place",
+          "safe": false,
+          "path": "rust/pin-init/src/lib.rs",
+          "span": "1346",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "init_from_closure",
+          "safe": false,
+          "path": "rust/pin-init/src/lib.rs",
+          "span": "1354",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
+    },
+    {
+      "name": "init_from_closure",
+      "safe": false,
+      "path": "rust/pin-init/src/lib.rs",
+      "span": "1272:1276",
+      "tags": [],
+      "unsafe_calls": []
+    },
+    {
+      "name": "pin_init_array_from_fn",
+      "safe": true,
+      "path": "rust/pin-init/src/lib.rs",
+      "span": "1372:1398",
+      "tags": [],
+      "unsafe_calls": [
+        {
+          "name": "core::ptr::mut_ptr::<impl *mut T>::add",
+          "safe": false,
+          "path": "rust/pin-init/src/lib.rs",
+          "span": "1383",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "PinInit::__pinned_init",
+          "safe": false,
+          "path": "rust/pin-init/src/lib.rs",
+          "span": "1386",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "core::ptr::drop_in_place",
+          "safe": false,
+          "path": "rust/pin-init/src/lib.rs",
+          "span": "1389",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "pin_init_from_closure",
+          "safe": false,
+          "path": "rust/pin-init/src/lib.rs",
+          "span": "1397",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
+    },
+    {
+      "name": "pin_init_from_closure",
+      "safe": false,
+      "path": "rust/pin-init/src/lib.rs",
+      "span": "1253:1257",
+      "tags": [],
+      "unsafe_calls": []
+    },
+    {
+      "name": "uninit",
+      "safe": true,
+      "path": "rust/pin-init/src/lib.rs",
+      "span": "1314:1317",
+      "tags": [],
+      "unsafe_calls": [
+        {
+          "name": "init_from_closure",
+          "safe": false,
+          "path": "rust/pin-init/src/lib.rs",
+          "span": "1316",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
+    },
+    {
+      "name": "zeroed",
+      "safe": true,
+      "path": "rust/pin-init/src/lib.rs",
+      "span": "1500:1509",
+      "tags": [],
+      "unsafe_calls": [
+        {
+          "name": "init_from_closure",
+          "safe": false,
+          "path": "rust/pin-init/src/lib.rs",
+          "span": "1504",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "core::ptr::mut_ptr::<impl *mut T>::write_bytes",
+          "safe": false,
+          "path": "rust/pin-init/src/lib.rs",
+          "span": "1505",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
+    }
+  ],
+  "metrics": {
+    "total_tags": 66,
+    "used_tags": 2,
+    "used": {
+      "Allocated": {
+        "occurence": 5,
+        "requires": 5,
+        "checked": 0,
+        "delegated": 0,
+        "as_vanilla": 5,
+        "in_any": 0
+      },
+      "Pinned": {
+        "occurence": 3,
+        "requires": 3,
+        "checked": 0,
+        "delegated": 0,
+        "as_vanilla": 3,
+        "in_any": 0
+      }
+    },
+    "coverage": {
+      "occurence": 8,
+      "requires": 8,
+      "checked": 0,
+      "delegated": 0,
+      "as_vanilla": 8,
+      "in_any": 0
+    },
+    "unused": [
+      "Access",
+      "ActiveContext",
+      "Alias",
+      "Align",
+      "Alive",
+      "AnyThread",
+      "Associated",
+      "CallOnce",
+      "CalledBy",
+      "ContainerOf",
+      "CurThread",
+      "Deref",
+      "Empty",
+      "Equal",
+      "FlagSet",
+      "InBound",
+      "InList",
+      "Init",
+      "Invariant",
+      "Layout",
+      "LockHold",
+      "MayInvalid",
+      "NoPadding",
+      "NonAccessable",
+      "NonConCurrent",
+      "NonData_race",
+      "NonDropped",
+      "NonExist",
+      "NonInList",
+      "NonInstance",
+      "NonMutRef",
+      "NonMutate",
+      "NonNull",
+      "NonOverlap",
+      "NonOwned",
+      "NonUsed",
+      "NonVolatile",
+      "NonZero",
+      "Null",
+      "Opened",
+      "OriginateFrom",
+      "Owning",
+      "PostToFunc",
+      "Ptr2Ref",
+      "RefTransfer",
+      "Size",
+      "Think_Exist",
+      "Trait",
+      "Typed",
+      "Unreachable",
+      "Unwrap",
+      "UserProperty",
+      "Valid",
+      "ValidCStr",
+      "ValidCast",
+      "ValidFile",
+      "ValidInstance",
+      "ValidMemory",
+      "ValidNum",
+      "ValidPtr",
+      "ValidRead",
+      "ValidString",
+      "ValidVma",
+      "ValidWrite"
+    ],
+    "funcs": {
+      "total": {
+        "funcs": 28,
+        "funcs_with_tags_declared": 5,
+        "funcs_with_tags_discharged": 0,
+        "declared_tags": 8,
+        "discharged_tags": 0,
+        "unsafe_calls": 29
+      },
+      "safe": {
+        "total": {
+          "funcs": 13,
+          "funcs_with_tags_declared": 0,
+          "funcs_with_tags_discharged": 0,
+          "declared_tags": 0,
+          "discharged_tags": 0,
+          "unsafe_calls": 18
+        },
+        "unsafe_calls": {
+          "0": 4,
+          "1": 5,
+          "2": 1,
+          "3": 1,
+          "4": 2
+        }
+      },
+      "unsafe": {
+        "total": {
+          "funcs": 15,
+          "funcs_with_tags_declared": 5,
+          "funcs_with_tags_discharged": 0,
+          "declared_tags": 8,
+          "discharged_tags": 0,
+          "unsafe_calls": 11
+        },
+        "unsafe_calls": {
+          "0": 8,
+          "1": 3,
+          "2": 4
+        }
+      }
+    }
+  }
+}

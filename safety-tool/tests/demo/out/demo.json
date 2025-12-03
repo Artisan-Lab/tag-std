@@ -625,6 +625,14 @@
   },
   "funcs": [
     {
+      "name": "MyStruct::from",
+      "safe": true,
+      "path": "src/lib.rs",
+      "span": "26:28",
+      "tags": [],
+      "unsafe_calls": []
+    },
+    {
       "name": "MyStruct::get",
       "safe": false,
       "path": "src/lib.rs",
@@ -743,7 +751,16 @@
           "doc": null
         }
       ],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "std::slice::from_raw_parts_mut",
+          "safe": false,
+          "path": "src/lib.rs",
+          "span": "41",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "test",
@@ -871,7 +888,16 @@
           "doc": null
         }
       ],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "std::intrinsics::unreachable",
+          "safe": false,
+          "path": "src/lib.rs",
+          "span": "18",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     }
   ],
   "metrics": {
@@ -985,6 +1011,42 @@
       "Unwrap",
       "ValidCStr",
       "ValidString"
-    ]
+    ],
+    "funcs": {
+      "total": {
+        "funcs": 3,
+        "funcs_with_tags_declared": 2,
+        "funcs_with_tags_discharged": 0,
+        "declared_tags": 13,
+        "discharged_tags": 0,
+        "unsafe_calls": 2
+      },
+      "safe": {
+        "total": {
+          "funcs": 1,
+          "funcs_with_tags_declared": 0,
+          "funcs_with_tags_discharged": 0,
+          "declared_tags": 0,
+          "discharged_tags": 0,
+          "unsafe_calls": 0
+        },
+        "unsafe_calls": {
+          "0": 1
+        }
+      },
+      "unsafe": {
+        "total": {
+          "funcs": 2,
+          "funcs_with_tags_declared": 2,
+          "funcs_with_tags_discharged": 0,
+          "declared_tags": 13,
+          "discharged_tags": 0,
+          "unsafe_calls": 2
+        },
+        "unsafe_calls": {
+          "1": 2
+        }
+      }
+    }
   }
 }

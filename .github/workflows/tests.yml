@@ -32,6 +32,8 @@ jobs:
 
       - name: Run Tests
         working-directory: safety-tool
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: bash run.sh
 
       - name: Upload static files as artifact
