@@ -6,6 +6,9 @@ set -o pipefail
 # 1. set UPDATE_EXPECT=1 to update snapshot tests
 # 2. sqlite3 cache may influence snapshots, so remove them when manually cargo test
 
+# Fetch latest stat JSON for asternias and rust-for-linux
+gh run download -D assets/stat/ -n "stat_asterinas" -n "stat_rfl-X64"
+
 # Set up toolchain: works under current folder.
 export LD_LIBRARY_PATH=$(rustc --print sysroot)/lib
 # Don't emit rlib files.
