@@ -49,7 +49,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           path: ${{env.SP_OUT_DIR }}
-          name: stat_rust-for-linux
+          name: stat_rfl-${{ runner.arch }}
 
   rustc-doc:
     runs-on: ubuntu-latest
