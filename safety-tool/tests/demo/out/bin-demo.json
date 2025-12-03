@@ -613,12 +613,14 @@
   "funcs": [
     {
       "name": "main",
+      "safe": true,
       "path": "src/main.rs",
       "span": "10:25",
       "tags": [],
       "unsafe_calls": [
         {
           "name": "demo::MyStruct::get",
+          "safe": false,
           "path": "src/main.rs",
           "span": "23",
           "tags": [
@@ -857,69 +859,69 @@
     "used_tags": 7,
     "used": {
       "Alias": {
-        "occurence": 4,
-        "as_vanilla": 2,
-        "in_any": 0,
+        "occurence": 2,
         "requires": 2,
         "checked": 0,
-        "delegated": 0
+        "delegated": 0,
+        "as_vanilla": 2,
+        "in_any": 0
       },
       "Align": {
-        "occurence": 4,
-        "as_vanilla": 2,
-        "in_any": 0,
+        "occurence": 2,
         "requires": 2,
         "checked": 0,
-        "delegated": 0
+        "delegated": 0,
+        "as_vanilla": 2,
+        "in_any": 0
       },
       "Alive": {
-        "occurence": 4,
-        "as_vanilla": 2,
-        "in_any": 0,
+        "occurence": 2,
         "requires": 2,
         "checked": 0,
-        "delegated": 0
+        "delegated": 0,
+        "as_vanilla": 2,
+        "in_any": 0
       },
       "Init": {
-        "occurence": 4,
-        "as_vanilla": 2,
-        "in_any": 0,
+        "occurence": 2,
         "requires": 2,
         "checked": 0,
-        "delegated": 0
+        "delegated": 0,
+        "as_vanilla": 2,
+        "in_any": 0
       },
       "NonNull": {
-        "occurence": 4,
-        "as_vanilla": 2,
-        "in_any": 0,
+        "occurence": 2,
         "requires": 2,
         "checked": 0,
-        "delegated": 0
+        "delegated": 0,
+        "as_vanilla": 2,
+        "in_any": 0
       },
       "ValidNum": {
-        "occurence": 4,
-        "as_vanilla": 2,
-        "in_any": 0,
+        "occurence": 2,
         "requires": 2,
         "checked": 0,
-        "delegated": 0
+        "delegated": 0,
+        "as_vanilla": 2,
+        "in_any": 0
       },
       "ValidPtr": {
-        "occurence": 4,
-        "as_vanilla": 2,
-        "in_any": 0,
+        "occurence": 2,
         "requires": 2,
         "checked": 0,
-        "delegated": 0
+        "delegated": 0,
+        "as_vanilla": 2,
+        "in_any": 0
       }
     },
     "coverage": {
-      "occurence": 28,
-      "as_vanilla": 14,
-      "in_any": 0,
+      "occurence": 14,
       "requires": 14,
       "checked": 0,
-      "delegated": 0
+      "delegated": 0,
+      "as_vanilla": 14,
+      "in_any": 0
     },
     "unused": [
       "Allocated",

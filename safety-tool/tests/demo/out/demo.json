@@ -626,6 +626,7 @@
   "funcs": [
     {
       "name": "test",
+      "safe": false,
       "path": "src/lib.rs",
       "span": "17:19",
       "tags": [
@@ -753,6 +754,7 @@
     },
     {
       "name": "MyStruct::get",
+      "safe": false,
       "path": "src/lib.rs",
       "span": "39:42",
       "tags": [
@@ -877,93 +879,93 @@
     "used_tags": 10,
     "used": {
       "Alias": {
-        "occurence": 4,
-        "as_vanilla": 2,
-        "in_any": 0,
+        "occurence": 2,
         "requires": 2,
         "checked": 0,
-        "delegated": 0
+        "delegated": 0,
+        "as_vanilla": 2,
+        "in_any": 0
       },
       "Align": {
-        "occurence": 2,
-        "as_vanilla": 1,
-        "in_any": 0,
+        "occurence": 1,
         "requires": 1,
         "checked": 0,
-        "delegated": 0
+        "delegated": 0,
+        "as_vanilla": 1,
+        "in_any": 0
       },
       "Alive": {
-        "occurence": 4,
-        "as_vanilla": 1,
-        "in_any": 1,
+        "occurence": 2,
         "requires": 2,
         "checked": 0,
-        "delegated": 0
+        "delegated": 0,
+        "as_vanilla": 1,
+        "in_any": 1
       },
       "Deref": {
-        "occurence": 2,
-        "as_vanilla": 0,
-        "in_any": 1,
+        "occurence": 1,
         "requires": 1,
         "checked": 0,
-        "delegated": 0
+        "delegated": 0,
+        "as_vanilla": 0,
+        "in_any": 1
       },
       "InBound": {
-        "occurence": 2,
-        "as_vanilla": 1,
-        "in_any": 0,
+        "occurence": 1,
         "requires": 1,
         "checked": 0,
-        "delegated": 0
+        "delegated": 0,
+        "as_vanilla": 1,
+        "in_any": 0
       },
       "Init": {
-        "occurence": 4,
-        "as_vanilla": 2,
-        "in_any": 0,
+        "occurence": 2,
         "requires": 2,
         "checked": 0,
-        "delegated": 0
+        "delegated": 0,
+        "as_vanilla": 2,
+        "in_any": 0
       },
       "NonNull": {
-        "occurence": 2,
-        "as_vanilla": 1,
-        "in_any": 0,
+        "occurence": 1,
         "requires": 1,
         "checked": 0,
-        "delegated": 0
+        "delegated": 0,
+        "as_vanilla": 1,
+        "in_any": 0
       },
       "RustdocLinkToItem": {
-        "occurence": 2,
-        "as_vanilla": 1,
-        "in_any": 0,
+        "occurence": 1,
         "requires": 1,
         "checked": 0,
-        "delegated": 0
+        "delegated": 0,
+        "as_vanilla": 1,
+        "in_any": 0
       },
       "ValidNum": {
-        "occurence": 4,
-        "as_vanilla": 2,
-        "in_any": 0,
+        "occurence": 2,
         "requires": 2,
         "checked": 0,
-        "delegated": 0
+        "delegated": 0,
+        "as_vanilla": 2,
+        "in_any": 0
       },
       "ValidPtr": {
-        "occurence": 2,
-        "as_vanilla": 1,
-        "in_any": 0,
+        "occurence": 1,
         "requires": 1,
         "checked": 0,
-        "delegated": 0
+        "delegated": 0,
+        "as_vanilla": 1,
+        "in_any": 0
       }
     },
     "coverage": {
-      "occurence": 28,
-      "as_vanilla": 12,
-      "in_any": 2,
+      "occurence": 14,
       "requires": 14,
       "checked": 0,
-      "delegated": 0
+      "delegated": 0,
+      "as_vanilla": 12,
+      "in_any": 2
     },
     "unused": [
       "Allocated",
