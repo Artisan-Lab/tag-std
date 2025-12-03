@@ -10,6 +10,7 @@ extern crate rustc_hir;
 extern crate rustc_hir_pretty;
 extern crate rustc_interface;
 extern crate rustc_middle;
+extern crate rustc_session;
 extern crate rustc_span;
 
 // Conditional compilation of feature names. Used in [`crossfig::switch`].

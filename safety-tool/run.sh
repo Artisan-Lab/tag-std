@@ -15,21 +15,21 @@ export STOP_COMPILATION=1
 FEATURES=${1:-"std"}
 
 # Switch toolchain
-./gen_rust_toolchain_toml.rs ${FEATURES}
+./gen_rust_toolchain_toml.rs "${FEATURES}"
 
 # Remove data.sqlite3 the cache
-rm -f target/data.sqlite3 tests/basic/data.sqlite3
+rm -f target/data.sqlite3 tests/demo/data.sqlite3
 
 cargo fmt --check --all
-cargo clippy -F${FEATURES} --workspace -- -D clippy::all
+cargo clippy -F "${FEATURES}" --workspace -- -D clippy::all
 
-cargo build -F${FEATURES}
+cargo build -F "${FEATURES}"
 export SAFETY_TOOL=$PWD/target/debug/safety-tool
 export SAFETY_TOOL=$PWD/target/debug/safety-tool
 export CARGO_SAFETY_TOOL=$PWD/target/debug/cargo-safety-tool
 export DATA_SQLITE3=$PWD/target/data.sqlite3
 
-cargo test -F${FEATURES}
+cargo test -F "${FEATURES}"
 
 pushd safety-lib
 cargo test
@@ -40,7 +40,7 @@ cargo test
 popd
 
 # enable tag definitions
-rm $DATA_SQLITE3
+rm "$DATA_SQLITE3"
 export SP_DIR=$PWD/assets
 
 pushd safety-lsp
@@ -48,7 +48,7 @@ cargo test
 popd
 
 # Test basic demo
-pushd ./tests/basic
+pushd ./tests/demo
 
 cargo clean
 
@@ -56,8 +56,11 @@ cargo clean
 unset STOP_COMPILATION
 
 # Analyze the lib and bin crates.
-PREFIX=$PWD/
-CARGO_TERM_PROGRESS_WHEN=never $CARGO_SAFETY_TOOL | sed "s#$PREFIX##g" | tee macro-expanded/cargo-safety-tool.txt
-cargo expand --lib >macro-expanded/lib.rs
-cargo expand --bin demo >macro-expanded/main.rs
+export SP_OUT_DIR=$PWD/out
+EXPAND_DIR=$SP_OUT_DIR/macro-expanded
+rm -rf "$SP_OUT_DIR" # clear outputs
+mkdir -p "$EXPAND_DIR"
+$CARGO_SAFETY_TOOL # run safety-tool to check
+cargo expand --lib >"$EXPAND_DIR"/lib.rs
+cargo expand --bin demo >"$EXPAND_DIR"/main.rs
 cargo doc --no-deps

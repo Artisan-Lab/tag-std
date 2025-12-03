@@ -5,6 +5,8 @@ on:
 
 env:
   CARGO_TERM_COLOR: always
+  # store stat json
+  SP_OUT_DIR: /tmp/sp-out
 
 jobs:
   check-asterinas:
@@ -37,6 +39,12 @@ jobs:
           RAPX_EXIT_AND_EMIT: silence_and_emit # don't abort if discharges are missing, but still emit diagnostics
           RAPX_ARGS: --color=always 2>rapx.err
         run: make rapx
+
+      - name: Upload stat JSONs
+        uses: actions/upload-artifact@v4
+        with:
+          path: ${{env.SP_OUT_DIR }}
+          name: stat_asterinas
 
       - name: Print safety-tool diagnostics
         if: always()

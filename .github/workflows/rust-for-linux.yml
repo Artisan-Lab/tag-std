@@ -5,6 +5,8 @@ on:
 
 env:
   CARGO_TERM_COLOR: always
+  # store stat json
+  SP_OUT_DIR: /tmp/sp-out
 
 jobs:
   check:
@@ -42,6 +44,12 @@ jobs:
           # doc-rfl-X64 or rustdoc-rfl-ARM64
           name: doc-rfl-${{ runner.arch }}
           path: linux/Documentation/output/rust/rustdoc/
+
+      - name: Upload stat JSONs
+        uses: actions/upload-artifact@v4
+        with:
+          path: ${{env.SP_OUT_DIR }}
+          name: stat_rfl-${{ runner.arch }}
 
   rustc-doc:
     runs-on: ubuntu-latest

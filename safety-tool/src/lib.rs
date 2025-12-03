@@ -1,4 +1,7 @@
+#![cfg_attr(not(feature = "std"), feature(let_chains))]
+
 pub mod logger;
+pub mod stat;
 pub mod utils;
 
 pub use camino::{Utf8Path, Utf8PathBuf};
