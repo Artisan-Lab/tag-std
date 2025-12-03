@@ -48,7 +48,7 @@ pub fn analyze_hir(tcx: TyCtxt) {
     for hir_fn in &v_hir_fn {
         let fn_hir_id = hir_fn.hir_id;
         let rapx_attrs: Vec<_> = db::tool_attr_on_hir(fn_hir_id, tcx).collect();
-        let mut stat_caller = None;
+        let mut stat_caller = stat::new_caller(fn_hir_id, tcx, &rapx_attrs);
 
         let body_id = hir_fn.body;
 
@@ -63,26 +63,19 @@ pub fn analyze_hir(tcx: TyCtxt) {
         let tyck = tcx.typeck_body(body_id);
         let calls = visit::get_calls(tcx, body, tyck);
         let unsafe_calls = calls.get_unsafe_calls();
+
         if !unsafe_calls.is_empty() {
             debug!(?unsafe_calls);
-            // Caller that has discharged tags inside. The function can be safe.
-            let mut caller = stat::new_caller(fn_hir_id, tcx, &rapx_attrs);
             for call in &unsafe_calls {
                 call.check_tool_attrs(hir_fn.hir_id, &mut tool_attrs, &mut diagnostics);
                 if let Some(collect_callee_tags) = call.stat(hir_fn.hir_id, tcx, &mut tool_attrs) {
                     let callee = collect_callee_tags.into_stat_func();
-                    caller.unsafe_calls.push(callee);
+                    stat_caller.unsafe_calls.push(callee);
                 }
             }
-            stat_caller = Some(caller);
-        } else if hir_fn.is_unsafe() && !rapx_attrs.is_empty() {
-            // The function is unsafe without tagged unsafe calls.
-            stat_caller = Some(stat::new_caller(fn_hir_id, tcx, &rapx_attrs));
         }
 
-        if let Some(caller) = stat_caller {
-            stat.funcs.push(caller);
-        }
+        stat.funcs.push(stat_caller);
     }
 
     diagnostics.emit();
@@ -110,9 +103,5 @@ impl HirFn<'_> {
 
     fn to_data(&self, tcx: TyCtxt) -> Option<db::Data> {
         self.has_tool_attrs(tcx).then(|| db::Data::new(self, tcx))
-    }
-
-    fn is_unsafe(&self) -> bool {
-        self.sig.header.is_unsafe()
     }
 }

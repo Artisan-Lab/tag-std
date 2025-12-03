@@ -156,10 +156,7 @@ impl<'tcx> Calls<'tcx> {
     }
 
     pub fn get_unsafe_calls(&self) -> Vec<&Call> {
-        self.calls
-            .iter()
-            .filter(|call| self.tcx.fn_sig(call.def_id).skip_binder().safety().is_unsafe())
-            .collect()
+        self.calls.iter().filter(|call| stat::is_unsafe(call.def_id, self.tcx)).collect()
     }
 }
 
@@ -189,12 +186,12 @@ impl<'tcx> CollectCalleeTags<'tcx> {
         callee: Call,
         caller: HirId,
         tcx: TyCtxt<'tcx>,
-        tool_attrs: &mut ToolAttrs,
+        _tool_attrs: &mut ToolAttrs,
     ) -> Option<Self> {
-        let Some(_tag_state) = tool_attrs.get_tags(callee.def_id, tcx) else {
-            // No tool attrs to be checked on the callee.
-            return None;
-        };
+        // let Some(_tag_state) = tool_attrs.get_tags(callee.def_id, tcx) else {
+        //     // No tool attrs to be checked on the callee.
+        //     return None;
+        // };
 
         let mut found_nearest_tags = false;
         let mut tags = Vec::new();
