@@ -1013,25 +1013,36 @@
       "ValidString"
     ],
     "funcs": {
-      "total": 3,
-      "safe": {
-        "total_funcs": 1,
-        "total_funcs_with_tags_declared": 0,
-        "total_funcs_with_tags_discharged": 0,
-        "declared_tags": 0,
+      "total": {
+        "funcs": 3,
+        "funcs_with_tags_declared": 2,
+        "funcs_with_tags_discharged": 0,
+        "declared_tags": 13,
         "discharged_tags": 0,
-        "total_unsafe_calls": 0,
+        "unsafe_calls": 2
+      },
+      "safe": {
+        "total": {
+          "funcs": 1,
+          "funcs_with_tags_declared": 0,
+          "funcs_with_tags_discharged": 0,
+          "declared_tags": 0,
+          "discharged_tags": 0,
+          "unsafe_calls": 0
+        },
         "unsafe_calls": {
           "0": 1
         }
       },
       "unsafe": {
-        "total_funcs": 2,
-        "total_funcs_with_tags_declared": 2,
-        "total_funcs_with_tags_discharged": 0,
-        "declared_tags": 13,
-        "discharged_tags": 0,
-        "total_unsafe_calls": 2,
+        "total": {
+          "funcs": 2,
+          "funcs_with_tags_declared": 2,
+          "funcs_with_tags_discharged": 0,
+          "declared_tags": 13,
+          "discharged_tags": 0,
+          "unsafe_calls": 2
+        },
         "unsafe_calls": {
           "1": 2
         }

@@ -39,7 +39,10 @@ impl Stat {
             func.update_metrics(&mut self.metrics.funcs);
         }
 
-        // Update metrics.
+        // Merge metrics of funcs.
+        self.metrics.funcs.merge();
+
+        // Update metrics as per specs.
         self.specs.update_metrics(&mut self.metrics);
 
         // Sort.
@@ -239,23 +242,22 @@ impl Func {
     }
 
     fn update_metrics(&self, metrics_funcs: &mut MetricsFunctions) {
-        metrics_funcs.total += 1;
-
         let m = if self.safe { &mut metrics_funcs.safe } else { &mut metrics_funcs.r#unsafe };
-        m.total_funcs += 1;
+        m.total.funcs += 1;
 
         if !self.tags.is_empty() {
-            m.total_funcs_with_tags_declared += 1;
+            m.total.funcs_with_tags_declared += 1;
         }
         if self.unsafe_calls.iter().any(|c| !c.tags.is_empty()) {
-            m.total_funcs_with_tags_discharged += 1;
+            m.total.funcs_with_tags_discharged += 1;
         }
 
-        m.declared_tags += self.tags.len() as u16;
-        m.discharged_tags += self.unsafe_calls.iter().map(|c| c.tags.len() as u16).sum::<u16>();
+        m.total.declared_tags += self.tags.len() as u16;
+        m.total.discharged_tags +=
+            self.unsafe_calls.iter().map(|c| c.tags.len() as u16).sum::<u16>();
 
         let unsafe_calls = self.unsafe_calls.len() as u16;
-        m.total_unsafe_calls += unsafe_calls;
+        m.total.unsafe_calls += unsafe_calls;
         m.unsafe_calls.entry(unsafe_calls).and_modify(|c| *c += 1).or_insert(1);
     }
 }
@@ -364,18 +366,41 @@ impl MetricsCoverage {
 
 #[derive(Debug, Default, Deserialize, Serialize)]
 pub struct MetricsFunctions {
-    total: u16,
+    total: MetricsFuncsTotal,
     safe: MetricsFuncs,
     r#unsafe: MetricsFuncs,
 }
 
+impl MetricsFunctions {
+    fn merge(&mut self) {
+        self.total.merge(&self.safe.total);
+        self.total.merge(&self.r#unsafe.total);
+    }
+}
+
 #[derive(Debug, Default, Deserialize, Serialize)]
 pub struct MetricsFuncs {
-    total_funcs: u16,
-    total_funcs_with_tags_declared: u16,
-    total_funcs_with_tags_discharged: u16,
+    total: MetricsFuncsTotal,
+    unsafe_calls: IndexMap<u16, u16>,
+}
+
+#[derive(Debug, Default, Deserialize, Serialize)]
+pub struct MetricsFuncsTotal {
+    funcs: u16,
+    funcs_with_tags_declared: u16,
+    funcs_with_tags_discharged: u16,
     declared_tags: u16,
     discharged_tags: u16,
-    total_unsafe_calls: u16,
-    unsafe_calls: IndexMap<u16, u16>,
+    unsafe_calls: u16,
+}
+
+impl MetricsFuncsTotal {
+    fn merge(&mut self, other: &Self) {
+        self.funcs += other.funcs;
+        self.funcs_with_tags_declared += other.funcs_with_tags_declared;
+        self.funcs_with_tags_discharged += other.funcs_with_tags_discharged;
+        self.declared_tags += other.declared_tags;
+        self.discharged_tags += other.discharged_tags;
+        self.unsafe_calls += other.unsafe_calls;
+    }
 }
