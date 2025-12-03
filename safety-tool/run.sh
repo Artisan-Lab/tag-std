@@ -56,7 +56,7 @@ cargo clean
 unset STOP_COMPILATION
 
 # Analyze the lib and bin crates.
-SP_OUT_DIR=$PWD/out
+export SP_OUT_DIR=$PWD/out
 EXPAND_DIR=$SP_OUT_DIR/macro-expanded
 rm -rf "$SP_OUT_DIR" # clear outputs
 mkdir -p "$EXPAND_DIR"

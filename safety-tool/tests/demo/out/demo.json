@@ -626,6 +626,8 @@
   "funcs": [
     {
       "name": "test",
+      "path": "src/lib.rs",
+      "span": "17:19",
       "tags": [
         {
           "predicate": "Requires",
@@ -747,12 +749,12 @@
           "doc": null
         }
       ],
-      "path": "src/lib.rs",
-      "span": "17:19",
       "unsafe_calls": []
     },
     {
       "name": "MyStruct::get",
+      "path": "src/lib.rs",
+      "span": "39:42",
       "tags": [
         {
           "predicate": "Requires",
@@ -867,8 +869,6 @@
           "doc": null
         }
       ],
-      "path": "src/lib.rs",
-      "span": "39:42",
       "unsafe_calls": []
     }
   ],

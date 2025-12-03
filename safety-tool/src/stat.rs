@@ -183,9 +183,9 @@ impl Usage {
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Func {
     pub name: String,
-    pub tags: Vec<Tag>,
     pub path: Utf8PathBuf,
     pub span: String,
+    pub tags: Vec<Tag>,
     pub unsafe_calls: Vec<Func>,
 }
 

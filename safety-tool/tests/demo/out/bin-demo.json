@@ -613,12 +613,14 @@
   "funcs": [
     {
       "name": "main",
-      "tags": [],
       "path": "src/main.rs",
       "span": "10:25",
+      "tags": [],
       "unsafe_calls": [
         {
           "name": "demo::MyStruct::get",
+          "path": "src/main.rs",
+          "span": "23",
           "tags": [
             {
               "predicate": "Requires",
@@ -845,8 +847,6 @@
               "doc": null
             }
           ],
-          "path": "src/main.rs",
-          "span": "23",
           "unsafe_calls": []
         }
       ]
