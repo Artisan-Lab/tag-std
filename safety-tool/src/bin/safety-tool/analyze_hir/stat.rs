@@ -62,6 +62,7 @@ pub fn new_func(fn_hir_id: HirId, fn_def_id: DefId, tcx: TyCtxt) -> Func {
 
     Func {
         name: tcx.def_path_str(fn_def_id),
+        safe: tcx.fn_sig(fn_def_id).skip_binder().safety().is_safe(),
         tags: Vec::new(),
         path: file_lines.file.name.prefer_local().to_string().into(),
         span: {
