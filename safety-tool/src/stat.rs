@@ -140,6 +140,10 @@ impl Specs {
                 let coverage = MetricsCoverage::from_usage(&item.usage);
                 metrics.used_tags += 1;
                 metrics.coverage.merge(&coverage);
+
+                let occurence = coverage.as_vanilla + coverage.in_any;
+                assert_eq!(coverage.occurence, occurence, "{name} has unbalanced occurence");
+
                 let previous = metrics.used.insert(name.clone(), coverage);
                 assert!(
                     previous.is_none(),
@@ -270,18 +274,18 @@ pub struct Metrics {
 
 #[derive(Debug, Default, Deserialize, Serialize)]
 pub struct MetricsCoverage {
-    /// Sum of the other fields.
+    /// Sum of the requires, checked, and delegated (or equivalently as_vanilla + in_any).
     occurence: u16,
-    /// How many times does the tag is used individually?
-    as_vanilla: u16,
-    /// How many times does the tag is used in `any` tag?
-    in_any: u16,
     /// How many times does the tag is used in `requires` predicate?
     requires: u16,
     /// How many times does the tag is used in `checked` predicate?
     checked: u16,
     /// How many times does the tag is used in `delegated` predicate?
     delegated: u16,
+    /// How many times does the tag is used individually?
+    as_vanilla: u16,
+    /// How many times does the tag is used in `any` tag?
+    in_any: u16,
 }
 
 impl MetricsCoverage {
@@ -302,7 +306,7 @@ impl MetricsCoverage {
                 Predicate::Delegated => *delegated += count,
             }
         }
-        *occurence = *as_vanilla + *in_any + *requires + *checked + *delegated;
+        *occurence = *requires + *checked + *delegated;
         coverage
     }
 
