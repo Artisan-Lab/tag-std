@@ -36,6 +36,7 @@ impl Stat {
             for callee in &func.unsafe_calls {
                 callee.update_specs(&mut self.specs);
             }
+            func.update_metrics(&mut self.metrics.funcs);
         }
 
         // Update metrics.
@@ -52,6 +53,11 @@ impl Stat {
         self.metrics.used.sort_unstable_by(|a_name, a_cov, b_name, b_cov| {
             (b_cov.occurence, a_name).cmp(&(a_cov.occurence, b_name))
         });
+        // Sort by unsafe call counts.
+        self.metrics.funcs.safe.unsafe_calls.sort_unstable_keys();
+        self.metrics.funcs.r#unsafe.unsafe_calls.sort_unstable_keys();
+
+        // Tags in spec have been in alphabet order, and unused list are in the insertion order.
     }
 
     /// This method should be called after self is fully computed.
@@ -231,6 +237,16 @@ impl Func {
             }
         }
     }
+
+    fn update_metrics(&self, metrics_funcs: &mut MetricsFunctions) {
+        metrics_funcs.total += 1;
+        let m = if self.safe { &mut metrics_funcs.safe } else { &mut metrics_funcs.r#unsafe };
+        m.total += 1;
+        m.declared_tags += self.tags.len() as u16;
+        m.discharged_tags += self.unsafe_calls.iter().map(|c| c.tags.len() as u16).sum::<u16>();
+        let unsafe_calls = self.unsafe_calls.len() as u16;
+        m.unsafe_calls.entry(unsafe_calls).and_modify(|c| *c += 1).or_insert(1);
+    }
 }
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -283,6 +299,7 @@ pub struct Metrics {
     pub coverage: MetricsCoverage,
     /// Unused tag names.
     pub unused: Vec<Box<str>>,
+    pub funcs: MetricsFunctions,
 }
 
 #[derive(Debug, Default, Deserialize, Serialize)]
@@ -332,4 +349,19 @@ impl MetricsCoverage {
         self.checked += detail.checked;
         self.delegated += detail.delegated;
     }
+}
+
+#[derive(Debug, Default, Deserialize, Serialize)]
+pub struct MetricsFunctions {
+    total: u16,
+    safe: MetricsFuncs,
+    r#unsafe: MetricsFuncs,
+}
+
+#[derive(Debug, Default, Deserialize, Serialize)]
+pub struct MetricsFuncs {
+    total: u16,
+    declared_tags: u16,
+    discharged_tags: u16,
+    unsafe_calls: IndexMap<u16, u16>,
 }
