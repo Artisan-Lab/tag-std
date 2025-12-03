@@ -2,6 +2,7 @@ use camino::Utf8PathBuf;
 use rustc_hir::{HirId, def_id::DefId};
 use rustc_middle::ty::TyCtxt;
 use rustc_session::config::CrateType as RawCrateType;
+use rustc_span::Span;
 use safety_parser::safety::{PropertiesAndReason, parse_attr_and_get_properties};
 pub use safety_tool::stat::*;
 
@@ -37,8 +38,23 @@ fn crate_type(v: &[RawCrateType]) -> CrateType {
     }
 }
 
+fn hir_span(fn_hir_id: HirId, tcx: TyCtxt) -> Span {
+    crossfig::switch! {
+        crate::std => { tcx.hir_span_with_body(fn_hir_id) }
+        _ => {
+            match tcx.hir_node(fn_hir_id) {
+                rustc_hir::Node::Item(caller) => caller.span,
+                rustc_hir::Node::ImplItem(caller) => caller.span,
+                rustc_hir::Node::Expr(callee) => callee.span,
+                x => unimplemented!("{x:?}"),
+            }
+        }
+    }
+}
+
 pub fn new_func(fn_hir_id: HirId, fn_def_id: DefId, tcx: TyCtxt) -> Func {
-    let span = tcx.hir_span_with_body(fn_hir_id);
+    let span = hir_span(fn_hir_id, tcx);
+
     let src_map = tcx.sess.source_map();
     let file_lines = src_map
         .span_to_lines(span)
