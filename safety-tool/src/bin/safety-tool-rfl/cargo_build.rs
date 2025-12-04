@@ -117,6 +117,10 @@ impl SafetyToolSysroot {
                         | CrateType::StaticLib
                 ) || is_system_lib(ext)
                 {
+                    // Skip copying libproc_macro2 for rfl.
+                    if !verify_rust_std() && filename.starts_with("libproc_macro2") {
+                        continue;
+                    }
                     fs::copy(file, self.lib.join(filename))?;
                 };
             }
