@@ -18,7 +18,7 @@ rm -rf $SAFETY_TOOL_LOG_FILE
 touch $SAFETY_TOOL_LOG_FILE
 
 # Rust toolchain
-RUST_TOOLCHAIN=1.87
+RUST_TOOLCHAIN=1.91
 
 rustup default $RUST_TOOLCHAIN
 
@@ -38,7 +38,7 @@ safety-tool-rfl build-dev
 popd
 
 # Add llvm to PATH, and set up libclang
-llvm=llvm-20.1.7-rust-1.87.0-$(uname -m)
+llvm=llvm-21.1.4-rust-1.91.0-$(uname -m)
 llvm_prefix=$PWD/$llvm
 export PATH=$llvm_prefix/bin:$PATH
 export LIBCLANG_PATH=$llvm_prefix/lib/libclang.so
@@ -46,7 +46,7 @@ export LIBCLANG_PATH=$llvm_prefix/lib/libclang.so
 # Install bindgen-cli which must be built from the same version of
 # libclang and rustc required above.
 cargo --version
-cargo install --locked --root $llvm_prefix bindgen-cli
+cargo install --locked --root "$llvm_prefix" bindgen-cli
 
 # Prepare Rust for Linux config
 cat <<EOF >$KCONFIG

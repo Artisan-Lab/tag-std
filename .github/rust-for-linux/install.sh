@@ -24,7 +24,7 @@ fi
 
 # Download LLVM and rustc toolchain required by Rust for Linux
 # see https://mirrors.edge.kernel.org/pub/tools/llvm/rust/
-llvm=llvm-20.1.7-rust-1.87.0-$(uname -m)
+llvm=llvm-21.1.4-rust-1.91.0-$(uname -m)
 if [ ! -d "${llvm}" ]; then
   wget https://mirrors.edge.kernel.org/pub/tools/llvm/rust/files/"$llvm".tar.xz
   tar -xvf "$llvm".tar.xz
