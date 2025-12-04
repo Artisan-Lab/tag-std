@@ -1,4 +1,4 @@
-#![cfg_attr(not(feature = "std"), feature(let_chains))]
+#![cfg_attr(feature = "asterinas", feature(let_chains))]
 
 use cargo_metadata::camino::{Utf8Path, Utf8PathBuf};
 use eyre::Result;

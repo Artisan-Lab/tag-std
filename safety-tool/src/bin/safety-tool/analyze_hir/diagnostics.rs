@@ -161,8 +161,8 @@ impl<'tcx> EmitDiagnostics<'tcx> {
 /// Get HIR node span.
 fn hir_span(hir_id: HirId, tcx: TyCtxt) -> Span {
     crossfig::switch! {
-        crate::std => { tcx.hir_span(hir_id) }
-        _ => { tcx.hir().span(hir_id) }
+        crate::asterinas => { tcx.hir().span(hir_id) }
+        _ => { tcx.hir_span(hir_id) }
     }
 }
 

@@ -1,6 +1,5 @@
 #![feature(rustc_private)]
-#![cfg_attr(feature = "asterinas", feature(integer_sign_cast))]
-#![cfg_attr(not(feature = "std"), feature(let_chains))]
+#![cfg_attr(feature = "asterinas", feature(integer_sign_cast, let_chains))]
 
 extern crate itertools;
 extern crate rustc_ast;
@@ -27,17 +26,17 @@ crossfig::alias! {
 }
 
 crossfig::switch! {
-    std => {
-        #[macro_use]
-        extern crate rustc_public;
-        use rustc_public::rustc_internal::internal;
-    }
-    _ => {
+    asterinas => {
         #[macro_use]
         extern crate rustc_smir;
         extern crate stable_mir;
         use stable_mir as rustc_public;
         use rustc_smir::rustc_internal::{self, internal};
+    }
+    _ => {
+        #[macro_use]
+        extern crate rustc_public;
+        use rustc_public::rustc_internal::internal;
     }
 }
 
@@ -66,8 +65,8 @@ fn main() {
     let rustc_args: Vec<_> = std::env::args().collect();
 
     crossfig::switch! {
-        std => { let rustc_args = &rustc_args; }
-        _ => { }
+        asterinas => { }
+        _ => { let rustc_args = &rustc_args; }
     };
 
     let res = run_with_tcx!(rustc_args, |tcx| {
@@ -170,9 +169,8 @@ fn print_tag_std_attrs_through_internal_apis(tcx: TyCtxt<'_>, instance: &Instanc
     let def_id = internal(tcx, instance.def.def_id());
 
     crossfig::switch! {
-        crate::std => { let attrs = tcx.get_all_attrs(def_id).iter(); }
-        crate::rfl => { let attrs = tcx.get_all_attrs(def_id); }
-        crate::asterinas => { let attrs = tcx.get_attrs_unchecked(def_id).iter(); }
+        asterinas => { let attrs = tcx.get_attrs_unchecked(def_id).iter(); }
+        _ => { let attrs = tcx.get_all_attrs(def_id).iter(); }
     }
 
     let tool_attrs = attrs.filter(|&attr| is_tool_attr(attr));
