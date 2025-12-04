@@ -11,6 +11,9 @@ export SP_DIR=$PWD/safety-tool/assets/
 export DATA_SQLITE3=$PWD/linux/rust_safety.sqlite3
 KCONFIG=$PWD/linux/kernel/configs/rfl-for-rust-ci.config
 
+# valid value: abort_and_emit, abort_and_no_emit, silence_and_emit, and silence_and_no_emit
+export EXIT_AND_EMIT=silence_and_emit # don't abort if discharges are missing, but still emit diagnostics
+
 # Logger file will be only appended, meaning all logs are
 # preserved during building in this script.
 # And we'd better remove it and create a new one for new logs.
