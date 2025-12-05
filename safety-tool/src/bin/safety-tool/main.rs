@@ -30,8 +30,8 @@ crossfig::switch! {
         extern crate rustc_smir;
         extern crate stable_mir;
         use stable_mir as rustc_public;
-        use rustc_smir::run_with_tcx;
-        use rustc_smir::rustc_internal::{self, internal};
+        use rustc_smir::*;
+        use rustc_smir::rustc_internal::internal;
     }
     _ => {
         extern crate rustc_public;
