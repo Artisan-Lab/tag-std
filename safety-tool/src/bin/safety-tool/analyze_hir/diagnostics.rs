@@ -110,7 +110,7 @@ impl<'tcx> EmitDiagnostics<'tcx> {
     #[must_use]
     fn generate(&mut self, hir_id: HirId, title: &str, info: &[String]) -> Box<str> {
         let span_node = hir_span(hir_id, self.tcx);
-        error!(span_node = %self.src_map.span_to_snippet(span_node).unwrap());
+        // error!(span_node = %self.src_map.span_to_snippet(span_node).unwrap());
         let span_body = self.tcx.source_span(hir_id.owner);
 
         // Point out an unsafe call with underlines.

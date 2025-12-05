@@ -17,7 +17,7 @@ if [ ! -d "linux" ]; then
   git -C linux init
   git -C linux remote add origin ${LINUX_REPO}
   git -C linux fetch --depth 1 origin ${LINUX_BRANCH}
-  git -C linux checkout FETCH_HEAD # b66755f
+  git -C linux checkout FETCH_HEAD # c3963b1844a3
 else
   echo "linux source code has been downloaded"
 fi

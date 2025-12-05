@@ -34,7 +34,7 @@ pushd safety-tool
 
 # Must enter safety-tool folder to respect rust toolchain to compile code.
 cargo install --path . --locked -Frfl
-# This should print `rustc 1.87.0 (17067e9ac 2025-05-09)`.
+# This should print `rustc 1.91.0 (f8297e351 2025-10-28)`.
 safety-tool --version
 # Generate bin and lib in target/safety-tool
 safety-tool-rfl build-dev
