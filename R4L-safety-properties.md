@@ -102,7 +102,7 @@ This property describes the requirement that no mutable references exist to a va
 
 **Example APIs**:  [ArcBorrow::new](https://rust.docs.kernel.org/src/kernel/sync/arc.rs.html#577)
 
-### 2.5 NonConCurrent(val)
+### 2.5 NonConcurrent(val)
 
 The value `val` should not be accessed concurrently by multiple users.
 

@@ -30,7 +30,7 @@ desc = "The value `{val}` remains non-zero for the duration of the lifetime `{a}
 args = [ "val" ]
 desc = "There is no mutable reference to `{val}` created."
 
-[tag.NonConCurrent]
+[tag.NonConcurrent]
 args = [ "val" ]
 desc = "The value `{val}` should not be accessed concurrently by multiple users."
 
