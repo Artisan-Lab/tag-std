@@ -116,7 +116,7 @@ impl<'tcx> EmitDiagnostics<'tcx> {
         // Point out an unsafe call with underlines.
         let range = match range_of_call(span_body, span_node) {
             Ok(range) => range,
-            // FIXME: point out the real function callsite in macros. 
+            // FIXME: point out the real function callsite in macros.
             // Currently, only the macro callsite is reported.
             Err(range) => range,
         };
