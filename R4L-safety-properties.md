@@ -93,7 +93,7 @@ There is no mutable reference to `val` created.
 **Formal Description**:
 
 $$
-\nexists \text{ref}: \&\text{mut } T, \text{ref} \to \text{val}
+\nexists \text{ref}: \\&\text{mut } T, \text{ref} \to \text{val}
 $$
 
 **Usage**: precondition
@@ -252,7 +252,7 @@ The pointer `f` must point to a valid file.
 **Formal Description**:
 
 $$
-\text{opened}(f) \land \neg\text{closed}(f) \land \text{valid\_ptr}(f)
+\text{opened}(f) \land \neg\text{closed}(f) \land \text{valid\\_ptr}(f)
 $$
 
 **Usage**: precondition
@@ -461,7 +461,7 @@ The pointer `p` points at a field `f` of container `C`.
 **Formal Description**:
 
 $$
-\exists c: C, p = \&c.f
+\exists c: C, p = \\&c.f
 $$
 
 **Usage**: precondition
