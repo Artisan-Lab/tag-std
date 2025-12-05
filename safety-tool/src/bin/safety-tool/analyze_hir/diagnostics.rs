@@ -110,11 +110,17 @@ impl<'tcx> EmitDiagnostics<'tcx> {
     #[must_use]
     fn generate(&mut self, hir_id: HirId, title: &str, info: &[String]) -> Box<str> {
         let span_node = hir_span(hir_id, self.tcx);
+        // error!(span_node = %self.src_map.span_to_snippet(span_node).unwrap());
         let span_body = self.tcx.source_span(hir_id.owner);
 
         // Point out an unsafe call with underlines.
-        let anno_call =
-            Level::Error.span(anno_span(span_body, span_node)).label("For this unsafe call.");
+        let range = match range_of_call(span_body, span_node) {
+            Ok(range) => range,
+            // FIXME: point out the real function callsite in macros.
+            // Currently, only the macro callsite is reported.
+            Err(range) => range,
+        };
+        let anno_call = Level::Error.span(range).label("For this unsafe call.");
 
         let src_body = self.src_map.span_to_snippet(span_body).unwrap();
         let file_and_line = self.src_map.lookup_line(span_body.lo()).unwrap();
@@ -161,15 +167,40 @@ impl<'tcx> EmitDiagnostics<'tcx> {
 /// Get HIR node span.
 fn hir_span(hir_id: HirId, tcx: TyCtxt) -> Span {
     crossfig::switch! {
-        crate::std => { tcx.hir_span(hir_id) }
-        _ => { tcx.hir().span(hir_id) }
+        crate::asterinas => { tcx.hir().span(hir_id) }
+        _ => { tcx.hir_span(hir_id) }
     }
 }
 
 /// Compute relative position of a node in a body node.
-fn anno_span(span_body: Span, span_node: Span) -> Range<usize> {
-    let body_lo = span_body.lo().0;
-    let node_lo = span_node.lo().0;
-    let node_hi = span_node.hi().0;
-    (node_lo - body_lo) as usize..(node_hi - body_lo) as usize
+///
+/// Return value always points to the range within span_body, but the meaning of status:
+/// * Ok: span_node is in span_body, i.e. function callsite is in body scope
+/// * Err: span_node is out of span_body, probably owing to macro expansion,
+///   thus find the ancestor span in span_body. Need to attach real callsite
+///   as per the error status.
+fn range_of_call(span_body: Span, span_node: Span) -> Result<Range<usize>, Range<usize>> {
+    let gen_range = |span: Span| {
+        let body_lo = span_body.lo().0;
+        let node_lo = span.lo().0;
+        let node_hi = span.hi().0;
+        (node_lo - body_lo) as usize..(node_hi - body_lo) as usize
+        // error!(?span_body, ?span_node, body_lo, node_lo, node_hi, ?range,);
+    };
+
+    if span_body.contains(span_node) {
+        Ok(gen_range(span_node))
+    } else {
+        assert!(
+            span_node.from_expansion(),
+            "{span_node:?} is not from a macro expansion, neither directly within {span_body:?}"
+        );
+        for data in span_node.macro_backtrace() {
+            let span = data.call_site;
+            if span_body.contains(span) {
+                return Err(gen_range(span));
+            }
+        }
+        unreachable!("Failed to find how {span_node:?} is called in {span_body:?}");
+    }
 }

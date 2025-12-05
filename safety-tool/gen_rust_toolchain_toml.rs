@@ -42,7 +42,7 @@ impl Project {
     fn channel(self) -> &'static str {
         match self {
             Project::Std => "nightly-2025-09-09",
-            Project::RustForLinux => "1.87",
+            Project::RustForLinux => "1.91.0",
             Project::Asterinas => "nightly-2025-02-01",
             Project::Default => todo!("Haven't decided which toolchain as default to support."),
         }

@@ -132,10 +132,10 @@
         },
         "usage": {
           "types": {
-            "Vanilla": 5
+            "Vanilla": 3
           },
           "predicates": {
-            "Requires": 5
+            "Requires": 3
           }
         }
       },
@@ -530,7 +530,7 @@
           "predicates": {}
         }
       },
-      "NonConCurrent": {
+      "NonConcurrent": {
         "item": {
           "tag": {
             "args": [
@@ -920,10 +920,10 @@
         },
         "usage": {
           "types": {
-            "Vanilla": 3
+            "Vanilla": 2
           },
           "predicates": {
-            "Requires": 3
+            "Requires": 2
           }
         }
       },
@@ -1191,8 +1191,12 @@
           "src": "/home/runner/work/tag-std/tag-std/safety-tool/assets/sp-rust-for-linux.toml"
         },
         "usage": {
-          "types": {},
-          "predicates": {}
+          "types": {
+            "Vanilla": 2
+          },
+          "predicates": {
+            "Requires": 2
+          }
         }
       },
       "ValidFile": {
@@ -1295,8 +1299,12 @@
           "src": "/home/runner/work/tag-std/tag-std/safety-tool/assets/sp-core.toml"
         },
         "usage": {
-          "types": {},
-          "predicates": {}
+          "types": {
+            "Vanilla": 1
+          },
+          "predicates": {
+            "Requires": 1
+          }
         }
       },
       "ValidRead": {
@@ -1394,7 +1402,7 @@
       "name": "<ChainInit<I, F, T, E> as Init<T, E>>::__init",
       "safe": false,
       "path": "rust/pin-init/src/lib.rs",
-      "span": "1217:1224",
+      "span": "1219:1226",
       "tags": [
         {
           "predicate": "Requires",
@@ -1420,7 +1428,7 @@
           "name": "PinInit::__pinned_init",
           "safe": false,
           "path": "rust/pin-init/src/lib.rs",
-          "span": "1219",
+          "span": "1221",
           "tags": [],
           "unsafe_calls": []
         },
@@ -1428,7 +1436,7 @@
           "name": "core::ptr::drop_in_place",
           "safe": false,
           "path": "rust/pin-init/src/lib.rs",
-          "span": "1223",
+          "span": "1225",
           "tags": [],
           "unsafe_calls": []
         }
@@ -1438,7 +1446,7 @@
       "name": "<ChainInit<I, F, T, E> as PinInit<T, E>>::__pinned_init",
       "safe": false,
       "path": "rust/pin-init/src/lib.rs",
-      "span": "1234:1237",
+      "span": "1236:1239",
       "tags": [
         {
           "predicate": "Requires",
@@ -1480,7 +1488,7 @@
           "name": "Init::__init",
           "safe": false,
           "path": "rust/pin-init/src/lib.rs",
-          "span": "1236",
+          "span": "1238",
           "tags": [],
           "unsafe_calls": []
         }
@@ -1490,7 +1498,7 @@
       "name": "<ChainPinInit<I, F, T, E> as PinInit<T, E>>::__pinned_init",
       "safe": false,
       "path": "rust/pin-init/src/lib.rs",
-      "span": "1108:1117",
+      "span": "1110:1119",
       "tags": [
         {
           "predicate": "Requires",
@@ -1532,7 +1540,7 @@
           "name": "PinInit::__pinned_init",
           "safe": false,
           "path": "rust/pin-init/src/lib.rs",
-          "span": "1110",
+          "span": "1112",
           "tags": [],
           "unsafe_calls": []
         },
@@ -1540,95 +1548,41 @@
           "name": "core::ptr::drop_in_place",
           "safe": false,
           "path": "rust/pin-init/src/lib.rs",
-          "span": "1116",
+          "span": "1118",
           "tags": [],
           "unsafe_calls": []
         }
       ]
     },
     {
-      "name": "<T as Init<T, E>>::__init",
+      "name": "<T as Init<T>>::__init",
       "safe": false,
       "path": "rust/pin-init/src/lib.rs",
-      "span": "1403:1407",
-      "tags": [
-        {
-          "predicate": "Requires",
-          "tag": {
-            "Vanilla": {
-              "tag": {
-                "typ": null,
-                "name": "Allocated"
-              },
-              "args": [
-                "slot",
-                "T",
-                "1",
-                "_"
-              ]
-            }
-          },
-          "doc": null
-        }
-      ],
+      "span": "1406:1410",
+      "tags": [],
       "unsafe_calls": [
         {
           "name": "core::ptr::mut_ptr::<impl *mut T>::write",
           "safe": false,
           "path": "rust/pin-init/src/lib.rs",
-          "span": "1405",
+          "span": "1408",
           "tags": [],
           "unsafe_calls": []
         }
       ]
     },
     {
-      "name": "<T as PinInit<T, E>>::__pinned_init",
+      "name": "<T as PinInit<T>>::__pinned_init",
       "safe": false,
       "path": "rust/pin-init/src/lib.rs",
-      "span": "1413:1416",
-      "tags": [
-        {
-          "predicate": "Requires",
-          "tag": {
-            "Vanilla": {
-              "tag": {
-                "typ": null,
-                "name": "Allocated"
-              },
-              "args": [
-                "slot",
-                "T",
-                "1",
-                "_"
-              ]
-            }
-          },
-          "doc": null
-        },
-        {
-          "predicate": "Requires",
-          "tag": {
-            "Vanilla": {
-              "tag": {
-                "typ": null,
-                "name": "Pinned"
-              },
-              "args": [
-                "slot",
-                "_"
-              ]
-            }
-          },
-          "doc": null
-        }
-      ],
+      "span": "1416:1420",
+      "tags": [],
       "unsafe_calls": [
         {
-          "name": "Init::__init",
+          "name": "core::ptr::mut_ptr::<impl *mut T>::write",
           "safe": false,
           "path": "rust/pin-init/src/lib.rs",
-          "span": "1415",
+          "span": "1418",
           "tags": [],
           "unsafe_calls": []
         }
@@ -1654,7 +1608,7 @@
       "name": "<__internal::AlwaysFail<T> as PinInit<T, ()>>::__pinned_init",
       "safe": false,
       "path": "rust/pin-init/src/__internal.rs",
-      "span": "289:291",
+      "span": "291:293",
       "tags": [],
       "unsafe_calls": []
     },
@@ -1662,7 +1616,7 @@
       "name": "<__internal::AlwaysFail<T> as core::default::Default>::default",
       "safe": true,
       "path": "rust/pin-init/src/__internal.rs",
-      "span": "282:284",
+      "span": "284:286",
       "tags": [],
       "unsafe_calls": []
     },
@@ -1670,14 +1624,14 @@
       "name": "<__internal::DropGuard<T> as core::ops::Drop>::drop",
       "safe": true,
       "path": "rust/pin-init/src/__internal.rs",
-      "span": "243:247",
+      "span": "245:249",
       "tags": [],
       "unsafe_calls": [
         {
           "name": "core::ptr::drop_in_place",
           "safe": false,
           "path": "rust/pin-init/src/__internal.rs",
-          "span": "246",
+          "span": "248",
           "tags": [],
           "unsafe_calls": []
         }
@@ -1720,14 +1674,14 @@
       "name": "<core::cell::UnsafeCell<T> as Wrapper<T>>::pin_init",
       "safe": true,
       "path": "rust/pin-init/src/lib.rs",
-      "span": "1609:1612",
+      "span": "1723:1726",
       "tags": [],
       "unsafe_calls": [
         {
           "name": "cast_pin_init",
           "safe": false,
           "path": "rust/pin-init/src/lib.rs",
-          "span": "1611",
+          "span": "1725",
           "tags": [],
           "unsafe_calls": []
         }
@@ -1737,14 +1691,48 @@
       "name": "<core::mem::MaybeUninit<T> as Wrapper<T>>::pin_init",
       "safe": true,
       "path": "rust/pin-init/src/lib.rs",
-      "span": "1616:1619",
+      "span": "1730:1733",
       "tags": [],
       "unsafe_calls": [
         {
           "name": "cast_pin_init",
           "safe": false,
           "path": "rust/pin-init/src/lib.rs",
-          "span": "1618",
+          "span": "1732",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
+    },
+    {
+      "name": "<core::result::Result<T, E> as Init<T, E>>::__init",
+      "safe": false,
+      "path": "rust/pin-init/src/lib.rs",
+      "span": "1427:1431",
+      "tags": [],
+      "unsafe_calls": [
+        {
+          "name": "core::ptr::mut_ptr::<impl *mut T>::write",
+          "safe": false,
+          "path": "rust/pin-init/src/lib.rs",
+          "span": "1429",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
+    },
+    {
+      "name": "<core::result::Result<T, E> as PinInit<T, E>>::__pinned_init",
+      "safe": false,
+      "path": "rust/pin-init/src/lib.rs",
+      "span": "1438:1442",
+      "tags": [],
+      "unsafe_calls": [
+        {
+          "name": "core::ptr::mut_ptr::<impl *mut T>::write",
+          "safe": false,
+          "path": "rust/pin-init/src/lib.rs",
+          "span": "1440",
           "tags": [],
           "unsafe_calls": []
         }
@@ -1754,7 +1742,7 @@
       "name": "__internal::AlwaysFail::<T>::new",
       "safe": true,
       "path": "rust/pin-init/src/__internal.rs",
-      "span": "276:278",
+      "span": "278:280",
       "tags": [],
       "unsafe_calls": []
     },
@@ -1762,15 +1750,29 @@
       "name": "__internal::DropGuard::<T>::new",
       "safe": false,
       "path": "rust/pin-init/src/__internal.rs",
-      "span": "236:238",
-      "tags": [],
+      "span": "238:240",
+      "tags": [
+        {
+          "predicate": "Requires",
+          "tag": {
+            "Vanilla": {
+              "tag": {
+                "typ": null,
+                "name": "ValidPtr"
+              },
+              "args": []
+            }
+          },
+          "doc": null
+        }
+      ],
       "unsafe_calls": []
     },
     {
       "name": "__internal::OnlyCallFromDrop::new",
       "safe": false,
       "path": "rust/pin-init/src/__internal.rs",
-      "span": "260:262",
+      "span": "262:264",
       "tags": [],
       "unsafe_calls": []
     },
@@ -1819,14 +1821,31 @@
       "name": "cast_init",
       "safe": false,
       "path": "rust/pin-init/src/lib.rs",
-      "span": "1301:1308",
-      "tags": [],
+      "span": "1305:1312",
+      "tags": [
+        {
+          "predicate": "Requires",
+          "tag": {
+            "Vanilla": {
+              "tag": {
+                "typ": null,
+                "name": "ValidCast"
+              },
+              "args": [
+                "U",
+                "T"
+              ]
+            }
+          },
+          "doc": null
+        }
+      ],
       "unsafe_calls": [
         {
           "name": "init_from_closure",
           "safe": false,
           "path": "rust/pin-init/src/lib.rs",
-          "span": "1304",
+          "span": "1308",
           "tags": [],
           "unsafe_calls": []
         },
@@ -1834,7 +1853,7 @@
           "name": "Init::__init",
           "safe": false,
           "path": "rust/pin-init/src/lib.rs",
-          "span": "1304",
+          "span": "1308",
           "tags": [],
           "unsafe_calls": []
         }
@@ -1844,14 +1863,31 @@
       "name": "cast_pin_init",
       "safe": false,
       "path": "rust/pin-init/src/lib.rs",
-      "span": "1285:1292",
-      "tags": [],
+      "span": "1288:1295",
+      "tags": [
+        {
+          "predicate": "Requires",
+          "tag": {
+            "Vanilla": {
+              "tag": {
+                "typ": null,
+                "name": "ValidCast"
+              },
+              "args": [
+                "U",
+                "T"
+              ]
+            }
+          },
+          "doc": null
+        }
+      ],
       "unsafe_calls": [
         {
           "name": "pin_init_from_closure",
           "safe": false,
           "path": "rust/pin-init/src/lib.rs",
-          "span": "1288",
+          "span": "1291",
           "tags": [],
           "unsafe_calls": []
         },
@@ -1859,7 +1895,7 @@
           "name": "PinInit::__pinned_init",
           "safe": false,
           "path": "rust/pin-init/src/lib.rs",
-          "span": "1288",
+          "span": "1291",
           "tags": [],
           "unsafe_calls": []
         }
@@ -1869,14 +1905,14 @@
       "name": "init_array_from_fn",
       "safe": true,
       "path": "rust/pin-init/src/lib.rs",
-      "span": "1329:1355",
+      "span": "1333:1359",
       "tags": [],
       "unsafe_calls": [
         {
           "name": "core::ptr::mut_ptr::<impl *mut T>::add",
           "safe": false,
           "path": "rust/pin-init/src/lib.rs",
-          "span": "1340",
+          "span": "1344",
           "tags": [],
           "unsafe_calls": []
         },
@@ -1884,7 +1920,7 @@
           "name": "Init::__init",
           "safe": false,
           "path": "rust/pin-init/src/lib.rs",
-          "span": "1343",
+          "span": "1347",
           "tags": [],
           "unsafe_calls": []
         },
@@ -1892,7 +1928,7 @@
           "name": "core::ptr::drop_in_place",
           "safe": false,
           "path": "rust/pin-init/src/lib.rs",
-          "span": "1346",
+          "span": "1350",
           "tags": [],
           "unsafe_calls": []
         },
@@ -1900,7 +1936,7 @@
           "name": "init_from_closure",
           "safe": false,
           "path": "rust/pin-init/src/lib.rs",
-          "span": "1354",
+          "span": "1358",
           "tags": [],
           "unsafe_calls": []
         }
@@ -1910,22 +1946,47 @@
       "name": "init_from_closure",
       "safe": false,
       "path": "rust/pin-init/src/lib.rs",
-      "span": "1272:1276",
+      "span": "1274:1278",
       "tags": [],
       "unsafe_calls": []
+    },
+    {
+      "name": "init_zeroed",
+      "safe": true,
+      "path": "rust/pin-init/src/lib.rs",
+      "span": "1574:1583",
+      "tags": [],
+      "unsafe_calls": [
+        {
+          "name": "init_from_closure",
+          "safe": false,
+          "path": "rust/pin-init/src/lib.rs",
+          "span": "1578",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "core::ptr::mut_ptr::<impl *mut T>::write_bytes",
+          "safe": false,
+          "path": "rust/pin-init/src/lib.rs",
+          "span": "1579",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "pin_init_array_from_fn",
       "safe": true,
       "path": "rust/pin-init/src/lib.rs",
-      "span": "1372:1398",
+      "span": "1376:1402",
       "tags": [],
       "unsafe_calls": [
         {
           "name": "core::ptr::mut_ptr::<impl *mut T>::add",
           "safe": false,
           "path": "rust/pin-init/src/lib.rs",
-          "span": "1383",
+          "span": "1387",
           "tags": [],
           "unsafe_calls": []
         },
@@ -1933,7 +1994,7 @@
           "name": "PinInit::__pinned_init",
           "safe": false,
           "path": "rust/pin-init/src/lib.rs",
-          "span": "1386",
+          "span": "1390",
           "tags": [],
           "unsafe_calls": []
         },
@@ -1941,7 +2002,7 @@
           "name": "core::ptr::drop_in_place",
           "safe": false,
           "path": "rust/pin-init/src/lib.rs",
-          "span": "1389",
+          "span": "1393",
           "tags": [],
           "unsafe_calls": []
         },
@@ -1949,7 +2010,7 @@
           "name": "pin_init_from_closure",
           "safe": false,
           "path": "rust/pin-init/src/lib.rs",
-          "span": "1397",
+          "span": "1401",
           "tags": [],
           "unsafe_calls": []
         }
@@ -1959,7 +2020,7 @@
       "name": "pin_init_from_closure",
       "safe": false,
       "path": "rust/pin-init/src/lib.rs",
-      "span": "1253:1257",
+      "span": "1255:1259",
       "tags": [],
       "unsafe_calls": []
     },
@@ -1967,14 +2028,14 @@
       "name": "uninit",
       "safe": true,
       "path": "rust/pin-init/src/lib.rs",
-      "span": "1314:1317",
+      "span": "1318:1321",
       "tags": [],
       "unsafe_calls": [
         {
           "name": "init_from_closure",
           "safe": false,
           "path": "rust/pin-init/src/lib.rs",
-          "span": "1316",
+          "span": "1320",
           "tags": [],
           "unsafe_calls": []
         }
@@ -1984,22 +2045,14 @@
       "name": "zeroed",
       "safe": true,
       "path": "rust/pin-init/src/lib.rs",
-      "span": "1500:1509",
+      "span": "1605:1608",
       "tags": [],
       "unsafe_calls": [
         {
-          "name": "init_from_closure",
+          "name": "core::mem::zeroed",
           "safe": false,
           "path": "rust/pin-init/src/lib.rs",
-          "span": "1504",
-          "tags": [],
-          "unsafe_calls": []
-        },
-        {
-          "name": "core::ptr::mut_ptr::<impl *mut T>::write_bytes",
-          "safe": false,
-          "path": "rust/pin-init/src/lib.rs",
-          "span": "1505",
+          "span": "1607",
           "tags": [],
           "unsafe_calls": []
         }
@@ -2008,22 +2061,38 @@
   ],
   "metrics": {
     "total_tags": 66,
-    "used_tags": 2,
+    "used_tags": 4,
     "used": {
       "Allocated": {
-        "occurence": 5,
-        "requires": 5,
-        "checked": 0,
-        "delegated": 0,
-        "as_vanilla": 5,
-        "in_any": 0
-      },
-      "Pinned": {
         "occurence": 3,
         "requires": 3,
         "checked": 0,
         "delegated": 0,
         "as_vanilla": 3,
+        "in_any": 0
+      },
+      "Pinned": {
+        "occurence": 2,
+        "requires": 2,
+        "checked": 0,
+        "delegated": 0,
+        "as_vanilla": 2,
+        "in_any": 0
+      },
+      "ValidCast": {
+        "occurence": 2,
+        "requires": 2,
+        "checked": 0,
+        "delegated": 0,
+        "as_vanilla": 2,
+        "in_any": 0
+      },
+      "ValidPtr": {
+        "occurence": 1,
+        "requires": 1,
+        "checked": 0,
+        "delegated": 0,
+        "as_vanilla": 1,
         "in_any": 0
       }
     },
@@ -2060,7 +2129,7 @@
       "MayInvalid",
       "NoPadding",
       "NonAccessable",
-      "NonConCurrent",
+      "NonConcurrent",
       "NonData_race",
       "NonDropped",
       "NonExist",
@@ -2090,12 +2159,10 @@
       "UserProperty",
       "Valid",
       "ValidCStr",
-      "ValidCast",
       "ValidFile",
       "ValidInstance",
       "ValidMemory",
       "ValidNum",
-      "ValidPtr",
       "ValidRead",
       "ValidString",
       "ValidVma",
@@ -2103,25 +2170,25 @@
     ],
     "funcs": {
       "total": {
-        "funcs": 28,
-        "funcs_with_tags_declared": 5,
+        "funcs": 31,
+        "funcs_with_tags_declared": 6,
         "funcs_with_tags_discharged": 0,
         "declared_tags": 8,
         "discharged_tags": 0,
-        "unsafe_calls": 29
+        "unsafe_calls": 32
       },
       "safe": {
         "total": {
-          "funcs": 13,
+          "funcs": 14,
           "funcs_with_tags_declared": 0,
           "funcs_with_tags_discharged": 0,
           "declared_tags": 0,
           "discharged_tags": 0,
-          "unsafe_calls": 18
+          "unsafe_calls": 19
         },
         "unsafe_calls": {
           "0": 4,
-          "1": 5,
+          "1": 6,
           "2": 1,
           "3": 1,
           "4": 2
@@ -2129,16 +2196,16 @@
       },
       "unsafe": {
         "total": {
-          "funcs": 15,
-          "funcs_with_tags_declared": 5,
+          "funcs": 17,
+          "funcs_with_tags_declared": 6,
           "funcs_with_tags_discharged": 0,
           "declared_tags": 8,
           "discharged_tags": 0,
-          "unsafe_calls": 11
+          "unsafe_calls": 13
         },
         "unsafe_calls": {
           "0": 8,
-          "1": 3,
+          "1": 5,
           "2": 4
         }
       }

@@ -11,6 +11,9 @@ export SP_DIR=$PWD/safety-tool/assets/
 export DATA_SQLITE3=$PWD/linux/rust_safety.sqlite3
 KCONFIG=$PWD/linux/kernel/configs/rfl-for-rust-ci.config
 
+# valid value: abort_and_emit, abort_and_no_emit, silence_and_emit, and silence_and_no_emit
+export EXIT_AND_EMIT=silence_and_emit # don't abort if discharges are missing, but still emit diagnostics
+
 # Logger file will be only appended, meaning all logs are
 # preserved during building in this script.
 # And we'd better remove it and create a new one for new logs.
@@ -18,7 +21,7 @@ rm -rf $SAFETY_TOOL_LOG_FILE
 touch $SAFETY_TOOL_LOG_FILE
 
 # Rust toolchain
-RUST_TOOLCHAIN=1.87
+RUST_TOOLCHAIN=1.91.0
 
 rustup default $RUST_TOOLCHAIN
 
@@ -31,14 +34,14 @@ pushd safety-tool
 
 # Must enter safety-tool folder to respect rust toolchain to compile code.
 cargo install --path . --locked -Frfl
-# This should print `rustc 1.87.0 (17067e9ac 2025-05-09)`.
+# This should print `rustc 1.91.0 (f8297e351 2025-10-28)`.
 safety-tool --version
 # Generate bin and lib in target/safety-tool
 safety-tool-rfl build-dev
 popd
 
 # Add llvm to PATH, and set up libclang
-llvm=llvm-20.1.7-rust-1.87.0-$(uname -m)
+llvm=llvm-21.1.4-rust-1.91.0-$(uname -m)
 llvm_prefix=$PWD/$llvm
 export PATH=$llvm_prefix/bin:$PATH
 export LIBCLANG_PATH=$llvm_prefix/lib/libclang.so
@@ -46,7 +49,7 @@ export LIBCLANG_PATH=$llvm_prefix/lib/libclang.so
 # Install bindgen-cli which must be built from the same version of
 # libclang and rustc required above.
 cargo --version
-cargo install --locked --root $llvm_prefix bindgen-cli
+cargo install --locked --root "$llvm_prefix" bindgen-cli
 
 # Prepare Rust for Linux config
 cat <<EOF >$KCONFIG
