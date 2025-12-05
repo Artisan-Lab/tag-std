@@ -1,3 +1,10 @@
+## Asterinas
+|Num| PR | API | Info | PR Status |
+|---|-----|--------------|--------|--------|
+| 1 | [2677](https://github.com/asterinas/asterinas/pull/2677) | __multiboot_entry, __multiboot2_entry | safe => unsafe | submitted |
+| 2 | [2673](https://github.com/asterinas/asterinas/pull/2673) | IoApicAccess::{read, write} | no safety doc | submitted |
+
+## Standard Library
 |Num| API | Missing SP | PR Num |PR |PR Status |
 |---|-----|--------------|--------|--------|--------|
 |1| Arc::from_raw | Allocated | 1 | [PR_134496](https://github.com/rust-lang/rust/pull/134496) | Merged |
