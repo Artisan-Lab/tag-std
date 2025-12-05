@@ -27,14 +27,12 @@ crossfig::alias! {
 
 crossfig::switch! {
     asterinas => {
-        #[macro_use]
         extern crate rustc_smir;
         extern crate stable_mir;
         use stable_mir as rustc_public;
         use rustc_smir::rustc_internal::{self, internal};
     }
     _ => {
-        #[macro_use]
         extern crate rustc_public;
         use rustc_public::rustc_internal::internal;
     }
@@ -69,7 +67,7 @@ fn main() {
         _ => { let rustc_args = &rustc_args; }
     };
 
-    let res = run_with_tcx!(rustc_args, |tcx| {
+    let res = rustc_public::run_with_tcx!(rustc_args, |tcx| {
         analyze_hir::analyze_hir(tcx);
         analyze(tcx);
         compilation_status()
