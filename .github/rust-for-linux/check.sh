@@ -21,7 +21,7 @@ rm -rf $SAFETY_TOOL_LOG_FILE
 touch $SAFETY_TOOL_LOG_FILE
 
 # Rust toolchain
-RUST_TOOLCHAIN=1.91
+RUST_TOOLCHAIN=1.91.0
 
 rustup default $RUST_TOOLCHAIN
 
