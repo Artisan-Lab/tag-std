@@ -31,6 +31,8 @@ jiff = { version = "0.2", features = ["serde"] }
 annotate-snippets = "0.11.5"
 cargo_metadata = "0.21.0"
 camino = "1.1.10"
+termtree = "0.5.1"
+itertools = "0.14.0"
 
 safety-parser = { path = "./safety-parser/", version = "0.4.0" }
 crossfig = "0.1.3"
