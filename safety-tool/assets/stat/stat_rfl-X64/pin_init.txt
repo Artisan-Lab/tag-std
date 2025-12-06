@@ -1,0 +1,72 @@
+<ChainInit<I, F, T, E> as Init<T, E>>::__init { Allocated }
+├── PinInit::__pinned_init
+└── core::ptr::drop_in_place
+
+<ChainInit<I, F, T, E> as PinInit<T, E>>::__pinned_init { Allocated, Pinned }
+└── Init::__init
+
+<ChainPinInit<I, F, T, E> as PinInit<T, E>>::__pinned_init { Allocated, Pinned }
+├── PinInit::__pinned_init
+└── core::ptr::drop_in_place
+
+<T as Init<T>>::__init
+└── core::ptr::mut_ptr::<impl *mut T>::write
+
+<T as PinInit<T>>::__pinned_init
+└── core::ptr::mut_ptr::<impl *mut T>::write
+
+<__internal::DropGuard<T> as core::ops::Drop>::drop
+└── core::ptr::drop_in_place
+
+<__internal::StackInit<T> as core::ops::Drop>::drop
+└── core::mem::MaybeUninit::<T>::assume_init_drop
+
+<core::cell::UnsafeCell<T> as Wrapper<T>>::pin_init
+└── cast_pin_init { ValidCast }
+
+<core::mem::MaybeUninit<T> as Wrapper<T>>::pin_init
+└── cast_pin_init { ValidCast }
+
+<core::result::Result<T, E> as Init<T, E>>::__init
+└── core::ptr::mut_ptr::<impl *mut T>::write
+
+<core::result::Result<T, E> as PinInit<T, E>>::__pinned_init
+└── core::ptr::mut_ptr::<impl *mut T>::write
+
+__internal::DropGuard::<T>::new { ValidPtr }
+
+__internal::StackInit::<T>::init
+├── core::mem::MaybeUninit::<T>::assume_init_drop
+├── PinInit::__pinned_init
+└── core::mem::MaybeUninit::<T>::assume_init_mut
+
+cast_init { ValidCast }
+├── init_from_closure
+└── Init::__init
+
+cast_pin_init { ValidCast }
+├── pin_init_from_closure
+└── PinInit::__pinned_init
+
+init_array_from_fn
+├── core::ptr::mut_ptr::<impl *mut T>::add
+├── Init::__init
+├── core::ptr::drop_in_place
+└── init_from_closure
+
+init_zeroed
+├── init_from_closure
+└── core::ptr::mut_ptr::<impl *mut T>::write_bytes
+
+pin_init_array_from_fn
+├── core::ptr::mut_ptr::<impl *mut T>::add
+├── PinInit::__pinned_init
+├── core::ptr::drop_in_place
+└── pin_init_from_closure
+
+uninit
+└── init_from_closure
+
+zeroed
+└── core::mem::zeroed
+
