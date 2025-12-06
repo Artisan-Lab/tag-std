@@ -42,6 +42,12 @@ impl Stat {
         // Merge metrics of funcs.
         self.metrics.funcs.merge();
 
+        // Sort and deduplicate functions for tags.
+        for item in self.specs.map.values_mut() {
+            item.usage.functions.sort_unstable();
+            item.usage.functions.dedup();
+        }
+
         // Update metrics as per specs.
         self.specs.update_metrics(&mut self.metrics);
 
@@ -185,6 +191,7 @@ pub struct SpecItem {
 pub struct Usage {
     types: IndexMap<TagTypeUsage, u16>,
     predicates: IndexMap<Predicate, u16>,
+    pub functions: Vec<Box<str>>,
 }
 
 impl Usage {
@@ -198,6 +205,10 @@ impl Usage {
 
     fn increment_predicate(&mut self, predicate: Predicate) {
         self.predicates.entry(predicate).and_modify(|c| *c += 1).or_insert(1);
+    }
+
+    fn push_function(&mut self, name: &str) {
+        self.functions.push(name.into());
     }
 
     fn is_unused(&self) -> bool {
@@ -226,6 +237,7 @@ impl Func {
                     let usage = specs.get_usage_mut(name);
                     usage.increment_type_vanilla();
                     usage.increment_predicate(predicate);
+                    usage.push_function(&self.name);
                 }
                 TagType::Any(props) => {
                     for prop in props {
@@ -234,6 +246,7 @@ impl Func {
                             let usage = specs.get_usage_mut(name);
                             usage.increment_type_any();
                             usage.increment_predicate(predicate);
+                            usage.push_function(&self.name);
                         }
                     }
                 }
