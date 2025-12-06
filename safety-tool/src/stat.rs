@@ -1,5 +1,5 @@
 use camino::{Utf8Path, Utf8PathBuf};
-use indexmap::IndexMap;
+use indexmap::{IndexMap, IndexSet};
 use itertools::Itertools;
 use safety_parser::{
     configuration::{CACHE, GenDocOption, Key},
@@ -87,22 +87,48 @@ impl Stat {
     pub fn write_call_tree(&self) {
         use std::io::Write;
         let Some(mut file) = self.krate.output_tree_file_path() else { return };
+
+        let local_fns: IndexMap<_, _> = self.funcs.iter().map(|f| (f.name.as_str(), f)).collect();
+        let mut intree = IndexSet::new();
         for func in &self.funcs {
             if func.unsafe_calls.is_empty() && func.has_no_tag() {
                 // Skip functions that have no unsafe calls and no tags.
                 continue;
             }
-            let tree = termtree::Tree::new(func.root_node());
-            let leaves = func.unsafe_calls.iter().map(|c| {
-                let name = &*c.name;
-                if let Some(local_fn) = self.funcs.iter().find(|f| f.name == name) {
-                    local_fn.root_node()
-                } else {
-                    c.name.to_owned()
-                }
-            });
-            let tree = tree.with_leaves(leaves);
+
+            let mut tree = Tree::new(func.root_node());
+            intree.insert(&*func.name);
+
+            call_tree(&mut tree, func, &mut intree, &local_fns);
             _ = writeln!(&mut file, "{tree}");
+        }
+    }
+}
+
+type Tree = termtree::Tree<String>;
+
+// Recursively add the call nodes.
+fn call_tree<'a>(
+    tree: &mut Tree,
+    func: &'a Func,
+    intree: &mut IndexSet<&'a str>,
+    local_fns: &IndexMap<&'a str, &'a Func>,
+) {
+    for call in &func.unsafe_calls {
+        let name = &*call.name;
+        if let Some(local_fn) = local_fns.get(name) {
+            // Push down the leaves when the call is local and never called before.
+            if intree.insert(name) {
+                let mut leaf = Tree::new(local_fn.root_node());
+                call_tree(&mut leaf, local_fn, intree, local_fns);
+                tree.push(leaf);
+            } else {
+                // Don't go down when the node exists, but generate the node with tags.
+                tree.push(local_fn.root_node());
+            }
+        } else {
+            // When the call is external, only the name is available.
+            tree.push(name.to_owned());
         }
     }
 }
