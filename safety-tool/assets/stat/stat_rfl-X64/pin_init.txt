@@ -23,6 +23,8 @@
 
 <core::cell::UnsafeCell<T> as Wrapper<T>>::pin_init
 └── cast_pin_init { ValidCast }
+    ├── pin_init_from_closure
+    └── PinInit::__pinned_init
 
 <core::mem::MaybeUninit<T> as Wrapper<T>>::pin_init
 └── cast_pin_init { ValidCast }

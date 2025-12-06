@@ -128,6 +128,7 @@
 
 <debugfs::callback_adapters::FormatAdapter<D, F> as debugfs::traits::Writer>::write
 └── debugfs::callback_adapters::materialize_zst
+    └── core::ptr::NonNull::<T>::as_ref
 
 <debugfs::callback_adapters::WritableAdapter<D, W> as debugfs::traits::Reader>::read_from_slice
 └── debugfs::callback_adapters::materialize_zst
@@ -157,6 +158,9 @@
 
 <devres::Devres<T> as pin_init::PinnedDrop>::drop
 ├── revocable::Revocable::<T>::revoke_nosync { NonConcurrent }
+│   └── revocable::Revocable::<T>::revoke_internal { NonConcurrent }
+│       ├── bindings::synchronize_rcu
+│       └── core::ptr::drop_in_place
 └── core::ptr::drop_in_place
 
 <dma::CoherentAllocation<T> as core::ops::Drop>::drop
@@ -692,6 +696,8 @@ alloc::kvec::Vec::<T, A>::pop
 
 alloc::kvec::Vec::<T, A>::push
 └── alloc::kvec::Vec::<T, A>::push_within_capacity_unchecked { ValidNum }
+    ├── core::slice::<impl [T]>::get_unchecked_mut
+    └── alloc::kvec::Vec::<T, A>::inc_len { Init, ValidNum }
 
 alloc::kvec::Vec::<T, A>::push_within_capacity
 └── alloc::kvec::Vec::<T, A>::push_within_capacity_unchecked { ValidNum }
@@ -734,6 +740,7 @@ alloc::layout::ArrayLayout::<T>::new_unchecked { ValidNum }
 
 auxiliary::Adapter::<T>::remove_callback
 └── device::Device::<device::CoreInternal>::drvdata_obtain
+    └── bindings::dev_get_drvdata
 
 auxiliary::Device::release
 └── core::ptr::mut_ptr::<impl *mut T>::byte_sub
@@ -748,6 +755,7 @@ auxiliary::Registration::new
 
 bitmap::Bitmap::clear_bit
 ├── print::call_printk { ValidInstance, ValidCStr }
+│   └── bindings::_printk
 └── bindings::__clear_bit
 
 bitmap::Bitmap::clear_bit_atomic
@@ -1153,6 +1161,7 @@ device::Device::<Ctx>::fwnode
 
 device::Device::<Ctx>::pr_alert
 └── device::Device::<Ctx>::printk { ValidCStr }
+    └── bindings::_dev_printk
 
 device::Device::<Ctx>::pr_crit
 └── device::Device::<Ctx>::printk { ValidCStr }
@@ -1523,6 +1532,7 @@ irq::request::Registration::<T>::new
 ├── irq::request::_::__ThePinData::__project_cookie
 ├── bindings::request_irq
 ├── irq::request::handle_irq_callback
+│   └── device::Device::as_bound
 ├── core::ptr::write
 ├── irq::request::_::__ThePinData::__project_irq
 ├── core::ptr::write
@@ -1544,7 +1554,9 @@ irq::request::ThreadedRegistration::<T>::new
 ├── irq::request::_::__ThePinData::__project_cookie
 ├── bindings::request_threaded_irq
 ├── irq::request::handle_threaded_irq_callback
+│   └── device::Device::as_bound
 ├── irq::request::thread_fn_callback
+│   └── device::Device::as_bound
 ├── core::ptr::write
 ├── irq::request::_::__ThePinData::__project_irq
 ├── core::ptr::write
@@ -1603,6 +1615,7 @@ list::Cursor::<'a, T, ID>::insert_inner
 
 list::CursorPeek::<'a, 'b, T, ISNEXT, ID>::remove
 └── list::List::<T, ID>::remove_internal { InList }
+    └── list::List::<T, ID>::remove_internal_inner { InList, Equal, Equal }
 
 list::List::<T, ID>::insert_inner { InList, Empty, Null }
 
@@ -2135,6 +2148,7 @@ str::RawFormatter::from_ptrs { ValidNum, ValidWrite }
 
 str::kstrtobool
 └── str::kstrtobool_raw
+    └── bindings::kstrtobool
 
 str::kstrtobool_bytes
 └── str::kstrtobool_raw
@@ -2320,6 +2334,7 @@ sync::arc::UniqueArc::<core::mem::MaybeUninit<T>>::write
 
 sync::atomic::Atomic::<T>::fetch_add
 └── sync::atomic::from_repr
+    └── core::mem::transmute_copy
 
 sync::atomic::Atomic::<T>::load
 └── sync::atomic::from_repr
