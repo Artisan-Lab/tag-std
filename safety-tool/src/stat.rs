@@ -1,5 +1,6 @@
 use camino::{Utf8Path, Utf8PathBuf};
-use indexmap::IndexMap;
+use indexmap::{IndexMap, IndexSet};
+use itertools::Itertools;
 use safety_parser::{
     configuration::{CACHE, GenDocOption, Key},
     safety::{PropertiesAndReason, Property},
@@ -75,10 +76,59 @@ impl Stat {
     /// If the dir is not present, it'll be created.
     pub fn write_to_file(&self) {
         if self.metrics.used_tags != 0
-            && let Some(path) = self.krate.output_file_path()
+            && let Some(path) = self.krate.output_json_file_path()
             && let Ok(file) = fs::File::create(path)
         {
             _ = serde_json::to_writer_pretty(file, self);
+            self.write_call_tree();
+        }
+    }
+
+    pub fn write_call_tree(&self) {
+        use std::io::Write;
+        let Some(mut file) = self.krate.output_tree_file_path() else { return };
+
+        let local_fns: IndexMap<_, _> = self.funcs.iter().map(|f| (f.name.as_str(), f)).collect();
+        let mut intree = IndexSet::new();
+        for func in &self.funcs {
+            if func.unsafe_calls.is_empty() && func.has_no_tag() {
+                // Skip functions that have no unsafe calls and no tags.
+                continue;
+            }
+
+            let mut tree = Tree::new(func.root_node());
+            intree.insert(&*func.name);
+
+            call_tree(&mut tree, func, &mut intree, &local_fns);
+            _ = writeln!(&mut file, "{tree}");
+        }
+    }
+}
+
+type Tree = termtree::Tree<String>;
+
+// Recursively add the call nodes.
+fn call_tree<'a>(
+    tree: &mut Tree,
+    func: &'a Func,
+    intree: &mut IndexSet<&'a str>,
+    local_fns: &IndexMap<&'a str, &'a Func>,
+) {
+    for call in &func.unsafe_calls {
+        let name = &*call.name;
+        if let Some(local_fn) = local_fns.get(name) {
+            // Push down the leaves when the call is local and never called before.
+            if intree.insert(name) {
+                let mut leaf = Tree::new(local_fn.root_node());
+                call_tree(&mut leaf, local_fn, intree, local_fns);
+                tree.push(leaf);
+            } else {
+                // Don't go down when the node exists, but generate the node with tags.
+                tree.push(local_fn.root_node());
+            }
+        } else {
+            // When the call is external, only the name is available.
+            tree.push(name.to_owned());
         }
     }
 }
@@ -105,14 +155,22 @@ fn out_dir() -> Option<Utf8PathBuf> {
 }
 
 impl Krate {
-    fn output_file_path(&self) -> Option<Utf8PathBuf> {
+    fn output_file_path(&self, ext: &str) -> Option<Utf8PathBuf> {
         let dir = out_dir()?;
         let prefix = match self.typ {
             CrateType::Bin => "bin-",
             CrateType::Lib => "",
         };
-        let file = format!("{prefix}{}.json", self.name);
+        let file = format!("{prefix}{}.{ext}", self.name);
         Some(dir.join(file))
+    }
+
+    fn output_json_file_path(&self) -> Option<Utf8PathBuf> {
+        self.output_file_path("json")
+    }
+
+    fn output_tree_file_path(&self) -> Option<fs::File> {
+        fs::File::create(self.output_file_path("txt")?).ok()
     }
 }
 
@@ -273,6 +331,21 @@ impl Func {
         m.total.unsafe_calls += unsafe_calls;
         m.unsafe_calls.entry(unsafe_calls).and_modify(|c| *c += 1).or_insert(1);
     }
+
+    fn has_no_tag(&self) -> bool {
+        // There must be a tag as an element in self.tags. It could possibly be
+        // empty for Any TagType, but that's still an `any` tag.
+        self.tags.is_empty()
+    }
+
+    fn root_node(&self) -> String {
+        if self.has_no_tag() {
+            self.name.to_owned()
+        } else {
+            let tags = self.tags.iter().map(|tag| &tag.tag).format_with(", ", |ele, f| f(ele));
+            format!("{} {{ {tags} }}", self.name)
+        }
+    }
 }
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -298,6 +371,19 @@ pub enum TagType {
     Vanilla(Property),
     /// A set of tags in built-in `any` tag
     Any(Vec<PropertiesAndReason>),
+}
+
+impl fmt::Display for TagType {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            TagType::Vanilla(prop) => write!(f, "{}", prop.tag.name()),
+            TagType::Any(props) => {
+                let iter = props.iter().flat_map(|any| any.tags.iter().map(|tag| tag.tag.name()));
+                let iter_fmt = iter.format_with(", ", |ele, f| f(&ele));
+                write!(f, "{iter_fmt}")
+            }
+        }
+    }
 }
 
 #[derive(Clone, Copy, Debug, Deserialize, Serialize, PartialEq, Eq, Hash)]
