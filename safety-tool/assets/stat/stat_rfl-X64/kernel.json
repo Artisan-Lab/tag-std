@@ -30,7 +30,14 @@
           },
           "predicates": {
             "Requires": 5
-          }
+          },
+          "functions": [
+            "list::arc_field::ListArcField::<T, ID>::assert_mut",
+            "list::arc_field::ListArcField::<T, ID>::assert_ref",
+            "rbtree::CursorMut::<'a, K, V>::to_key_value",
+            "rbtree::CursorMut::<'a, K, V>::to_key_value_mut",
+            "rbtree::CursorMut::<'a, K, V>::to_key_value_raw"
+          ]
         }
       },
       "ActiveContext": {
@@ -54,7 +61,10 @@
           },
           "predicates": {
             "Requires": 1
-          }
+          },
+          "functions": [
+            "task::Task::current"
+          ]
         }
       },
       "Alias": {
@@ -75,7 +85,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "Align": {
@@ -100,7 +111,12 @@
           },
           "predicates": {
             "Requires": 3
-          }
+          },
+          "functions": [
+            "alloc::kbox::Box::<T, A>::from_raw",
+            "alloc::kvec::Vec::<T, A>::from_raw_parts",
+            "workqueue::Work::<T, ID>::raw_get"
+          ]
         }
       },
       "Alive": {
@@ -125,7 +141,19 @@
           },
           "predicates": {
             "Requires": 10
-          }
+          },
+          "functions": [
+            "<ffi::CStr as str::CStrExt>::from_char_ptr",
+            "cpufreq::Policy::from_raw",
+            "cpufreq::Policy::from_raw_mut",
+            "cpufreq::PolicyData::from_raw_mut",
+            "cpufreq::Table::from_raw",
+            "cpumask::Cpumask::as_mut_ref",
+            "cpumask::Cpumask::as_ref",
+            "cpumask::CpumaskVar::from_raw",
+            "cpumask::CpumaskVar::from_raw_mut",
+            "mm::Mm::from_raw"
+          ]
         }
       },
       "Allocated": {
@@ -152,7 +180,12 @@
           },
           "predicates": {
             "Requires": 3
-          }
+          },
+          "functions": [
+            "alloc::allocator::ReallocFunc::call",
+            "alloc::kbox::Box::<T, A>::from_raw",
+            "alloc::kvec::Vec::<T, A>::from_raw_parts"
+          ]
         }
       },
       "AnyThread": {
@@ -176,7 +209,10 @@
           },
           "predicates": {
             "Requires": 1
-          }
+          },
+          "functions": [
+            "device::Device::get_device"
+          ]
         }
       },
       "Associated": {
@@ -201,7 +237,15 @@
           },
           "predicates": {
             "Requires": 6
-          }
+          },
+          "functions": [
+            "miscdevice::MiscdeviceVTable::<T>::compat_ioctl",
+            "miscdevice::MiscdeviceVTable::<T>::ioctl",
+            "miscdevice::MiscdeviceVTable::<T>::mmap",
+            "miscdevice::MiscdeviceVTable::<T>::open",
+            "miscdevice::MiscdeviceVTable::<T>::release",
+            "miscdevice::MiscdeviceVTable::<T>::show_fdinfo"
+          ]
         }
       },
       "CallOnce": {
@@ -223,7 +267,14 @@
           },
           "predicates": {
             "Requires": 5
-          }
+          },
+          "functions": [
+            "block::mq::operations::OperationsVTable::<T>::init_hctx_callback",
+            "fs::file::LocalFile::assume_no_fdget_pos",
+            "list::arc::ListArc::<T, ID>::from_raw",
+            "sync::arc::Arc::<T>::from_raw",
+            "sync::lock::global::GlobalLock::<B>::init"
+          ]
         }
       },
       "CalledBy": {
@@ -247,7 +298,38 @@
           },
           "predicates": {
             "Requires": 29
-          }
+          },
+          "functions": [
+            "block::mq::operations::OperationsVTable::<T>::commit_rqs_callback",
+            "block::mq::operations::OperationsVTable::<T>::complete_callback",
+            "block::mq::operations::OperationsVTable::<T>::exit_hctx_callback",
+            "block::mq::operations::OperationsVTable::<T>::exit_request_callback",
+            "block::mq::operations::OperationsVTable::<T>::init_hctx_callback",
+            "block::mq::operations::OperationsVTable::<T>::init_request_callback",
+            "block::mq::operations::OperationsVTable::<T>::poll_callback",
+            "cpufreq::Registration::<T>::adjust_perf_callback",
+            "cpufreq::Registration::<T>::bios_limit_callback",
+            "cpufreq::Registration::<T>::exit_callback",
+            "cpufreq::Registration::<T>::fast_switch_callback",
+            "cpufreq::Registration::<T>::get_callback",
+            "cpufreq::Registration::<T>::get_intermediate_callback",
+            "cpufreq::Registration::<T>::init_callback",
+            "cpufreq::Registration::<T>::offline_callback",
+            "cpufreq::Registration::<T>::online_callback",
+            "cpufreq::Registration::<T>::ready_callback",
+            "cpufreq::Registration::<T>::register_em_callback",
+            "cpufreq::Registration::<T>::resume_callback",
+            "cpufreq::Registration::<T>::set_boost_callback",
+            "cpufreq::Registration::<T>::setpolicy_callback",
+            "cpufreq::Registration::<T>::suspend_callback",
+            "cpufreq::Registration::<T>::target_callback",
+            "cpufreq::Registration::<T>::target_index_callback",
+            "cpufreq::Registration::<T>::target_intermediate_callback",
+            "cpufreq::Registration::<T>::update_limits_callback",
+            "cpufreq::Registration::<T>::verify_callback",
+            "dma::CoherentAllocation::<T>::field_read",
+            "dma::CoherentAllocation::<T>::field_write"
+          ]
         }
       },
       "ContainerOf": {
@@ -273,7 +355,11 @@
           },
           "predicates": {
             "Requires": 2
-          }
+          },
+          "functions": [
+            "drm::device::Device::<T>::from_drm_device",
+            "drm::device::Device::<T>::from_raw"
+          ]
         }
       },
       "CurThread": {
@@ -297,7 +383,11 @@
           },
           "predicates": {
             "Requires": 2
-          }
+          },
+          "functions": [
+            "fs::file::LocalFile::from_raw_file",
+            "seq_file::SeqFile::from_raw"
+          ]
         }
       },
       "Deref": {
@@ -319,7 +409,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "Empty": {
@@ -343,7 +434,10 @@
           },
           "predicates": {
             "Requires": 1
-          }
+          },
+          "functions": [
+            "list::List::<T, ID>::insert_inner"
+          ]
         }
       },
       "Equal": {
@@ -368,7 +462,10 @@
           },
           "predicates": {
             "Requires": 2
-          }
+          },
+          "functions": [
+            "list::List::<T, ID>::remove_internal_inner"
+          ]
         }
       },
       "FlagSet": {
@@ -392,7 +489,10 @@
           },
           "predicates": {
             "Requires": 1
-          }
+          },
+          "functions": [
+            "mm::virt::VmaMixedMap::from_raw"
+          ]
         }
       },
       "InBound": {
@@ -414,7 +514,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "InList": {
@@ -439,7 +540,12 @@
           },
           "predicates": {
             "Requires": 3
-          }
+          },
+          "functions": [
+            "list::List::<T, ID>::insert_inner",
+            "list::List::<T, ID>::remove_internal",
+            "list::List::<T, ID>::remove_internal_inner"
+          ]
         }
       },
       "Init": {
@@ -465,7 +571,19 @@
           },
           "predicates": {
             "Requires": 11
-          }
+          },
+          "functions": [
+            "alloc::kbox::Box::<core::mem::MaybeUninit<T>, A>::assume_init",
+            "alloc::kvec::Vec::<T, A>::from_raw_parts",
+            "alloc::kvec::Vec::<T, A>::inc_len",
+            "block::mq::operations::OperationsVTable::<T>::exit_request_callback",
+            "block::mq::operations::OperationsVTable::<T>::init_request_callback",
+            "block::mq::operations::OperationsVTable::<T>::queue_rq_callback",
+            "cpumask::CpumaskVar::new",
+            "mm::virt::VmaNew::from_raw",
+            "sync::arc::UniqueArc::<core::mem::MaybeUninit<T>>::assume_init",
+            "sync::lock::Lock::<(), B>::from_raw"
+          ]
         }
       },
       "Invariant": {
@@ -489,7 +607,10 @@
           },
           "predicates": {
             "Requires": 1
-          }
+          },
+          "functions": [
+            "block::mq::request::Request::<T>::aref_from_raw"
+          ]
         }
       },
       "Layout": {
@@ -514,7 +635,10 @@
           },
           "predicates": {
             "Requires": 1
-          }
+          },
+          "functions": [
+            "alloc::allocator::ReallocFunc::call"
+          ]
         }
       },
       "LockHold": {
@@ -539,7 +663,13 @@
           },
           "predicates": {
             "Requires": 4
-          }
+          },
+          "functions": [
+            "fs::file::File::from_raw_file",
+            "mm::virt::VmaMixedMap::from_raw",
+            "mm::virt::VmaRef::from_raw",
+            "sync::lock::Guard::<'a, T, B>::new"
+          ]
         }
       },
       "MayInvalid": {
@@ -563,7 +693,10 @@
           },
           "predicates": {
             "Requires": 1
-          }
+          },
+          "functions": [
+            "cpu::from_cpu"
+          ]
         }
       },
       "NoPadding": {
@@ -583,7 +716,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "NonAccessable": {
@@ -603,7 +737,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "NonConcurrent": {
@@ -627,7 +762,11 @@
           },
           "predicates": {
             "Requires": 2
-          }
+          },
+          "functions": [
+            "revocable::Revocable::<T>::revoke_internal",
+            "revocable::Revocable::<T>::revoke_nosync"
+          ]
         }
       },
       "NonData_race": {
@@ -651,7 +790,13 @@
           },
           "predicates": {
             "Requires": 4
-          }
+          },
+          "functions": [
+            "page::Page::copy_from_user_slice_raw",
+            "page::Page::fill_zero_raw",
+            "page::Page::read_raw",
+            "page::Page::write_raw"
+          ]
         }
       },
       "NonDropped": {
@@ -676,7 +821,10 @@
           },
           "predicates": {
             "Requires": 1
-          }
+          },
+          "functions": [
+            "cpufreq::Policy::set_freq_table"
+          ]
         }
       },
       "NonExist": {
@@ -701,7 +849,11 @@
           },
           "predicates": {
             "Requires": 2
-          }
+          },
+          "functions": [
+            "list::arc::ListArc::<T, ID>::from_raw",
+            "list::arc::ListArc::<T, ID>::transmute_from_arc"
+          ]
         }
       },
       "NonInList": {
@@ -726,7 +878,10 @@
           },
           "predicates": {
             "Requires": 1
-          }
+          },
+          "functions": [
+            "list::List::<T, ID>::remove"
+          ]
         }
       },
       "NonInstance": {
@@ -751,7 +906,10 @@
           },
           "predicates": {
             "Requires": 1
-          }
+          },
+          "functions": [
+            "sync::arc::ArcBorrow::<'_, T>::from_raw"
+          ]
         }
       },
       "NonMutRef": {
@@ -775,7 +933,10 @@
           },
           "predicates": {
             "Requires": 1
-          }
+          },
+          "functions": [
+            "sync::arc::ArcBorrow::<'_, T>::new"
+          ]
         }
       },
       "NonMutate": {
@@ -800,7 +961,10 @@
           },
           "predicates": {
             "Requires": 1
-          }
+          },
+          "functions": [
+            "<ffi::CStr as str::CStrExt>::from_char_ptr"
+          ]
         }
       },
       "NonNull": {
@@ -824,7 +988,12 @@
           },
           "predicates": {
             "Requires": 3
-          }
+          },
+          "functions": [
+            "device::Device::<Ctx>::from_raw",
+            "device::Device::get_device",
+            "drm::device::Device::<T>::from_raw"
+          ]
         }
       },
       "NonOverlap": {
@@ -847,7 +1016,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "NonOwned": {
@@ -867,7 +1037,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "NonUsed": {
@@ -891,7 +1062,10 @@
           },
           "predicates": {
             "Requires": 1
-          }
+          },
+          "functions": [
+            "sync::lock::global::GlobalLock::<B>::new"
+          ]
         }
       },
       "NonVolatile": {
@@ -913,7 +1087,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "NonZero": {
@@ -938,7 +1113,17 @@
           },
           "predicates": {
             "Requires": 8
-          }
+          },
+          "functions": [
+            "device::Device::<Ctx>::from_raw",
+            "device::Device::get_device",
+            "drm::device::Device::<T>::from_raw",
+            "fs::file::File::from_raw_file",
+            "fs::file::LocalFile::from_raw_file",
+            "mm::MmWithUser::from_raw",
+            "sync::arc::Arc::<T>::from_inner",
+            "sync::arc::ArcBorrow::<'_, T>::from_raw"
+          ]
         }
       },
       "Null": {
@@ -962,7 +1147,10 @@
           },
           "predicates": {
             "Requires": 1
-          }
+          },
+          "functions": [
+            "list::List::<T, ID>::insert_inner"
+          ]
         }
       },
       "Opened": {
@@ -982,7 +1170,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "OriginateFrom": {
@@ -1007,7 +1196,24 @@
           },
           "predicates": {
             "Requires": 15
-          }
+          },
+          "functions": [
+            "list::arc::ListArc::<T, ID>::from_raw",
+            "net::phy::Adapter::<T>::config_aneg_callback",
+            "net::phy::Adapter::<T>::get_features_callback",
+            "net::phy::Adapter::<T>::link_change_notify_callback",
+            "net::phy::Adapter::<T>::match_phy_device_callback",
+            "net::phy::Adapter::<T>::probe_callback",
+            "net::phy::Adapter::<T>::read_mmd_callback",
+            "net::phy::Adapter::<T>::read_status_callback",
+            "net::phy::Adapter::<T>::resume_callback",
+            "net::phy::Adapter::<T>::soft_reset_callback",
+            "net::phy::Adapter::<T>::suspend_callback",
+            "net::phy::Adapter::<T>::write_mmd_callback",
+            "sync::arc::Arc::<T>::from_raw",
+            "sync::arc::ArcBorrow::<'_, T>::from_raw",
+            "sync::arc::ArcInner::<T>::container_of"
+          ]
         }
       },
       "Owning": {
@@ -1031,7 +1237,11 @@
           },
           "predicates": {
             "Requires": 2
-          }
+          },
+          "functions": [
+            "block::mq::operations::OperationsVTable::<T>::queue_rq_callback",
+            "sync::poll::PollTable::<'a>::from_raw"
+          ]
         }
       },
       "Pinned": {
@@ -1052,7 +1262,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "PostToFunc": {
@@ -1076,7 +1287,10 @@
           },
           "predicates": {
             "Requires": 1
-          }
+          },
+          "functions": [
+            "drm::file::File::<T>::from_raw"
+          ]
         }
       },
       "Ptr2Ref": {
@@ -1097,7 +1311,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "RefTransfer": {
@@ -1122,7 +1337,10 @@
           },
           "predicates": {
             "Requires": 1
-          }
+          },
+          "functions": [
+            "block::mq::request::Request::<T>::aref_from_raw"
+          ]
         }
       },
       "Size": {
@@ -1143,7 +1361,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "Think_Exist": {
@@ -1168,7 +1387,11 @@
           },
           "predicates": {
             "Requires": 2
-          }
+          },
+          "functions": [
+            "list::arc::ListArc::<T, ID>::from_raw",
+            "list::arc::ListArc::<T, ID>::transmute_from_arc"
+          ]
         }
       },
       "Trait": {
@@ -1190,7 +1413,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "Typed": {
@@ -1215,7 +1439,18 @@
           },
           "predicates": {
             "Requires": 9
-          }
+          },
+          "functions": [
+            "drm::file::File::<T>::from_raw",
+            "list::ListLinks::<ID>::fields",
+            "list::ListLinks::<ID>::from_fields",
+            "mm::Mm::from_raw",
+            "mm::MmWithUser::from_raw",
+            "net::phy::Device::from_raw",
+            "seq_file::SeqFile::from_raw",
+            "time::hrtimer::HrTimer::<T>::raw_cancel",
+            "workqueue::Queue::from_raw"
+          ]
         }
       },
       "Unreachable": {
@@ -1233,7 +1468,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "Unwrap": {
@@ -1255,7 +1491,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "UserProperty": {
@@ -1273,7 +1510,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "Valid": {
@@ -1294,7 +1532,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "ValidCStr": {
@@ -1319,7 +1558,13 @@
           },
           "predicates": {
             "Requires": 4
-          }
+          },
+          "functions": [
+            "<ffi::CStr as str::CStrExt>::from_bytes_with_nul_unchecked_mut",
+            "<ffi::CStr as str::CStrExt>::from_char_ptr",
+            "device::Device::<Ctx>::printk",
+            "print::call_printk"
+          ]
         }
       },
       "ValidCast": {
@@ -1340,7 +1585,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "ValidFile": {
@@ -1364,7 +1610,12 @@
           },
           "predicates": {
             "Requires": 3
-          }
+          },
+          "functions": [
+            "fs::file::File::from_raw_file",
+            "fs::file::LocalFile::from_raw_file",
+            "miscdevice::MiscdeviceVTable::<T>::show_fdinfo"
+          ]
         }
       },
       "ValidInstance": {
@@ -1388,7 +1639,18 @@
           },
           "predicates": {
             "Requires": 11
-          }
+          },
+          "functions": [
+            "block::mq::operations::OperationsVTable::<T>::commit_rqs_callback",
+            "block::mq::operations::OperationsVTable::<T>::complete_callback",
+            "miscdevice::MiscdeviceVTable::<T>::open",
+            "miscdevice::MiscdeviceVTable::<T>::release",
+            "net::phy::Device::from_raw",
+            "print::call_printk",
+            "sync::arc::Arc::<T>::from_inner",
+            "sync::arc::ArcBorrow::<'_, T>::new",
+            "sync::arc::ArcInner::<T>::container_of"
+          ]
         }
       },
       "ValidMemory": {
@@ -1413,7 +1675,12 @@
           },
           "predicates": {
             "Requires": 3
-          }
+          },
+          "functions": [
+            "block::mq::operations::OperationsVTable::<T>::init_request_callback",
+            "io::Io::<SIZE>::from_raw",
+            "time::hrtimer::HrTimer::<T>::raw_get"
+          ]
         }
       },
       "ValidNum": {
@@ -1438,7 +1705,21 @@
           },
           "predicates": {
             "Requires": 13
-          }
+          },
+          "functions": [
+            "alloc::kvec::Vec::<T, A>::dec_len",
+            "alloc::kvec::Vec::<T, A>::from_raw_parts",
+            "alloc::kvec::Vec::<T, A>::inc_len",
+            "alloc::kvec::Vec::<T, A>::push_within_capacity_unchecked",
+            "alloc::layout::ArrayLayout::<T>::new_unchecked",
+            "block::mq::request::Request::<T>::start_unchecked",
+            "cpu::CpuId::from_i32_unchecked",
+            "cpu::CpuId::from_u32_unchecked",
+            "cpufreq::TableIndex::new",
+            "error::Error::from_errno_unchecked",
+            "mm::virt::VmaNew::update_flags",
+            "str::RawFormatter::from_ptrs"
+          ]
         }
       },
       "ValidPtr": {
@@ -1464,7 +1745,44 @@
           },
           "predicates": {
             "Requires": 35
-          }
+          },
+          "functions": [
+            "alloc::kbox::Box::<T, A>::from_raw",
+            "alloc::kvec::Vec::<T, A>::from_raw_parts",
+            "block::mq::operations::OperationsVTable::<T>::exit_request_callback",
+            "block::mq::request::Request::<T>::wrapper_ptr",
+            "block::mq::request::RequestDataWrapper::refcount_ptr",
+            "cpufreq::Registration::<T>::bios_limit_callback",
+            "cpufreq::Registration::<T>::exit_callback",
+            "cpufreq::Registration::<T>::fast_switch_callback",
+            "cpufreq::Registration::<T>::get_intermediate_callback",
+            "cpufreq::Registration::<T>::init_callback",
+            "cpufreq::Registration::<T>::offline_callback",
+            "cpufreq::Registration::<T>::online_callback",
+            "cpufreq::Registration::<T>::ready_callback",
+            "cpufreq::Registration::<T>::register_em_callback",
+            "cpufreq::Registration::<T>::resume_callback",
+            "cpufreq::Registration::<T>::set_boost_callback",
+            "cpufreq::Registration::<T>::setpolicy_callback",
+            "cpufreq::Registration::<T>::suspend_callback",
+            "cpufreq::Registration::<T>::target_callback",
+            "cpufreq::Registration::<T>::target_index_callback",
+            "cpufreq::Registration::<T>::target_intermediate_callback",
+            "cpufreq::Registration::<T>::update_limits_callback",
+            "cpufreq::Registration::<T>::verify_callback",
+            "cred::Credential::from_ptr",
+            "device::Device::<Ctx>::from_raw",
+            "device::Device::get_device",
+            "drm::device::Device::<T>::from_drm_device",
+            "drm::device::Device::<T>::from_raw",
+            "pci::Bar::<SIZE>::do_release",
+            "pid_namespace::PidNamespace::from_ptr",
+            "rbtree::CursorMut::<'a, K, V>::to_key_value",
+            "rbtree::CursorMut::<'a, K, V>::to_key_value_mut",
+            "rbtree::CursorMut::<'a, K, V>::to_key_value_raw",
+            "sync::poll::PollTable::<'a>::from_raw",
+            "workqueue::Work::<T, ID>::raw_get"
+          ]
         }
       },
       "ValidRead": {
@@ -1489,7 +1807,15 @@
           },
           "predicates": {
             "Requires": 6
-          }
+          },
+          "functions": [
+            "block::mq::operations::OperationsVTable::<T>::queue_rq_callback",
+            "cpufreq::Policy::from_raw",
+            "cpufreq::Table::from_raw",
+            "cpumask::Cpumask::as_ref",
+            "cpumask::CpumaskVar::from_raw",
+            "page::Page::write_raw"
+          ]
         }
       },
       "ValidString": {
@@ -1510,7 +1836,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "ValidVma": {
@@ -1535,7 +1862,12 @@
           },
           "predicates": {
             "Requires": 3
-          }
+          },
+          "functions": [
+            "miscdevice::MiscdeviceVTable::<T>::mmap",
+            "mm::virt::VmaMixedMap::from_raw",
+            "mm::virt::VmaRef::from_raw"
+          ]
         }
       },
       "ValidWrite": {
@@ -1560,7 +1892,19 @@
           },
           "predicates": {
             "Requires": 10
-          }
+          },
+          "functions": [
+            "block::mq::operations::OperationsVTable::<T>::complete_callback",
+            "cpufreq::Policy::from_raw_mut",
+            "cpufreq::PolicyData::from_raw_mut",
+            "cpumask::Cpumask::as_mut_ref",
+            "cpumask::CpumaskVar::from_raw_mut",
+            "miscdevice::MiscdeviceVTable::<T>::show_fdinfo",
+            "page::Page::read_raw",
+            "str::Formatter::<'_>::from_buffer",
+            "str::RawFormatter::from_buffer",
+            "str::RawFormatter::from_ptrs"
+          ]
         }
       }
     },
