@@ -26,7 +26,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "ActiveContext": {
@@ -46,7 +47,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "Alias": {
@@ -67,7 +69,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "Align": {
@@ -88,7 +91,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "Alive": {
@@ -109,7 +113,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "Allocated": {
@@ -136,7 +141,12 @@
           },
           "predicates": {
             "Requires": 3
-          }
+          },
+          "functions": [
+            "<ChainInit<I, F, T, E> as Init<T, E>>::__init",
+            "<ChainInit<I, F, T, E> as PinInit<T, E>>::__pinned_init",
+            "<ChainPinInit<I, F, T, E> as PinInit<T, E>>::__pinned_init"
+          ]
         }
       },
       "AnyThread": {
@@ -156,7 +166,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "Associated": {
@@ -177,7 +188,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "CallOnce": {
@@ -195,7 +207,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "CalledBy": {
@@ -215,7 +228,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "ContainerOf": {
@@ -237,7 +251,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "CurThread": {
@@ -257,7 +272,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "Deref": {
@@ -279,7 +295,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "Empty": {
@@ -299,7 +316,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "Equal": {
@@ -320,7 +338,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "FlagSet": {
@@ -340,7 +359,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "InBound": {
@@ -362,7 +382,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "InList": {
@@ -383,7 +404,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "Init": {
@@ -405,7 +427,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "Invariant": {
@@ -425,7 +448,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "Layout": {
@@ -446,7 +470,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "LockHold": {
@@ -467,7 +492,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "MayInvalid": {
@@ -487,7 +513,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "NoPadding": {
@@ -507,7 +534,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "NonAccessable": {
@@ -527,7 +555,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "NonConcurrent": {
@@ -547,7 +576,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "NonData_race": {
@@ -567,7 +597,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "NonDropped": {
@@ -588,7 +619,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "NonExist": {
@@ -609,7 +641,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "NonInList": {
@@ -630,7 +663,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "NonInstance": {
@@ -651,7 +685,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "NonMutRef": {
@@ -671,7 +706,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "NonMutate": {
@@ -692,7 +728,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "NonNull": {
@@ -712,7 +749,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "NonOverlap": {
@@ -735,7 +773,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "NonOwned": {
@@ -755,7 +794,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "NonUsed": {
@@ -775,7 +815,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "NonVolatile": {
@@ -797,7 +838,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "NonZero": {
@@ -818,7 +860,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "Null": {
@@ -838,7 +881,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "Opened": {
@@ -858,7 +902,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "OriginateFrom": {
@@ -879,7 +924,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "Owning": {
@@ -899,7 +945,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "Pinned": {
@@ -924,7 +971,11 @@
           },
           "predicates": {
             "Requires": 2
-          }
+          },
+          "functions": [
+            "<ChainInit<I, F, T, E> as PinInit<T, E>>::__pinned_init",
+            "<ChainPinInit<I, F, T, E> as PinInit<T, E>>::__pinned_init"
+          ]
         }
       },
       "PostToFunc": {
@@ -944,7 +995,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "Ptr2Ref": {
@@ -965,7 +1017,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "RefTransfer": {
@@ -986,7 +1039,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "Size": {
@@ -1007,7 +1061,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "Think_Exist": {
@@ -1028,7 +1083,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "Trait": {
@@ -1050,7 +1106,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "Typed": {
@@ -1071,7 +1128,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "Unreachable": {
@@ -1089,7 +1147,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "Unwrap": {
@@ -1111,7 +1170,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "UserProperty": {
@@ -1129,7 +1189,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "Valid": {
@@ -1150,7 +1211,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "ValidCStr": {
@@ -1171,7 +1233,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "ValidCast": {
@@ -1196,7 +1259,11 @@
           },
           "predicates": {
             "Requires": 2
-          }
+          },
+          "functions": [
+            "cast_init",
+            "cast_pin_init"
+          ]
         }
       },
       "ValidFile": {
@@ -1216,7 +1283,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "ValidInstance": {
@@ -1236,7 +1304,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "ValidMemory": {
@@ -1257,7 +1326,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "ValidNum": {
@@ -1278,7 +1348,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "ValidPtr": {
@@ -1304,7 +1375,10 @@
           },
           "predicates": {
             "Requires": 1
-          }
+          },
+          "functions": [
+            "__internal::DropGuard::<T>::new"
+          ]
         }
       },
       "ValidRead": {
@@ -1325,7 +1399,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "ValidString": {
@@ -1346,7 +1421,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "ValidVma": {
@@ -1367,7 +1443,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "ValidWrite": {
@@ -1388,7 +1465,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       }
     },

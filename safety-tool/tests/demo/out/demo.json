@@ -29,7 +29,11 @@
           },
           "predicates": {
             "Requires": 2
-          }
+          },
+          "functions": [
+            "MyStruct::get",
+            "test"
+          ]
         }
       },
       "Align": {
@@ -54,7 +58,10 @@
           },
           "predicates": {
             "Requires": 1
-          }
+          },
+          "functions": [
+            "MyStruct::get"
+          ]
         }
       },
       "Alive": {
@@ -80,7 +87,11 @@
           },
           "predicates": {
             "Requires": 2
-          }
+          },
+          "functions": [
+            "MyStruct::get",
+            "test"
+          ]
         }
       },
       "Allocated": {
@@ -103,7 +114,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "Deref": {
@@ -129,7 +141,10 @@
           },
           "predicates": {
             "Requires": 1
-          }
+          },
+          "functions": [
+            "test"
+          ]
         }
       },
       "InBound": {
@@ -155,7 +170,10 @@
           },
           "predicates": {
             "Requires": 1
-          }
+          },
+          "functions": [
+            "test"
+          ]
         }
       },
       "Init": {
@@ -181,7 +199,11 @@
           },
           "predicates": {
             "Requires": 2
-          }
+          },
+          "functions": [
+            "MyStruct::get",
+            "test"
+          ]
         }
       },
       "Layout": {
@@ -202,7 +224,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "NoPadding": {
@@ -222,7 +245,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "NonNull": {
@@ -246,7 +270,10 @@
           },
           "predicates": {
             "Requires": 1
-          }
+          },
+          "functions": [
+            "MyStruct::get"
+          ]
         }
       },
       "NonOverlap": {
@@ -269,7 +296,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "NonOwned": {
@@ -289,7 +317,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "NonVolatile": {
@@ -311,7 +340,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "Opened": {
@@ -331,7 +361,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "Owning": {
@@ -351,7 +382,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "Pinned": {
@@ -372,7 +404,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "Ptr2Ref": {
@@ -393,7 +426,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "RustdocLinkToItem": {
@@ -417,7 +451,10 @@
           },
           "predicates": {
             "Requires": 1
-          }
+          },
+          "functions": [
+            "test"
+          ]
         }
       },
       "Size": {
@@ -438,7 +475,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "Trait": {
@@ -460,7 +498,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "Typed": {
@@ -481,7 +520,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "Unreachable": {
@@ -499,7 +539,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "Unwrap": {
@@ -521,7 +562,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "ValidCStr": {
@@ -542,7 +584,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       },
       "ValidNum": {
@@ -567,7 +610,11 @@
           },
           "predicates": {
             "Requires": 2
-          }
+          },
+          "functions": [
+            "MyStruct::get",
+            "test"
+          ]
         }
       },
       "ValidPtr": {
@@ -593,7 +640,10 @@
           },
           "predicates": {
             "Requires": 1
-          }
+          },
+          "functions": [
+            "MyStruct::get"
+          ]
         }
       },
       "ValidString": {
@@ -614,7 +664,8 @@
         },
         "usage": {
           "types": {},
-          "predicates": {}
+          "predicates": {},
+          "functions": []
         }
       }
     },

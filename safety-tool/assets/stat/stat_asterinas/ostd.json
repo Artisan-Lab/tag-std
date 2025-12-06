@@ -29,7 +29,14 @@
           },
           "predicates": {
             "Requires": 5
-          }
+          },
+          "functions": [
+            "io::init",
+            "io::io_port::allocator::init",
+            "mm::page_table::node::PageTableGuard::<'rcu, C>::read_pte",
+            "mm::page_table::node::PageTableGuard::<'rcu, C>::write_pte",
+            "mm::page_table::node::entry::Entry::<'a, 'rcu, C>::new_at"
+          ]
         }
       },
       "CallOnce": {
@@ -53,7 +60,24 @@
           },
           "predicates": {
             "Requires": 15
-          }
+          },
+          "functions": [
+            "arch::init_on_ap",
+            "arch::late_init_on_bsp",
+            "arch::trap::init",
+            "cpu::set_this_cpu_id",
+            "init",
+            "mm::frame::allocator::init",
+            "mm::frame::allocator::init_early_allocator",
+            "mm::frame::meta::init",
+            "mm::kspace::activate_kernel_page_table",
+            "mm::page_table::PageTable::<C>::first_activate_unchecked",
+            "mm::page_table::boot_pt::BootPageTable::<E, C>::from_current_pt",
+            "mm::page_table::boot_pt::dismiss",
+            "mm::page_table::node::<impl mm::frame::Frame<mm::page_table::node::PageTablePageMeta<C>>>::first_activate",
+            "mm::page_table::node::child::Child::<C>::from_pte",
+            "task::processor::after_switching_to"
+          ]
         }
       },
       "Context": {
@@ -78,7 +102,21 @@
           },
           "predicates": {
             "Requires": 12
-          }
+          },
+          "functions": [
+            "arch::boot::smp::bringup_all_aps",
+            "arch::boot::smp::send_boot_ipis",
+            "arch::boot::smp::wake_up_aps_via_mailbox",
+            "arch::late_init_on_bsp",
+            "arch::trap::init",
+            "boot::smp::boot_all_aps",
+            "cpu::init_num_cpus",
+            "cpu::init_on_ap",
+            "cpu::init_on_bsp",
+            "cpu::local::copy_bsp_for_ap",
+            "init",
+            "mm::frame::meta::init"
+          ]
         }
       },
       "Eq": {
@@ -103,7 +141,11 @@
           },
           "predicates": {
             "Requires": 2
-          }
+          },
+          "functions": [
+            "mm::frame::meta::MetaSlot::drop_last_in_place",
+            "mm::frame::meta::MetaSlot::drop_meta_in_place"
+          ]
         }
       },
       "Forgotten": {
@@ -127,7 +169,14 @@
           },
           "predicates": {
             "Requires": 5
-          }
+          },
+          "functions": [
+            "mm::frame::Frame::<M>::from_raw",
+            "mm::frame::segment::Segment::<M>::from_raw",
+            "mm::frame::unique::UniqueFrame::<M>::from_raw",
+            "mm::page_table::cursor::locking::dfs_mark_stray_and_unlock",
+            "mm::page_table::cursor::locking::dfs_release_lock"
+          ]
         }
       },
       "Ge": {
@@ -152,7 +201,10 @@
           },
           "predicates": {
             "Requires": 1
-          }
+          },
+          "functions": [
+            "mm::frame::meta::MetaSlot::inc_ref_count"
+          ]
         }
       },
       "KernelMemorySafe": {
@@ -176,7 +228,15 @@
           },
           "predicates": {
             "Requires": 6
-          }
+          },
+          "functions": [
+            "mm::page_table::PageTable::<mm::kspace::KernelPtConfig>::protect_flush_tlb",
+            "mm::page_table::boot_pt::BootPageTable::<E, C>::map_base_page",
+            "mm::page_table::boot_pt::BootPageTable::<E, C>::protect_base_page",
+            "mm::page_table::cursor::CursorMut::<'rcu, C>::map",
+            "mm::page_table::cursor::CursorMut::<'rcu, C>::protect_next",
+            "mm::page_table::cursor::CursorMut::<'rcu, C>::take_next"
+          ]
         }
       },
       "LockHeld": {
@@ -200,7 +260,10 @@
           },
           "predicates": {
             "Requires": 1
-          }
+          },
+          "functions": [
+            "mm::page_table::node::<impl mm::frame::frame_ref::FrameRef<'a, mm::page_table::node::PageTablePageMeta<C>>>::make_guard_unchecked"
+          ]
         }
       },
       "Memo": {
@@ -224,7 +287,18 @@
           },
           "predicates": {
             "Requires": 11
-          }
+          },
+          "functions": [
+            "arch::irq::send_ipi",
+            "arch::kernel::apic::get_or_init::ForceSyncSend::<T>::get",
+            "arch::trap::gdt::init",
+            "cpu::local::dyn_cpu_local::<impl cpu::local::CpuLocal<T, cpu::local::dyn_cpu_local::DynamicStorage<T>>>::__new_dynamic",
+            "io::io_port::IoPort::<T, A>::new",
+            "mm::io::memcpy_fallible",
+            "mm::io::memset_fallible",
+            "mm::kspace::kvirt_area::KVirtArea::map_untracked_frames",
+            "mm::page_table::node::PageTableGuard::<'rcu, C>::write_pte"
+          ]
         }
       },
       "MutAccess": {
@@ -248,7 +322,10 @@
           },
           "predicates": {
             "Requires": 2
-          }
+          },
+          "functions": [
+            "mm::frame::meta::MetaSlot::write_meta"
+          ]
         }
       },
       "Ne": {
@@ -273,7 +350,10 @@
           },
           "predicates": {
             "Requires": 1
-          }
+          },
+          "functions": [
+            "mm::frame::meta::MetaSlot::inc_ref_count"
+          ]
         }
       },
       "NonModifying": {
@@ -297,7 +377,10 @@
           },
           "predicates": {
             "Requires": 1
-          }
+          },
+          "functions": [
+            "mm::page_table::cursor::CursorMut::<'rcu, C>::protect_next"
+          ]
         }
       },
       "NotPostToFunc": {
@@ -321,7 +404,13 @@
           },
           "predicates": {
             "Requires": 7
-          }
+          },
+          "functions": [
+            "mm::page_table::PageTable::<C>::shallow_copy",
+            "mm::page_table::boot_pt::dismiss",
+            "mm::page_table::cursor::locking::dfs_mark_stray_and_unlock",
+            "mm::page_table::cursor::locking::dfs_release_lock"
+          ]
         }
       },
       "NotPriorToFunc": {
@@ -345,7 +434,10 @@
           },
           "predicates": {
             "Requires": 1
-          }
+          },
+          "functions": [
+            "mm::page_table::boot_pt::dismiss"
+          ]
         }
       },
       "OriginateFrom": {
@@ -370,7 +462,15 @@
           },
           "predicates": {
             "Requires": 6
-          }
+          },
+          "functions": [
+            "io::init",
+            "io::io_port::allocator::init",
+            "mm::frame::meta::MetaSlot::drop_last_in_place",
+            "mm::frame::meta::MetaSlot::drop_meta_in_place",
+            "mm::frame::meta::MetaSlot::dyn_meta_ptr",
+            "mm::page_table::node::child::ChildRef::<'_, C>::from_pte"
+          ]
         }
       },
       "OwnedResource": {
@@ -394,7 +494,15 @@
           },
           "predicates": {
             "Requires": 6
-          }
+          },
+          "functions": [
+            "arch::device::serial::SerialPort::new",
+            "arch::iommu::fault::FaultEventRegisters::new",
+            "arch::iommu::fault::init",
+            "arch::iommu::registers::invalidation::InvalidationRegisters::new",
+            "io::io_mem::allocator::IoMemAllocator::recycle",
+            "io::io_port::allocator::IoPortAllocator::recycle"
+          ]
         }
       },
       "PostToFunc": {
@@ -418,7 +526,22 @@
           },
           "predicates": {
             "Requires": 18
-          }
+          },
+          "functions": [
+            "arch::boot::smp::count_processors",
+            "arch::boot::smp::send_boot_ipis",
+            "arch::boot::smp::wake_up_aps_via_mailbox",
+            "arch::init_on_ap",
+            "arch::kernel::acpi::get_acpi_tables",
+            "arch::trap::syscall::init",
+            "cpu::init_on_bsp",
+            "io::init",
+            "io::io_mem::allocator::IoMemAllocator::recycle",
+            "io::io_mem::allocator::init",
+            "io::io_port::allocator::IoPortAllocator::recycle",
+            "mm::frame::allocator::init",
+            "mm::frame::allocator::init_early_allocator"
+          ]
         }
       },
       "RefHeld": {
@@ -442,7 +565,10 @@
           },
           "predicates": {
             "Requires": 1
-          }
+          },
+          "functions": [
+            "mm::frame::inc_frame_ref_count"
+          ]
         }
       },
       "RefUnheld": {
@@ -466,7 +592,10 @@
           },
           "predicates": {
             "Requires": 1
-          }
+          },
+          "functions": [
+            "mm::page_table::node::child::Child::<C>::from_pte"
+          ]
         }
       },
       "ReferTo": {
@@ -490,7 +619,13 @@
           },
           "predicates": {
             "Requires": 4
-          }
+          },
+          "functions": [
+            "arch::boot::multiboot2::make_str_vaddr_static",
+            "arch::boot::multiboot::parse_as_cstr",
+            "mm::page_table::load_pte",
+            "mm::page_table::store_pte"
+          ]
         }
       },
       "Section": {
@@ -515,7 +650,11 @@
           },
           "predicates": {
             "Requires": 2
-          }
+          },
+          "functions": [
+            "cpu::local::cell::CpuLocalCell::<T>::__new",
+            "cpu::local::static_cpu_local::<impl cpu::local::CpuLocal<T, cpu::local::static_cpu_local::StaticStorage<T>>>::__new_static"
+          ]
         }
       },
       "Sync": {
@@ -539,7 +678,10 @@
           },
           "predicates": {
             "Requires": 1
-          }
+          },
+          "functions": [
+            "task::utils::ForceSync::<T>::get"
+          ]
         }
       },
       "Unaccessed": {
@@ -563,7 +705,11 @@
           },
           "predicates": {
             "Requires": 2
-          }
+          },
+          "functions": [
+            "cpu::init_on_bsp",
+            "cpu::local::copy_bsp_for_ap"
+          ]
         }
       },
       "UserSpace": {
@@ -588,7 +734,11 @@
           },
           "predicates": {
             "Requires": 2
-          }
+          },
+          "functions": [
+            "mm::io::VmReader::<'_>::from_user_space",
+            "mm::io::VmWriter::<'_>::from_user_space"
+          ]
         }
       },
       "Valid": {
@@ -612,7 +762,27 @@
           },
           "predicates": {
             "Requires": 18
-          }
+          },
+          "functions": [
+            "arch::boot::smp::send_init_deassert",
+            "arch::boot::smp::send_init_to_all_aps",
+            "arch::boot::smp::send_startup_to_all_aps",
+            "arch::device::serial::SerialPort::new",
+            "arch::iommu::dma_remapping::context_table::ContextTable::map",
+            "arch::iommu::dma_remapping::context_table::RootTable::map",
+            "arch::iommu::dma_remapping::map",
+            "arch::irq::send_ipi",
+            "cpu::init_num_cpus",
+            "cpu::init_on_ap",
+            "cpu::local::copy_bsp_for_ap",
+            "cpu::set_this_cpu_id",
+            "mm::frame::meta::MetaSlot::dyn_meta_ptr",
+            "mm::page_table::cursor::CursorMut::<'rcu, C>::map",
+            "mm::page_table::node::<impl mm::frame::Frame<mm::page_table::node::PageTablePageMeta<C>>>::activate",
+            "mm::page_table::node::<impl mm::frame::Frame<mm::page_table::node::PageTablePageMeta<C>>>::first_activate",
+            "mm::page_table::node::PageTableGuard::<'rcu, C>::write_pte",
+            "task::CurrentTask::new"
+          ]
         }
       },
       "ValidAccessAddr": {
@@ -637,7 +807,16 @@
           },
           "predicates": {
             "Requires": 10
-          }
+          },
+          "functions": [
+            "arch::boot::smp::bringup_all_aps",
+            "arch::boot::smp::copy_ap_boot_code",
+            "arch::boot::smp::fill_boot_info_ptr",
+            "arch::boot::smp::fill_boot_pt_ptr",
+            "mm::io::VmReader::<'a, mm::io::Infallible>::from_kernel_space",
+            "mm::io::VmWriter::<'a, mm::io::Infallible>::from_kernel_space",
+            "mm::io::memcpy"
+          ]
         }
       },
       "ValidBaseAddr": {
@@ -662,7 +841,15 @@
           },
           "predicates": {
             "Requires": 6
-          }
+          },
+          "functions": [
+            "arch::iommu::fault::FaultEventRegisters::new",
+            "arch::iommu::fault::init",
+            "arch::iommu::registers::invalidation::InvalidationRegisters::new",
+            "arch::kernel::irq::ioapic::IoApic::new",
+            "arch::kernel::irq::ioapic::IoApicAccess::new",
+            "arch::timer::hpet::Hpet::new"
+          ]
         }
       },
       "ValidInstanceAddr": {
@@ -687,7 +874,13 @@
           },
           "predicates": {
             "Requires": 4
-          }
+          },
+          "functions": [
+            "arch::mm::activate_page_table",
+            "mm::frame::inc_frame_ref_count",
+            "mm::heap::slot::HeapSlot::new",
+            "mm::page_table::page_walk"
+          ]
         }
       }
     },

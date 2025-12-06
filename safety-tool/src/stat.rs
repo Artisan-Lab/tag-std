@@ -42,6 +42,12 @@ impl Stat {
         // Merge metrics of funcs.
         self.metrics.funcs.merge();
 
+        // Sort and deduplicate functions for tags.
+        for item in self.specs.map.values_mut() {
+            item.usage.functions.sort_unstable();
+            item.usage.functions.dedup();
+        }
+
         // Update metrics as per specs.
         self.specs.update_metrics(&mut self.metrics);
 
@@ -177,14 +183,15 @@ impl Specs {
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct SpecItem {
-    item: Key,
-    usage: Usage,
+    pub item: Key,
+    pub usage: Usage,
 }
 
 #[derive(Debug, Default, Deserialize, Serialize)]
 pub struct Usage {
-    types: IndexMap<TagTypeUsage, u16>,
-    predicates: IndexMap<Predicate, u16>,
+    pub types: IndexMap<TagTypeUsage, u16>,
+    pub predicates: IndexMap<Predicate, u16>,
+    pub functions: Vec<Box<str>>,
 }
 
 impl Usage {
@@ -198,6 +205,10 @@ impl Usage {
 
     fn increment_predicate(&mut self, predicate: Predicate) {
         self.predicates.entry(predicate).and_modify(|c| *c += 1).or_insert(1);
+    }
+
+    fn push_function(&mut self, name: &str) {
+        self.functions.push(name.into());
     }
 
     fn is_unused(&self) -> bool {
@@ -226,6 +237,7 @@ impl Func {
                     let usage = specs.get_usage_mut(name);
                     usage.increment_type_vanilla();
                     usage.increment_predicate(predicate);
+                    usage.push_function(&self.name);
                 }
                 TagType::Any(props) => {
                     for prop in props {
@@ -234,6 +246,7 @@ impl Func {
                             let usage = specs.get_usage_mut(name);
                             usage.increment_type_any();
                             usage.increment_predicate(predicate);
+                            usage.push_function(&self.name);
                         }
                     }
                 }
@@ -318,17 +331,17 @@ pub struct Metrics {
 #[derive(Debug, Default, Deserialize, Serialize)]
 pub struct MetricsCoverage {
     /// Sum of the requires, checked, and delegated (or equivalently as_vanilla + in_any).
-    occurence: u16,
+    pub occurence: u16,
     /// How many times does the tag is used in `requires` predicate?
-    requires: u16,
+    pub requires: u16,
     /// How many times does the tag is used in `checked` predicate?
-    checked: u16,
+    pub checked: u16,
     /// How many times does the tag is used in `delegated` predicate?
-    delegated: u16,
+    pub delegated: u16,
     /// How many times does the tag is used individually?
-    as_vanilla: u16,
+    pub as_vanilla: u16,
     /// How many times does the tag is used in `any` tag?
-    in_any: u16,
+    pub in_any: u16,
 }
 
 impl MetricsCoverage {
@@ -366,9 +379,9 @@ impl MetricsCoverage {
 
 #[derive(Debug, Default, Deserialize, Serialize)]
 pub struct MetricsFunctions {
-    total: MetricsFuncsTotal,
-    safe: MetricsFuncs,
-    r#unsafe: MetricsFuncs,
+    pub total: MetricsFuncsTotal,
+    pub safe: MetricsFuncs,
+    pub r#unsafe: MetricsFuncs,
 }
 
 impl MetricsFunctions {
@@ -380,18 +393,18 @@ impl MetricsFunctions {
 
 #[derive(Debug, Default, Deserialize, Serialize)]
 pub struct MetricsFuncs {
-    total: MetricsFuncsTotal,
-    unsafe_calls: IndexMap<u16, u16>,
+    pub total: MetricsFuncsTotal,
+    pub unsafe_calls: IndexMap<u16, u16>,
 }
 
 #[derive(Debug, Default, Deserialize, Serialize)]
 pub struct MetricsFuncsTotal {
-    funcs: u16,
-    funcs_with_tags_declared: u16,
-    funcs_with_tags_discharged: u16,
-    declared_tags: u16,
-    discharged_tags: u16,
-    unsafe_calls: u16,
+    pub funcs: u16,
+    pub funcs_with_tags_declared: u16,
+    pub funcs_with_tags_discharged: u16,
+    pub declared_tags: u16,
+    pub discharged_tags: u16,
+    pub unsafe_calls: u16,
 }
 
 impl MetricsFuncsTotal {
