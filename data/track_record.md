@@ -1,7 +1,7 @@
 ## Asterinas
 |Num| PR | API | Info | PR Status |
 |---|-----|--------------|--------|--------|
-| 1 | [2677](https://github.com/asterinas/asterinas/pull/2677) | __multiboot_entry, __multiboot2_entry | safe => unsafe | submitted |
+| 1 | [2677](https://github.com/asterinas/asterinas/pull/2677) | loongarch_boot,riscv_boot,ap_early_entry,kernel_task_entry | safe => unsafe | merged |
 | 2 | [2673](https://github.com/asterinas/asterinas/pull/2673) | IoApicAccess::{read, write} | no safety doc | submitted |
 
 ## Standard Library
