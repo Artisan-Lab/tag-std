@@ -1,5 +1,3 @@
-MyStruct::from
-
 MyStruct::get { NonNull, ValidPtr, Init, Alive, Alias, Align, ValidNum }
 └── std::slice::from_raw_parts_mut
 

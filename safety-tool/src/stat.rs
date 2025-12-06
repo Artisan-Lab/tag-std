@@ -88,6 +88,10 @@ impl Stat {
         use std::io::Write;
         let Some(mut file) = self.krate.output_tree_file_path() else { return };
         for func in &self.funcs {
+            if func.unsafe_calls.is_empty() && func.has_no_tag() {
+                // Skip functions that have no unsafe calls and no tags.
+                continue;
+            }
             let tree = termtree::Tree::new(func.root_node());
             let leaves = func.unsafe_calls.iter().map(|c| {
                 let name = &*c.name;
