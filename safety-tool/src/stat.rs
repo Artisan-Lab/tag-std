@@ -353,8 +353,7 @@ impl Func {
             });
             let gray = if color { colors::xterm::DustyGray::ANSI_FG } else { "" };
             let end = if color { "\x1B[0m" } else { "" };
-            let tags = format_args!("{gray}{{{end} {tags} {gray}}}{end}");
-            format!("{} {tags}", self.name)
+            format!("{} {}", self.name, format_args!("{gray}{{ {tags} }}{end}"))
         }
     }
 }
