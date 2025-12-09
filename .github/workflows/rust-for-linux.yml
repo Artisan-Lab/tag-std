@@ -36,6 +36,8 @@ jobs:
         run:  make -v
 
       - name: Check Linux Repo
+        env:
+          SP_COLOR: 1
         run: .github/rust-for-linux/check.sh
 
       - name: Upload kernel rustdoc
