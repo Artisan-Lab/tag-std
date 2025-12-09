@@ -1,12 +1,13 @@
 use camino::{Utf8Path, Utf8PathBuf};
 use indexmap::{IndexMap, IndexSet};
 use itertools::Itertools;
+use owo_colors::{Color, OwoColorize, colors};
 use safety_parser::{
     configuration::{CACHE, GenDocOption, Key},
     safety::{PropertiesAndReason, Property},
 };
 use serde::{Deserialize, Serialize};
-use std::{env, fmt, fs};
+use std::{env, fmt, fs, sync::LazyLock};
 
 #[derive(Deserialize, Serialize)]
 pub struct Stat {
@@ -342,11 +343,25 @@ impl Func {
         if self.has_no_tag() {
             self.name.to_owned()
         } else {
-            let tags = self.tags.iter().map(|tag| &tag.tag).format_with(", ", |ele, f| f(ele));
-            format!("{} {{ {tags} }}", self.name)
+            let color = *SP_COLOR;
+            let tags = self.tags.iter().map(|tag| &tag.tag).format_with(", ", |ele, f| {
+                if color {
+                    f(&format_args!("{}", ele.fg::<colors::css::Orange>().bold()))
+                } else {
+                    f(ele)
+                }
+            });
+            let gray = if color { colors::xterm::DustyGray::ANSI_FG } else { "" };
+            let end = if color { "\x1B[0m" } else { "" };
+            let tags = format_args!("{gray}{{{end} {tags} {gray}}}{end}");
+            format!("{} {tags}", self.name)
         }
     }
 }
+
+// When `SP_COLOR` is unset or set to 0, no color for tag names.
+static SP_COLOR: LazyLock<bool> =
+    LazyLock::new(|| env::var("SP_COLOR").map(|s| s != "0").unwrap_or(false));
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Tag {

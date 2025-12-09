@@ -32,6 +32,7 @@ annotate-snippets = "0.11.5"
 cargo_metadata = "0.21.0"
 camino = "1.1.10"
 termtree = "0.5.1"
+owo-colors = "4.2.3"
 itertools = "0.14.0"
 
 safety-parser = { path = "./safety-parser/", version = "0.4.0" }

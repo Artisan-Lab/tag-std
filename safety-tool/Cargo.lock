@@ -1038,6 +1038,7 @@ dependencies = [
  "indexmap",
  "itertools",
  "jiff",
+ "owo-colors",
  "prettyplease",
  "rusqlite",
  "safety-parser",
