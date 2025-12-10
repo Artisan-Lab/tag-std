@@ -3,6 +3,7 @@
 |---|-----|--------------|--------|--------|
 | 1 | [2677](https://github.com/asterinas/asterinas/pull/2677) | loongarch_boot,riscv_boot,ap_early_entry,kernel_task_entry | safe => unsafe | merged |
 | 2 | [2673](https://github.com/asterinas/asterinas/pull/2673) | IoApicAccess::{read, write} | no safety doc | submitted |
+| 3 | [2707](https://github.com/asterinas/asterinas/issues/2707) | (x86, riscv) bringup_all_aps | vague safety requirement | issue submitted |
 
 ## Standard Library
 |Num| API | Missing SP | PR Num |PR |PR Status |
