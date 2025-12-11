@@ -24,11 +24,41 @@
 ├── core::ptr::mut_ptr::<impl *mut T>::write
 └── core::ptr::mut_ptr::<impl *mut T>::read
 
+<alloc::boxed::Box<T> as sync::rcu::non_null::NonNullPtr>::from_raw
+└── alloc::boxed::Box::<T>::from_raw
+
+<alloc::boxed::Box<T> as sync::rcu::non_null::NonNullPtr>::into_raw
+└── core::ptr::NonNull::<T>::new_unchecked
+
+<alloc::boxed::Box<T> as sync::rcu::non_null::NonNullPtr>::ref_as_raw
+└── core::ptr::NonNull::<T>::new_unchecked
+
+<alloc::sync::Arc<T> as sync::rcu::non_null::NonNullPtr>::from_raw
+└── alloc::sync::Arc::<T>::from_raw
+
+<alloc::sync::Arc<T> as sync::rcu::non_null::NonNullPtr>::into_raw
+└── core::ptr::NonNull::<T>::new_unchecked
+
+<alloc::sync::Arc<T> as sync::rcu::non_null::NonNullPtr>::raw_as_ref
+└── alloc::sync::Arc::<T>::from_raw
+
+<alloc::sync::Weak<T> as sync::rcu::non_null::NonNullPtr>::from_raw
+└── alloc::sync::Weak::<T>::from_raw
+
+<alloc::sync::Weak<T> as sync::rcu::non_null::NonNullPtr>::into_raw
+└── core::ptr::NonNull::<T>::new_unchecked
+
+<alloc::sync::Weak<T> as sync::rcu::non_null::NonNullPtr>::raw_as_ref
+└── alloc::sync::Weak::<T>::from_raw
+
 <arch::boot::multiboot::MemoryEntryIter as core::iter::Iterator>::next
 └── core::ptr::const_ptr::<impl *const T>::add
 
 <arch::cpu::context::UserContext as user::UserContextApiInternal>::execute
 └── x86::controlregs::cr2
+
+<arch::kernel::acpi::AcpiMemoryHandler as acpi::AcpiHandler>::map_physical_region
+└── acpi::PhysicalMapping::<H, T>::new
 
 <arch::kernel::apic::x2apic::X2Apic as arch::kernel::apic::Apic>::eoi
 └── x86::msr::wrmsr
@@ -57,12 +87,20 @@
 <arch::kernel::apic::x2apic::X2Apic as arch::kernel::apic::ApicTimer>::timer_current_count
 └── x86::msr::rdmsr
 
+<arch::mm::PageTableEntry as core::fmt::Debug>::fmt
+├── core::fmt::rt::UnsafeArg::new
+└── core::fmt::rt::UnsafeArg::new
+
+<cpu::local::dyn_cpu_local::DynCpuLocalChunk<ITEM_SIZE> as core::ops::Drop>::drop
+└── core::mem::ManuallyDrop::<T>::drop
+
 <cpu::local::static_cpu_local::StaticStorage<T> as cpu::local::AnyStorage<T>>::get_ptr_on_target
 ├── spin::once::Once::<T, R>::get_unchecked
 └── core::slice::<impl [T]>::get_unchecked
 
 <io::io_port::IoPort<T, A> as core::ops::Drop>::drop
 └── io::io_port::allocator::IoPortAllocator::recycle { PostToFunc, OwnedResource }
+    └── core::fmt::rt::UnsafeArg::new
 
 <mm::dma::dma_coherent::DmaCoherentInner as core::ops::Drop>::drop
 ├── arch::tdx_guest::protect_gpa_range
@@ -101,16 +139,28 @@
 <mm::frame::Frame<M> as core::convert::TryFrom<mm::frame::Frame<(dyn mm::frame::meta::AnyFrameMeta + 'static)>>>::try_from
 └── core::intrinsics::transmute
 
+<mm::frame::Frame<M> as core::fmt::Debug>::fmt
+└── core::fmt::rt::UnsafeArg::new
+
 <mm::frame::Frame<M> as core::ops::Drop>::drop
 └── mm::frame::meta::MetaSlot::drop_last_in_place { Eq, OriginateFrom }
     └── mm::frame::meta::MetaSlot::drop_meta_in_place { Eq, OriginateFrom }
         ├── core::mem::MaybeUninit::<T>::assume_init_read
+        ├── mm::io::VmReader::<'a, mm::io::Infallible>::from_kernel_space { ValidAccessAddr }
         └── core::ptr::drop_in_place
+
+<mm::frame::Frame<UM> as mm::frame::untyped::UntypedMem>::reader
+└── mm::io::VmReader::<'a, mm::io::Infallible>::from_kernel_space { ValidAccessAddr }
+
+<mm::frame::Frame<UM> as mm::frame::untyped::UntypedMem>::writer
+└── mm::io::VmWriter::<'a, mm::io::Infallible>::from_kernel_space { ValidAccessAddr }
 
 <mm::frame::segment::Segment<(dyn mm::frame::untyped::AnyUFrameMeta + 'static)> as core::convert::From<mm::frame::segment::Segment<M>>>::from
 └── core::intrinsics::transmute
 
 <mm::frame::segment::Segment<(dyn mm::frame::untyped::AnyUFrameMeta + 'static)> as core::convert::TryFrom<mm::frame::segment::Segment<(dyn mm::frame::meta::AnyFrameMeta + 'static)>>>::try_from
+├── mm::frame::Frame::<M>::from_raw { Forgotten }
+├── mm::frame::Frame::<M>::from_raw { Forgotten }
 └── core::intrinsics::transmute
 
 <mm::frame::segment::Segment<M> as core::clone::Clone>::clone
@@ -118,16 +168,49 @@
     └── mm::frame::meta::MetaSlot::inc_ref_count { Ge, Ne }
 
 <mm::frame::segment::Segment<M> as core::convert::TryFrom<mm::frame::segment::Segment<(dyn mm::frame::meta::AnyFrameMeta + 'static)>>>::try_from
+├── mm::frame::Frame::<M>::from_raw { Forgotten }
+├── mm::frame::Frame::<M>::from_raw { Forgotten }
 └── core::intrinsics::transmute
+
+<mm::frame::segment::Segment<M> as core::fmt::Debug>::fmt
+└── core::fmt::rt::UnsafeArg::new
+
+<mm::frame::segment::Segment<M> as core::iter::Iterator>::next
+└── mm::frame::Frame::<M>::from_raw { Forgotten }
+
+<mm::frame::segment::Segment<M> as core::ops::Drop>::drop
+└── mm::frame::Frame::<M>::from_raw { Forgotten }
+
+<mm::frame::segment::Segment<UM> as mm::frame::untyped::UntypedMem>::reader
+└── mm::io::VmReader::<'a, mm::io::Infallible>::from_kernel_space { ValidAccessAddr }
+
+<mm::frame::segment::Segment<UM> as mm::frame::untyped::UntypedMem>::writer
+└── mm::io::VmWriter::<'a, mm::io::Infallible>::from_kernel_space { ValidAccessAddr }
 
 <mm::frame::unique::UniqueFrame<M> as core::convert::TryFrom<mm::frame::Frame<M>>>::try_from
 └── core::intrinsics::transmute
 
+<mm::frame::unique::UniqueFrame<M> as core::fmt::Debug>::fmt
+└── core::fmt::rt::UnsafeArg::new
+
 <mm::frame::unique::UniqueFrame<M> as core::ops::Drop>::drop
 └── mm::frame::meta::MetaSlot::drop_last_in_place { Eq, OriginateFrom }
 
+<mm::heap::AllocDispatch as core::alloc::GlobalAlloc>::alloc
+├── core::fmt::rt::UnsafeArg::new
+└── core::fmt::rt::UnsafeArg::new
+
+<mm::heap::AllocDispatch as core::alloc::GlobalAlloc>::dealloc
+├── core::fmt::rt::UnsafeArg::new
+├── mm::heap::slot::HeapSlot::new { ValidInstanceAddr }
+├── core::ptr::NonNull::<T>::new_unchecked
+└── core::fmt::rt::UnsafeArg::new
+
 <mm::heap::slot::SlotInfo as core::cmp::PartialEq>::eq
 └── core::intrinsics::unreachable
+
+<mm::io::VmReader<'a, mm::io::Infallible> as core::convert::From<&'a [u8]>>::from
+└── mm::io::VmReader::<'a, mm::io::Infallible>::from_kernel_space { ValidAccessAddr }
 
 <mm::io::VmReader<'a, mm::io::Infallible> as mm::io::FallibleVmRead<mm::io::Fallible>>::read_fallible
 └── mm::io::memcpy_fallible { Memo, Memo }
@@ -139,11 +222,30 @@
 <mm::io::VmReader<'a> as mm::io::FallibleVmRead<mm::io::Infallible>>::read_fallible
 └── mm::io::memcpy_fallible { Memo, Memo }
 
+<mm::io::VmWriter<'a, mm::io::Infallible> as core::convert::From<&'a mut [u8]>>::from
+└── mm::io::VmWriter::<'a, mm::io::Infallible>::from_kernel_space { ValidAccessAddr }
+
+<mm::kspace::KernelPtConfig as mm::page_table::PageTableConfig>::item_from_raw
+└── mm::frame::Frame::<M>::from_raw { Forgotten }
+
 <mm::kspace::MappedItem as core::cmp::PartialEq>::eq
 └── core::intrinsics::unreachable
 
 <mm::kspace::kvirt_area::KVirtArea as core::ops::Drop>::drop
 └── mm::page_table::cursor::CursorMut::<'rcu, C>::take_next { KernelMemorySafe }
+
+<mm::page_table::node::PageTablePageMeta<C> as mm::frame::meta::AnyFrameMeta>::on_drop
+├── mm::frame::Frame::<M>::from_raw { Forgotten }
+└── mm::page_table::PageTableConfig::item_from_raw
+
+<mm::vm_space::UserPtConfig as mm::page_table::PageTableConfig>::item_from_raw
+└── mm::frame::Frame::<M>::from_raw { Forgotten }
+
+<sync::rcu::RcuDrop<T> as core::ops::Drop>::drop
+└── core::mem::ManuallyDrop::<T>::take
+
+<sync::rcu::RcuInner<P> as core::ops::Drop>::drop
+└── sync::rcu::non_null::NonNullPtr::from_raw
 
 <sync::rcu::non_null::BoxRef<'_, T> as core::ops::Deref>::deref
 └── core::intrinsics::transmute
@@ -159,6 +261,9 @@ arch::boot::linux_boot::parse_initramfs
 
 arch::boot::linux_boot::parse_kernel_commandline
 └── core::slice::from_raw_parts
+
+arch::boot::multiboot2::__multiboot2_entry
+└── multiboot2::BootInformation::<'a>::load
 
 arch::boot::multiboot2::make_str_vaddr_static { ReferTo }
 └── core::slice::from_raw_parts
@@ -191,6 +296,7 @@ arch::boot::multiboot::MultibootLegacyInfo::get_memory_map
 └── core::ptr::const_ptr::<impl *const T>::add
 
 arch::boot::multiboot::parse_as_cstr { ReferTo }
+└── core::ffi::CStr::from_ptr
 
 arch::boot::multiboot::parse_bootloader_name
 └── arch::boot::multiboot::parse_as_cstr { ReferTo }
@@ -272,7 +378,22 @@ arch::cpu::context::XSaveArea::init
 ├── core::intrinsics::write_bytes
 └── alloc::boxed::Box::<core::mem::MaybeUninit<T>, A>::assume_init
 
+arch::cpu::context::enable_essential_features
+└── x86_64::registers::control::x86_64::<impl x86_64::registers::control::Cr0>::write
+
 arch::device::serial::SerialPort::new { Valid, OwnedResource }
+├── io::io_port::IoPort::<T, A>::new { Memo }
+├── io::io_port::IoPort::<T, A>::new { Memo }
+├── io::io_port::IoPort::<T, A>::new { Memo }
+├── io::io_port::IoPort::<T, A>::new { Memo }
+├── io::io_port::IoPort::<T, A>::new { Memo }
+├── io::io_port::IoPort::<T, A>::new { Memo }
+└── io::io_port::IoPort::<T, A>::new { Memo }
+
+arch::enable_cpu_features
+├── x86_64::registers::control::x86_64::<impl x86_64::registers::control::Cr4>::write
+├── x86_64::registers::xcontrol::x86_64::<impl x86_64::registers::xcontrol::XCr0>::write
+└── x86_64::registers::model_specific::x86_64::<impl x86_64::registers::control::Efer>::update
 
 arch::ex_table::ExTable::find_recovery_inst_addr
 ├── arch::ex_table::__ex_table_end
@@ -290,11 +411,17 @@ arch::has_avx512
 
 arch::init_on_ap { CallOnce, PostToFunc }
 
+arch::io::construct_io_mem_allocator_builder
+└── io::io_mem::allocator::IoMemAllocatorBuilder::new
+    └── core::fmt::rt::UnsafeArg::new
+
 arch::iommu::dma_remapping::context_table::ContextTable::map { Valid }
+├── core::fmt::rt::UnsafeArg::new
 └── mm::page_table::cursor::CursorMut::<'rcu, C>::map { KernelMemorySafe, Valid }
     └── mm::page_table::node::<impl mm::frame::frame_ref::FrameRef<'a, mm::page_table::node::PageTablePageMeta<C>>>::make_guard_unchecked { LockHeld }
 
 arch::iommu::dma_remapping::context_table::ContextTable::unmap
+├── core::fmt::rt::UnsafeArg::new
 └── mm::page_table::cursor::CursorMut::<'rcu, C>::take_next { KernelMemorySafe }
 
 arch::iommu::dma_remapping::context_table::RootTable::map { Valid }
@@ -307,37 +434,104 @@ arch::iommu::dma_remapping::map { Valid }
 └── arch::iommu::dma_remapping::context_table::RootTable::map { Valid }
 
 arch::iommu::fault::FaultEventRegisters::new { ValidBaseAddr, OwnedResource }
+├── volatile::VolatileRef::<'a, T>::new_read_only
 ├── core::ptr::NonNull::<T>::add
+├── volatile::VolatileRef::<'a, T>::new
 ├── core::ptr::NonNull::<T>::add
+├── volatile::VolatileRef::<'a, T>::new
 ├── core::ptr::NonNull::<T>::add
+├── volatile::VolatileRef::<'a, T>::new
 ├── core::ptr::NonNull::<T>::add
+├── volatile::VolatileRef::<'a, T>::new
 ├── core::ptr::NonNull::<T>::add
+├── volatile::VolatileRef::<'a, T>::new
 ├── core::ptr::NonNull::<T>::add
+├── volatile::VolatileRef::<'a, T>::new
 ├── core::ptr::NonNull::<T>::add
 └── core::ptr::NonNull::<T>::add
+
+arch::iommu::fault::init
+└── arch::iommu::fault::FaultEventRegisters::new { ValidBaseAddr, OwnedResource }
+
+arch::iommu::fault::iommu_fault_handler
+└── core::fmt::rt::UnsafeArg::new
+
+arch::iommu::fault::primary_fault_handler
+└── core::fmt::rt::UnsafeArg::new
 
 arch::iommu::registers::IommuRegisters::new
+├── core::fmt::rt::UnsafeArg::new
+├── core::fmt::rt::UnsafeArg::new
 ├── arch::iommu::fault::init
+├── volatile::VolatileRef::<'a, T>::new_read_only
+├── volatile::VolatileRef::<'a, T>::new_read_only
 ├── core::ptr::NonNull::<T>::add
+├── volatile::VolatileRef::<'a, T>::new_read_only
 ├── core::ptr::NonNull::<T>::add
+├── volatile::VolatileRef::<'a, T>::new_restricted
 ├── core::ptr::NonNull::<T>::add
+├── volatile::VolatileRef::<'a, T>::new_read_only
 ├── core::ptr::NonNull::<T>::add
+├── volatile::VolatileRef::<'a, T>::new
 ├── core::ptr::NonNull::<T>::add
+├── volatile::VolatileRef::<'a, T>::new
 ├── core::ptr::NonNull::<T>::add
-└── core::ptr::NonNull::<T>::add
+├── volatile::VolatileRef::<'a, T>::new
+├── core::ptr::NonNull::<T>::add
+├── arch::iommu::registers::invalidation::InvalidationRegisters::new { ValidBaseAddr, OwnedResource }
+│   ├── volatile::VolatileRef::<'a, T>::new_read_only
+│   ├── core::ptr::NonNull::<T>::add
+│   ├── volatile::VolatileRef::<'a, T>::new_read_only
+│   ├── core::ptr::NonNull::<T>::add
+│   ├── volatile::VolatileRef::<'a, T>::new
+│   ├── core::ptr::NonNull::<T>::add
+│   ├── volatile::VolatileRef::<'a, T>::new
+│   ├── core::ptr::NonNull::<T>::add
+│   ├── volatile::VolatileRef::<'a, T>::new
+│   ├── core::ptr::NonNull::<T>::add
+│   ├── volatile::VolatileRef::<'a, T>::new
+│   ├── core::ptr::NonNull::<T>::add
+│   ├── volatile::VolatileRef::<'a, T>::new
+│   ├── core::ptr::NonNull::<T>::add
+│   ├── volatile::VolatileRef::<'a, T>::new
+│   ├── core::ptr::NonNull::<T>::add
+│   ├── volatile::VolatileRef::<'a, T>::new
+│   ├── core::ptr::NonNull::<T>::add
+│   ├── volatile::VolatileRef::<'a, T>::new_read_only
+│   ├── core::ptr::NonNull::<T>::add
+│   ├── volatile::VolatileRef::<'a, T>::new_restricted
+│   ├── core::ptr::NonNull::<T>::add
+│   ├── volatile::VolatileRef::<'a, T>::new
+│   ├── core::ptr::NonNull::<T>::add
+│   └── core::ptr::NonNull::<T>::add
+├── core::fmt::rt::UnsafeArg::new
+├── core::fmt::rt::UnsafeArg::new
+└── core::fmt::rt::UnsafeArg::new
 
 arch::iommu::registers::invalidation::InvalidationRegisters::new { ValidBaseAddr, OwnedResource }
+├── volatile::VolatileRef::<'a, T>::new_read_only
 ├── core::ptr::NonNull::<T>::add
+├── volatile::VolatileRef::<'a, T>::new_read_only
 ├── core::ptr::NonNull::<T>::add
+├── volatile::VolatileRef::<'a, T>::new
 ├── core::ptr::NonNull::<T>::add
+├── volatile::VolatileRef::<'a, T>::new
 ├── core::ptr::NonNull::<T>::add
+├── volatile::VolatileRef::<'a, T>::new
 ├── core::ptr::NonNull::<T>::add
+├── volatile::VolatileRef::<'a, T>::new
 ├── core::ptr::NonNull::<T>::add
+├── volatile::VolatileRef::<'a, T>::new
 ├── core::ptr::NonNull::<T>::add
+├── volatile::VolatileRef::<'a, T>::new
 ├── core::ptr::NonNull::<T>::add
+├── volatile::VolatileRef::<'a, T>::new
 ├── core::ptr::NonNull::<T>::add
+├── volatile::VolatileRef::<'a, T>::new_read_only
 ├── core::ptr::NonNull::<T>::add
+├── volatile::VolatileRef::<'a, T>::new_restricted
 ├── core::ptr::NonNull::<T>::add
+├── volatile::VolatileRef::<'a, T>::new
 ├── core::ptr::NonNull::<T>::add
 └── core::ptr::NonNull::<T>::add
 
@@ -348,6 +542,11 @@ arch::kernel::acpi::dmar::Dmar::new
 └── core::slice::from_raw_parts
 
 arch::kernel::acpi::get_acpi_tables { PostToFunc }
+├── acpi::AcpiTables::<H>::from_rsdp
+├── acpi::AcpiTables::<H>::from_rsdt
+├── acpi::AcpiTables::<H>::from_rsdt
+├── acpi::rsdp::Rsdp::search_for_on_bios
+└── acpi::AcpiTables::<H>::from_rsdp
 
 arch::kernel::apic::get_or_init
 ├── arch::kernel::apic::get_or_init::ForceSyncSend::<T>::get { Memo }
@@ -380,30 +579,55 @@ arch::kernel::apic::xapic::get_xapic_base_address
 arch::kernel::apic::xapic::set_apic_base_address
 └── x86_64::registers::model_specific::x86_64::<impl x86_64::registers::model_specific::Msr>::write
 
+arch::kernel::irq::init
+└── arch::kernel::irq::ioapic::IoApic::new { ValidBaseAddr }
+    ├── arch::kernel::irq::ioapic::IoApicAccess::new { ValidBaseAddr }
+    │   ├── core::fmt::rt::UnsafeArg::new
+    │   ├── arch::tdx_guest::unprotect_gpa_range
+    │   │   ├── mm::page_table::boot_pt::BootPageTable::<E, C>::protect_base_page { KernelMemorySafe }
+    │   │   └── mm::page_table::PageTable::<mm::kspace::KernelPtConfig>::protect_flush_tlb { KernelMemorySafe }
+    │   ├── volatile::VolatileRef::<'a, T>::new_restricted
+    │   └── volatile::VolatileRef::<'a, T>::new
+    └── core::fmt::rt::UnsafeArg::new
+
 arch::kernel::irq::ioapic::IoApic::new { ValidBaseAddr }
+├── arch::kernel::irq::ioapic::IoApicAccess::new { ValidBaseAddr }
+└── core::fmt::rt::UnsafeArg::new
 
 arch::kernel::irq::ioapic::IoApicAccess::new { ValidBaseAddr }
-└── arch::tdx_guest::unprotect_gpa_range
-    ├── mm::page_table::boot_pt::BootPageTable::<E, C>::protect_base_page { KernelMemorySafe }
-    └── mm::page_table::PageTable::<mm::kspace::KernelPtConfig>::protect_flush_tlb { KernelMemorySafe }
+├── core::fmt::rt::UnsafeArg::new
+├── arch::tdx_guest::unprotect_gpa_range
+├── volatile::VolatileRef::<'a, T>::new_restricted
+└── volatile::VolatileRef::<'a, T>::new
 
 arch::late_init_on_bsp { CallOnce, Context }
 ├── arch::trap::init { Context, CallOnce }
 │   ├── arch::trap::gdt::init { Memo }
+│   │   ├── x86_64::structures::gdt::Descriptor::tss_segment_unchecked
 │   │   ├── x86_64::instructions::tables::lgdt
-│   │   └── x86_64::instructions::tables::load_tss
+│   │   ├── x86_64::instructions::tables::load_tss
+│   │   └── x86_64::registers::model_specific::x86_64::<impl x86_64::registers::model_specific::Star>::write_raw
 │   └── arch::trap::syscall::init { PostToFunc }
-│       └── arch::trap::syscall::syscall_entry
+│       ├── arch::trap::syscall::syscall_entry
+│       ├── x86_64::registers::model_specific::x86_64::<impl x86_64::registers::control::Efer>::update
+│       └── x86_64::registers::control::x86_64::<impl x86_64::registers::control::Cr4>::update
 ├── boot::smp::boot_all_aps { Context }
 │   └── arch::boot::smp::bringup_all_aps { Context, ValidAccessAddr, ValidAccessAddr, ValidAccessAddr }
 └── io::init { OriginateFrom, Bounded, PostToFunc }
     ├── io::io_mem::allocator::init { PostToFunc }
+    │   └── io::io_mem::allocator::IoMemAllocator::new
     └── io::io_port::allocator::init { OriginateFrom, Bounded }
         ├── io::io_port::allocator::init::__sensitive_io_ports_start
         ├── io::io_port::allocator::init::__sensitive_io_ports_end
-        └── io::io_port::allocator::init::__sensitive_io_ports_start
+        ├── io::io_port::allocator::init::__sensitive_io_ports_start
+        └── core::fmt::rt::UnsafeArg::new
 
 arch::mm::activate_page_table { ValidInstanceAddr }
+└── x86_64::registers::control::x86_64::<impl x86_64::registers::control::Cr3>::write
+
+arch::mm::tlb_flush_all_including_global
+├── x86_64::registers::control::x86_64::<impl x86_64::registers::control::Cr4>::update
+└── x86_64::registers::control::x86_64::<impl x86_64::registers::control::Cr4>::update
 
 arch::qemu::exit_qemu
 └── x86_64::instructions::port::PortGeneric::<T, A>::write
@@ -423,22 +647,37 @@ arch::tdx_guest::unprotect_gpa_range
 ├── mm::page_table::boot_pt::BootPageTable::<E, C>::protect_base_page { KernelMemorySafe }
 └── mm::page_table::PageTable::<mm::kspace::KernelPtConfig>::protect_flush_tlb { KernelMemorySafe }
 
+arch::timer::apic::init_periodic_mode_config::pit_callback
+└── core::fmt::rt::UnsafeArg::new
+
 arch::timer::apic::timer_callback
 └── x86::msr::wrmsr
 
 arch::timer::hpet::Hpet::new { ValidBaseAddr }
+├── volatile::VolatileRef::<'a, T>::new_read_only
 ├── core::ptr::NonNull::<T>::add
+├── volatile::VolatileRef::<'a, T>::new
 ├── core::ptr::NonNull::<T>::add
+├── volatile::VolatileRef::<'a, T>::new
 ├── core::ptr::NonNull::<T>::add
+├── volatile::VolatileRef::<'a, T>::new
 ├── core::ptr::NonNull::<T>::add
 └── core::ptr::NonNull::<T>::add
 
+arch::timer::hpet::init
+└── arch::timer::hpet::Hpet::new { ValidBaseAddr }
+
 arch::trap::gdt::init { Memo }
+├── x86_64::structures::gdt::Descriptor::tss_segment_unchecked
 ├── x86_64::instructions::tables::lgdt
-└── x86_64::instructions::tables::load_tss
+├── x86_64::instructions::tables::load_tss
+└── x86_64::registers::model_specific::x86_64::<impl x86_64::registers::model_specific::Star>::write_raw
 
 arch::trap::handle_kernel_page_fault
 └── mm::page_table::cursor::CursorMut::<'rcu, C>::map { KernelMemorySafe, Valid }
+
+arch::trap::handle_user_page_fault
+└── core::fmt::rt::UnsafeArg::new
 
 arch::trap::idt::init
 ├── x86_64::structures::idt::Entry::<F>::set_handler_addr
@@ -452,7 +691,9 @@ arch::trap::syscall::<impl arch::trap::RawUserContext>::run
 └── arch::trap::syscall::syscall_return
 
 arch::trap::syscall::init { PostToFunc }
-└── arch::trap::syscall::syscall_entry
+├── arch::trap::syscall::syscall_entry
+├── x86_64::registers::model_specific::x86_64::<impl x86_64::registers::control::Efer>::update
+└── x86_64::registers::control::x86_64::<impl x86_64::registers::control::Cr4>::update
 
 boot::call_ostd_main
 ├── init { CallOnce, Context }
@@ -475,12 +716,14 @@ boot::call_ostd_main
 │   │       ├── core::ptr::mut_ptr::<impl *mut T>::read
 │   │       └── core::ptr::mut_ptr::<impl *mut T>::write
 │   ├── mm::frame::allocator::init { CallOnce, PostToFunc, PostToFunc }
+│   │   └── core::fmt::rt::UnsafeArg::new
 │   ├── arch::late_init_on_bsp { CallOnce, Context }
 │   └── mm::kspace::activate_kernel_page_table { CallOnce }
 │       ├── mm::page_table::PageTable::<C>::first_activate_unchecked { CallOnce }
 │       │   └── mm::page_table::node::<impl mm::frame::Frame<mm::page_table::node::PageTablePageMeta<C>>>::first_activate { Valid, CallOnce }
 │       │       └── arch::mm::activate_page_table { ValidInstanceAddr }
 │       └── mm::page_table::boot_pt::dismiss { NotPriorToFunc, NotPostToFunc, CallOnce }
+│           └── mm::frame::Frame::<M>::from_raw { Forgotten }
 └── boot::call_ostd_main::__ostd_main
 
 boot::memory_region::MemoryRegion::kernel
@@ -498,6 +741,25 @@ boot::smp::ap_early_entry
 boot::smp::boot_all_aps { Context }
 └── arch::boot::smp::bringup_all_aps { Context, ValidAccessAddr, ValidAccessAddr, ValidAccessAddr }
 
+bus::pci::bus::PciBus::register_common_device
+└── core::fmt::rt::UnsafeArg::new
+
+bus::pci::bus::PciBus::register_driver
+└── core::fmt::rt::UnsafeArg::new
+
+bus::pci::cfg_space::IoBar::read
+└── x86_64::instructions::port::PortRead::read_from_port
+
+bus::pci::cfg_space::IoBar::write
+└── x86_64::instructions::port::PortWrite::write_to_port
+
+bus::pci::cfg_space::MemoryBar::new
+└── io::io_mem::IoMem::new
+    ├── core::fmt::rt::UnsafeArg::new
+    ├── arch::tdx_guest::unprotect_gpa_range
+    └── mm::kspace::kvirt_area::KVirtArea::map_untracked_frames { Memo }
+        └── mm::page_table::cursor::CursorMut::<'rcu, C>::map { KernelMemorySafe, Valid }
+
 cpu::init_num_cpus { Context, Valid }
 
 cpu::init_on_ap { Context, Valid }
@@ -511,29 +773,36 @@ cpu::init_on_bsp { Context, PostToFunc, Unaccessed }
 cpu::local::cell::CpuLocalCell::<T>::__new { Section }
 
 cpu::local::cell::CpuLocalCell::<T>::add_assign
-└── cpu::local::__cpu_local_start
+├── cpu::local::__cpu_local_start
+└── cpu::local::single_instr::SingleInstructionAddAssign::add_assign
 
 cpu::local::cell::CpuLocalCell::<T>::as_mut_ptr
 ├── cpu::local::__cpu_local_start
 └── cpu::local::__cpu_local_end
 
 cpu::local::cell::CpuLocalCell::<T>::bitand_assign
-└── cpu::local::__cpu_local_start
+├── cpu::local::__cpu_local_start
+└── cpu::local::single_instr::SingleInstructionBitAndAssign::bitand_assign
 
 cpu::local::cell::CpuLocalCell::<T>::bitor_assign
-└── cpu::local::__cpu_local_start
+├── cpu::local::__cpu_local_start
+└── cpu::local::single_instr::SingleInstructionBitOrAssign::bitor_assign
 
 cpu::local::cell::CpuLocalCell::<T>::bitxor_assign
-└── cpu::local::__cpu_local_start
+├── cpu::local::__cpu_local_start
+└── cpu::local::single_instr::SingleInstructionBitXorAssign::bitxor_assign
 
 cpu::local::cell::CpuLocalCell::<T>::load
-└── cpu::local::__cpu_local_start
+├── cpu::local::__cpu_local_start
+└── cpu::local::single_instr::SingleInstructionLoad::load
 
 cpu::local::cell::CpuLocalCell::<T>::store
-└── cpu::local::__cpu_local_start
+├── cpu::local::__cpu_local_start
+└── cpu::local::single_instr::SingleInstructionStore::store
 
 cpu::local::cell::CpuLocalCell::<T>::sub_assign
-└── cpu::local::__cpu_local_start
+├── cpu::local::__cpu_local_start
+└── cpu::local::single_instr::SingleInstructionSubAssign::sub_assign
 
 cpu::local::copy_bsp_for_ap { Context, Unaccessed, Valid }
 ├── core::intrinsics::write_bytes
@@ -544,6 +813,9 @@ cpu::local::copy_bsp_for_ap { Context, Unaccessed, Valid }
 
 cpu::local::dyn_cpu_local::<impl cpu::local::CpuLocal<T, cpu::local::dyn_cpu_local::DynamicStorage<T>>>::__new_dynamic { Memo, Memo }
 └── core::ptr::write
+
+cpu::local::dyn_cpu_local::DynCpuLocalChunk::<ITEM_SIZE>::alloc
+└── cpu::local::dyn_cpu_local::<impl cpu::local::CpuLocal<T, cpu::local::dyn_cpu_local::DynamicStorage<T>>>::__new_dynamic { Memo, Memo }
 
 cpu::local::dyn_cpu_local::DynCpuLocalChunk::<ITEM_SIZE>::try_dealloc
 └── core::ptr::drop_in_place
@@ -574,20 +846,59 @@ io::init { OriginateFrom, Bounded, PostToFunc }
 └── io::io_port::allocator::init { OriginateFrom, Bounded }
 
 io::io_mem::IoMem::new
-└── arch::tdx_guest::unprotect_gpa_range
+├── core::fmt::rt::UnsafeArg::new
+├── arch::tdx_guest::unprotect_gpa_range
+└── mm::kspace::kvirt_area::KVirtArea::map_untracked_frames { Memo }
+
+io::io_mem::IoMem::reader
+└── mm::io::VmReader::<'a, mm::io::Infallible>::from_kernel_space { ValidAccessAddr }
+
+io::io_mem::IoMem::writer
+└── mm::io::VmWriter::<'a, mm::io::Infallible>::from_kernel_space { ValidAccessAddr }
+
+io::io_mem::allocator::IoMemAllocator::acquire
+├── core::fmt::rt::UnsafeArg::new
+└── io::io_mem::IoMem::new
 
 io::io_mem::allocator::IoMemAllocator::recycle { PostToFunc, OwnedResource }
 
+io::io_mem::allocator::IoMemAllocatorBuilder::new
+└── core::fmt::rt::UnsafeArg::new
+
+io::io_mem::allocator::IoMemAllocatorBuilder::remove
+├── core::fmt::rt::UnsafeArg::new
+└── core::fmt::rt::UnsafeArg::new
+
 io::io_mem::allocator::init { PostToFunc }
+└── io::io_mem::allocator::IoMemAllocator::new
+
+io::io_mem::allocator::test::conflict_region
+├── io::io_mem::allocator::IoMemAllocator::new
+└── io::io_mem::allocator::IoMemAllocatorBuilder::new
+
+io::io_mem::allocator::test::illegal_region
+├── io::io_mem::allocator::IoMemAllocator::new
+└── io::io_mem::allocator::IoMemAllocatorBuilder::new
 
 io::io_port::IoPort::<T, A>::new { Memo }
 
+io::io_port::IoPort::<T, A>::read
+└── x86_64::instructions::port::PortRead::read_from_port
+
+io::io_port::IoPort::<T, A>::write
+└── x86_64::instructions::port::PortWrite::write_to_port
+
+io::io_port::allocator::IoPortAllocator::acquire
+└── io::io_port::IoPort::<T, A>::new { Memo }
+
 io::io_port::allocator::IoPortAllocator::recycle { PostToFunc, OwnedResource }
+└── core::fmt::rt::UnsafeArg::new
 
 io::io_port::allocator::init { OriginateFrom, Bounded }
 ├── io::io_port::allocator::init::__sensitive_io_ports_start
 ├── io::io_port::allocator::init::__sensitive_io_ports_end
-└── io::io_port::allocator::init::__sensitive_io_ports_start
+├── io::io_port::allocator::init::__sensitive_io_ports_start
+└── core::fmt::rt::UnsafeArg::new
 
 mm::dma::dma_coherent::DmaCoherent::map
 ├── mm::page_table::PageTable::<mm::kspace::KernelPtConfig>::protect_flush_tlb { KernelMemorySafe }
@@ -598,11 +909,19 @@ mm::dma::dma_stream::DmaStream::map
 ├── arch::tdx_guest::unprotect_gpa_range
 └── arch::iommu::dma_remapping::map { Valid }
 
+mm::frame::Frame::<M>::borrow
+└── mm::frame::frame_ref::FrameRef::<'_, M>::borrow_paddr
+    └── mm::frame::Frame::<M>::from_raw { Forgotten }
+
 mm::frame::Frame::<M>::dyn_meta
 └── mm::frame::meta::MetaSlot::dyn_meta_ptr { OriginateFrom, Valid }
     └── core::mem::MaybeUninit::<T>::assume_init_ref
 
 mm::frame::Frame::<M>::from_raw { Forgotten }
+
+mm::frame::allocator::EarlyFrameAllocator::new
+├── core::fmt::rt::UnsafeArg::new
+└── core::fmt::rt::UnsafeArg::new
 
 mm::frame::allocator::FrameAllocOptions::alloc_frame_with
 └── core::intrinsics::write_bytes
@@ -611,8 +930,12 @@ mm::frame::allocator::FrameAllocOptions::alloc_segment_with
 └── core::intrinsics::write_bytes
 
 mm::frame::allocator::init { CallOnce, PostToFunc, PostToFunc }
+└── core::fmt::rt::UnsafeArg::new
 
 mm::frame::allocator::init_early_allocator { CallOnce, PostToFunc }
+
+mm::frame::frame_ref::FrameRef::<'_, M>::borrow_paddr
+└── mm::frame::Frame::<M>::from_raw { Forgotten }
 
 mm::frame::inc_frame_ref_count { ValidInstanceAddr, RefHeld }
 └── mm::frame::meta::MetaSlot::inc_ref_count { Ge, Ne }
@@ -630,6 +953,7 @@ mm::frame::linked_list::CursorMut::<'_, M>::move_prev
 └── core::ptr::NonNull::<T>::as_ref
 
 mm::frame::linked_list::CursorMut::<'_, M>::take_current
+├── mm::frame::unique::UniqueFrame::<M>::from_raw { Forgotten }
 ├── core::ptr::NonNull::<T>::as_mut
 └── core::ptr::NonNull::<T>::as_mut
 
@@ -638,6 +962,7 @@ mm::frame::meta::MetaSlot::drop_last_in_place { Eq, OriginateFrom }
 
 mm::frame::meta::MetaSlot::drop_meta_in_place { Eq, OriginateFrom }
 ├── core::mem::MaybeUninit::<T>::assume_init_read
+├── mm::io::VmReader::<'a, mm::io::Infallible>::from_kernel_space { ValidAccessAddr }
 └── core::ptr::drop_in_place
 
 mm::frame::meta::MetaSlot::dyn_meta_ptr { OriginateFrom, Valid }
@@ -667,6 +992,10 @@ mm::frame::segment::Segment::<M>::from_raw { Forgotten }
 mm::frame::segment::Segment::<M>::slice
 └── mm::frame::inc_frame_ref_count { ValidInstanceAddr, RefHeld }
 
+mm::frame::test::frame_ref::frame_impls_non_null_ptr
+├── sync::rcu::non_null::NonNullPtr::from_raw
+└── sync::rcu::non_null::NonNullPtr::raw_as_ref
+
 mm::frame::unique::<impl core::convert::From<mm::frame::unique::UniqueFrame<M>> for mm::frame::Frame<M>>::from
 └── core::intrinsics::transmute
 
@@ -686,12 +1015,44 @@ mm::frame::unique::UniqueFrame::<M>::repurpose
 mm::frame::unique::UniqueFrame::<M>::reset_as_unused
 └── mm::frame::meta::MetaSlot::drop_last_in_place { Eq, OriginateFrom }
 
+mm::heap::_::__rg_oom
+└── core::alloc::Layout::from_size_align_unchecked
+
+mm::heap::_::__rust_alloc
+├── core::alloc::GlobalAlloc::alloc
+└── core::alloc::Layout::from_size_align_unchecked
+
+mm::heap::_::__rust_alloc_zeroed
+├── core::alloc::GlobalAlloc::alloc_zeroed
+└── core::alloc::Layout::from_size_align_unchecked
+
+mm::heap::_::__rust_dealloc
+├── core::alloc::GlobalAlloc::dealloc
+└── core::alloc::Layout::from_size_align_unchecked
+
+mm::heap::_::__rust_realloc
+├── core::alloc::GlobalAlloc::realloc
+└── core::alloc::Layout::from_size_align_unchecked
+
+mm::heap::handle_alloc_error
+└── core::fmt::rt::UnsafeArg::new
+
+mm::heap::slab::<impl mm::frame::unique::UniqueFrame<mm::frame::linked_list::Link<mm::heap::slab::SlabMeta<SLOT_SIZE>>>>::new
+├── core::ptr::NonNull::<T>::new_unchecked
+└── mm::heap::slot::HeapSlot::new { ValidInstanceAddr }
+
+mm::heap::slot::HeapSlot::dealloc_large
+└── mm::frame::segment::Segment::<M>::from_raw { Forgotten }
+
 mm::heap::slot::HeapSlot::new { ValidInstanceAddr }
 
 mm::heap::slot_list::SlabSlotList::<SLOT_SIZE>::pop
-└── core::ptr::mut_ptr::<impl *mut T>::read
+├── core::ptr::mut_ptr::<impl *mut T>::read
+├── core::ptr::NonNull::<T>::new_unchecked
+└── mm::heap::slot::HeapSlot::new { ValidInstanceAddr }
 
 mm::heap::slot_list::SlabSlotList::<SLOT_SIZE>::push
+├── core::ptr::NonNull::<T>::new_unchecked
 └── core::ptr::mut_ptr::<impl *mut T>::write
 
 mm::heap::slot_size_from_layout
@@ -755,12 +1116,20 @@ mm::kspace::kvirt_area::KVirtArea::map_frames
 mm::kspace::kvirt_area::KVirtArea::map_untracked_frames { Memo }
 └── mm::page_table::cursor::CursorMut::<'rcu, C>::map { KernelMemorySafe, Valid }
 
+mm::kspace::test::kvirt_area_untracked_drop
+├── mm::kspace::kvirt_area::KVirtArea::map_untracked_frames { Memo }
+└── mm::kspace::kvirt_area::KVirtArea::map_untracked_frames { Memo }
+
+mm::kspace::test::kvirt_area_untracked_map_pages
+└── mm::kspace::kvirt_area::KVirtArea::map_untracked_frames { Memo }
+
 mm::page_table::PageTable::<C>::first_activate_unchecked { CallOnce }
 └── mm::page_table::node::<impl mm::frame::Frame<mm::page_table::node::PageTablePageMeta<C>>>::first_activate { Valid, CallOnce }
 
 mm::page_table::PageTable::<C>::page_walk
 └── mm::page_table::page_walk { ValidInstanceAddr }
     ├── mm::page_table::load_pte { ReferTo }
+    │   └── core::sync::atomic::AtomicUsize::from_ptr
     └── core::ptr::mut_ptr::<impl *mut T>::add
 
 mm::page_table::PageTable::<C>::shallow_copy { NotPostToFunc }
@@ -768,6 +1137,7 @@ mm::page_table::PageTable::<C>::shallow_copy { NotPostToFunc }
 mm::page_table::PageTable::<mm::kspace::KernelPtConfig>::create_user_page_table
 └── mm::page_table::node::PageTableGuard::<'rcu, C>::write_pte { Bounded, Valid, Memo }
     ├── mm::page_table::store_pte { ReferTo }
+    │   └── core::sync::atomic::AtomicUsize::from_ptr
     └── core::ptr::mut_ptr::<impl *mut T>::add
 
 mm::page_table::PageTable::<mm::kspace::KernelPtConfig>::protect_flush_tlb { KernelMemorySafe }
@@ -775,7 +1145,8 @@ mm::page_table::PageTable::<mm::kspace::KernelPtConfig>::protect_flush_tlb { Ker
 
 mm::page_table::PageTable::<mm::vm_space::UserPtConfig>::activate
 └── mm::page_table::node::<impl mm::frame::Frame<mm::page_table::node::PageTablePageMeta<C>>>::activate { Valid }
-    └── arch::mm::activate_page_table { ValidInstanceAddr }
+    ├── arch::mm::activate_page_table { ValidInstanceAddr }
+    └── mm::frame::Frame::<M>::from_raw { Forgotten }
 
 mm::page_table::boot_pt::BootPageTable::<E, C>::alloc_child
 └── core::intrinsics::write_bytes
@@ -804,12 +1175,17 @@ mm::page_table::boot_pt::dfs_walk_on_leave
 └── core::slice::from_raw_parts_mut
 
 mm::page_table::boot_pt::dismiss { NotPriorToFunc, NotPostToFunc, CallOnce }
+└── mm::frame::Frame::<M>::from_raw { Forgotten }
+
+mm::page_table::boot_pt::with_borrow
+└── mm::page_table::boot_pt::BootPageTable::<E, C>::from_current_pt { CallOnce }
 
 mm::page_table::cursor::Cursor::<'rcu, C>::find_next_impl
 └── mm::page_table::node::<impl mm::frame::frame_ref::FrameRef<'a, mm::page_table::node::PageTablePageMeta<C>>>::make_guard_unchecked { LockHeld }
 
 mm::page_table::cursor::Cursor::<'rcu, C>::query
-└── mm::page_table::node::<impl mm::frame::frame_ref::FrameRef<'a, mm::page_table::node::PageTablePageMeta<C>>>::make_guard_unchecked { LockHeld }
+├── mm::page_table::node::<impl mm::frame::frame_ref::FrameRef<'a, mm::page_table::node::PageTablePageMeta<C>>>::make_guard_unchecked { LockHeld }
+└── mm::page_table::PageTableConfig::item_from_raw
 
 mm::page_table::cursor::CursorMut::<'rcu, C>::map { KernelMemorySafe, Valid }
 └── mm::page_table::node::<impl mm::frame::frame_ref::FrameRef<'a, mm::page_table::node::PageTablePageMeta<C>>>::make_guard_unchecked { LockHeld }
@@ -817,12 +1193,16 @@ mm::page_table::cursor::CursorMut::<'rcu, C>::map { KernelMemorySafe, Valid }
 mm::page_table::cursor::CursorMut::<'rcu, C>::protect_next { NonModifying, KernelMemorySafe }
 
 mm::page_table::cursor::CursorMut::<'rcu, C>::replace_cur_entry
+├── mm::page_table::PageTableConfig::item_from_raw
 ├── mm::page_table::node::<impl mm::frame::frame_ref::FrameRef<'a, mm::page_table::node::PageTablePageMeta<C>>>::make_guard_unchecked { LockHeld }
 └── mm::page_table::cursor::locking::dfs_mark_stray_and_unlock { NotPostToFunc, NotPostToFunc, NotPostToFunc, Forgotten }
     ├── mm::page_table::node::<impl mm::frame::frame_ref::FrameRef<'a, mm::page_table::node::PageTablePageMeta<C>>>::make_guard_unchecked { LockHeld }
     └── mm::page_table::cursor::locking::dfs_mark_stray_and_unlock { NotPostToFunc, NotPostToFunc, NotPostToFunc, Forgotten }
 
 mm::page_table::cursor::CursorMut::<'rcu, C>::take_next { KernelMemorySafe }
+
+mm::page_table::cursor::PageTableFrag::<C>::va_range
+└── mm::page_table::PageTableConfig::item_from_raw
 
 mm::page_table::cursor::locking::dfs_mark_stray_and_unlock { NotPostToFunc, NotPostToFunc, NotPostToFunc, Forgotten }
 ├── mm::page_table::node::<impl mm::frame::frame_ref::FrameRef<'a, mm::page_table::node::PageTablePageMeta<C>>>::make_guard_unchecked { LockHeld }
@@ -834,20 +1214,30 @@ mm::page_table::cursor::locking::dfs_release_lock { NotPostToFunc, NotPostToFunc
 
 mm::page_table::cursor::locking::try_traverse_and_lock_subtree_root
 ├── mm::page_table::load_pte { ReferTo }
-└── core::ptr::mut_ptr::<impl *mut T>::add
+├── core::ptr::mut_ptr::<impl *mut T>::add
+├── mm::frame::frame_ref::FrameRef::<'_, M>::borrow_paddr
+└── mm::frame::frame_ref::FrameRef::<'_, M>::borrow_paddr
 
 mm::page_table::cursor::locking::unlock_range
 └── mm::page_table::cursor::locking::dfs_release_lock { NotPostToFunc, NotPostToFunc, Forgotten }
 
 mm::page_table::load_pte { ReferTo }
+└── core::sync::atomic::AtomicUsize::from_ptr
 
 mm::page_table::node::<impl mm::frame::Frame<mm::page_table::node::PageTablePageMeta<C>>>::activate { Valid }
-└── arch::mm::activate_page_table { ValidInstanceAddr }
+├── arch::mm::activate_page_table { ValidInstanceAddr }
+└── mm::frame::Frame::<M>::from_raw { Forgotten }
 
 mm::page_table::node::<impl mm::frame::Frame<mm::page_table::node::PageTablePageMeta<C>>>::first_activate { Valid, CallOnce }
 └── arch::mm::activate_page_table { ValidInstanceAddr }
 
 mm::page_table::node::<impl mm::frame::frame_ref::FrameRef<'a, mm::page_table::node::PageTablePageMeta<C>>>::make_guard_unchecked { LockHeld }
+
+mm::page_table::node::PageTableGuard::<'rcu, C>::entry
+└── mm::page_table::node::entry::Entry::<'a, 'rcu, C>::new_at { Bounded }
+    └── mm::page_table::node::PageTableGuard::<'rcu, C>::read_pte { Bounded }
+        ├── mm::page_table::load_pte { ReferTo }
+        └── core::ptr::mut_ptr::<impl *mut T>::add
 
 mm::page_table::node::PageTableGuard::<'rcu, C>::read_pte { Bounded }
 ├── mm::page_table::load_pte { ReferTo }
@@ -858,10 +1248,13 @@ mm::page_table::node::PageTableGuard::<'rcu, C>::write_pte { Bounded, Valid, Mem
 └── core::ptr::mut_ptr::<impl *mut T>::add
 
 mm::page_table::node::child::Child::<C>::from_pte { RefUnheld, CallOnce }
+└── mm::frame::Frame::<M>::from_raw { Forgotten }
 
 mm::page_table::node::child::ChildRef::<'_, C>::from_pte { OriginateFrom }
+└── mm::frame::frame_ref::FrameRef::<'_, M>::borrow_paddr
 
 mm::page_table::node::entry::Entry::<'a, 'rcu, C>::alloc_if_none
+├── mm::frame::frame_ref::FrameRef::<'_, M>::borrow_paddr
 └── mm::page_table::node::PageTableGuard::<'rcu, C>::write_pte { Bounded, Valid, Memo }
 
 mm::page_table::node::entry::Entry::<'a, 'rcu, C>::new_at { Bounded }
@@ -871,16 +1264,22 @@ mm::page_table::node::entry::Entry::<'a, 'rcu, C>::protect
 └── mm::page_table::node::PageTableGuard::<'rcu, C>::write_pte { Bounded, Valid, Memo }
 
 mm::page_table::node::entry::Entry::<'a, 'rcu, C>::replace
+├── mm::page_table::node::child::Child::<C>::from_pte { RefUnheld, CallOnce }
 └── mm::page_table::node::PageTableGuard::<'rcu, C>::write_pte { Bounded, Valid, Memo }
 
 mm::page_table::node::entry::Entry::<'a, 'rcu, C>::split_if_mapped_huge
+├── mm::frame::frame_ref::FrameRef::<'_, M>::borrow_paddr
 └── mm::page_table::node::PageTableGuard::<'rcu, C>::write_pte { Bounded, Valid, Memo }
+
+mm::page_table::node::entry::Entry::<'a, 'rcu, C>::to_ref
+└── mm::page_table::node::child::ChildRef::<'_, C>::from_pte { OriginateFrom }
 
 mm::page_table::page_walk { ValidInstanceAddr }
 ├── mm::page_table::load_pte { ReferTo }
 └── core::ptr::mut_ptr::<impl *mut T>::add
 
 mm::page_table::store_pte { ReferTo }
+└── core::sync::atomic::AtomicUsize::from_ptr
 
 mm::page_table::test::boot_pt::map_base_page
 ├── mm::page_table::boot_pt::BootPageTable::<E, C>::map_base_page { KernelMemorySafe }
@@ -919,7 +1318,8 @@ mm::page_table::test::navigation::setup_page_table_with_two_frames
 
 mm::page_table::test::overlapping_mappings::overlapping_mappings
 ├── mm::page_table::cursor::CursorMut::<'rcu, C>::map { KernelMemorySafe, Valid }
-└── mm::page_table::cursor::CursorMut::<'rcu, C>::map { KernelMemorySafe, Valid }
+├── mm::page_table::cursor::CursorMut::<'rcu, C>::map { KernelMemorySafe, Valid }
+└── core::fmt::rt::UnsafeArg::new
 
 mm::page_table::test::overlapping_mappings::unaligned_map
 └── mm::page_table::cursor::CursorMut::<'rcu, C>::map { KernelMemorySafe, Valid }
@@ -940,6 +1340,9 @@ mm::page_table::test::test_utils::create_user_pt_mapped_at
 mm::page_table::test::test_utils::map_untracked
 └── mm::page_table::cursor::CursorMut::<'rcu, C>::map { KernelMemorySafe, Valid }
 
+mm::page_table::test::test_utils::pa_prop_from_item
+└── mm::page_table::PageTableConfig::item_from_raw
+
 mm::page_table::test::test_utils::protect_range
 └── mm::page_table::cursor::CursorMut::<'rcu, C>::protect_next { NonModifying, KernelMemorySafe }
 
@@ -951,6 +1354,48 @@ mm::page_table::test::unmap::take_next_takes_something
 ├── mm::page_table::cursor::CursorMut::<'rcu, C>::map { KernelMemorySafe, Valid }
 └── mm::page_table::cursor::CursorMut::<'rcu, C>::take_next { KernelMemorySafe }
 
+mm::test::io::fill_infallible
+└── mm::io::VmWriter::<'a, mm::io::Infallible>::from_kernel_space { ValidAccessAddr }
+
+mm::test::io::invalid_read_write_infallible
+├── mm::io::VmWriter::<'a, mm::io::Infallible>::from_kernel_space { ValidAccessAddr }
+└── mm::io::VmReader::<'a, mm::io::Infallible>::from_kernel_space { ValidAccessAddr }
+
+mm::test::io::read_beyond_buffer_infallible
+└── mm::io::VmReader::<'a, mm::io::Infallible>::from_kernel_space { ValidAccessAddr }
+
+mm::test::io::read_write_once_infallible
+├── mm::io::VmWriter::<'a, mm::io::Infallible>::from_kernel_space { ValidAccessAddr }
+└── mm::io::VmReader::<'a, mm::io::Infallible>::from_kernel_space { ValidAccessAddr }
+
+mm::test::io::read_write_slice_infallible
+├── mm::io::VmWriter::<'a, mm::io::Infallible>::from_kernel_space { ValidAccessAddr }
+└── mm::io::VmReader::<'a, mm::io::Infallible>::from_kernel_space { ValidAccessAddr }
+
+mm::test::io::read_write_slice_vmio_infallible
+├── mm::io::VmWriter::<'a, mm::io::Infallible>::from_kernel_space { ValidAccessAddr }
+└── mm::io::VmReader::<'a, mm::io::Infallible>::from_kernel_space { ValidAccessAddr }
+
+mm::test::io::read_write_struct_infallible
+├── mm::io::VmWriter::<'a, mm::io::Infallible>::from_kernel_space { ValidAccessAddr }
+└── mm::io::VmReader::<'a, mm::io::Infallible>::from_kernel_space { ValidAccessAddr }
+
+mm::test::io::read_write_u32_infallible
+├── mm::io::VmWriter::<'a, mm::io::Infallible>::from_kernel_space { ValidAccessAddr }
+└── mm::io::VmReader::<'a, mm::io::Infallible>::from_kernel_space { ValidAccessAddr }
+
+mm::test::io::skip_read_infallible
+└── mm::io::VmReader::<'a, mm::io::Infallible>::from_kernel_space { ValidAccessAddr }
+
+mm::test::io::skip_write_infallible
+└── mm::io::VmWriter::<'a, mm::io::Infallible>::from_kernel_space { ValidAccessAddr }
+
+mm::test::io::write_beyond_buffer_infallible
+└── mm::io::VmWriter::<'a, mm::io::Infallible>::from_kernel_space { ValidAccessAddr }
+
+mm::test::io::write_val_infallible
+└── mm::io::VmWriter::<'a, mm::io::Infallible>::from_kernel_space { ValidAccessAddr }
+
 mm::vm_space::CursorMut::<'a>::map
 └── mm::page_table::cursor::CursorMut::<'rcu, C>::map { KernelMemorySafe, Valid }
 
@@ -960,34 +1405,93 @@ mm::vm_space::CursorMut::<'a>::protect_next
 mm::vm_space::CursorMut::<'a>::unmap
 └── mm::page_table::cursor::CursorMut::<'rcu, C>::take_next { KernelMemorySafe }
 
+mm::vm_space::VmSpace::activate
+└── alloc::sync::Arc::<T>::from_raw
+
+mm::vm_space::VmSpace::reader
+└── mm::io::VmReader::<'_>::from_user_space { UserSpace }
+
+mm::vm_space::VmSpace::writer
+└── mm::io::VmWriter::<'_>::from_user_space { UserSpace }
+
+panic::__ostd_panic_handler
+├── core::fmt::rt::UnsafeArg::new
+└── core::fmt::rt::UnsafeArg::new
+
+panic::print_stack_trace::callback
+├── core::fmt::rt::UnsafeArg::new
+└── core::fmt::rt::UnsafeArg::new
+
+smp::do_inter_processor_call
+└── core::fmt::rt::UnsafeArg::new
+
 smp::inter_processor_call
 └── arch::irq::send_ipi { Valid, Memo }
 
+sync::mutex::Mutex::<T>::try_lock
+└── sync::mutex::MutexGuard_::<T, &'a sync::mutex::Mutex<T>>::new
+
+sync::rcu::RcuInner::<P>::read_with
+└── sync::rcu::non_null::NonNullPtr::raw_as_ref
+
 sync::rcu::RcuInner::<P>::update
 └── sync::rcu::delay_drop
+    └── sync::rcu::non_null::NonNullPtr::from_raw
 
 sync::rcu::RcuReadGuardInner::<'_, P>::compare_exchange
+├── sync::rcu::non_null::NonNullPtr::from_raw
 └── sync::rcu::delay_drop
+
+sync::rcu::RcuReadGuardInner::<'_, P>::get
+└── sync::rcu::non_null::NonNullPtr::raw_as_ref
+
+sync::rcu::delay_drop
+└── sync::rcu::non_null::NonNullPtr::from_raw
 
 sync::rcu::finish_grace_period
 └── sync::rcu::monitor::RcuMonitor::finish_grace_period
 
 sync::rcu::non_null::either::<impl sync::rcu::non_null::NonNullPtr for util::either::Either<L, R>>::from_raw
-└── sync::rcu::non_null::either::remove_bits
+├── sync::rcu::non_null::either::remove_bits
+│   └── core::num::NonZero::<T>::new_unchecked
+├── sync::rcu::non_null::NonNullPtr::from_raw
+└── sync::rcu::non_null::NonNullPtr::from_raw
 
 sync::rcu::non_null::either::<impl sync::rcu::non_null::NonNullPtr for util::either::Either<L, R>>::raw_as_ref
-└── sync::rcu::non_null::either::remove_bits
+├── sync::rcu::non_null::either::remove_bits
+├── sync::rcu::non_null::NonNullPtr::raw_as_ref
+└── sync::rcu::non_null::NonNullPtr::raw_as_ref
+
+sync::rcu::non_null::either::remove_bits
+└── core::num::NonZero::<T>::new_unchecked
+
+sync::rcu::non_null::either::test::left_pointer
+├── sync::rcu::non_null::NonNullPtr::raw_as_ref
+└── sync::rcu::non_null::NonNullPtr::from_raw
+
+sync::rcu::non_null::either::test::right_pointer
+├── sync::rcu::non_null::NonNullPtr::raw_as_ref
+└── sync::rcu::non_null::NonNullPtr::from_raw
+
+task::CurrentTask::cloned
+├── alloc::sync::Arc::<T>::increment_strong_count
+└── alloc::sync::Arc::<T>::from_raw
 
 task::CurrentTask::local_data
 └── task::utils::ForceSync::<T>::get { Sync }
 
 task::CurrentTask::new { Valid }
 
+task::Task::current
+└── task::CurrentTask::new { Valid }
+
 task::TaskOptions::build::kernel_task_entry
 ├── task::processor::after_switching_to { CallOnce }
+│   └── alloc::sync::Arc::<T>::from_raw
 └── task::utils::ForceSync::<T>::get { Sync }
 
 task::processor::after_switching_to { CallOnce }
+└── alloc::sync::Arc::<T>::from_raw
 
 task::processor::switch_to_task
 ├── sync::rcu::finish_grace_period
