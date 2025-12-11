@@ -16,10 +16,10 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Init asterinas submodule
-        run: git submodule update --init tag-asterinas
-        # run: |
-        #   git clone https://github.com/os-checker/tag-asterinas.git
-        #   cd tag-asterinas && git checkout 56703301
+        # run: git submodule update --init tag-asterinas
+        run: |
+          git clone https://github.com/Artisan-Lab/tag-asterinas.git
+          cd tag-asterinas && git switch 2025-12
 
       - name: Install toolchain
         working-directory: safety-tool
