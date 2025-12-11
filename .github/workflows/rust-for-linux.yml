@@ -38,7 +38,7 @@ jobs:
       - name: Check Linux Repo
         env:
           # Colored unsafe call trees.
-          SP_COLOR: 1
+          SP_COLOR: 0
         run: .github/rust-for-linux/check.sh
 
       - name: Upload kernel rustdoc
