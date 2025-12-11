@@ -133,9 +133,11 @@ crossfig::switch! {
 impl<'tcx> Calls<'tcx> {
     fn inner_visit_expr(&mut self, ex: &'tcx Expr<'tcx>) {
         let hir_id = ex.hir_id;
-        match ex.kind {
-            ExprKind::Path(QPath::Resolved(_opt_ty, path)) => {
-                if let Res::Def(DefKind::Fn, def_id) = path.res {
+        match &ex.kind {
+            ExprKind::Path(qpath) => {
+                let qpath_res = self.tyck.qpath_res(qpath, hir_id);
+                // maybe use [DefKind::is_fn_like](https://doc.rust-lang.org/nightly/nightly-rustc/rustc_hir/def/enum.DefKind.html#method.is_fn_like)
+                if let Res::Def(DefKind::Fn | DefKind::AssocFn, def_id) = qpath_res {
                     self.calls.push(Call { hir_id, def_id });
                 }
             }
@@ -143,7 +145,7 @@ impl<'tcx> Calls<'tcx> {
             //
             // res is Err, and  must resolve to get def_id, thus need to call
             // https://doc.rust-lang.org/nightly/nightly-rustc/rustc_middle/ty/struct.TypeckResults.html#method.type_dependent_def_id
-            ExprKind::Call(..) | ExprKind::MethodCall(..) => {
+            ExprKind::MethodCall(..) => {
                 if let Some(def_id) = self.tyck.type_dependent_def_id(hir_id) {
                     self.calls.push(Call { hir_id, def_id });
                 } else {
