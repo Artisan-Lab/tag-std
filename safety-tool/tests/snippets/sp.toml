@@ -18,3 +18,11 @@ args = ["p", "T"]
 desc = "pointer `{p}` must be properly aligned for type `{T}`"
 expr = "p % alignment(T) = 0"
 url = "https://doc.rust-lang.org/nightly/std/ptr/index.html#alignment"
+
+[tag.ValidBaseAddr]
+args = ["addr", "hardware"]
+desc = "`{addr}` must be a valid base address of {hardware}."
+
+[tag.OwnedResource]
+args = ["value", "owner"]
+desc = "`{value}` must be exclusively owned by {owner}."
