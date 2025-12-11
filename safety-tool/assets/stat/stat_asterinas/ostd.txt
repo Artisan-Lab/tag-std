@@ -316,10 +316,8 @@ arch::iommu::fault::FaultEventRegisters::new { ValidBaseAddr, OwnedResource }
 ├── core::ptr::NonNull::<T>::add
 └── core::ptr::NonNull::<T>::add
 
-arch::iommu::fault::init { ValidBaseAddr, OwnedResource }
-
 arch::iommu::registers::IommuRegisters::new
-├── arch::iommu::fault::init { ValidBaseAddr, OwnedResource }
+├── arch::iommu::fault::init
 ├── core::ptr::NonNull::<T>::add
 ├── core::ptr::NonNull::<T>::add
 ├── core::ptr::NonNull::<T>::add

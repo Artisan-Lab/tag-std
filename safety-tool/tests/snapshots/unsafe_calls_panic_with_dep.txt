@@ -1,7 +1,7 @@
 stdout=
 
 stderr=
-Got 6 tags.
+Got 8 tags.
 [1m[91merror[0m: [1mTag is not discharged: `Tag`[0m
  [1m[94m-->[0m ./tests/snippets/unsafe_calls_panic_with_dep.rs:9:14
   [1m[94m|[0m

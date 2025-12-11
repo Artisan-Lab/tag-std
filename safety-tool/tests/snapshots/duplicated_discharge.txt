@@ -1,7 +1,7 @@
 stdout=
 
 stderr=
-Got 6 tags.
+Got 8 tags.
 [1m[91merror[0m: [1m"Tag" has already been discharged[0m
   [1m[94m-->[0m ./tests/snippets/duplicated_discharge.rs:8:5
    [1m[94m|[0m

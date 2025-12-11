@@ -477,9 +477,10 @@
         "item": {
           "tag": {
             "args": [
-              "val"
+              "value",
+              "owner"
             ],
-            "desc": "{val} shoule be exclusively owned.",
+            "desc": "`{value}` must be exclusively owned by {owner}.",
             "expr": null,
             "types": [
               "precond"
@@ -490,15 +491,14 @@
         },
         "usage": {
           "types": {
-            "Vanilla": 6
+            "Vanilla": 5
           },
           "predicates": {
-            "Requires": 6
+            "Requires": 5
           },
           "functions": [
             "arch::device::serial::SerialPort::new",
             "arch::iommu::fault::FaultEventRegisters::new",
-            "arch::iommu::fault::init",
             "arch::iommu::registers::invalidation::InvalidationRegisters::new",
             "io::io_mem::allocator::IoMemAllocator::recycle",
             "io::io_port::allocator::IoPortAllocator::recycle"
@@ -826,7 +826,7 @@
               "addr",
               "hardware"
             ],
-            "desc": "{addr} should be a valid base address of {hardware}.",
+            "desc": "`{addr}` must be a valid base address of {hardware}.",
             "expr": null,
             "types": [
               "precond"
@@ -837,14 +837,13 @@
         },
         "usage": {
           "types": {
-            "Vanilla": 6
+            "Vanilla": 5
           },
           "predicates": {
-            "Requires": 6
+            "Requires": 5
           },
           "functions": [
             "arch::iommu::fault::FaultEventRegisters::new",
-            "arch::iommu::fault::init",
             "arch::iommu::registers::invalidation::InvalidationRegisters::new",
             "arch::kernel::irq::ioapic::IoApic::new",
             "arch::kernel::irq::ioapic::IoApicAccess::new",
@@ -13813,7 +13812,7 @@
               },
               "args": [
                 "base_register_vaddr",
-                "IOMMU"
+                "hardware = \"IOMMU\""
               ]
             }
           },
@@ -13828,7 +13827,8 @@
                 "name": "OwnedResource"
               },
               "args": [
-                "The IOMMU fault event registers"
+                "base_register_vaddr",
+                "owner = FaultEventRegisters"
               ]
             }
           },
@@ -14154,47 +14154,15 @@
       "name": "arch::iommu::fault::init",
       "safe": false,
       "path": "ostd/src/arch/x86/iommu/fault.rs",
-      "span": "244:248",
-      "tags": [
-        {
-          "predicate": "Requires",
-          "tag": {
-            "Vanilla": {
-              "tag": {
-                "typ": null,
-                "name": "ValidBaseAddr"
-              },
-              "args": [
-                "base_register_vaddr",
-                "IOMMU"
-              ]
-            }
-          },
-          "doc": null
-        },
-        {
-          "predicate": "Requires",
-          "tag": {
-            "Vanilla": {
-              "tag": {
-                "typ": null,
-                "name": "OwnedResource"
-              },
-              "args": [
-                "The IOMMU fault event registers"
-              ]
-            }
-          },
-          "doc": null
-        }
-      ],
+      "span": "240:244",
+      "tags": [],
       "unsafe_calls": []
     },
     {
       "name": "arch::iommu::fault::iommu_fault_handler",
       "safe": true,
       "path": "ostd/src/arch/x86/iommu/fault.rs",
-      "span": "252:264",
+      "span": "248:260",
       "tags": [],
       "unsafe_calls": []
     },
@@ -14202,7 +14170,7 @@
       "name": "arch::iommu::fault::primary_fault_handler",
       "safe": true,
       "path": "ostd/src/arch/x86/iommu/fault.rs",
-      "span": "266:301",
+      "span": "262:297",
       "tags": [],
       "unsafe_calls": []
     },
@@ -28733,22 +28701,6 @@
         "as_vanilla": 6,
         "in_any": 0
       },
-      "OwnedResource": {
-        "occurence": 6,
-        "requires": 6,
-        "checked": 0,
-        "delegated": 0,
-        "as_vanilla": 6,
-        "in_any": 0
-      },
-      "ValidBaseAddr": {
-        "occurence": 6,
-        "requires": 6,
-        "checked": 0,
-        "delegated": 0,
-        "as_vanilla": 6,
-        "in_any": 0
-      },
       "Bounded": {
         "occurence": 5,
         "requires": 5,
@@ -28758,6 +28710,22 @@
         "in_any": 0
       },
       "Forgotten": {
+        "occurence": 5,
+        "requires": 5,
+        "checked": 0,
+        "delegated": 0,
+        "as_vanilla": 5,
+        "in_any": 0
+      },
+      "OwnedResource": {
+        "occurence": 5,
+        "requires": 5,
+        "checked": 0,
+        "delegated": 0,
+        "as_vanilla": 5,
+        "in_any": 0
+      },
+      "ValidBaseAddr": {
         "occurence": 5,
         "requires": 5,
         "checked": 0,
@@ -28887,20 +28855,20 @@
       }
     },
     "coverage": {
-      "occurence": 151,
-      "requires": 151,
+      "occurence": 149,
+      "requires": 149,
       "checked": 0,
       "delegated": 0,
-      "as_vanilla": 151,
+      "as_vanilla": 149,
       "in_any": 0
     },
     "unused": [],
     "funcs": {
       "total": {
         "funcs": 2762,
-        "funcs_with_tags_declared": 95,
+        "funcs_with_tags_declared": 94,
         "funcs_with_tags_discharged": 0,
-        "declared_tags": 151,
+        "declared_tags": 149,
         "discharged_tags": 0,
         "unsafe_calls": 379
       },
@@ -28925,9 +28893,9 @@
       "unsafe": {
         "total": {
           "funcs": 232,
-          "funcs_with_tags_declared": 93,
+          "funcs_with_tags_declared": 92,
           "funcs_with_tags_discharged": 0,
-          "declared_tags": 149,
+          "declared_tags": 147,
           "discharged_tags": 0,
           "unsafe_calls": 148
         },
