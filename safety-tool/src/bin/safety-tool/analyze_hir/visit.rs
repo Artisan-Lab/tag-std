@@ -143,7 +143,7 @@ impl<'tcx> Calls<'tcx> {
             //
             // res is Err, and  must resolve to get def_id, thus need to call
             // https://doc.rust-lang.org/nightly/nightly-rustc/rustc_middle/ty/struct.TypeckResults.html#method.type_dependent_def_id
-            ExprKind::MethodCall(..) => {
+            ExprKind::Call(..) | ExprKind::MethodCall(..) => {
                 if let Some(def_id) = self.tyck.type_dependent_def_id(hir_id) {
                     self.calls.push(Call { hir_id, def_id });
                 } else {
