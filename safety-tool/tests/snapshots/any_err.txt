@@ -1,7 +1,7 @@
 stdout=
 
 stderr=
-Got 6 tags.
+Got 8 tags.
 [1m[91merror[0m: [1mTags are not discharged: `SP1`, or `SP2`[0m
  [1m[94m-->[0m ./tests/snippets/any_err.rs:7:14
   [1m[94m|[0m

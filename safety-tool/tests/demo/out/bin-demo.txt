@@ -1,3 +1,5 @@
 main
+├── core::fmt::rt::<impl std::fmt::Arguments<'a>>::new_v1_formatted
+├── core::fmt::rt::<impl std::fmt::Arguments<'a>>::new_v1_formatted
 └── demo::MyStruct::get
 

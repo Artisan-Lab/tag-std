@@ -7,6 +7,7 @@
 
 <ChainPinInit<I, F, T, E> as PinInit<T, E>>::__pinned_init { Allocated, Pinned }
 ├── PinInit::__pinned_init
+├── core::pin::Pin::<Ptr>::new_unchecked
 └── core::ptr::drop_in_place
 
 <T as Init<T>>::__init
@@ -38,8 +39,10 @@
 __internal::DropGuard::<T>::new { ValidPtr }
 
 __internal::StackInit::<T>::init
+├── core::pin::Pin::<Ptr>::into_inner_unchecked
 ├── core::mem::MaybeUninit::<T>::assume_init_drop
 ├── PinInit::__pinned_init
+├── core::pin::Pin::<Ptr>::new_unchecked
 └── core::mem::MaybeUninit::<T>::assume_init_mut
 
 cast_init { ValidCast }

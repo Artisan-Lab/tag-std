@@ -109,6 +109,12 @@ fn unsafe_calls_panic_discharge_all_tagged_less() {
 }
 
 #[test]
+fn fault_event_err() {
+    let [file, outfile] = &testcase("fault_event_err");
+    should_panic(file, outfile, Default::default());
+}
+
+#[test]
 fn unsafe_calls_panic_discharge_all_tagged_more() {
     // FIXME: distinguish discharge and definition tags.
     // cc https://github.com/os-checker/tag-std/issues/17

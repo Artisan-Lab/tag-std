@@ -1,0 +1,15 @@
+stdout=
+
+stderr=
+Got 8 tags.
+[1m[91merror[0m: [1mTags are not discharged: `ValidBaseAddr`, `OwnedResource`[0m
+ [1m[94m-->[0m ./tests/snippets/fault_event_err.rs:8:14
+  [1m[94m|[0m
+[1m[94m8 |[0m     unsafe { FaultEventRegisters::new(base_register_vaddr) }
+  [1m[94m|[0m              [1m[91m^^^^^^^^^^^^^^^^^^^^^^^^[0m [1m[91mFor this unsafe call.[0m
+  [1m[94m|[0m
+  [1m[94m= info[0m: `ValidBaseAddr(addr, hardware)`: `{addr}` must be a valid base address of {hardware}.
+  [1m[94m= info[0m: `OwnedResource(value, owner)`: `{value}` must be exclusively owned by {owner}.
+
+[1m[31mTotal counts of diagnostics from safety-tool: {MissingDischarge: 1}[0m
+

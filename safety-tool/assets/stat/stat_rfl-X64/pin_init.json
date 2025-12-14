@@ -1623,6 +1623,14 @@
           "unsafe_calls": []
         },
         {
+          "name": "core::pin::Pin::<Ptr>::new_unchecked",
+          "safe": false,
+          "path": "rust/pin-init/src/lib.rs",
+          "span": "1116",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
           "name": "core::ptr::drop_in_place",
           "safe": false,
           "path": "rust/pin-init/src/lib.rs",
@@ -1862,6 +1870,14 @@
       "tags": [],
       "unsafe_calls": [
         {
+          "name": "core::pin::Pin::<Ptr>::into_inner_unchecked",
+          "safe": false,
+          "path": "rust/pin-init/src/__internal.rs",
+          "span": "173",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
           "name": "core::mem::MaybeUninit::<T>::assume_init_drop",
           "safe": false,
           "path": "rust/pin-init/src/__internal.rs",
@@ -1874,6 +1890,14 @@
           "safe": false,
           "path": "rust/pin-init/src/__internal.rs",
           "span": "182",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "core::pin::Pin::<Ptr>::new_unchecked",
+          "safe": false,
+          "path": "rust/pin-init/src/__internal.rs",
+          "span": "186",
           "tags": [],
           "unsafe_calls": []
         },
@@ -2253,7 +2277,7 @@
         "funcs_with_tags_discharged": 0,
         "declared_tags": 8,
         "discharged_tags": 0,
-        "unsafe_calls": 32
+        "unsafe_calls": 35
       },
       "safe": {
         "total": {
@@ -2262,14 +2286,14 @@
           "funcs_with_tags_discharged": 0,
           "declared_tags": 0,
           "discharged_tags": 0,
-          "unsafe_calls": 19
+          "unsafe_calls": 21
         },
         "unsafe_calls": {
           "0": 4,
           "1": 6,
           "2": 1,
-          "3": 1,
-          "4": 2
+          "4": 2,
+          "5": 1
         }
       },
       "unsafe": {
@@ -2279,12 +2303,13 @@
           "funcs_with_tags_discharged": 0,
           "declared_tags": 8,
           "discharged_tags": 0,
-          "unsafe_calls": 13
+          "unsafe_calls": 14
         },
         "unsafe_calls": {
           "0": 8,
           "1": 5,
-          "2": 4
+          "2": 3,
+          "3": 1
         }
       }
     }

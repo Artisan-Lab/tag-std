@@ -477,9 +477,10 @@
         "item": {
           "tag": {
             "args": [
-              "val"
+              "value",
+              "owner"
             ],
-            "desc": "{val} shoule be exclusively owned.",
+            "desc": "`{value}` must be exclusively owned by {owner}.",
             "expr": null,
             "types": [
               "precond"
@@ -490,15 +491,14 @@
         },
         "usage": {
           "types": {
-            "Vanilla": 6
+            "Vanilla": 5
           },
           "predicates": {
-            "Requires": 6
+            "Requires": 5
           },
           "functions": [
             "arch::device::serial::SerialPort::new",
             "arch::iommu::fault::FaultEventRegisters::new",
-            "arch::iommu::fault::init",
             "arch::iommu::registers::invalidation::InvalidationRegisters::new",
             "io::io_mem::allocator::IoMemAllocator::recycle",
             "io::io_port::allocator::IoPortAllocator::recycle"
@@ -826,7 +826,7 @@
               "addr",
               "hardware"
             ],
-            "desc": "{addr} should be a valid base address of {hardware}.",
+            "desc": "`{addr}` must be a valid base address of {hardware}.",
             "expr": null,
             "types": [
               "precond"
@@ -837,14 +837,13 @@
         },
         "usage": {
           "types": {
-            "Vanilla": 6
+            "Vanilla": 5
           },
           "predicates": {
-            "Requires": 6
+            "Requires": 5
           },
           "functions": [
             "arch::iommu::fault::FaultEventRegisters::new",
-            "arch::iommu::fault::init",
             "arch::iommu::registers::invalidation::InvalidationRegisters::new",
             "arch::kernel::irq::ioapic::IoApic::new",
             "arch::kernel::irq::ioapic::IoApicAccess::new",
@@ -1311,7 +1310,16 @@
       "path": "ostd/src/sync/rcu/non_null/mod.rs",
       "span": "122:127",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "alloc::boxed::Box::<T>::from_raw",
+          "safe": false,
+          "path": "ostd/src/sync/rcu/non_null/mod.rs",
+          "span": "126",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "<alloc::boxed::Box<T> as sync::rcu::non_null::NonNullPtr>::into_raw",
@@ -1319,7 +1327,16 @@
       "path": "ostd/src/sync/rcu/non_null/mod.rs",
       "span": "115:120",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "core::ptr::NonNull::<T>::new_unchecked",
+          "safe": false,
+          "path": "ostd/src/sync/rcu/non_null/mod.rs",
+          "span": "119",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "<alloc::boxed::Box<T> as sync::rcu::non_null::NonNullPtr>::raw_as_ref",
@@ -1335,7 +1352,16 @@
       "path": "ostd/src/sync/rcu/non_null/mod.rs",
       "span": "136:139",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "core::ptr::NonNull::<T>::new_unchecked",
+          "safe": false,
+          "path": "ostd/src/sync/rcu/non_null/mod.rs",
+          "span": "138",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "<alloc::sync::Arc<T> as mm::io::VmIo>::read",
@@ -1423,7 +1449,16 @@
       "path": "ostd/src/sync/rcu/non_null/mod.rs",
       "span": "184:189",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "alloc::sync::Arc::<T>::from_raw",
+          "safe": false,
+          "path": "ostd/src/sync/rcu/non_null/mod.rs",
+          "span": "188",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "<alloc::sync::Arc<T> as sync::rcu::non_null::NonNullPtr>::into_raw",
@@ -1431,7 +1466,16 @@
       "path": "ostd/src/sync/rcu/non_null/mod.rs",
       "span": "177:182",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "core::ptr::NonNull::<T>::new_unchecked",
+          "safe": false,
+          "path": "ostd/src/sync/rcu/non_null/mod.rs",
+          "span": "181",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "<alloc::sync::Arc<T> as sync::rcu::non_null::NonNullPtr>::raw_as_ref",
@@ -1439,7 +1483,16 @@
       "path": "ostd/src/sync/rcu/non_null/mod.rs",
       "span": "191:199",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "alloc::sync::Arc::<T>::from_raw",
+          "safe": false,
+          "path": "ostd/src/sync/rcu/non_null/mod.rs",
+          "span": "195",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "<alloc::sync::Arc<T> as sync::rcu::non_null::NonNullPtr>::ref_as_raw",
@@ -1455,7 +1508,16 @@
       "path": "ostd/src/sync/rcu/non_null/mod.rs",
       "span": "240:245",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "alloc::sync::Weak::<T>::from_raw",
+          "safe": false,
+          "path": "ostd/src/sync/rcu/non_null/mod.rs",
+          "span": "244",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "<alloc::sync::Weak<T> as sync::rcu::non_null::NonNullPtr>::into_raw",
@@ -1463,7 +1525,16 @@
       "path": "ostd/src/sync/rcu/non_null/mod.rs",
       "span": "233:238",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "core::ptr::NonNull::<T>::new_unchecked",
+          "safe": false,
+          "path": "ostd/src/sync/rcu/non_null/mod.rs",
+          "span": "237",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "<alloc::sync::Weak<T> as sync::rcu::non_null::NonNullPtr>::raw_as_ref",
@@ -1471,7 +1542,16 @@
       "path": "ostd/src/sync/rcu/non_null/mod.rs",
       "span": "247:255",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "alloc::sync::Weak::<T>::from_raw",
+          "safe": false,
+          "path": "ostd/src/sync/rcu/non_null/mod.rs",
+          "span": "251",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "<alloc::sync::Weak<T> as sync::rcu::non_null::NonNullPtr>::ref_as_raw",
@@ -4961,7 +5041,16 @@
       "path": "ostd/src/arch/x86/kernel/acpi/mod.rs",
       "span": "22:37",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "acpi::PhysicalMapping::<H, T>::new",
+          "safe": false,
+          "path": "ostd/src/arch/x86/kernel/acpi/mod.rs",
+          "span": "35",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "<arch::kernel::acpi::AcpiMemoryHandler as acpi::AcpiHandler>::unmap_physical_region",
@@ -5601,7 +5690,24 @@
       "path": "ostd/src/arch/x86/mm/mod.rs",
       "span": "285:296",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "core::fmt::rt::UnsafeArg::new",
+          "safe": false,
+          "path": "ostd/src/arch/x86/mm/mod.rs",
+          "span": "287",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "core::fmt::rt::UnsafeArg::new",
+          "safe": false,
+          "path": "ostd/src/arch/x86/mm/mod.rs",
+          "span": "288",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "<arch::mm::PageTableEntry as mm::page_table::PageTableEntryTrait>::is_last",
@@ -7649,7 +7755,16 @@
       "path": "ostd/src/cpu/local/dyn_cpu_local.rs",
       "span": "227:237",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "core::mem::ManuallyDrop::<T>::drop",
+          "safe": false,
+          "path": "ostd/src/cpu/local/dyn_cpu_local.rs",
+          "span": "232",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "<cpu::local::dyn_cpu_local::DynCpuLocalMeta as core::clone::Clone>::clone",
@@ -8347,7 +8462,16 @@
       "path": "ostd/src/mm/frame/mod.rs",
       "span": "91:93",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "core::fmt::rt::UnsafeArg::new",
+          "safe": false,
+          "path": "/home/runner/.rustup/toolchains/nightly-2025-02-01-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/macros/mod.rs",
+          "span": "713",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "<mm::frame::Frame<M> as core::ops::Drop>::drop",
@@ -8372,7 +8496,16 @@
       "path": "ostd/src/mm/frame/untyped.rs",
       "span": "83:87",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "mm::io::VmReader::<'a, mm::io::Infallible>::from_kernel_space",
+          "safe": false,
+          "path": "ostd/src/mm/frame/untyped.rs",
+          "span": "86",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "<mm::frame::Frame<UM> as mm::frame::untyped::UntypedMem>::writer",
@@ -8380,7 +8513,16 @@
       "path": "ostd/src/mm/frame/untyped.rs",
       "span": "89:93",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "mm::io::VmWriter::<'a, mm::io::Infallible>::from_kernel_space",
+          "safe": false,
+          "path": "ostd/src/mm/frame/untyped.rs",
+          "span": "92",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "<mm::frame::allocator::EarlyAllocatedFrameMeta as core::fmt::Debug>::fmt",
@@ -8559,6 +8701,22 @@
       "tags": [],
       "unsafe_calls": [
         {
+          "name": "mm::frame::Frame::<M>::from_raw",
+          "safe": false,
+          "path": "ostd/src/mm/frame/segment.rs",
+          "span": "289",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "mm::frame::Frame::<M>::from_raw",
+          "safe": false,
+          "path": "ostd/src/mm/frame/segment.rs",
+          "span": "299",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
           "name": "core::intrinsics::transmute",
           "safe": false,
           "path": "ostd/src/mm/frame/segment.rs",
@@ -8601,6 +8759,22 @@
       "tags": [],
       "unsafe_calls": [
         {
+          "name": "mm::frame::Frame::<M>::from_raw",
+          "safe": false,
+          "path": "ostd/src/mm/frame/segment.rs",
+          "span": "252",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "mm::frame::Frame::<M>::from_raw",
+          "safe": false,
+          "path": "ostd/src/mm/frame/segment.rs",
+          "span": "262",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
           "name": "core::intrinsics::transmute",
           "safe": false,
           "path": "ostd/src/mm/frame/segment.rs",
@@ -8616,7 +8790,16 @@
       "path": "ostd/src/mm/frame/segment.rs",
       "span": "35:37",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "core::fmt::rt::UnsafeArg::new",
+          "safe": false,
+          "path": "/home/runner/.rustup/toolchains/nightly-2025-02-01-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/macros/mod.rs",
+          "span": "713",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "<mm::frame::segment::Segment<M> as core::iter::Iterator>::next",
@@ -8624,7 +8807,16 @@
       "path": "ostd/src/mm/frame/segment.rs",
       "span": "221:233",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "mm::frame::Frame::<M>::from_raw",
+          "safe": false,
+          "path": "ostd/src/mm/frame/segment.rs",
+          "span": "225",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "<mm::frame::segment::Segment<M> as core::ops::Drop>::drop",
@@ -8632,7 +8824,16 @@
       "path": "ostd/src/mm/frame/segment.rs",
       "span": "50:56",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "mm::frame::Frame::<M>::from_raw",
+          "safe": false,
+          "path": "ostd/src/mm/frame/segment.rs",
+          "span": "54",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "<mm::frame::segment::Segment<UM> as mm::frame::untyped::UntypedMem>::reader",
@@ -8640,7 +8841,16 @@
       "path": "ostd/src/mm/frame/untyped.rs",
       "span": "83:87",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "mm::io::VmReader::<'a, mm::io::Infallible>::from_kernel_space",
+          "safe": false,
+          "path": "ostd/src/mm/frame/untyped.rs",
+          "span": "86",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "<mm::frame::segment::Segment<UM> as mm::frame::untyped::UntypedMem>::writer",
@@ -8648,7 +8858,16 @@
       "path": "ostd/src/mm/frame/untyped.rs",
       "span": "89:93",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "mm::io::VmWriter::<'a, mm::io::Infallible>::from_kernel_space",
+          "safe": false,
+          "path": "ostd/src/mm/frame/untyped.rs",
+          "span": "92",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "<mm::frame::test::MockFrameMeta as core::default::Default>::default",
@@ -8713,7 +8932,16 @@
       "path": "ostd/src/mm/frame/unique.rs",
       "span": "30:32",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "core::fmt::rt::UnsafeArg::new",
+          "safe": false,
+          "path": "/home/runner/.rustup/toolchains/nightly-2025-02-01-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/macros/mod.rs",
+          "span": "713",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "<mm::frame::unique::UniqueFrame<M> as core::ops::Drop>::drop",
@@ -8738,7 +8966,24 @@
       "path": "ostd/src/mm/heap/mod.rs",
       "span": "101:125",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "core::fmt::rt::UnsafeArg::new",
+          "safe": false,
+          "path": "/home/runner/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/log-0.4.27/src/macros.rs",
+          "span": "140",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "core::fmt::rt::UnsafeArg::new",
+          "safe": false,
+          "path": "/home/runner/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/log-0.4.27/src/macros.rs",
+          "span": "140",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "<mm::heap::AllocDispatch as core::alloc::GlobalAlloc>::dealloc",
@@ -8746,7 +8991,40 @@
       "path": "ostd/src/mm/heap/mod.rs",
       "span": "127:150",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "core::fmt::rt::UnsafeArg::new",
+          "safe": false,
+          "path": "/home/runner/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/log-0.4.27/src/macros.rs",
+          "span": "140",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "mm::heap::slot::HeapSlot::new",
+          "safe": false,
+          "path": "ostd/src/mm/heap/mod.rs",
+          "span": "139",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "core::ptr::NonNull::<T>::new_unchecked",
+          "safe": false,
+          "path": "ostd/src/mm/heap/mod.rs",
+          "span": "139",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "core::fmt::rt::UnsafeArg::new",
+          "safe": false,
+          "path": "/home/runner/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/log-0.4.27/src/macros.rs",
+          "span": "140",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "<mm::heap::slab::SlabMeta<SLOT_SIZE> as core::fmt::Debug>::fmt",
@@ -8851,7 +9129,16 @@
       "path": "ostd/src/mm/io.rs",
       "span": "663:670",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "mm::io::VmReader::<'a, mm::io::Infallible>::from_kernel_space",
+          "safe": false,
+          "path": "ostd/src/mm/io.rs",
+          "span": "669",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "<mm::io::VmReader<'a, mm::io::Infallible> as mm::io::FallibleVmRead<mm::io::Fallible>>::read_fallible",
@@ -8910,7 +9197,16 @@
       "path": "ostd/src/mm/io.rs",
       "span": "934:941",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "mm::io::VmWriter::<'a, mm::io::Infallible>::from_kernel_space",
+          "safe": false,
+          "path": "ostd/src/mm/io.rs",
+          "span": "940",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "<mm::io::VmWriter<'a, mm::io::Infallible> as mm::io::FallibleVmWrite<mm::io::Fallible>>::write_fallible",
@@ -8958,7 +9254,16 @@
       "path": "ostd/src/mm/kspace/mod.rs",
       "span": "144:153",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "mm::frame::Frame::<M>::from_raw",
+          "safe": false,
+          "path": "ostd/src/mm/kspace/mod.rs",
+          "span": "148",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "<mm::kspace::KernelPtConfig as mm::page_table::PageTableConfig>::item_into_raw",
@@ -9672,7 +9977,24 @@
       "path": "ostd/src/mm/page_table/node/mod.rs",
       "span": "311:345",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "mm::frame::Frame::<M>::from_raw",
+          "safe": false,
+          "path": "ostd/src/mm/page_table/node/mod.rs",
+          "span": "337",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "mm::page_table::PageTableConfig::item_from_raw",
+          "safe": false,
+          "path": "ostd/src/mm/page_table/node/mod.rs",
+          "span": "341",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "<mm::page_table::node::child::Child<C> as core::fmt::Debug>::fmt",
@@ -9840,7 +10162,16 @@
       "path": "ostd/src/mm/vm_space.rs",
       "span": "441:446",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "mm::frame::Frame::<M>::from_raw",
+          "safe": false,
+          "path": "ostd/src/mm/vm_space.rs",
+          "span": "444",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "<mm::vm_space::UserPtConfig as mm::page_table::PageTableConfig>::item_into_raw",
@@ -10032,7 +10363,16 @@
       "path": "ostd/src/sync/rcu/mod.rs",
       "span": "478:485",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "core::mem::ManuallyDrop::<T>::take",
+          "safe": false,
+          "path": "ostd/src/sync/rcu/mod.rs",
+          "span": "480",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "<sync::rcu::RcuInner<P> as core::ops::Drop>::drop",
@@ -10040,7 +10380,16 @@
       "path": "ostd/src/sync/rcu/mod.rs",
       "span": "189:199",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "sync::rcu::non_null::NonNullPtr::from_raw",
+          "safe": false,
+          "path": "ostd/src/sync/rcu/mod.rs",
+          "span": "194",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "<sync::rcu::non_null::ArcRef<'_, T> as core::ops::Deref>::deref",
@@ -10861,7 +11210,16 @@
       "path": "ostd/src/arch/x86/boot/multiboot2/mod.rs",
       "span": "147:164",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "multiboot2::BootInformation::<'a>::load",
+          "safe": false,
+          "path": "ostd/src/arch/x86/boot/multiboot2/mod.rs",
+          "span": "150",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "arch::boot::multiboot2::make_str_vaddr_static",
@@ -11118,7 +11476,16 @@
           "doc": null
         }
       ],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "core::ffi::CStr::from_ptr",
+          "safe": false,
+          "path": "ostd/src/arch/x86/boot/multiboot/mod.rs",
+          "span": "41",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "arch::boot::multiboot::parse_bootloader_name",
@@ -12477,7 +12844,16 @@
       "path": "ostd/src/arch/x86/cpu/context/mod.rs",
       "span": "616:648",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "x86_64::registers::control::x86_64::<impl x86_64::registers::control::Cr0>::write",
+          "safe": false,
+          "path": "ostd/src/arch/x86/cpu/context/mod.rs",
+          "span": "643",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "arch::cpu::context::tdx::VirtualizationExceptionHandler::handle",
@@ -13188,7 +13564,64 @@
           "doc": null
         }
       ],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "io::io_port::IoPort::<T, A>::new",
+          "safe": false,
+          "path": "ostd/src/arch/x86/device/serial.rs",
+          "span": "44",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "io::io_port::IoPort::<T, A>::new",
+          "safe": false,
+          "path": "ostd/src/arch/x86/device/serial.rs",
+          "span": "45",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "io::io_port::IoPort::<T, A>::new",
+          "safe": false,
+          "path": "ostd/src/arch/x86/device/serial.rs",
+          "span": "46",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "io::io_port::IoPort::<T, A>::new",
+          "safe": false,
+          "path": "ostd/src/arch/x86/device/serial.rs",
+          "span": "47",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "io::io_port::IoPort::<T, A>::new",
+          "safe": false,
+          "path": "ostd/src/arch/x86/device/serial.rs",
+          "span": "48",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "io::io_port::IoPort::<T, A>::new",
+          "safe": false,
+          "path": "ostd/src/arch/x86/device/serial.rs",
+          "span": "49",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "io::io_port::IoPort::<T, A>::new",
+          "safe": false,
+          "path": "ostd/src/arch/x86/device/serial.rs",
+          "span": "50",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "arch::device::serial::SerialPort::recv",
@@ -13212,7 +13645,32 @@
       "path": "ostd/src/arch/x86/mod.rs",
       "span": "174:216",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "x86_64::registers::control::x86_64::<impl x86_64::registers::control::Cr4>::write",
+          "safe": false,
+          "path": "ostd/src/arch/x86/mod.rs",
+          "span": "191",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "x86_64::registers::xcontrol::x86_64::<impl x86_64::registers::xcontrol::XCr0>::write",
+          "safe": false,
+          "path": "ostd/src/arch/x86/mod.rs",
+          "span": "207",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "x86_64::registers::model_specific::x86_64::<impl x86_64::registers::control::Efer>::update",
+          "safe": false,
+          "path": "ostd/src/arch/x86/mod.rs",
+          "span": "212",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "arch::ex_table::ExTable::find_recovery_inst_addr",
@@ -13366,7 +13824,16 @@
       "path": "ostd/src/arch/x86/io.rs",
       "span": "14:58",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "io::io_mem::allocator::IoMemAllocatorBuilder::new",
+          "safe": false,
+          "path": "ostd/src/arch/x86/io.rs",
+          "span": "57",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "arch::iommu::dma_remapping::context_table::ContextEntry::address_width",
@@ -13448,6 +13915,14 @@
       ],
       "unsafe_calls": [
         {
+          "name": "core::fmt::rt::UnsafeArg::new",
+          "safe": false,
+          "path": "/home/runner/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/log-0.4.27/src/macros.rs",
+          "span": "140",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
           "name": "mm::page_table::cursor::CursorMut::<'rcu, C>::map",
           "safe": false,
           "path": "ostd/src/arch/x86/iommu/dma_remapping/context_table.rs",
@@ -13480,6 +13955,14 @@
       "span": "328:346",
       "tags": [],
       "unsafe_calls": [
+        {
+          "name": "core::fmt::rt::UnsafeArg::new",
+          "safe": false,
+          "path": "/home/runner/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/log-0.4.27/src/macros.rs",
+          "span": "140",
+          "tags": [],
+          "unsafe_calls": []
+        },
         {
           "name": "mm::page_table::cursor::CursorMut::<'rcu, C>::take_next",
           "safe": false,
@@ -13813,7 +14296,7 @@
               },
               "args": [
                 "base_register_vaddr",
-                "IOMMU"
+                "hardware = \"IOMMU\""
               ]
             }
           },
@@ -13828,7 +14311,8 @@
                 "name": "OwnedResource"
               },
               "args": [
-                "The IOMMU fault event registers"
+                "base_register_vaddr",
+                "owner = FaultEventRegisters"
               ]
             }
           },
@@ -13837,10 +14321,26 @@
       ],
       "unsafe_calls": [
         {
+          "name": "volatile::VolatileRef::<'a, T>::new_read_only",
+          "safe": false,
+          "path": "ostd/src/arch/x86/iommu/fault.rs",
+          "span": "54",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
           "name": "core::ptr::NonNull::<T>::add",
           "safe": false,
           "path": "ostd/src/arch/x86/iommu/fault.rs",
           "span": "54",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "volatile::VolatileRef::<'a, T>::new",
+          "safe": false,
+          "path": "ostd/src/arch/x86/iommu/fault.rs",
+          "span": "56",
           "tags": [],
           "unsafe_calls": []
         },
@@ -13853,10 +14353,26 @@
           "unsafe_calls": []
         },
         {
+          "name": "volatile::VolatileRef::<'a, T>::new",
+          "safe": false,
+          "path": "ostd/src/arch/x86/iommu/fault.rs",
+          "span": "58",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
           "name": "core::ptr::NonNull::<T>::add",
           "safe": false,
           "path": "ostd/src/arch/x86/iommu/fault.rs",
           "span": "58",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "volatile::VolatileRef::<'a, T>::new",
+          "safe": false,
+          "path": "ostd/src/arch/x86/iommu/fault.rs",
+          "span": "60",
           "tags": [],
           "unsafe_calls": []
         },
@@ -13869,7 +14385,7 @@
           "unsafe_calls": []
         },
         {
-          "name": "core::ptr::NonNull::<T>::add",
+          "name": "volatile::VolatileRef::<'a, T>::new",
           "safe": false,
           "path": "ostd/src/arch/x86/iommu/fault.rs",
           "span": "62",
@@ -13880,7 +14396,31 @@
           "name": "core::ptr::NonNull::<T>::add",
           "safe": false,
           "path": "ostd/src/arch/x86/iommu/fault.rs",
+          "span": "62",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "volatile::VolatileRef::<'a, T>::new",
+          "safe": false,
+          "path": "ostd/src/arch/x86/iommu/fault.rs",
           "span": "64",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "core::ptr::NonNull::<T>::add",
+          "safe": false,
+          "path": "ostd/src/arch/x86/iommu/fault.rs",
+          "span": "64",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "volatile::VolatileRef::<'a, T>::new",
+          "safe": false,
+          "path": "ostd/src/arch/x86/iommu/fault.rs",
+          "span": "80",
           "tags": [],
           "unsafe_calls": []
         },
@@ -14154,57 +14694,52 @@
       "name": "arch::iommu::fault::init",
       "safe": false,
       "path": "ostd/src/arch/x86/iommu/fault.rs",
-      "span": "244:248",
-      "tags": [
+      "span": "240:244",
+      "tags": [],
+      "unsafe_calls": [
         {
-          "predicate": "Requires",
-          "tag": {
-            "Vanilla": {
-              "tag": {
-                "typ": null,
-                "name": "ValidBaseAddr"
-              },
-              "args": [
-                "base_register_vaddr",
-                "IOMMU"
-              ]
-            }
-          },
-          "doc": null
-        },
-        {
-          "predicate": "Requires",
-          "tag": {
-            "Vanilla": {
-              "tag": {
-                "typ": null,
-                "name": "OwnedResource"
-              },
-              "args": [
-                "The IOMMU fault event registers"
-              ]
-            }
-          },
-          "doc": null
+          "name": "arch::iommu::fault::FaultEventRegisters::new",
+          "safe": false,
+          "path": "ostd/src/arch/x86/iommu/fault.rs",
+          "span": "243",
+          "tags": [],
+          "unsafe_calls": []
         }
-      ],
-      "unsafe_calls": []
+      ]
     },
     {
       "name": "arch::iommu::fault::iommu_fault_handler",
       "safe": true,
       "path": "ostd/src/arch/x86/iommu/fault.rs",
-      "span": "252:264",
+      "span": "248:260",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "core::fmt::rt::UnsafeArg::new",
+          "safe": false,
+          "path": "/home/runner/.rustup/toolchains/nightly-2025-02-01-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/panic.rs",
+          "span": "107",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "arch::iommu::fault::primary_fault_handler",
       "safe": true,
       "path": "ostd/src/arch/x86/iommu/fault.rs",
-      "span": "266:301",
+      "span": "262:297",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "core::fmt::rt::UnsafeArg::new",
+          "safe": false,
+          "path": "/home/runner/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/log-0.4.27/src/macros.rs",
+          "span": "140",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "arch::iommu::init",
@@ -14606,10 +15141,42 @@
       "tags": [],
       "unsafe_calls": [
         {
+          "name": "core::fmt::rt::UnsafeArg::new",
+          "safe": false,
+          "path": "/home/runner/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/log-0.4.27/src/macros.rs",
+          "span": "140",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "core::fmt::rt::UnsafeArg::new",
+          "safe": false,
+          "path": "/home/runner/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/log-0.4.27/src/macros.rs",
+          "span": "140",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
           "name": "arch::iommu::fault::init",
           "safe": false,
           "path": "ostd/src/arch/x86/iommu/registers/mod.rs",
           "span": "287",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "volatile::VolatileRef::<'a, T>::new_read_only",
+          "safe": false,
+          "path": "ostd/src/arch/x86/iommu/registers/mod.rs",
+          "span": "290",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "volatile::VolatileRef::<'a, T>::new_read_only",
+          "safe": false,
+          "path": "ostd/src/arch/x86/iommu/registers/mod.rs",
+          "span": "291",
           "tags": [],
           "unsafe_calls": []
         },
@@ -14622,10 +15189,26 @@
           "unsafe_calls": []
         },
         {
+          "name": "volatile::VolatileRef::<'a, T>::new_read_only",
+          "safe": false,
+          "path": "ostd/src/arch/x86/iommu/registers/mod.rs",
+          "span": "292",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
           "name": "core::ptr::NonNull::<T>::add",
           "safe": false,
           "path": "ostd/src/arch/x86/iommu/registers/mod.rs",
           "span": "292",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "volatile::VolatileRef::<'a, T>::new_restricted",
+          "safe": false,
+          "path": "ostd/src/arch/x86/iommu/registers/mod.rs",
+          "span": "293",
           "tags": [],
           "unsafe_calls": []
         },
@@ -14638,10 +15221,26 @@
           "unsafe_calls": []
         },
         {
+          "name": "volatile::VolatileRef::<'a, T>::new_read_only",
+          "safe": false,
+          "path": "ostd/src/arch/x86/iommu/registers/mod.rs",
+          "span": "297",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
           "name": "core::ptr::NonNull::<T>::add",
           "safe": false,
           "path": "ostd/src/arch/x86/iommu/registers/mod.rs",
           "span": "297",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "volatile::VolatileRef::<'a, T>::new",
+          "safe": false,
+          "path": "ostd/src/arch/x86/iommu/registers/mod.rs",
+          "span": "298",
           "tags": [],
           "unsafe_calls": []
         },
@@ -14654,7 +15253,7 @@
           "unsafe_calls": []
         },
         {
-          "name": "core::ptr::NonNull::<T>::add",
+          "name": "volatile::VolatileRef::<'a, T>::new",
           "safe": false,
           "path": "ostd/src/arch/x86/iommu/registers/mod.rs",
           "span": "299",
@@ -14665,7 +15264,55 @@
           "name": "core::ptr::NonNull::<T>::add",
           "safe": false,
           "path": "ostd/src/arch/x86/iommu/registers/mod.rs",
+          "span": "299",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "volatile::VolatileRef::<'a, T>::new",
+          "safe": false,
+          "path": "ostd/src/arch/x86/iommu/registers/mod.rs",
           "span": "301",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "core::ptr::NonNull::<T>::add",
+          "safe": false,
+          "path": "ostd/src/arch/x86/iommu/registers/mod.rs",
+          "span": "301",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "arch::iommu::registers::invalidation::InvalidationRegisters::new",
+          "safe": false,
+          "path": "ostd/src/arch/x86/iommu/registers/mod.rs",
+          "span": "303",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "core::fmt::rt::UnsafeArg::new",
+          "safe": false,
+          "path": "/home/runner/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/log-0.4.27/src/macros.rs",
+          "span": "140",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "core::fmt::rt::UnsafeArg::new",
+          "safe": false,
+          "path": "/home/runner/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/log-0.4.27/src/macros.rs",
+          "span": "140",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "core::fmt::rt::UnsafeArg::new",
+          "safe": false,
+          "path": "/home/runner/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/log-0.4.27/src/macros.rs",
+          "span": "140",
           "tags": [],
           "unsafe_calls": []
         }
@@ -15647,10 +16294,26 @@
       ],
       "unsafe_calls": [
         {
+          "name": "volatile::VolatileRef::<'a, T>::new_read_only",
+          "safe": false,
+          "path": "ostd/src/arch/x86/iommu/registers/invalidation.rs",
+          "span": "44",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
           "name": "core::ptr::NonNull::<T>::add",
           "safe": false,
           "path": "ostd/src/arch/x86/iommu/registers/invalidation.rs",
           "span": "44",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "volatile::VolatileRef::<'a, T>::new_read_only",
+          "safe": false,
+          "path": "ostd/src/arch/x86/iommu/registers/invalidation.rs",
+          "span": "55",
           "tags": [],
           "unsafe_calls": []
         },
@@ -15663,10 +16326,26 @@
           "unsafe_calls": []
         },
         {
+          "name": "volatile::VolatileRef::<'a, T>::new",
+          "safe": false,
+          "path": "ostd/src/arch/x86/iommu/registers/invalidation.rs",
+          "span": "56",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
           "name": "core::ptr::NonNull::<T>::add",
           "safe": false,
           "path": "ostd/src/arch/x86/iommu/registers/invalidation.rs",
           "span": "56",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "volatile::VolatileRef::<'a, T>::new",
+          "safe": false,
+          "path": "ostd/src/arch/x86/iommu/registers/invalidation.rs",
+          "span": "57",
           "tags": [],
           "unsafe_calls": []
         },
@@ -15679,10 +16358,26 @@
           "unsafe_calls": []
         },
         {
+          "name": "volatile::VolatileRef::<'a, T>::new",
+          "safe": false,
+          "path": "ostd/src/arch/x86/iommu/registers/invalidation.rs",
+          "span": "58",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
           "name": "core::ptr::NonNull::<T>::add",
           "safe": false,
           "path": "ostd/src/arch/x86/iommu/registers/invalidation.rs",
           "span": "58",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "volatile::VolatileRef::<'a, T>::new",
+          "safe": false,
+          "path": "ostd/src/arch/x86/iommu/registers/invalidation.rs",
+          "span": "59",
           "tags": [],
           "unsafe_calls": []
         },
@@ -15695,10 +16390,26 @@
           "unsafe_calls": []
         },
         {
+          "name": "volatile::VolatileRef::<'a, T>::new",
+          "safe": false,
+          "path": "ostd/src/arch/x86/iommu/registers/invalidation.rs",
+          "span": "60",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
           "name": "core::ptr::NonNull::<T>::add",
           "safe": false,
           "path": "ostd/src/arch/x86/iommu/registers/invalidation.rs",
           "span": "60",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "volatile::VolatileRef::<'a, T>::new",
+          "safe": false,
+          "path": "ostd/src/arch/x86/iommu/registers/invalidation.rs",
+          "span": "61",
           "tags": [],
           "unsafe_calls": []
         },
@@ -15711,10 +16422,26 @@
           "unsafe_calls": []
         },
         {
+          "name": "volatile::VolatileRef::<'a, T>::new",
+          "safe": false,
+          "path": "ostd/src/arch/x86/iommu/registers/invalidation.rs",
+          "span": "62",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
           "name": "core::ptr::NonNull::<T>::add",
           "safe": false,
           "path": "ostd/src/arch/x86/iommu/registers/invalidation.rs",
           "span": "62",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "volatile::VolatileRef::<'a, T>::new_read_only",
+          "safe": false,
+          "path": "ostd/src/arch/x86/iommu/registers/invalidation.rs",
+          "span": "63",
           "tags": [],
           "unsafe_calls": []
         },
@@ -15727,10 +16454,26 @@
           "unsafe_calls": []
         },
         {
+          "name": "volatile::VolatileRef::<'a, T>::new_restricted",
+          "safe": false,
+          "path": "ostd/src/arch/x86/iommu/registers/invalidation.rs",
+          "span": "65",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
           "name": "core::ptr::NonNull::<T>::add",
           "safe": false,
           "path": "ostd/src/arch/x86/iommu/registers/invalidation.rs",
           "span": "67",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "volatile::VolatileRef::<'a, T>::new",
+          "safe": false,
+          "path": "ostd/src/arch/x86/iommu/registers/invalidation.rs",
+          "span": "69",
           "tags": [],
           "unsafe_calls": []
         },
@@ -16063,7 +16806,48 @@
           "doc": null
         }
       ],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "acpi::AcpiTables::<H>::from_rsdp",
+          "safe": false,
+          "path": "ostd/src/arch/x86/kernel/acpi/mod.rs",
+          "span": "48",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "acpi::AcpiTables::<H>::from_rsdt",
+          "safe": false,
+          "path": "ostd/src/arch/x86/kernel/acpi/mod.rs",
+          "span": "51",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "acpi::AcpiTables::<H>::from_rsdt",
+          "safe": false,
+          "path": "ostd/src/arch/x86/kernel/acpi/mod.rs",
+          "span": "54",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "acpi::rsdp::Rsdp::search_for_on_bios",
+          "safe": false,
+          "path": "ostd/src/arch/x86/kernel/acpi/mod.rs",
+          "span": "58",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "acpi::AcpiTables::<H>::from_rsdp",
+          "safe": false,
+          "path": "ostd/src/arch/x86/kernel/acpi/mod.rs",
+          "span": "61",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "arch::kernel::acpi::remapping::Andd::from_bytes",
@@ -16463,7 +17247,16 @@
       "path": "ostd/src/arch/x86/kernel/irq/mod.rs",
       "span": "162:241",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "arch::kernel::irq::ioapic::IoApic::new",
+          "safe": false,
+          "path": "ostd/src/arch/x86/kernel/irq/mod.rs",
+          "span": "190",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "arch::kernel::irq::ioapic::IoApic::disable",
@@ -16512,7 +17305,24 @@
           "doc": null
         }
       ],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "arch::kernel::irq::ioapic::IoApicAccess::new",
+          "safe": false,
+          "path": "ostd/src/arch/x86/kernel/irq/ioapic.rs",
+          "span": "50",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "core::fmt::rt::UnsafeArg::new",
+          "safe": false,
+          "path": "/home/runner/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/log-0.4.27/src/macros.rs",
+          "span": "140",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "arch::kernel::irq::ioapic::IoApicAccess::id",
@@ -16555,10 +17365,34 @@
       ],
       "unsafe_calls": [
         {
+          "name": "core::fmt::rt::UnsafeArg::new",
+          "safe": false,
+          "path": "/home/runner/.rustup/toolchains/nightly-2025-02-01-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/macros/mod.rs",
+          "span": "64",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
           "name": "arch::tdx_guest::unprotect_gpa_range",
           "safe": false,
           "path": "ostd/src/arch/x86/kernel/irq/ioapic.rs",
           "span": "167",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "volatile::VolatileRef::<'a, T>::new_restricted",
+          "safe": false,
+          "path": "ostd/src/arch/x86/kernel/irq/ioapic.rs",
+          "span": "174",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "volatile::VolatileRef::<'a, T>::new",
+          "safe": false,
+          "path": "ostd/src/arch/x86/kernel/irq/ioapic.rs",
+          "span": "180",
           "tags": [],
           "unsafe_calls": []
         }
@@ -16876,7 +17710,16 @@
           "doc": null
         }
       ],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "x86_64::registers::control::x86_64::<impl x86_64::registers::control::Cr3>::write",
+          "safe": false,
+          "path": "ostd/src/arch/x86/mm/mod.rs",
+          "span": "137",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "arch::mm::current_page_table_paddr",
@@ -16916,7 +17759,24 @@
       "path": "ostd/src/arch/x86/mm/mod.rs",
       "span": "102:115",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "x86_64::registers::control::x86_64::<impl x86_64::registers::control::Cr4>::update",
+          "safe": false,
+          "path": "ostd/src/arch/x86/mm/mod.rs",
+          "span": "108",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "x86_64::registers::control::x86_64::<impl x86_64::registers::control::Cr4>::update",
+          "safe": false,
+          "path": "ostd/src/arch/x86/mm/mod.rs",
+          "span": "111",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "arch::pci::construct_remappable_msix_address",
@@ -17329,7 +18189,16 @@
       "path": "ostd/src/arch/x86/timer/apic.rs",
       "span": "142:175",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "core::fmt::rt::UnsafeArg::new",
+          "safe": false,
+          "path": "/home/runner/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/log-0.4.27/src/macros.rs",
+          "span": "140",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "arch::timer::apic::init_timer",
@@ -17413,10 +18282,26 @@
       ],
       "unsafe_calls": [
         {
+          "name": "volatile::VolatileRef::<'a, T>::new_read_only",
+          "safe": false,
+          "path": "ostd/src/arch/x86/timer/hpet.rs",
+          "span": "61",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
           "name": "core::ptr::NonNull::<T>::add",
           "safe": false,
           "path": "ostd/src/arch/x86/timer/hpet.rs",
           "span": "61",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "volatile::VolatileRef::<'a, T>::new",
+          "safe": false,
+          "path": "ostd/src/arch/x86/timer/hpet.rs",
+          "span": "62",
           "tags": [],
           "unsafe_calls": []
         },
@@ -17429,10 +18314,26 @@
           "unsafe_calls": []
         },
         {
+          "name": "volatile::VolatileRef::<'a, T>::new",
+          "safe": false,
+          "path": "ostd/src/arch/x86/timer/hpet.rs",
+          "span": "67",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
           "name": "core::ptr::NonNull::<T>::add",
           "safe": false,
           "path": "ostd/src/arch/x86/timer/hpet.rs",
           "span": "68:69",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "volatile::VolatileRef::<'a, T>::new",
+          "safe": false,
+          "path": "ostd/src/arch/x86/timer/hpet.rs",
+          "span": "86",
           "tags": [],
           "unsafe_calls": []
         },
@@ -17476,7 +18377,16 @@
       "path": "ostd/src/arch/x86/timer/hpet.rs",
       "span": "137:149",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "arch::timer::hpet::Hpet::new",
+          "safe": false,
+          "path": "ostd/src/arch/x86/timer/hpet.rs",
+          "span": "145",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "arch::timer::init_ap",
@@ -17542,6 +18452,14 @@
       ],
       "unsafe_calls": [
         {
+          "name": "x86_64::structures::gdt::Descriptor::tss_segment_unchecked",
+          "safe": false,
+          "path": "ostd/src/arch/x86/trap/gdt.rs",
+          "span": "41",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
           "name": "x86_64::instructions::tables::lgdt",
           "safe": false,
           "path": "ostd/src/arch/x86/trap/gdt.rs",
@@ -17554,6 +18472,14 @@
           "safe": false,
           "path": "ostd/src/arch/x86/trap/gdt.rs",
           "span": "78",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "x86_64::registers::model_specific::x86_64::<impl x86_64::registers::model_specific::Star>::write_raw",
+          "safe": false,
+          "path": "ostd/src/arch/x86/trap/gdt.rs",
+          "span": "88",
           "tags": [],
           "unsafe_calls": []
         }
@@ -17582,7 +18508,16 @@
       "path": "ostd/src/arch/x86/trap/mod.rs",
       "span": "225:249",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "core::fmt::rt::UnsafeArg::new",
+          "safe": false,
+          "path": "/home/runner/.rustup/toolchains/nightly-2025-02-01-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/panic.rs",
+          "span": "107",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "arch::trap::idt::init",
@@ -17727,6 +18662,22 @@
           "safe": false,
           "path": "ostd/src/arch/x86/trap/syscall.rs",
           "span": "63",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "x86_64::registers::model_specific::x86_64::<impl x86_64::registers::control::Efer>::update",
+          "safe": false,
+          "path": "ostd/src/arch/x86/trap/syscall.rs",
+          "span": "67",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "x86_64::registers::control::x86_64::<impl x86_64::registers::control::Cr4>::update",
+          "safe": false,
+          "path": "ostd/src/arch/x86/trap/syscall.rs",
+          "span": "76",
           "tags": [],
           "unsafe_calls": []
         }
@@ -18087,7 +19038,16 @@
       "path": "ostd/src/bus/pci/bus.rs",
       "span": "75:95",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "core::fmt::rt::UnsafeArg::new",
+          "safe": false,
+          "path": "/home/runner/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/log-0.4.27/src/macros.rs",
+          "span": "140",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "bus::pci::bus::PciBus::register_driver",
@@ -18095,7 +19055,16 @@
       "path": "ostd/src/bus/pci/bus.rs",
       "span": "50:73",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "core::fmt::rt::UnsafeArg::new",
+          "safe": false,
+          "path": "/home/runner/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/log-0.4.27/src/macros.rs",
+          "span": "140",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "bus::pci::capability::Capability::capability_data",
@@ -18431,7 +19400,16 @@
       "path": "ostd/src/bus/pci/cfg_space.rs",
       "span": "306:318",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "x86_64::instructions::port::PortRead::read_from_port",
+          "safe": false,
+          "path": "ostd/src/bus/pci/cfg_space.rs",
+          "span": "317",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "bus::pci::cfg_space::IoBar::size",
@@ -18447,7 +19425,16 @@
       "path": "ostd/src/bus/pci/cfg_space.rs",
       "span": "321:334",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "x86_64::instructions::port::PortWrite::write_to_port",
+          "safe": false,
+          "path": "ostd/src/bus/pci/cfg_space.rs",
+          "span": "332",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "bus::pci::cfg_space::MemoryBar::address_length",
@@ -18479,7 +19466,16 @@
       "path": "ostd/src/bus/pci/cfg_space.rs",
       "span": "237:275",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "io::io_mem::IoMem::new",
+          "safe": false,
+          "path": "ostd/src/bus/pci/cfg_space.rs",
+          "span": "268",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "bus::pci::cfg_space::MemoryBar::prefetchable",
@@ -19089,6 +20085,14 @@
           "span": "157",
           "tags": [],
           "unsafe_calls": []
+        },
+        {
+          "name": "cpu::local::single_instr::SingleInstructionAddAssign::add_assign",
+          "safe": false,
+          "path": "ostd/src/cpu/local/cell.rs",
+          "span": "161",
+          "tags": [],
+          "unsafe_calls": []
         }
       ]
     },
@@ -19131,6 +20135,14 @@
           "span": "189",
           "tags": [],
           "unsafe_calls": []
+        },
+        {
+          "name": "cpu::local::single_instr::SingleInstructionBitAndAssign::bitand_assign",
+          "safe": false,
+          "path": "ostd/src/cpu/local/cell.rs",
+          "span": "193",
+          "tags": [],
+          "unsafe_calls": []
         }
       ]
     },
@@ -19146,6 +20158,14 @@
           "safe": false,
           "path": "ostd/src/cpu/local/cell.rs",
           "span": "204",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "cpu::local::single_instr::SingleInstructionBitOrAssign::bitor_assign",
+          "safe": false,
+          "path": "ostd/src/cpu/local/cell.rs",
+          "span": "208",
           "tags": [],
           "unsafe_calls": []
         }
@@ -19165,6 +20185,14 @@
           "span": "219",
           "tags": [],
           "unsafe_calls": []
+        },
+        {
+          "name": "cpu::local::single_instr::SingleInstructionBitXorAssign::bitxor_assign",
+          "safe": false,
+          "path": "ostd/src/cpu/local/cell.rs",
+          "span": "223",
+          "tags": [],
+          "unsafe_calls": []
         }
       ]
     },
@@ -19180,6 +20208,14 @@
           "safe": false,
           "path": "ostd/src/cpu/local/cell.rs",
           "span": "234",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "cpu::local::single_instr::SingleInstructionLoad::load",
+          "safe": false,
+          "path": "ostd/src/cpu/local/cell.rs",
+          "span": "237",
           "tags": [],
           "unsafe_calls": []
         }
@@ -19199,6 +20235,14 @@
           "span": "247",
           "tags": [],
           "unsafe_calls": []
+        },
+        {
+          "name": "cpu::local::single_instr::SingleInstructionStore::store",
+          "safe": false,
+          "path": "ostd/src/cpu/local/cell.rs",
+          "span": "251",
+          "tags": [],
+          "unsafe_calls": []
         }
       ]
     },
@@ -19214,6 +20258,14 @@
           "safe": false,
           "path": "ostd/src/cpu/local/cell.rs",
           "span": "174",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "cpu::local::single_instr::SingleInstructionSubAssign::sub_assign",
+          "safe": false,
+          "path": "ostd/src/cpu/local/cell.rs",
+          "span": "178",
           "tags": [],
           "unsafe_calls": []
         }
@@ -19377,7 +20429,16 @@
       "path": "ostd/src/cpu/local/dyn_cpu_local.rs",
       "span": "150:168",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "cpu::local::dyn_cpu_local::<impl cpu::local::CpuLocal<T, cpu::local::dyn_cpu_local::DynamicStorage<T>>>::__new_dynamic",
+          "safe": false,
+          "path": "ostd/src/cpu/local/dyn_cpu_local.rs",
+          "span": "166",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "cpu::local::dyn_cpu_local::DynCpuLocalChunk::<ITEM_SIZE>::get_item_index",
@@ -20024,10 +21085,26 @@
       "tags": [],
       "unsafe_calls": [
         {
+          "name": "core::fmt::rt::UnsafeArg::new",
+          "safe": false,
+          "path": "/home/runner/.rustup/toolchains/nightly-2025-02-01-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/panic.rs",
+          "span": "107",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
           "name": "arch::tdx_guest::unprotect_gpa_range",
           "safe": false,
           "path": "ostd/src/io/io_mem/mod.rs",
           "span": "111",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "mm::kspace::kvirt_area::KVirtArea::map_untracked_frames",
+          "safe": false,
+          "path": "ostd/src/io/io_mem/mod.rs",
+          "span": "128",
           "tags": [],
           "unsafe_calls": []
         }
@@ -20047,7 +21124,16 @@
       "path": "ostd/src/io/io_mem/mod.rs",
       "span": "147:156",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "mm::io::VmReader::<'a, mm::io::Infallible>::from_kernel_space",
+          "safe": false,
+          "path": "ostd/src/io/io_mem/mod.rs",
+          "span": "151",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "io::io_mem::IoMem::slice",
@@ -20063,7 +21149,16 @@
       "path": "ostd/src/io/io_mem/mod.rs",
       "span": "158:167",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "mm::io::VmWriter::<'a, mm::io::Infallible>::from_kernel_space",
+          "safe": false,
+          "path": "ostd/src/io/io_mem/mod.rs",
+          "span": "162",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "io::io_mem::allocator::IoMemAllocator::acquire",
@@ -20071,7 +21166,24 @@
       "path": "ostd/src/io/io_mem/allocator.rs",
       "span": "28:37",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "core::fmt::rt::UnsafeArg::new",
+          "safe": false,
+          "path": "/home/runner/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/log-0.4.27/src/macros.rs",
+          "span": "140",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "io::io_mem::IoMem::new",
+          "safe": false,
+          "path": "ostd/src/io/io_mem/allocator.rs",
+          "span": "36",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "io::io_mem::allocator::IoMemAllocator::new",
@@ -20126,7 +21238,16 @@
       "path": "ostd/src/io/io_mem/allocator.rs",
       "span": "77:87",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "core::fmt::rt::UnsafeArg::new",
+          "safe": false,
+          "path": "/home/runner/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/log-0.4.27/src/macros.rs",
+          "span": "140",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "io::io_mem::allocator::IoMemAllocatorBuilder::remove",
@@ -20134,7 +21255,24 @@
       "path": "ostd/src/io/io_mem/allocator.rs",
       "span": "92:106",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "core::fmt::rt::UnsafeArg::new",
+          "safe": false,
+          "path": "/home/runner/.rustup/toolchains/nightly-2025-02-01-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/panic.rs",
+          "span": "107",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "core::fmt::rt::UnsafeArg::new",
+          "safe": false,
+          "path": "/home/runner/.rustup/toolchains/nightly-2025-02-01-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/panic.rs",
+          "span": "107",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "io::io_mem::allocator::find_allocator",
@@ -20166,7 +21304,16 @@
           "doc": null
         }
       ],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "io::io_mem::allocator::IoMemAllocator::new",
+          "safe": false,
+          "path": "ostd/src/io/io_mem/allocator.rs",
+          "span": "118",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "io::io_mem::allocator::test::conflict_region",
@@ -20174,7 +21321,24 @@
       "path": "ostd/src/io/io_mem/allocator.rs",
       "span": "157:188",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "io::io_mem::allocator::IoMemAllocator::new",
+          "safe": false,
+          "path": "ostd/src/io/io_mem/allocator.rs",
+          "span": "166",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "io::io_mem::allocator::IoMemAllocatorBuilder::new",
+          "safe": false,
+          "path": "ostd/src/io/io_mem/allocator.rs",
+          "span": "166",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "io::io_mem::allocator::test::illegal_region",
@@ -20182,7 +21346,24 @@
       "path": "ostd/src/io/io_mem/allocator.rs",
       "span": "146:154",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "io::io_mem::allocator::IoMemAllocator::new",
+          "safe": false,
+          "path": "ostd/src/io/io_mem/allocator.rs",
+          "span": "149",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "io::io_mem::allocator::IoMemAllocatorBuilder::new",
+          "safe": false,
+          "path": "ostd/src/io/io_mem/allocator.rs",
+          "span": "149",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "io::io_port::IoPort::<T, A>::acquire",
@@ -20230,7 +21411,16 @@
       "path": "ostd/src/io/io_port/mod.rs",
       "span": "69:71",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "x86_64::instructions::port::PortRead::read_from_port",
+          "safe": false,
+          "path": "ostd/src/io/io_port/mod.rs",
+          "span": "70",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "io::io_port::IoPort::<T, A>::size",
@@ -20246,7 +21436,16 @@
       "path": "ostd/src/io/io_port/mod.rs",
       "span": "77:79",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "x86_64::instructions::port::PortWrite::write_to_port",
+          "safe": false,
+          "path": "ostd/src/io/io_port/mod.rs",
+          "span": "78",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "io::io_port::allocator::IoPortAllocator::acquire",
@@ -20254,7 +21453,16 @@
       "path": "ostd/src/io/io_port/allocator.rs",
       "span": "29:42",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "io::io_port::IoPort::<T, A>::new",
+          "safe": false,
+          "path": "ostd/src/io/io_port/allocator.rs",
+          "span": "41",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "io::io_port::allocator::IoPortAllocator::recycle",
@@ -20293,7 +21501,16 @@
           "doc": null
         }
       ],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "core::fmt::rt::UnsafeArg::new",
+          "safe": false,
+          "path": "/home/runner/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/log-0.4.27/src/macros.rs",
+          "span": "140",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "io::io_port::allocator::init",
@@ -20356,6 +21573,14 @@
           "safe": false,
           "path": "ostd/src/io/io_port/allocator.rs",
           "span": "80",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "core::fmt::rt::UnsafeArg::new",
+          "safe": false,
+          "path": "/home/runner/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/log-0.4.27/src/macros.rs",
+          "span": "140",
           "tags": [],
           "unsafe_calls": []
         }
@@ -20809,7 +22034,16 @@
       "path": "ostd/src/mm/frame/mod.rs",
       "span": "187:190",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "mm::frame::frame_ref::FrameRef::<'_, M>::borrow_paddr",
+          "safe": false,
+          "path": "ostd/src/mm/frame/mod.rs",
+          "span": "189",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "mm::frame::Frame::<M>::dyn_meta",
@@ -20938,7 +22172,24 @@
       "path": "ostd/src/mm/frame/allocator.rs",
       "span": "260:298",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "core::fmt::rt::UnsafeArg::new",
+          "safe": false,
+          "path": "/home/runner/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/log-0.4.27/src/macros.rs",
+          "span": "140",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "core::fmt::rt::UnsafeArg::new",
+          "safe": false,
+          "path": "/home/runner/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/log-0.4.27/src/macros.rs",
+          "span": "140",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "mm::frame::allocator::FrameAllocOptions::alloc_frame",
@@ -21074,7 +22325,16 @@
           "doc": null
         }
       ],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "core::fmt::rt::UnsafeArg::new",
+          "safe": false,
+          "path": "/home/runner/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/log-0.4.27/src/macros.rs",
+          "span": "140",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "mm::frame::allocator::init_early_allocator",
@@ -21161,7 +22421,16 @@
       "path": "ostd/src/mm/frame/frame_ref.rs",
       "span": "27:33",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "mm::frame::Frame::<M>::from_raw",
+          "safe": false,
+          "path": "ostd/src/mm/frame/frame_ref.rs",
+          "span": "30",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "mm::frame::inc_frame_ref_count",
@@ -21310,6 +22579,14 @@
       "span": "284:327",
       "tags": [],
       "unsafe_calls": [
+        {
+          "name": "mm::frame::unique::UniqueFrame::<M>::from_raw",
+          "safe": false,
+          "path": "ostd/src/mm/frame/linked_list.rs",
+          "span": "291",
+          "tags": [],
+          "unsafe_calls": []
+        },
         {
           "name": "core::ptr::NonNull::<T>::as_mut",
           "safe": false,
@@ -21551,6 +22828,14 @@
           "safe": false,
           "path": "ostd/src/mm/frame/meta.rs",
           "span": "413",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "mm::io::VmReader::<'a, mm::io::Infallible>::from_kernel_space",
+          "safe": false,
+          "path": "ostd/src/mm/frame/meta.rs",
+          "span": "421",
           "tags": [],
           "unsafe_calls": []
         },
@@ -22001,7 +23286,24 @@
       "path": "ostd/src/mm/frame/test.rs",
       "span": "512:529",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "sync::rcu::non_null::NonNullPtr::from_raw",
+          "safe": false,
+          "path": "ostd/src/mm/frame/test.rs",
+          "span": "522",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "sync::rcu::non_null::NonNullPtr::raw_as_ref",
+          "safe": false,
+          "path": "ostd/src/mm/frame/test.rs",
+          "span": "527",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "mm::frame::test::frame_ref::frame_ref_preserves_refcnt",
@@ -22382,7 +23684,16 @@
       "path": "ostd/src/mm/heap/mod.rs",
       "span": "89:91",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "core::alloc::Layout::from_size_align_unchecked",
+          "safe": false,
+          "path": "ostd/src/mm/heap/mod.rs",
+          "span": "89:91",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "mm::heap::_::__rust_alloc",
@@ -22390,7 +23701,24 @@
       "path": "ostd/src/mm/heap/mod.rs",
       "span": "94",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "core::alloc::GlobalAlloc::alloc",
+          "safe": false,
+          "path": "ostd/src/mm/heap/mod.rs",
+          "span": "94",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "core::alloc::Layout::from_size_align_unchecked",
+          "safe": false,
+          "path": "ostd/src/mm/heap/mod.rs",
+          "span": "94",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "mm::heap::_::__rust_alloc_zeroed",
@@ -22398,7 +23726,24 @@
       "path": "ostd/src/mm/heap/mod.rs",
       "span": "94",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "core::alloc::GlobalAlloc::alloc_zeroed",
+          "safe": false,
+          "path": "ostd/src/mm/heap/mod.rs",
+          "span": "94",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "core::alloc::Layout::from_size_align_unchecked",
+          "safe": false,
+          "path": "ostd/src/mm/heap/mod.rs",
+          "span": "94",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "mm::heap::_::__rust_dealloc",
@@ -22406,7 +23751,24 @@
       "path": "ostd/src/mm/heap/mod.rs",
       "span": "94",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "core::alloc::GlobalAlloc::dealloc",
+          "safe": false,
+          "path": "ostd/src/mm/heap/mod.rs",
+          "span": "94",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "core::alloc::Layout::from_size_align_unchecked",
+          "safe": false,
+          "path": "ostd/src/mm/heap/mod.rs",
+          "span": "94",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "mm::heap::_::__rust_realloc",
@@ -22414,7 +23776,24 @@
       "path": "ostd/src/mm/heap/mod.rs",
       "span": "94",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "core::alloc::GlobalAlloc::realloc",
+          "safe": false,
+          "path": "ostd/src/mm/heap/mod.rs",
+          "span": "94",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "core::alloc::Layout::from_size_align_unchecked",
+          "safe": false,
+          "path": "ostd/src/mm/heap/mod.rs",
+          "span": "94",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "mm::heap::get_global_heap_allocator",
@@ -22430,7 +23809,16 @@
       "path": "ostd/src/mm/heap/mod.rs",
       "span": "89:91",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "core::fmt::rt::UnsafeArg::new",
+          "safe": false,
+          "path": "/home/runner/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/log-0.4.27/src/macros.rs",
+          "span": "140",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "mm::heap::slab::<impl mm::frame::unique::UniqueFrame<mm::frame::linked_list::Link<mm::heap::slab::SlabMeta<SLOT_SIZE>>>>::dealloc",
@@ -22446,7 +23834,24 @@
       "path": "ostd/src/mm/heap/slab.rs",
       "span": "87:117",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "core::ptr::NonNull::<T>::new_unchecked",
+          "safe": false,
+          "path": "ostd/src/mm/heap/slab.rs",
+          "span": "109",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "mm::heap::slot::HeapSlot::new",
+          "safe": false,
+          "path": "ostd/src/mm/heap/slab.rs",
+          "span": "113",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "mm::heap::slab::SlabMeta::<SLOT_SIZE>::alloc",
@@ -22494,7 +23899,16 @@
       "path": "ostd/src/mm/heap/slot.rs",
       "span": "105:119",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "mm::frame::segment::Segment::<M>::from_raw",
+          "safe": false,
+          "path": "ostd/src/mm/heap/slot.rs",
+          "span": "118",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "mm::heap::slot::HeapSlot::info",
@@ -22575,6 +23989,22 @@
           "span": "78",
           "tags": [],
           "unsafe_calls": []
+        },
+        {
+          "name": "core::ptr::NonNull::<T>::new_unchecked",
+          "safe": false,
+          "path": "ostd/src/mm/heap/slot_list.rs",
+          "span": "84",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "mm::heap::slot::HeapSlot::new",
+          "safe": false,
+          "path": "ostd/src/mm/heap/slot_list.rs",
+          "span": "87",
+          "tags": [],
+          "unsafe_calls": []
         }
       ]
     },
@@ -22585,6 +24015,14 @@
       "span": "46:68",
       "tags": [],
       "unsafe_calls": [
+        {
+          "name": "core::ptr::NonNull::<T>::new_unchecked",
+          "safe": false,
+          "path": "ostd/src/mm/heap/slot_list.rs",
+          "span": "59",
+          "tags": [],
+          "unsafe_calls": []
+        },
         {
           "name": "core::ptr::mut_ptr::<impl *mut T>::write",
           "safe": false,
@@ -23325,7 +24763,24 @@
       "path": "ostd/src/mm/kspace/test.rs",
       "span": "86:99",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "mm::kspace::kvirt_area::KVirtArea::map_untracked_frames",
+          "safe": false,
+          "path": "ostd/src/mm/kspace/test.rs",
+          "span": "92",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "mm::kspace::kvirt_area::KVirtArea::map_untracked_frames",
+          "safe": false,
+          "path": "ostd/src/mm/kspace/test.rs",
+          "span": "97",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "mm::kspace::test::kvirt_area_untracked_map_pages",
@@ -23333,7 +24788,16 @@
       "path": "ostd/src/mm/kspace/test.rs",
       "span": "44:66",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "mm::kspace::kvirt_area::KVirtArea::map_untracked_frames",
+          "safe": false,
+          "path": "ostd/src/mm/kspace/test.rs",
+          "span": "51",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "mm::kspace::test::manual_paddr_to_vaddr",
@@ -24156,7 +25620,16 @@
           "doc": null
         }
       ],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "mm::frame::Frame::<M>::from_raw",
+          "safe": false,
+          "path": "ostd/src/mm/page_table/boot_pt.rs",
+          "span": "96",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "mm::page_table::boot_pt::with_borrow",
@@ -24164,7 +25637,16 @@
       "path": "ostd/src/mm/page_table/boot_pt.rs",
       "span": "41:60",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "mm::page_table::boot_pt::BootPageTable::<E, C>::from_current_pt",
+          "safe": false,
+          "path": "ostd/src/mm/page_table/boot_pt.rs",
+          "span": "54",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "mm::page_table::cursor::Cursor::<'rcu, C>::cur_entry",
@@ -24259,6 +25741,14 @@
           "safe": false,
           "path": "ostd/src/mm/page_table/cursor/mod.rs",
           "span": "161",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "mm::page_table::PageTableConfig::item_from_raw",
+          "safe": false,
+          "path": "ostd/src/mm/page_table/cursor/mod.rs",
+          "span": "178",
           "tags": [],
           "unsafe_calls": []
         }
@@ -24399,6 +25889,14 @@
       "tags": [],
       "unsafe_calls": [
         {
+          "name": "mm::page_table::PageTableConfig::item_from_raw",
+          "safe": false,
+          "path": "ostd/src/mm/page_table/cursor/mod.rs",
+          "span": "592",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
           "name": "mm::page_table::node::<impl mm::frame::frame_ref::FrameRef<'a, mm::page_table::node::PageTablePageMeta<C>>>::make_guard_unchecked",
           "safe": false,
           "path": "ostd/src/mm/page_table/cursor/mod.rs",
@@ -24454,7 +25952,16 @@
       "path": "ostd/src/mm/page_table/cursor/mod.rs",
       "span": "101:112",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "mm::page_table::PageTableConfig::item_from_raw",
+          "safe": false,
+          "path": "ostd/src/mm/page_table/cursor/mod.rs",
+          "span": "107",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "mm::page_table::cursor::locking::dfs_acquire_lock",
@@ -24659,6 +26166,22 @@
           "span": "115",
           "tags": [],
           "unsafe_calls": []
+        },
+        {
+          "name": "mm::frame::frame_ref::FrameRef::<'_, M>::borrow_paddr",
+          "safe": false,
+          "path": "ostd/src/mm/page_table/cursor/locking.rs",
+          "span": "130",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "mm::frame::frame_ref::FrameRef::<'_, M>::borrow_paddr",
+          "safe": false,
+          "path": "ostd/src/mm/page_table/cursor/locking.rs",
+          "span": "156",
+          "tags": [],
+          "unsafe_calls": []
         }
       ]
     },
@@ -24717,7 +26240,16 @@
           "doc": null
         }
       ],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "core::sync::atomic::AtomicUsize::from_ptr",
+          "safe": false,
+          "path": "ostd/src/mm/page_table/mod.rs",
+          "span": "587",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "mm::page_table::node::<impl mm::frame::Frame<mm::page_table::node::PageTablePageMeta<C>>>::activate",
@@ -24747,6 +26279,14 @@
           "safe": false,
           "path": "ostd/src/mm/page_table/node/mod.rs",
           "span": "118",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "mm::frame::Frame::<M>::from_raw",
+          "safe": false,
+          "path": "ostd/src/mm/page_table/node/mod.rs",
+          "span": "122",
           "tags": [],
           "unsafe_calls": []
         }
@@ -24854,7 +26394,16 @@
       "path": "ostd/src/mm/page_table/node/mod.rs",
       "span": "199:203",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "mm::page_table::node::entry::Entry::<'a, 'rcu, C>::new_at",
+          "safe": false,
+          "path": "ostd/src/mm/page_table/node/mod.rs",
+          "span": "202",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "mm::page_table::node::PageTableGuard::<'rcu, C>::nr_children",
@@ -25039,7 +26588,16 @@
           "doc": null
         }
       ],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "mm::frame::Frame::<M>::from_raw",
+          "safe": false,
+          "path": "ostd/src/mm/page_table/node/child.rs",
+          "span": "63",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "mm::page_table::node::child::Child::<C>::into_pte",
@@ -25080,7 +26638,16 @@
           "doc": null
         }
       ],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "mm::frame::frame_ref::FrameRef::<'_, M>::borrow_paddr",
+          "safe": false,
+          "path": "ostd/src/mm/page_table/node/child.rs",
+          "span": "104",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "mm::page_table::node::entry::Entry::<'a, 'rcu, C>::alloc_if_none",
@@ -25089,6 +26656,14 @@
       "span": "133:164",
       "tags": [],
       "unsafe_calls": [
+        {
+          "name": "mm::frame::frame_ref::FrameRef::<'_, M>::borrow_paddr",
+          "safe": false,
+          "path": "ostd/src/mm/page_table/node/entry.rs",
+          "span": "147",
+          "tags": [],
+          "unsafe_calls": []
+        },
         {
           "name": "mm::page_table::node::PageTableGuard::<'rcu, C>::write_pte",
           "safe": false,
@@ -25174,6 +26749,14 @@
       "tags": [],
       "unsafe_calls": [
         {
+          "name": "mm::page_table::node::child::Child::<C>::from_pte",
+          "safe": false,
+          "path": "ostd/src/mm/page_table/node/entry.rs",
+          "span": "108",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
           "name": "mm::page_table::node::PageTableGuard::<'rcu, C>::write_pte",
           "safe": false,
           "path": "ostd/src/mm/page_table/node/entry.rs",
@@ -25191,6 +26774,14 @@
       "tags": [],
       "unsafe_calls": [
         {
+          "name": "mm::frame::frame_ref::FrameRef::<'_, M>::borrow_paddr",
+          "safe": false,
+          "path": "ostd/src/mm/page_table/node/entry.rs",
+          "span": "192",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
           "name": "mm::page_table::node::PageTableGuard::<'rcu, C>::write_pte",
           "safe": false,
           "path": "ostd/src/mm/page_table/node/entry.rs",
@@ -25206,7 +26797,16 @@
       "path": "ostd/src/mm/page_table/node/entry.rs",
       "span": "53:58",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "mm::page_table::node::child::ChildRef::<'_, C>::from_pte",
+          "safe": false,
+          "path": "ostd/src/mm/page_table/node/entry.rs",
+          "span": "57",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "mm::page_table::nr_pte_index_bits",
@@ -25296,7 +26896,16 @@
           "doc": null
         }
       ],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "core::sync::atomic::AtomicUsize::from_ptr",
+          "safe": false,
+          "path": "ostd/src/mm/page_table/mod.rs",
+          "span": "599",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "mm::page_table::test::boot_pt::map_base_page",
@@ -25584,6 +27193,14 @@
           "span": "327:330",
           "tags": [],
           "unsafe_calls": []
+        },
+        {
+          "name": "core::fmt::rt::UnsafeArg::new",
+          "safe": false,
+          "path": "/home/runner/.rustup/toolchains/nightly-2025-02-01-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/panic.rs",
+          "span": "107",
+          "tags": [],
+          "unsafe_calls": []
         }
       ]
     },
@@ -25767,7 +27384,16 @@
       "path": "ostd/src/mm/page_table/test.rs",
       "span": "70:75",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "mm::page_table::PageTableConfig::item_from_raw",
+          "safe": false,
+          "path": "ostd/src/mm/page_table/test.rs",
+          "span": "73",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "mm::page_table::test::test_utils::protect_range",
@@ -25906,7 +27532,16 @@
       "path": "ostd/src/mm/test.rs",
       "span": "142:155",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "mm::io::VmWriter::<'a, mm::io::Infallible>::from_kernel_space",
+          "safe": false,
+          "path": "ostd/src/mm/test.rs",
+          "span": "146",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "mm::test::io::fill_zeros_fallible",
@@ -25930,7 +27565,24 @@
       "path": "ostd/src/mm/test.rs",
       "span": "429:447",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "mm::io::VmWriter::<'a, mm::io::Infallible>::from_kernel_space",
+          "safe": false,
+          "path": "ostd/src/mm/test.rs",
+          "span": "433",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "mm::io::VmReader::<'a, mm::io::Infallible>::from_kernel_space",
+          "safe": false,
+          "path": "ostd/src/mm/test.rs",
+          "span": "442",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "mm::test::io::limit_read_infallible",
@@ -25970,7 +27622,16 @@
       "path": "ostd/src/mm/test.rs",
       "span": "116:124",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "mm::io::VmReader::<'a, mm::io::Infallible>::from_kernel_space",
+          "safe": false,
+          "path": "ostd/src/mm/test.rs",
+          "span": "120",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "mm::test::io::read_slice_segment",
@@ -25994,7 +27655,24 @@
       "path": "ostd/src/mm/test.rs",
       "span": "254:270",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "mm::io::VmWriter::<'a, mm::io::Infallible>::from_kernel_space",
+          "safe": false,
+          "path": "ostd/src/mm/test.rs",
+          "span": "258",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "mm::io::VmReader::<'a, mm::io::Infallible>::from_kernel_space",
+          "safe": false,
+          "path": "ostd/src/mm/test.rs",
+          "span": "266",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "mm::test::io::read_write_slice_infallible",
@@ -26002,7 +27680,24 @@
       "path": "ostd/src/mm/test.rs",
       "span": "65:86",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "mm::io::VmWriter::<'a, mm::io::Infallible>::from_kernel_space",
+          "safe": false,
+          "path": "ostd/src/mm/test.rs",
+          "span": "71",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "mm::io::VmReader::<'a, mm::io::Infallible>::from_kernel_space",
+          "safe": false,
+          "path": "ostd/src/mm/test.rs",
+          "span": "80",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "mm::test::io::read_write_slice_vmio_infallible",
@@ -26010,7 +27705,24 @@
       "path": "ostd/src/mm/test.rs",
       "span": "231:250",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "mm::io::VmWriter::<'a, mm::io::Infallible>::from_kernel_space",
+          "safe": false,
+          "path": "ostd/src/mm/test.rs",
+          "span": "237",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "mm::io::VmReader::<'a, mm::io::Infallible>::from_kernel_space",
+          "safe": false,
+          "path": "ostd/src/mm/test.rs",
+          "span": "244",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "mm::test::io::read_write_struct_infallible",
@@ -26018,7 +27730,24 @@
       "path": "ostd/src/mm/test.rs",
       "span": "90:111",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "mm::io::VmWriter::<'a, mm::io::Infallible>::from_kernel_space",
+          "safe": false,
+          "path": "ostd/src/mm/test.rs",
+          "span": "95",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "mm::io::VmReader::<'a, mm::io::Infallible>::from_kernel_space",
+          "safe": false,
+          "path": "ostd/src/mm/test.rs",
+          "span": "106",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "mm::test::io::read_write_u32_infallible",
@@ -26026,7 +27755,24 @@
       "path": "ostd/src/mm/test.rs",
       "span": "34:61",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "mm::io::VmWriter::<'a, mm::io::Infallible>::from_kernel_space",
+          "safe": false,
+          "path": "ostd/src/mm/test.rs",
+          "span": "39",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "mm::io::VmReader::<'a, mm::io::Infallible>::from_kernel_space",
+          "safe": false,
+          "path": "ostd/src/mm/test.rs",
+          "span": "54",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "mm::test::io::read_write_val_fallible",
@@ -26042,7 +27788,16 @@
       "path": "ostd/src/mm/test.rs",
       "span": "159:173",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "mm::io::VmReader::<'a, mm::io::Infallible>::from_kernel_space",
+          "safe": false,
+          "path": "ostd/src/mm/test.rs",
+          "span": "163",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "mm::test::io::skip_write_infallible",
@@ -26050,7 +27805,16 @@
       "path": "ostd/src/mm/test.rs",
       "span": "177:191",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "mm::io::VmWriter::<'a, mm::io::Infallible>::from_kernel_space",
+          "safe": false,
+          "path": "ostd/src/mm/test.rs",
+          "span": "181",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "mm::test::io::write_beyond_buffer_infallible",
@@ -26058,7 +27822,16 @@
       "path": "ostd/src/mm/test.rs",
       "span": "129:138",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "mm::io::VmWriter::<'a, mm::io::Infallible>::from_kernel_space",
+          "safe": false,
+          "path": "ostd/src/mm/test.rs",
+          "span": "133",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "mm::test::io::write_slice_segment",
@@ -26074,7 +27847,16 @@
       "path": "ostd/src/mm/test.rs",
       "span": "274:285",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "mm::io::VmWriter::<'a, mm::io::Infallible>::from_kernel_space",
+          "safe": false,
+          "path": "ostd/src/mm/test.rs",
+          "span": "278",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "mm::test::io::write_vals_segment",
@@ -26429,7 +28211,16 @@
       "path": "ostd/src/mm/vm_space.rs",
       "span": "118:143",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "alloc::sync::Arc::<T>::from_raw",
+          "safe": false,
+          "path": "ostd/src/mm/vm_space.rs",
+          "span": "138",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "mm::vm_space::VmSpace::cursor",
@@ -26461,7 +28252,16 @@
       "path": "ostd/src/mm/vm_space.rs",
       "span": "152:163",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "mm::io::VmReader::<'_>::from_user_space",
+          "safe": false,
+          "path": "ostd/src/mm/vm_space.rs",
+          "span": "162",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "mm::vm_space::VmSpace::writer",
@@ -26469,7 +28269,16 @@
       "path": "ostd/src/mm/vm_space.rs",
       "span": "172:187",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "mm::io::VmWriter::<'_>::from_user_space",
+          "safe": false,
+          "path": "ostd/src/mm/vm_space.rs",
+          "span": "186",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "mm::vm_space::get_activated_vm_space",
@@ -26485,7 +28294,24 @@
       "path": "ostd/src/panic.rs",
       "span": "30:48",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "core::fmt::rt::UnsafeArg::new",
+          "safe": false,
+          "path": "ostd/src/console.rs",
+          "span": "49",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "core::fmt::rt::UnsafeArg::new",
+          "safe": false,
+          "path": "ostd/src/console.rs",
+          "span": "49",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "panic::abort",
@@ -26509,7 +28335,24 @@
       "path": "ostd/src/panic.rs",
       "span": "69:104",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "core::fmt::rt::UnsafeArg::new",
+          "safe": false,
+          "path": "ostd/src/console.rs",
+          "span": "49",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "core::fmt::rt::UnsafeArg::new",
+          "safe": false,
+          "path": "ostd/src/console.rs",
+          "span": "40",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "smp::do_inter_processor_call",
@@ -26517,7 +28360,16 @@
       "path": "ostd/src/smp.rs",
       "span": "86:99",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "core::fmt::rt::UnsafeArg::new",
+          "safe": false,
+          "path": "/home/runner/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/log-0.4.27/src/macros.rs",
+          "span": "140",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "smp::init",
@@ -26606,7 +28458,16 @@
       "path": "ostd/src/sync/mutex.rs",
       "span": "52:58",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "sync::mutex::MutexGuard_::<T, &'a sync::mutex::Mutex<T>>::new",
+          "safe": false,
+          "path": "ostd/src/sync/mutex.rs",
+          "span": "57",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "sync::mutex::Mutex::<T>::try_lock_arc",
@@ -26718,7 +28579,16 @@
       "path": "ostd/src/sync/rcu/mod.rs",
       "span": "174:185",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "sync::rcu::non_null::NonNullPtr::raw_as_ref",
+          "safe": false,
+          "path": "ostd/src/sync/rcu/mod.rs",
+          "span": "184",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "sync::rcu::RcuInner::<P>::update",
@@ -26825,6 +28695,14 @@
       "tags": [],
       "unsafe_calls": [
         {
+          "name": "sync::rcu::non_null::NonNullPtr::from_raw",
+          "safe": false,
+          "path": "ostd/src/sync/rcu/mod.rs",
+          "span": "237",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
           "name": "sync::rcu::delay_drop",
           "safe": false,
           "path": "ostd/src/sync/rcu/mod.rs",
@@ -26840,7 +28718,16 @@
       "path": "ostd/src/sync/rcu/mod.rs",
       "span": "210:215",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "sync::rcu::non_null::NonNullPtr::raw_as_ref",
+          "safe": false,
+          "path": "ostd/src/sync/rcu/mod.rs",
+          "span": "214",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "sync::rcu::delay_drop",
@@ -26848,7 +28735,16 @@
       "path": "ostd/src/sync/rcu/mod.rs",
       "span": "423:445",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "sync::rcu::non_null::NonNullPtr::from_raw",
+          "safe": false,
+          "path": "ostd/src/sync/rcu/mod.rs",
+          "span": "442",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "sync::rcu::finish_grace_period",
@@ -26977,6 +28873,22 @@
           "span": "36",
           "tags": [],
           "unsafe_calls": []
+        },
+        {
+          "name": "sync::rcu::non_null::NonNullPtr::from_raw",
+          "safe": false,
+          "path": "ostd/src/sync/rcu/non_null/either.rs",
+          "span": "41",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "sync::rcu::non_null::NonNullPtr::from_raw",
+          "safe": false,
+          "path": "ostd/src/sync/rcu/non_null/either.rs",
+          "span": "45",
+          "tags": [],
+          "unsafe_calls": []
         }
       ]
     },
@@ -27000,6 +28912,22 @@
           "safe": false,
           "path": "ostd/src/sync/rcu/non_null/either.rs",
           "span": "52",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "sync::rcu::non_null::NonNullPtr::raw_as_ref",
+          "safe": false,
+          "path": "ostd/src/sync/rcu/non_null/either.rs",
+          "span": "57",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "sync::rcu::non_null::NonNullPtr::raw_as_ref",
+          "safe": false,
+          "path": "ostd/src/sync/rcu/non_null/either.rs",
+          "span": "61",
           "tags": [],
           "unsafe_calls": []
         }
@@ -27027,7 +28955,16 @@
       "path": "ostd/src/sync/rcu/non_null/either.rs",
       "span": "88:97",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "core::num::NonZero::<T>::new_unchecked",
+          "safe": false,
+          "path": "ostd/src/sync/rcu/non_null/either.rs",
+          "span": "94",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "sync::rcu::non_null::either::test::alignment",
@@ -27043,7 +28980,24 @@
       "path": "ostd/src/sync/rcu/non_null/either.rs",
       "span": "116:131",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "sync::rcu::non_null::NonNullPtr::raw_as_ref",
+          "safe": false,
+          "path": "ostd/src/sync/rcu/non_null/either.rs",
+          "span": "122",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "sync::rcu::non_null::NonNullPtr::from_raw",
+          "safe": false,
+          "path": "ostd/src/sync/rcu/non_null/either.rs",
+          "span": "128",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "sync::rcu::non_null::either::test::rcu_store_load",
@@ -27059,7 +29013,24 @@
       "path": "ostd/src/sync/rcu/non_null/either.rs",
       "span": "134:149",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "sync::rcu::non_null::NonNullPtr::raw_as_ref",
+          "safe": false,
+          "path": "ostd/src/sync/rcu/non_null/either.rs",
+          "span": "140",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "sync::rcu::non_null::NonNullPtr::from_raw",
+          "safe": false,
+          "path": "ostd/src/sync/rcu/non_null/either.rs",
+          "span": "146",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "sync::rwarc::RoArc::<T>::read",
@@ -27619,7 +29590,24 @@
       "path": "ostd/src/task/mod.rs",
       "span": "323:331",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "alloc::sync::Arc::<T>::increment_strong_count",
+          "safe": false,
+          "path": "ostd/src/task/mod.rs",
+          "span": "327",
+          "tags": [],
+          "unsafe_calls": []
+        },
+        {
+          "name": "alloc::sync::Arc::<T>::from_raw",
+          "safe": false,
+          "path": "ostd/src/task/mod.rs",
+          "span": "330",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "task::CurrentTask::local_data",
@@ -27676,7 +29664,16 @@
       "path": "ostd/src/task/mod.rs",
       "span": "72:77",
       "tags": [],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "task::CurrentTask::new",
+          "safe": false,
+          "path": "ostd/src/task/mod.rs",
+          "span": "76",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "task::Task::data",
@@ -27989,7 +29986,16 @@
           "doc": null
         }
       ],
-      "unsafe_calls": []
+      "unsafe_calls": [
+        {
+          "name": "alloc::sync::Arc::<T>::from_raw",
+          "safe": false,
+          "path": "ostd/src/task/processor.rs",
+          "span": "125",
+          "tags": [],
+          "unsafe_calls": []
+        }
+      ]
     },
     {
       "name": "task::processor::before_switching_to",
@@ -28733,22 +30739,6 @@
         "as_vanilla": 6,
         "in_any": 0
       },
-      "OwnedResource": {
-        "occurence": 6,
-        "requires": 6,
-        "checked": 0,
-        "delegated": 0,
-        "as_vanilla": 6,
-        "in_any": 0
-      },
-      "ValidBaseAddr": {
-        "occurence": 6,
-        "requires": 6,
-        "checked": 0,
-        "delegated": 0,
-        "as_vanilla": 6,
-        "in_any": 0
-      },
       "Bounded": {
         "occurence": 5,
         "requires": 5,
@@ -28758,6 +30748,22 @@
         "in_any": 0
       },
       "Forgotten": {
+        "occurence": 5,
+        "requires": 5,
+        "checked": 0,
+        "delegated": 0,
+        "as_vanilla": 5,
+        "in_any": 0
+      },
+      "OwnedResource": {
+        "occurence": 5,
+        "requires": 5,
+        "checked": 0,
+        "delegated": 0,
+        "as_vanilla": 5,
+        "in_any": 0
+      },
+      "ValidBaseAddr": {
         "occurence": 5,
         "requires": 5,
         "checked": 0,
@@ -28887,22 +30893,22 @@
       }
     },
     "coverage": {
-      "occurence": 151,
-      "requires": 151,
+      "occurence": 149,
+      "requires": 149,
       "checked": 0,
       "delegated": 0,
-      "as_vanilla": 151,
+      "as_vanilla": 149,
       "in_any": 0
     },
     "unused": [],
     "funcs": {
       "total": {
         "funcs": 2762,
-        "funcs_with_tags_declared": 95,
+        "funcs_with_tags_declared": 94,
         "funcs_with_tags_discharged": 0,
-        "declared_tags": 151,
+        "declared_tags": 149,
         "discharged_tags": 0,
-        "unsafe_calls": 379
+        "unsafe_calls": 619
       },
       "safe": {
         "total": {
@@ -28911,36 +30917,41 @@
           "funcs_with_tags_discharged": 0,
           "declared_tags": 2,
           "discharged_tags": 0,
-          "unsafe_calls": 231
+          "unsafe_calls": 382
         },
         "unsafe_calls": {
-          "0": 2369,
-          "1": 116,
-          "2": 33,
-          "3": 7,
-          "4": 3,
-          "8": 2
+          "0": 2285,
+          "1": 159,
+          "2": 65,
+          "3": 14,
+          "4": 4,
+          "5": 1,
+          "8": 1,
+          "22": 1
         }
       },
       "unsafe": {
         "total": {
           "funcs": 232,
-          "funcs_with_tags_declared": 93,
+          "funcs_with_tags_declared": 92,
           "funcs_with_tags_discharged": 0,
-          "declared_tags": 149,
+          "declared_tags": 147,
           "discharged_tags": 0,
-          "unsafe_calls": 148
+          "unsafe_calls": 237
         },
         "unsafe_calls": {
-          "0": 166,
-          "1": 34,
-          "2": 17,
-          "3": 4,
-          "4": 3,
-          "5": 3,
+          "0": 132,
+          "1": 53,
+          "2": 23,
+          "3": 8,
+          "4": 7,
+          "5": 2,
           "6": 2,
-          "8": 2,
-          "13": 1
+          "7": 1,
+          "8": 1,
+          "9": 1,
+          "15": 1,
+          "25": 1
         }
       }
     }
