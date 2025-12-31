@@ -46,7 +46,7 @@ desc = "The pointee of `{ptr}` must not be accessed after this call."
 args = [ "val", "a" ]
 desc = "For the duration of the lifetime '{a}', there must not exist a value '{val}'."
 
-#3. Validity(7)
+#3. Validity(9)
 
 [tag.Valid]
 args = [ "val", "a" ]
