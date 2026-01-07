@@ -201,7 +201,7 @@ impl PropertiesAndReason {
     }
 }
 
-#[derive(Deserialize, Serialize)]
+#[derive(Clone, Deserialize, Serialize)]
 pub struct Property {
     /// `SP` or `type.SP`. The type of single `SP` is unkown until queried from definition.
     pub tag: TagNameType,
@@ -264,7 +264,7 @@ impl Property {
 }
 
 /// Typed SP: `type.SP`
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct TagNameType {
     /// Default tag type is the one in single defined_types.
     //
