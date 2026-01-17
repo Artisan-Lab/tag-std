@@ -1,0 +1,146 @@
+{
+  "test": [
+    {
+      "tags": [
+        {
+          "tag": {
+            "typ": null,
+            "name": "Init"
+          },
+          "args": [
+            "self . ptr",
+            "u8",
+            "self . len"
+          ]
+        },
+        {
+          "tag": {
+            "typ": null,
+            "name": "InBound"
+          },
+          "args": [
+            "self . ptr",
+            "u8",
+            "self . len"
+          ]
+        },
+        {
+          "tag": {
+            "typ": null,
+            "name": "ValidNum"
+          },
+          "args": [
+            "self . len * sizeof (u8)",
+            "[0 , isize :: MAX]"
+          ]
+        },
+        {
+          "tag": {
+            "typ": null,
+            "name": "Alias"
+          },
+          "args": [
+            "self . ptr"
+          ]
+        },
+        {
+          "tag": {
+            "typ": null,
+            "name": "RustdocLinkToItem"
+          },
+          "args": [
+            "crate::test"
+          ]
+        },
+        {
+          "tag": {
+            "typ": null,
+            "name": "any"
+          },
+          "args": [
+            "Deref (self . ptr , u8 , 1)",
+            "Alive (self . ptr , _)"
+          ]
+        }
+      ],
+      "desc": null
+    }
+  ],
+  "MyStruct::get": [
+    {
+      "tags": [
+        {
+          "tag": {
+            "typ": null,
+            "name": "NonNull"
+          },
+          "args": [
+            "self . ptr"
+          ]
+        },
+        {
+          "tag": {
+            "typ": null,
+            "name": "ValidPtr"
+          },
+          "args": [
+            "self . ptr",
+            "u8",
+            "self . len"
+          ]
+        },
+        {
+          "tag": {
+            "typ": null,
+            "name": "Init"
+          },
+          "args": [
+            "self . ptr",
+            "u8",
+            "self . len"
+          ]
+        },
+        {
+          "tag": {
+            "typ": null,
+            "name": "Alive"
+          },
+          "args": [
+            "self . ptr",
+            "_"
+          ]
+        },
+        {
+          "tag": {
+            "typ": null,
+            "name": "Alias"
+          },
+          "args": [
+            "self . ptr"
+          ]
+        },
+        {
+          "tag": {
+            "typ": null,
+            "name": "Align"
+          },
+          "args": [
+            "self . ptr",
+            "u8"
+          ]
+        },
+        {
+          "tag": {
+            "typ": null,
+            "name": "ValidNum"
+          },
+          "args": [
+            "self . len * sizeof (u8)",
+            "[0 , isize :: MAX]"
+          ]
+        }
+      ],
+      "desc": null
+    }
+  ]
+}
