@@ -19,7 +19,7 @@ pub fn run(tcx: TyCtxt) {
         IndexMap::<String, Vec<PropertiesAndReason>>::with_capacity(fn_defs.len() / 3);
 
     for fn_def in fn_defs {
-        let fn_name = tcx.def_path_str(internal(tcx, fn_def.def_id()));
+        let fn_name = format!("{crate_name}::{}", tcx.def_path_str(internal(tcx, fn_def.def_id())));
         let mut tags = Vec::new();
         crossfig::switch! {
             crate::asterinas => { let attrs = fn_def.all_attrs(); }
@@ -46,7 +46,7 @@ pub fn run(tcx: TyCtxt) {
     // Write JSON to `$UPG_DIR/_tags/$crate_name`.
     let dir_rapx = dir.join("_tags");
     _ = fs::create_dir(&dir_rapx);
-    let mut file_name = dir_rapx.join({
+    let file_name = dir_rapx.join({
         let types = tcx.crate_types();
         let is_bin = types.contains(&CrateType::Executable);
         // If a project has both lib and bin, append `-bin` for the latter.

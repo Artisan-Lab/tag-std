@@ -1,5 +1,5 @@
 {
-  "arch::boot::multiboot::parse_as_cstr": [
+  "ostd::arch::boot::multiboot::parse_as_cstr": [
     {
       "tags": [
         {
@@ -15,7 +15,7 @@
       "desc": "Refer to: [core::ffi::CStr::from_ptr](https://doc.rust-lang.org/stable/core/ffi/struct.CStr.html#method.from_ptr)"
     }
   ],
-  "arch::boot::multiboot2::make_str_vaddr_static": [
+  "ostd::arch::boot::multiboot2::make_str_vaddr_static": [
     {
       "tags": [
         {
@@ -31,7 +31,7 @@
       "desc": "Refer to [core::slice::from_raw_parts](https://doc.rust-lang.org/core/slice/fn.from_raw_parts.html#safety)"
     }
   ],
-  "arch::boot::smp::count_processors": [
+  "ostd::arch::boot::smp::count_processors": [
     {
       "tags": [
         {
@@ -47,7 +47,7 @@
       "desc": null
     }
   ],
-  "arch::boot::smp::bringup_all_aps": [
+  "ostd::arch::boot::smp::bringup_all_aps": [
     {
       "tags": [
         {
@@ -94,7 +94,7 @@
       "desc": null
     }
   ],
-  "arch::boot::smp::copy_ap_boot_code": [
+  "ostd::arch::boot::smp::copy_ap_boot_code": [
     {
       "tags": [
         {
@@ -111,7 +111,7 @@
       "desc": null
     }
   ],
-  "arch::boot::smp::fill_boot_info_ptr": [
+  "ostd::arch::boot::smp::fill_boot_info_ptr": [
     {
       "tags": [
         {
@@ -128,7 +128,7 @@
       "desc": null
     }
   ],
-  "arch::boot::smp::fill_boot_pt_ptr": [
+  "ostd::arch::boot::smp::fill_boot_pt_ptr": [
     {
       "tags": [
         {
@@ -145,7 +145,7 @@
       "desc": null
     }
   ],
-  "arch::boot::smp::wake_up_aps_via_mailbox": [
+  "ostd::arch::boot::smp::wake_up_aps_via_mailbox": [
     {
       "tags": [
         {
@@ -189,7 +189,7 @@
       "desc": "We've properly prepared all the resources for the application processors to boot successfully"
     }
   ],
-  "arch::boot::smp::send_boot_ipis": [
+  "ostd::arch::boot::smp::send_boot_ipis": [
     {
       "tags": [
         {
@@ -233,7 +233,7 @@
       "desc": "We've properly prepared all the resources for the application processors to boot successfully."
     }
   ],
-  "arch::boot::smp::send_startup_to_all_aps": [
+  "ostd::arch::boot::smp::send_startup_to_all_aps": [
     {
       "tags": [
         {
@@ -249,7 +249,7 @@
       "desc": null
     }
   ],
-  "arch::boot::smp::send_init_to_all_aps": [
+  "ostd::arch::boot::smp::send_init_to_all_aps": [
     {
       "tags": [
         {
@@ -265,7 +265,7 @@
       "desc": null
     }
   ],
-  "arch::boot::smp::send_init_deassert": [
+  "ostd::arch::boot::smp::send_init_deassert": [
     {
       "tags": [
         {
@@ -281,7 +281,7 @@
       "desc": null
     }
   ],
-  "arch::device::serial::SerialPort::new": [
+  "ostd::arch::device::serial::SerialPort::new": [
     {
       "tags": [
         {
@@ -306,7 +306,7 @@
       "desc": null
     }
   ],
-  "arch::iommu::dma_remapping::context_table::RootTable::map": [
+  "ostd::arch::iommu::dma_remapping::context_table::RootTable::map": [
     {
       "tags": [
         {
@@ -322,7 +322,7 @@
       "desc": null
     }
   ],
-  "arch::iommu::dma_remapping::context_table::ContextTable::map": [
+  "ostd::arch::iommu::dma_remapping::context_table::ContextTable::map": [
     {
       "tags": [
         {
@@ -338,7 +338,7 @@
       "desc": null
     }
   ],
-  "arch::iommu::dma_remapping::map": [
+  "ostd::arch::iommu::dma_remapping::map": [
     {
       "tags": [
         {
@@ -354,7 +354,7 @@
       "desc": "Mapping an incorrect address may lead to a kernel data leak."
     }
   ],
-  "arch::iommu::fault::FaultEventRegisters::new": [
+  "ostd::arch::iommu::fault::FaultEventRegisters::new": [
     {
       "tags": [
         {
@@ -381,7 +381,7 @@
       "desc": null
     }
   ],
-  "arch::iommu::registers::invalidation::InvalidationRegisters::new": [
+  "ostd::arch::iommu::registers::invalidation::InvalidationRegisters::new": [
     {
       "tags": [
         {
@@ -407,7 +407,7 @@
       "desc": null
     }
   ],
-  "arch::irq::send_ipi": [
+  "ostd::arch::irq::send_ipi": [
     {
       "tags": [
         {
@@ -432,7 +432,7 @@
       "desc": null
     }
   ],
-  "arch::kernel::acpi::get_acpi_tables": [
+  "ostd::arch::kernel::acpi::get_acpi_tables": [
     {
       "tags": [
         {
@@ -448,7 +448,7 @@
       "desc": null
     }
   ],
-  "arch::kernel::apic::get_or_init::ForceSyncSend::<T>::get": [
+  "ostd::arch::kernel::apic::get_or_init::ForceSyncSend::<T>::get": [
     {
       "tags": [
         {
@@ -464,7 +464,7 @@
       "desc": null
     }
   ],
-  "arch::kernel::irq::ioapic::IoApic::new": [
+  "ostd::arch::kernel::irq::ioapic::IoApic::new": [
     {
       "tags": [
         {
@@ -481,7 +481,7 @@
       "desc": null
     }
   ],
-  "arch::kernel::irq::ioapic::IoApicAccess::new": [
+  "ostd::arch::kernel::irq::ioapic::IoApicAccess::new": [
     {
       "tags": [
         {
@@ -498,7 +498,7 @@
       "desc": null
     }
   ],
-  "arch::mm::activate_page_table": [
+  "ostd::arch::mm::activate_page_table": [
     {
       "tags": [
         {
@@ -515,7 +515,7 @@
       "desc": "Changing the level 4 page table is unsafe, because it's possible to violate memory safety by changing the page mapping."
     }
   ],
-  "arch::timer::hpet::Hpet::new": [
+  "ostd::arch::timer::hpet::Hpet::new": [
     {
       "tags": [
         {
@@ -532,7 +532,7 @@
       "desc": null
     }
   ],
-  "arch::trap::gdt::init": [
+  "ostd::arch::trap::gdt::init": [
     {
       "tags": [
         {
@@ -548,7 +548,7 @@
       "desc": null
     }
   ],
-  "arch::trap::syscall::init": [
+  "ostd::arch::trap::syscall::init": [
     {
       "tags": [
         {
@@ -564,7 +564,7 @@
       "desc": "The segment selectors used in the `syscall` and `sysret` instructions should have been properly initialized."
     }
   ],
-  "arch::trap::init": [
+  "ostd::arch::trap::init": [
     {
       "tags": [
         {
@@ -590,7 +590,7 @@
       "desc": null
     }
   ],
-  "arch::late_init_on_bsp": [
+  "ostd::arch::late_init_on_bsp": [
     {
       "tags": [
         {
@@ -616,7 +616,7 @@
       "desc": null
     }
   ],
-  "arch::init_on_ap": [
+  "ostd::arch::init_on_ap": [
     {
       "tags": [
         {
@@ -641,7 +641,7 @@
       "desc": null
     }
   ],
-  "boot::smp::boot_all_aps": [
+  "ostd::boot::smp::boot_all_aps": [
     {
       "tags": [
         {
@@ -658,7 +658,7 @@
       "desc": null
     }
   ],
-  "cpu::local::cell::CpuLocalCell::<T>::__new": [
+  "ostd::cpu::local::cell::CpuLocalCell::<T>::__new": [
     {
       "tags": [
         {
@@ -675,7 +675,7 @@
       "desc": "For the object initialized by this function"
     }
   ],
-  "cpu::local::dyn_cpu_local::<impl cpu::local::CpuLocal<T, cpu::local::dyn_cpu_local::DynamicStorage<T>>>::__new_dynamic": [
+  "ostd::cpu::local::dyn_cpu_local::<impl cpu::local::CpuLocal<T, cpu::local::dyn_cpu_local::DynamicStorage<T>>>::__new_dynamic": [
     {
       "tags": [
         {
@@ -700,7 +700,7 @@
       "desc": null
     }
   ],
-  "cpu::local::static_cpu_local::<impl cpu::local::CpuLocal<T, cpu::local::static_cpu_local::StaticStorage<T>>>::__new_static": [
+  "ostd::cpu::local::static_cpu_local::<impl cpu::local::CpuLocal<T, cpu::local::static_cpu_local::StaticStorage<T>>>::__new_static": [
     {
       "tags": [
         {
@@ -717,7 +717,7 @@
       "desc": "For the object initialized by this function"
     }
   ],
-  "cpu::local::copy_bsp_for_ap": [
+  "ostd::cpu::local::copy_bsp_for_ap": [
     {
       "tags": [
         {
@@ -752,7 +752,7 @@
       "desc": null
     }
   ],
-  "cpu::init_num_cpus": [
+  "ostd::cpu::init_num_cpus": [
     {
       "tags": [
         {
@@ -778,7 +778,7 @@
       "desc": "The argument is the correct value of the number of CPUs."
     }
   ],
-  "cpu::set_this_cpu_id": [
+  "ostd::cpu::set_this_cpu_id": [
     {
       "tags": [
         {
@@ -808,7 +808,7 @@
       "desc": "During the early boot phase"
     }
   ],
-  "cpu::init_on_bsp": [
+  "ostd::cpu::init_on_bsp": [
     {
       "tags": [
         {
@@ -843,7 +843,7 @@
       "desc": null
     }
   ],
-  "cpu::init_on_ap": [
+  "ostd::cpu::init_on_ap": [
     {
       "tags": [
         {
@@ -869,7 +869,7 @@
       "desc": "The argument is the correct CPU ID of the AP."
     }
   ],
-  "io::io_mem::allocator::IoMemAllocator::recycle": [
+  "ostd::io::io_mem::allocator::IoMemAllocator::recycle": [
     {
       "tags": [
         {
@@ -894,7 +894,7 @@
       "desc": null
     }
   ],
-  "io::io_mem::allocator::init": [
+  "ostd::io::io_mem::allocator::init": [
     {
       "tags": [
         {
@@ -910,7 +910,7 @@
       "desc": "All the memory that belong to the system device should have been removed"
     }
   ],
-  "io::init": [
+  "ostd::io::init": [
     {
       "tags": [
         {
@@ -951,7 +951,7 @@
       "desc": "All the memory that belong to the system device should have been removed"
     }
   ],
-  "mm::frame::allocator::init": [
+  "ostd::mm::frame::allocator::init": [
     {
       "tags": [
         {
@@ -985,7 +985,7 @@
       "desc": null
     }
   ],
-  "mm::frame::allocator::init_early_allocator": [
+  "ostd::mm::frame::allocator::init_early_allocator": [
     {
       "tags": [
         {
@@ -1010,7 +1010,7 @@
       "desc": null
     }
   ],
-  "mm::frame::meta::MetaSlot::inc_ref_count": [
+  "ostd::mm::frame::meta::MetaSlot::inc_ref_count": [
     {
       "tags": [
         {
@@ -1037,7 +1037,7 @@
       "desc": "Increases the frame reference count by one"
     }
   ],
-  "mm::frame::meta::MetaSlot::dyn_meta_ptr": [
+  "ostd::mm::frame::meta::MetaSlot::dyn_meta_ptr": [
     {
       "tags": [
         {
@@ -1063,7 +1063,7 @@
       "desc": null
     }
   ],
-  "mm::frame::meta::MetaSlot::write_meta": [
+  "ostd::mm::frame::meta::MetaSlot::write_meta": [
     {
       "tags": [
         {
@@ -1088,7 +1088,7 @@
       "desc": null
     }
   ],
-  "mm::frame::meta::MetaSlot::drop_last_in_place": [
+  "ostd::mm::frame::meta::MetaSlot::drop_last_in_place": [
     {
       "tags": [
         {
@@ -1115,7 +1115,7 @@
       "desc": null
     }
   ],
-  "mm::frame::meta::MetaSlot::drop_meta_in_place": [
+  "ostd::mm::frame::meta::MetaSlot::drop_meta_in_place": [
     {
       "tags": [
         {
@@ -1142,7 +1142,7 @@
       "desc": null
     }
   ],
-  "mm::frame::meta::init": [
+  "ostd::mm::frame::meta::init": [
     {
       "tags": [
         {
@@ -1168,7 +1168,7 @@
       "desc": null
     }
   ],
-  "mm::frame::segment::Segment::<M>::from_raw": [
+  "ostd::mm::frame::segment::Segment::<M>::from_raw": [
     {
       "tags": [
         {
@@ -1184,7 +1184,7 @@
       "desc": "For a Segment matching the type `M` derived from range"
     }
   ],
-  "mm::frame::unique::UniqueFrame::<M>::from_raw": [
+  "ostd::mm::frame::unique::UniqueFrame::<M>::from_raw": [
     {
       "tags": [
         {
@@ -1200,7 +1200,7 @@
       "desc": "For the frame pointed by the addr"
     }
   ],
-  "mm::frame::Frame::<M>::from_raw": [
+  "ostd::mm::frame::Frame::<M>::from_raw": [
     {
       "tags": [
         {
@@ -1216,7 +1216,7 @@
       "desc": "For the frame pointed by paddr"
     }
   ],
-  "mm::frame::inc_frame_ref_count": [
+  "ostd::mm::frame::inc_frame_ref_count": [
     {
       "tags": [
         {
@@ -1242,7 +1242,7 @@
       "desc": null
     }
   ],
-  "mm::heap::slot::HeapSlot::new": [
+  "ostd::mm::heap::slot::HeapSlot::new": [
     {
       "tags": [
         {
@@ -1259,7 +1259,7 @@
       "desc": null
     }
   ],
-  "mm::io::memcpy": [
+  "ostd::mm::io::memcpy": [
     {
       "tags": [
         {
@@ -1286,7 +1286,7 @@
       "desc": null
     }
   ],
-  "mm::io::memcpy_fallible": [
+  "ostd::mm::io::memcpy_fallible": [
     {
       "tags": [
         {
@@ -1311,7 +1311,7 @@
       "desc": null
     }
   ],
-  "mm::io::memset_fallible": [
+  "ostd::mm::io::memset_fallible": [
     {
       "tags": [
         {
@@ -1327,7 +1327,7 @@
       "desc": null
     }
   ],
-  "mm::io::VmReader::<'a, mm::io::Infallible>::from_kernel_space": [
+  "ostd::mm::io::VmReader::<'a, mm::io::Infallible>::from_kernel_space": [
     {
       "tags": [
         {
@@ -1344,7 +1344,7 @@
       "desc": null
     }
   ],
-  "mm::io::VmReader::<'_>::from_user_space": [
+  "ostd::mm::io::VmReader::<'_>::from_user_space": [
     {
       "tags": [
         {
@@ -1361,7 +1361,7 @@
       "desc": null
     }
   ],
-  "mm::io::VmWriter::<'a, mm::io::Infallible>::from_kernel_space": [
+  "ostd::mm::io::VmWriter::<'a, mm::io::Infallible>::from_kernel_space": [
     {
       "tags": [
         {
@@ -1378,7 +1378,7 @@
       "desc": null
     }
   ],
-  "mm::io::VmWriter::<'_>::from_user_space": [
+  "ostd::mm::io::VmWriter::<'_>::from_user_space": [
     {
       "tags": [
         {
@@ -1395,7 +1395,7 @@
       "desc": null
     }
   ],
-  "mm::kspace::kvirt_area::KVirtArea::map_untracked_frames": [
+  "ostd::mm::kspace::kvirt_area::KVirtArea::map_untracked_frames": [
     {
       "tags": [
         {
@@ -1411,7 +1411,7 @@
       "desc": null
     }
   ],
-  "mm::kspace::activate_kernel_page_table": [
+  "ostd::mm::kspace::activate_kernel_page_table": [
     {
       "tags": [
         {
@@ -1427,7 +1427,7 @@
       "desc": null
     }
   ],
-  "mm::page_table::node::child::Child::<C>::from_pte": [
+  "ostd::mm::page_table::node::child::Child::<C>::from_pte": [
     {
       "tags": [
         {
@@ -1457,7 +1457,7 @@
       "desc": null
     }
   ],
-  "mm::page_table::node::child::ChildRef::<'_, C>::from_pte": [
+  "ostd::mm::page_table::node::child::ChildRef::<'_, C>::from_pte": [
     {
       "tags": [
         {
@@ -1474,7 +1474,7 @@
       "desc": null
     }
   ],
-  "mm::page_table::node::entry::Entry::<'a, 'rcu, C>::new_at": [
+  "ostd::mm::page_table::node::entry::Entry::<'a, 'rcu, C>::new_at": [
     {
       "tags": [
         {
@@ -1491,7 +1491,7 @@
       "desc": null
     }
   ],
-  "mm::page_table::node::<impl mm::frame::Frame<mm::page_table::node::PageTablePageMeta<C>>>::activate": [
+  "ostd::mm::page_table::node::<impl mm::frame::Frame<mm::page_table::node::PageTablePageMeta<C>>>::activate": [
     {
       "tags": [
         {
@@ -1507,7 +1507,7 @@
       "desc": null
     }
   ],
-  "mm::page_table::node::<impl mm::frame::Frame<mm::page_table::node::PageTablePageMeta<C>>>::first_activate": [
+  "ostd::mm::page_table::node::<impl mm::frame::Frame<mm::page_table::node::PageTablePageMeta<C>>>::first_activate": [
     {
       "tags": [
         {
@@ -1537,7 +1537,7 @@
       "desc": null
     }
   ],
-  "mm::page_table::node::<impl mm::frame::frame_ref::FrameRef<'a, mm::page_table::node::PageTablePageMeta<C>>>::make_guard_unchecked": [
+  "ostd::mm::page_table::node::<impl mm::frame::frame_ref::FrameRef<'a, mm::page_table::node::PageTablePageMeta<C>>>::make_guard_unchecked": [
     {
       "tags": [
         {
@@ -1553,7 +1553,7 @@
       "desc": null
     }
   ],
-  "mm::page_table::node::PageTableGuard::<'rcu, C>::read_pte": [
+  "ostd::mm::page_table::node::PageTableGuard::<'rcu, C>::read_pte": [
     {
       "tags": [
         {
@@ -1570,7 +1570,7 @@
       "desc": null
     }
   ],
-  "mm::page_table::node::PageTableGuard::<'rcu, C>::write_pte": [
+  "ostd::mm::page_table::node::PageTableGuard::<'rcu, C>::write_pte": [
     {
       "tags": [
         {
@@ -1605,7 +1605,7 @@
       "desc": null
     }
   ],
-  "mm::page_table::cursor::locking::dfs_release_lock": [
+  "ostd::mm::page_table::cursor::locking::dfs_release_lock": [
     {
       "tags": [
         {
@@ -1639,7 +1639,7 @@
       "desc": "For cur_node:"
     }
   ],
-  "mm::page_table::cursor::locking::dfs_mark_stray_and_unlock": [
+  "ostd::mm::page_table::cursor::locking::dfs_mark_stray_and_unlock": [
     {
       "tags": [
         {
@@ -1682,7 +1682,7 @@
       "desc": "For sub_tree"
     }
   ],
-  "mm::page_table::cursor::CursorMut::<'rcu, C>::map": [
+  "ostd::mm::page_table::cursor::CursorMut::<'rcu, C>::map": [
     {
       "tags": [
         {
@@ -1707,7 +1707,7 @@
       "desc": null
     }
   ],
-  "mm::page_table::cursor::CursorMut::<'rcu, C>::take_next": [
+  "ostd::mm::page_table::cursor::CursorMut::<'rcu, C>::take_next": [
     {
       "tags": [
         {
@@ -1723,7 +1723,7 @@
       "desc": null
     }
   ],
-  "mm::page_table::cursor::CursorMut::<'rcu, C>::protect_next": [
+  "ostd::mm::page_table::cursor::CursorMut::<'rcu, C>::protect_next": [
     {
       "tags": [
         {
@@ -1753,7 +1753,7 @@
       "desc": null
     }
   ],
-  "mm::page_table::boot_pt::dismiss": [
+  "ostd::mm::page_table::boot_pt::dismiss": [
     {
       "tags": [
         {
@@ -1797,7 +1797,7 @@
       "desc": null
     }
   ],
-  "mm::page_table::boot_pt::BootPageTable::<E, C>::from_current_pt": [
+  "ostd::mm::page_table::boot_pt::BootPageTable::<E, C>::from_current_pt": [
     {
       "tags": [
         {
@@ -1813,7 +1813,7 @@
       "desc": null
     }
   ],
-  "mm::page_table::boot_pt::BootPageTable::<E, C>::map_base_page": [
+  "ostd::mm::page_table::boot_pt::BootPageTable::<E, C>::map_base_page": [
     {
       "tags": [
         {
@@ -1829,7 +1829,7 @@
       "desc": null
     }
   ],
-  "mm::page_table::boot_pt::BootPageTable::<E, C>::protect_base_page": [
+  "ostd::mm::page_table::boot_pt::BootPageTable::<E, C>::protect_base_page": [
     {
       "tags": [
         {
@@ -1845,7 +1845,7 @@
       "desc": null
     }
   ],
-  "mm::page_table::PageTableConfig::item_from_raw": [
+  "ostd::mm::page_table::PageTableConfig::item_from_raw": [
     {
       "tags": [
         {
@@ -1876,7 +1876,7 @@
       "desc": null
     }
   ],
-  "mm::page_table::PageTable::<mm::kspace::KernelPtConfig>::protect_flush_tlb": [
+  "ostd::mm::page_table::PageTable::<mm::kspace::KernelPtConfig>::protect_flush_tlb": [
     {
       "tags": [
         {
@@ -1892,7 +1892,7 @@
       "desc": null
     }
   ],
-  "mm::page_table::PageTable::<C>::first_activate_unchecked": [
+  "ostd::mm::page_table::PageTable::<C>::first_activate_unchecked": [
     {
       "tags": [
         {
@@ -1908,7 +1908,7 @@
       "desc": null
     }
   ],
-  "mm::page_table::PageTable::<C>::shallow_copy": [
+  "ostd::mm::page_table::PageTable::<C>::shallow_copy": [
     {
       "tags": [
         {
@@ -1924,7 +1924,7 @@
       "desc": null
     }
   ],
-  "mm::page_table::load_pte": [
+  "ostd::mm::page_table::load_pte": [
     {
       "tags": [
         {
@@ -1940,7 +1940,7 @@
       "desc": null
     }
   ],
-  "mm::page_table::store_pte": [
+  "ostd::mm::page_table::store_pte": [
     {
       "tags": [
         {
@@ -1956,7 +1956,7 @@
       "desc": null
     }
   ],
-  "task::processor::after_switching_to": [
+  "ostd::task::processor::after_switching_to": [
     {
       "tags": [
         {
@@ -1972,7 +1972,7 @@
       "desc": null
     }
   ],
-  "task::utils::ForceSync::<T>::get": [
+  "ostd::task::utils::ForceSync::<T>::get": [
     {
       "tags": [
         {
@@ -1988,7 +1988,7 @@
       "desc": null
     }
   ],
-  "task::CurrentTask::new": [
+  "ostd::task::CurrentTask::new": [
     {
       "tags": [
         {
@@ -2004,7 +2004,7 @@
       "desc": null
     }
   ],
-  "init": [
+  "ostd::init": [
     {
       "tags": [
         {
@@ -2030,7 +2030,7 @@
       "desc": null
     }
   ],
-  "io::io_port::IoPort::<T, A>::new": [
+  "ostd::io::io_port::IoPort::<T, A>::new": [
     {
       "tags": [
         {
@@ -2046,7 +2046,7 @@
       "desc": null
     }
   ],
-  "io::io_port::allocator::init": [
+  "ostd::io::io_port::allocator::init": [
     {
       "tags": [
         {
@@ -2073,7 +2073,7 @@
       "desc": null
     }
   ],
-  "io::io_port::allocator::IoPortAllocator::recycle": [
+  "ostd::io::io_port::allocator::IoPortAllocator::recycle": [
     {
       "tags": [
         {
