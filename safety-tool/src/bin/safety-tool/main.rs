@@ -58,6 +58,7 @@ use std::ops::ControlFlow;
 extern crate tracing;
 
 mod analyze_hir;
+mod output_json;
 
 fn main() {
     safety_tool::logger::init();
@@ -69,9 +70,14 @@ fn main() {
         _ => { let rustc_args = &rustc_args; }
     };
 
+    let emit_tag_json = std::env::var("SAFETY_TOOL_JSON").is_ok_and(|s| s != "0");
     let res = run_with_tcx!(rustc_args, |tcx| {
-        analyze_hir::analyze_hir(tcx);
-        analyze(tcx);
+        if emit_tag_json {
+            output_json::run(tcx);
+        } else {
+            analyze_hir::analyze_hir(tcx);
+            analyze(tcx);
+        }
         compilation_status()
     });
 

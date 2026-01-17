@@ -48,6 +48,10 @@ jobs:
           path: ${{env.SP_OUT_DIR }}
           name: stat_asterinas
 
+      - name: Collect Annotated Tags
+        working-directory: safety-tool
+        run: ./collect_tags.sh
+
       - name: Print safety-tool diagnostics
         if: always()
         working-directory: tag-asterinas/ostd
