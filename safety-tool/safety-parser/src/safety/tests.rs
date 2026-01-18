@@ -91,7 +91,7 @@ fn parse_sp_str() {
     let any = "any(Tag1, Tag2)";
     let tag1 = "Tag1";
     let tag2 = "Tag2";
-    let sp = PropertiesAndReason::parse_sp_str(any);
+    let sp = PropertiesAndReason::parse_sp_str(any).unwrap();
     assert_eq!(sp.tags.len(), 1, "{sp:#?} must have single property");
     assert!(sp.tags[0].tag.typ.is_none());
     assert_eq!(&*sp.tags[0].tag.name, ANY);

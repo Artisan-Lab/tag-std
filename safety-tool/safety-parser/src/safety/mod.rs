@@ -211,33 +211,11 @@ impl PropertiesAndReason {
         }
     }
 
-    /// The argument must be in the syntax of `Tag` or `any(Tag1, Tag2, ...)`, without
-    /// validating the spec.
-    pub fn parse_sp_str(name: &str) -> Self {
-        struct SepartedTags {
-            args: Punctuated<Expr, Token![,]>,
-        }
-        impl Parse for SepartedTags {
-            fn parse(input: ParseStream) -> Result<Self> {
-                let content;
-                let _paren_token: token::Paren = parenthesized!(content in input);
-                Ok(SepartedTags { args: content.parse_terminated(Expr::parse, Token![,])? })
-            }
-        }
-
-        if let Some(args) = name.strip_prefix(ANY) {
-            PropertiesAndReason {
-                tags: Box::new([Property {
-                    tag: TagNameType { typ: None, name: ANY.into() },
-                    args: parse_str::<SepartedTags>(args)
-                        .map(|val| val.args.into_iter().collect())
-                        .unwrap_or_default(),
-                }]),
-                desc: None,
-            }
-        } else {
-            Self::new_single_sp(name)
-        }
+    /// The argument must be in the syntax of `Tag` or `any(Tag1, Tag2, ...)`,
+    /// with optional reasons, but without validating the spec.
+    /// This is identical to be `syn::parse_str::<PropertiesAndReason>(s)`.
+    pub fn parse_sp_str(s: &str) -> syn::Result<Self> {
+        parse_str(s)
     }
 }
 
