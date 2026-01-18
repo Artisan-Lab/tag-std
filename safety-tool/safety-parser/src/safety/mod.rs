@@ -225,10 +225,10 @@ impl PropertiesAndReason {
             }
         }
 
-        if let Some(args) = name.strip_prefix("any") {
+        if let Some(args) = name.strip_prefix(ANY) {
             PropertiesAndReason {
                 tags: Box::new([Property {
-                    tag: TagNameType { typ: None, name: "any".into() },
+                    tag: TagNameType { typ: None, name: ANY.into() },
                     args: parse_str::<SepartedTags>(args)
                         .map(|val| val.args.into_iter().collect())
                         .unwrap_or_default(),
@@ -300,6 +300,10 @@ impl Property {
     pub fn args_in_any_tag(&self) -> Option<Vec<PropertiesAndReason>> {
         (self.tag.name() == ANY && !self.args.is_empty())
             .then(|| utils::parse_args_in_any_tag(&self.args))
+    }
+
+    pub fn args_as_string(&self) -> Box<[String]> {
+        self.args.iter().map(utils::expr_to_string).collect()
     }
 }
 

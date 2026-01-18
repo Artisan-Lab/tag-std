@@ -75,3 +75,31 @@ fn parse_safety_complex_args() {
     // complex expressions in arguments
     _ = parse_args(r#" hazard.Alias(A {a: self.a}, a::b(c![])) : "" "#).unwrap();
 }
+
+#[test]
+fn new_single_sp() {
+    let name = "Tag";
+    let sp = PropertiesAndReason::new_single_sp(name);
+    assert_eq!(sp.tags.len(), 1, "{sp:#?} must have single property");
+    assert!(sp.tags[0].args.is_empty(), "{sp:#?} must have no arguments");
+    assert!(sp.tags[0].tag.typ.is_none());
+    assert_eq!(&*sp.tags[0].tag.name, name);
+}
+
+#[test]
+fn parse_sp_str() {
+    let any = "any(Tag1, Tag2)";
+    let tag1 = "Tag1";
+    let tag2 = "Tag2";
+    let sp = PropertiesAndReason::parse_sp_str(any);
+    assert_eq!(sp.tags.len(), 1, "{sp:#?} must have single property");
+    assert!(sp.tags[0].tag.typ.is_none());
+    assert_eq!(&*sp.tags[0].tag.name, ANY);
+    assert_eq!(&*sp.tags[0].args_as_string(), [tag1, tag2]);
+
+    let args = sp.tags[0]
+        .args_in_any_tag()
+        .unwrap_or_else(|| panic!("{sp:#?} must be any `any` SP with two args"));
+    assert_eq!(&*args[0].tags[0].tag.name, tag1);
+    assert_eq!(&*args[1].tags[0].tag.name, tag2);
+}
