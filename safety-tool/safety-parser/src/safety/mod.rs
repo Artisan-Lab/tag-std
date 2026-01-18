@@ -199,6 +199,24 @@ impl PropertiesAndReason {
     pub fn need_gen_doc(&self) -> bool {
         self.desc.is_some() || !self.tags.is_empty()
     }
+
+    /// Direct construct the string as a single property, without validating the spec.
+    pub fn new_single_sp(name: &str) -> Self {
+        PropertiesAndReason {
+            tags: Box::new([Property {
+                tag: TagNameType { typ: None, name: name.into() },
+                args: Box::default(),
+            }]),
+            desc: None,
+        }
+    }
+
+    /// The argument must be in the syntax of `Tag` or `any(Tag1, Tag2, ...)`,
+    /// with optional reasons, but without validating the spec.
+    /// This is identical to be `syn::parse_str::<PropertiesAndReason>(s)`.
+    pub fn parse_sp_str(s: &str) -> syn::Result<Self> {
+        parse_str(s)
+    }
 }
 
 #[derive(Clone, Deserialize, Serialize)]
@@ -260,6 +278,10 @@ impl Property {
     pub fn args_in_any_tag(&self) -> Option<Vec<PropertiesAndReason>> {
         (self.tag.name() == ANY && !self.args.is_empty())
             .then(|| utils::parse_args_in_any_tag(&self.args))
+    }
+
+    pub fn args_as_string(&self) -> Box<[String]> {
+        self.args.iter().map(utils::expr_to_string).collect()
     }
 }
 
