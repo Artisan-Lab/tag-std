@@ -199,6 +199,46 @@ impl PropertiesAndReason {
     pub fn need_gen_doc(&self) -> bool {
         self.desc.is_some() || !self.tags.is_empty()
     }
+
+    /// Direct construct the string as a single property, without validating the spec.
+    pub fn new_single_sp(name: &str) -> Self {
+        PropertiesAndReason {
+            tags: Box::new([Property {
+                tag: TagNameType { typ: None, name: name.into() },
+                args: Box::default(),
+            }]),
+            desc: None,
+        }
+    }
+
+    /// The argument must be in the syntax of `Tag` or `any(Tag1, Tag2, ...)`, without
+    /// validating the spec.
+    pub fn parse_sp_str(name: &str) -> Self {
+        struct SepartedTags {
+            args: Punctuated<Expr, Token![,]>,
+        }
+        impl Parse for SepartedTags {
+            fn parse(input: ParseStream) -> Result<Self> {
+                let content;
+                let _paren_token: token::Paren = parenthesized!(content in input);
+                Ok(SepartedTags { args: content.parse_terminated(Expr::parse, Token![,])? })
+            }
+        }
+
+        if let Some(args) = name.strip_prefix("any") {
+            PropertiesAndReason {
+                tags: Box::new([Property {
+                    tag: TagNameType { typ: None, name: "any".into() },
+                    args: parse_str::<SepartedTags>(args)
+                        .map(|val| val.args.into_iter().collect())
+                        .unwrap_or_default(),
+                }]),
+                desc: None,
+            }
+        } else {
+            Self::new_single_sp(name)
+        }
+    }
 }
 
 #[derive(Clone, Deserialize, Serialize)]
