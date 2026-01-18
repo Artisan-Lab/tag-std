@@ -2,7 +2,11 @@ use crate::{CrateDef, internal, rustc_public};
 use indexmap::IndexMap;
 use rustc_middle::ty::TyCtxt;
 use rustc_session::config::CrateType;
-use safety_parser::safety::{PropertiesAndReason, parse_attr_and_get_properties};
+use safety_parser::{
+    configuration,
+    safety::{PropertiesAndReason, parse_attr_and_get_properties},
+};
+use serde::Serialize;
 use std::{env, fs, path::PathBuf};
 
 /// Emit annotatation to `$UPG_DIR/_tags/$crate.json`.
@@ -53,5 +57,20 @@ pub fn run(tcx: TyCtxt) {
         if is_bin { format!("{crate_name}-bin.json") } else { format!("{crate_name}.json") }
     });
     let file = fs::File::create(file_name).unwrap();
-    serde_json::to_writer_pretty(file, &safety_tags).unwrap();
+    let output = Ouput {
+        v_fn: safety_tags,
+        spec: {
+            let mut spec = configuration::CACHE.map.clone();
+            // Clear src for space.
+            spec.values_mut().for_each(|v| v.src = Box::default());
+            spec
+        },
+    };
+    serde_json::to_writer_pretty(file, &output).unwrap();
+}
+
+#[derive(Serialize)]
+struct Ouput {
+    v_fn: IndexMap<String, Vec<PropertiesAndReason>>,
+    spec: IndexMap<Box<str>, configuration::Key>,
 }
