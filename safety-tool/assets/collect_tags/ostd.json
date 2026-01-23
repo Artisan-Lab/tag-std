@@ -1289,11 +1289,11 @@
                 "name": "Ge"
               },
               "args": [
-                "self . ref_count",
+                "self.ref_count",
                 "1"
               ]
             },
-            "doc": "self . ref_count should be greater than or equal to 1.\n\n"
+            "doc": "self.ref_count should be greater than or equal to 1.\n\n"
           },
           {
             "sp": {
@@ -1302,15 +1302,15 @@
                 "name": "Ne"
               },
               "args": [
-                "self . ref_count",
+                "self.ref_count",
                 "REF_COUNT_UNUSED"
               ]
             },
-            "doc": "self . ref_count should not be equal to REF_COUNT_UNUSED.\n\n"
+            "doc": "self.ref_count should not be equal to REF_COUNT_UNUSED.\n\n"
           }
         ],
         "desc": "Increases the frame reference count by one",
-        "doc": "Increases the frame reference count by one\n\n* Ge: self . ref_count should be greater than or equal to 1.\n\n\n* Ne: self . ref_count should not be equal to REF_COUNT_UNUSED.\n\n\n"
+        "doc": "Increases the frame reference count by one\n\n* Ge: self.ref_count should be greater than or equal to 1.\n\n\n* Ne: self.ref_count should not be equal to REF_COUNT_UNUSED.\n\n\n"
       }
     ],
     "ostd::mm::frame::meta::MetaSlot::dyn_meta_ptr": [
@@ -1336,14 +1336,14 @@
                 "name": "Valid"
               },
               "args": [
-                "self . storage"
+                "self.storage"
               ]
             },
-            "doc": "self . storage should be valid.\n\n"
+            "doc": "self.storage should be valid.\n\n"
           }
         ],
         "desc": null,
-        "doc": "* OriginateFrom: The matadata should originate from [`Self::write_meta`].\n\n\n* Valid: self . storage should be valid.\n\n\n"
+        "doc": "* OriginateFrom: The matadata should originate from [`Self::write_meta`].\n\n\n* Valid: self.storage should be valid.\n\n\n"
       }
     ],
     "ostd::mm::frame::meta::MetaSlot::write_meta": [
@@ -1356,10 +1356,10 @@
                 "name": "MutAccess"
               },
               "args": [
-                "self . vtable_ptr"
+                "self.vtable_ptr"
               ]
             },
-            "doc": "The caller should have exclusive mutable access to self . vtable_ptr.\n\n"
+            "doc": "The caller should have exclusive mutable access to self.vtable_ptr.\n\n"
           },
           {
             "sp": {
@@ -1368,14 +1368,14 @@
                 "name": "MutAccess"
               },
               "args": [
-                "self . storage"
+                "self.storage"
               ]
             },
-            "doc": "The caller should have exclusive mutable access to self . storage.\n\n"
+            "doc": "The caller should have exclusive mutable access to self.storage.\n\n"
           }
         ],
         "desc": null,
-        "doc": "* MutAccess: The caller should have exclusive mutable access to self . vtable_ptr.\n\n\n* MutAccess: The caller should have exclusive mutable access to self . storage.\n\n\n"
+        "doc": "* MutAccess: The caller should have exclusive mutable access to self.vtable_ptr.\n\n\n* MutAccess: The caller should have exclusive mutable access to self.storage.\n\n\n"
       }
     ],
     "ostd::mm::frame::meta::MetaSlot::drop_last_in_place": [
@@ -1388,11 +1388,11 @@
                 "name": "Eq"
               },
               "args": [
-                "self . ref_count",
+                "self.ref_count",
                 "0"
               ]
             },
-            "doc": "self . ref_count should be equal to 0.\n\n"
+            "doc": "self.ref_count should be equal to 0.\n\n"
           },
           {
             "sp": {
@@ -1409,7 +1409,7 @@
           }
         ],
         "desc": null,
-        "doc": "* Eq: self . ref_count should be equal to 0.\n\n\n* OriginateFrom: The meta data should originate from `Self::write_meta`.\n\n\n"
+        "doc": "* Eq: self.ref_count should be equal to 0.\n\n\n* OriginateFrom: The meta data should originate from `Self::write_meta`.\n\n\n"
       }
     ],
     "ostd::mm::frame::meta::MetaSlot::drop_meta_in_place": [
@@ -1422,11 +1422,11 @@
                 "name": "Eq"
               },
               "args": [
-                "self . ref_count",
+                "self.ref_count",
                 "0"
               ]
             },
-            "doc": "self . ref_count should be equal to 0.\n\n"
+            "doc": "self.ref_count should be equal to 0.\n\n"
           },
           {
             "sp": {
@@ -1443,7 +1443,7 @@
           }
         ],
         "desc": null,
-        "doc": "* Eq: self . ref_count should be equal to 0.\n\n\n* OriginateFrom: The meta data should originate from `Self::write_meta`.\n\n\n"
+        "doc": "* Eq: self.ref_count should be equal to 0.\n\n\n* OriginateFrom: The meta data should originate from `Self::write_meta`.\n\n\n"
       }
     ],
     "ostd::mm::frame::meta::init": [

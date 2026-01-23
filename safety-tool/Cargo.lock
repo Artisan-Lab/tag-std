@@ -1015,6 +1015,7 @@ name = "safety-parser"
 version = "0.4.2"
 dependencies = [
  "indexmap",
+ "prettyplease",
  "proc-macro2",
  "quote",
  "serde",
@@ -1039,7 +1040,6 @@ dependencies = [
  "itertools",
  "jiff",
  "owo-colors",
- "prettyplease",
  "rusqlite",
  "safety-parser",
  "serde",
