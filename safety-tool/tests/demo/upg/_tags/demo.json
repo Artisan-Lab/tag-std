@@ -4,144 +4,185 @@
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "Init"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "Init"
+              },
+              "args": [
+                "self . ptr",
+                "u8",
+                "self . len"
+              ]
             },
-            "args": [
-              "self . ptr",
-              "u8",
-              "self . len"
-            ]
+            "doc": "the memory range `[self . ptr, self . ptr + sizeof(u8)*self . len]` must be fully initialized for type `u8`\n\n"
           },
           {
-            "tag": {
-              "typ": null,
-              "name": "InBound"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "InBound"
+              },
+              "args": [
+                "self . ptr",
+                "u8",
+                "self . len"
+              ]
             },
-            "args": [
-              "self . ptr",
-              "u8",
-              "self . len"
-            ]
+            "doc": "the pointer `self . ptr` and its offset up to `sizeof(u8)*self . len` must point to a single allocated object\n\n"
           },
           {
-            "tag": {
-              "typ": null,
-              "name": "ValidNum"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "ValidNum"
+              },
+              "args": [
+                "self . len * sizeof (u8)",
+                "[0 , isize :: MAX]"
+              ]
             },
-            "args": [
-              "self . len * sizeof (u8)",
-              "[0 , isize :: MAX]"
-            ]
+            "doc": "the value of `self . len * sizeof (u8)` must lie within the valid `[0 , isize :: MAX]`\n\n"
           },
           {
-            "tag": {
-              "typ": null,
-              "name": "Alias"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "Alias"
+              },
+              "args": [
+                "self . ptr"
+              ]
             },
-            "args": [
-              "self . ptr"
-            ]
+            "doc": "`self . ptr` must not have other alias\n\n"
           },
           {
-            "tag": {
-              "typ": null,
-              "name": "RustdocLinkToItem"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "RustdocLinkToItem"
+              },
+              "args": [
+                "crate::test"
+              ]
             },
-            "args": [
-              "crate::test"
-            ]
+            "doc": "[`crate::test`]\n\n"
           },
           {
-            "tag": {
-              "typ": null,
-              "name": "any"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "any"
+              },
+              "args": [
+                "Deref (self . ptr , u8 , 1)",
+                "Alive (self . ptr , _)"
+              ]
             },
-            "args": [
-              "Deref (self . ptr , u8 , 1)",
-              "Alive (self . ptr , _)"
-            ]
+            "doc": "Only one of the following properties requires being satisfied:\n    * Deref: pointer `self . ptr` must be dereferencable in the `sizeof(u8)*1` memory from it\n\n    * Alive: the reference of `self . ptr` must outlive the lifetime `_`\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* Init: the memory range `[self . ptr, self . ptr + sizeof(u8)*self . len]` must be fully initialized for type `u8`\n\n\n* InBound: the pointer `self . ptr` and its offset up to `sizeof(u8)*self . len` must point to a single allocated object\n\n\n* ValidNum: the value of `self . len * sizeof (u8)` must lie within the valid `[0 , isize :: MAX]`\n\n\n* Alias: `self . ptr` must not have other alias\n\n\n* RustdocLinkToItem: [`crate::test`]\n\n\n* any: Only one of the following properties requires being satisfied:\n    * Deref: pointer `self . ptr` must be dereferencable in the `sizeof(u8)*1` memory from it\n\n    * Alive: the reference of `self . ptr` must outlive the lifetime `_`\n\n\n"
       }
     ],
     "demo::MyStruct::get": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "NonNull"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "NonNull"
+              },
+              "args": [
+                "self . ptr"
+              ]
             },
-            "args": [
-              "self . ptr"
-            ]
+            "doc": "pointer `self . ptr` must not be null\n\n"
           },
           {
-            "tag": {
-              "typ": null,
-              "name": "ValidPtr"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "ValidPtr"
+              },
+              "args": [
+                "self . ptr",
+                "u8",
+                "self . len"
+              ]
             },
-            "args": [
-              "self . ptr",
-              "u8",
-              "self . len"
-            ]
+            "doc": "pointer `self . ptr` must be valid for reading and writing the `sizeof(u8)*self . len` memory from it\n\n"
           },
           {
-            "tag": {
-              "typ": null,
-              "name": "Init"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "Init"
+              },
+              "args": [
+                "self . ptr",
+                "u8",
+                "self . len"
+              ]
             },
-            "args": [
-              "self . ptr",
-              "u8",
-              "self . len"
-            ]
+            "doc": "the memory range `[self . ptr, self . ptr + sizeof(u8)*self . len]` must be fully initialized for type `u8`\n\n"
           },
           {
-            "tag": {
-              "typ": null,
-              "name": "Alive"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "Alive"
+              },
+              "args": [
+                "self . ptr",
+                "_"
+              ]
             },
-            "args": [
-              "self . ptr",
-              "_"
-            ]
+            "doc": "the reference of `self . ptr` must outlive the lifetime `_`\n\n"
           },
           {
-            "tag": {
-              "typ": null,
-              "name": "Alias"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "Alias"
+              },
+              "args": [
+                "self . ptr"
+              ]
             },
-            "args": [
-              "self . ptr"
-            ]
+            "doc": "`self . ptr` must not have other alias\n\n"
           },
           {
-            "tag": {
-              "typ": null,
-              "name": "Align"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "Align"
+              },
+              "args": [
+                "self . ptr",
+                "u8"
+              ]
             },
-            "args": [
-              "self . ptr",
-              "u8"
-            ]
+            "doc": "pointer `self . ptr` must be properly aligned for type `u8`\n\n"
           },
           {
-            "tag": {
-              "typ": null,
-              "name": "ValidNum"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "ValidNum"
+              },
+              "args": [
+                "self . len * sizeof (u8)",
+                "[0 , isize :: MAX]"
+              ]
             },
-            "args": [
-              "self . len * sizeof (u8)",
-              "[0 , isize :: MAX]"
-            ]
+            "doc": "the value of `self . len * sizeof (u8)` must lie within the valid `[0 , isize :: MAX]`\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* NonNull: pointer `self . ptr` must not be null\n\n\n* ValidPtr: pointer `self . ptr` must be valid for reading and writing the `sizeof(u8)*self . len` memory from it\n\n\n* Init: the memory range `[self . ptr, self . ptr + sizeof(u8)*self . len]` must be fully initialized for type `u8`\n\n\n* Alive: the reference of `self . ptr` must outlive the lifetime `_`\n\n\n* Alias: `self . ptr` must not have other alias\n\n\n* Align: pointer `self . ptr` must be properly aligned for type `u8`\n\n\n* ValidNum: the value of `self . len * sizeof (u8)` must lie within the valid `[0 , isize :: MAX]`\n\n\n"
       }
     ]
   },
