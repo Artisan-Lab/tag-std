@@ -4,2099 +4,2651 @@
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "ReferTo"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "ReferTo"
+              },
+              "args": [
+                "`core::ffi::CStr::from_ptr`"
+              ]
             },
-            "args": [
-              "`core::ffi::CStr::from_ptr`"
-            ]
+            "doc": "This function should meet the safety requirement of `core::ffi::CStr::from_ptr`.\n\n"
           }
         ],
-        "desc": "Refer to: [core::ffi::CStr::from_ptr](https://doc.rust-lang.org/stable/core/ffi/struct.CStr.html#method.from_ptr)"
+        "desc": "Refer to: [core::ffi::CStr::from_ptr](https://doc.rust-lang.org/stable/core/ffi/struct.CStr.html#method.from_ptr)",
+        "doc": "Refer to: [core::ffi::CStr::from_ptr](https://doc.rust-lang.org/stable/core/ffi/struct.CStr.html#method.from_ptr)\n\n* ReferTo: This function should meet the safety requirement of `core::ffi::CStr::from_ptr`.\n\n\n"
       }
     ],
     "ostd::arch::boot::multiboot2::make_str_vaddr_static": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "ReferTo"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "ReferTo"
+              },
+              "args": [
+                "`core::slice::from_raw_parts`"
+              ]
             },
-            "args": [
-              "`core::slice::from_raw_parts`"
-            ]
+            "doc": "This function should meet the safety requirement of `core::slice::from_raw_parts`.\n\n"
           }
         ],
-        "desc": "Refer to [core::slice::from_raw_parts](https://doc.rust-lang.org/core/slice/fn.from_raw_parts.html#safety)"
+        "desc": "Refer to [core::slice::from_raw_parts](https://doc.rust-lang.org/core/slice/fn.from_raw_parts.html#safety)",
+        "doc": "Refer to [core::slice::from_raw_parts](https://doc.rust-lang.org/core/slice/fn.from_raw_parts.html#safety)\n\n* ReferTo: This function should meet the safety requirement of `core::slice::from_raw_parts`.\n\n\n"
       }
     ],
     "ostd::arch::boot::smp::count_processors": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "PostToFunc"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "PostToFunc"
+              },
+              "args": [
+                "`crate::boot::EARLY_INFO.call_once`"
+              ]
             },
-            "args": [
-              "`crate::boot::EARLY_INFO.call_once`"
-            ]
+            "doc": "This function should be executed after `crate::boot::EARLY_INFO.call_once`.\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* PostToFunc: This function should be executed after `crate::boot::EARLY_INFO.call_once`.\n\n\n"
       }
     ],
     "ostd::arch::boot::smp::bringup_all_aps": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "Context"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "Context"
+              },
+              "args": [
+                "BSP starts",
+                "any AP starts"
+              ]
             },
-            "args": [
-              "BSP starts",
-              "any AP starts"
-            ]
+            "doc": "This function should be executed after BSP starts before any AP starts.\n\n"
           },
           {
-            "tag": {
-              "typ": null,
-              "name": "ValidAccessAddr"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "ValidAccessAddr"
+              },
+              "args": [
+                "`AP_BOOT_START_PA`",
+                "writing AP boot code"
+              ]
             },
-            "args": [
-              "`AP_BOOT_START_PA`",
-              "writing AP boot code"
-            ]
+            "doc": "`AP_BOOT_START_PA` should be valid for writing AP boot code.\n\n"
           },
           {
-            "tag": {
-              "typ": null,
-              "name": "ValidAccessAddr"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "ValidAccessAddr"
+              },
+              "args": [
+                "info_ptr",
+                "writing"
+              ]
             },
-            "args": [
-              "info_ptr",
-              "writing"
-            ]
+            "doc": "info_ptr should be valid for writing.\n\n"
           },
           {
-            "tag": {
-              "typ": null,
-              "name": "ValidAccessAddr"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "ValidAccessAddr"
+              },
+              "args": [
+                "pt_ptr",
+                "writing"
+              ]
             },
-            "args": [
-              "pt_ptr",
-              "writing"
-            ]
+            "doc": "pt_ptr should be valid for writing.\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* Context: This function should be executed after BSP starts before any AP starts.\n\n\n* ValidAccessAddr: `AP_BOOT_START_PA` should be valid for writing AP boot code.\n\n\n* ValidAccessAddr: info_ptr should be valid for writing.\n\n\n* ValidAccessAddr: pt_ptr should be valid for writing.\n\n\n"
       }
     ],
     "ostd::arch::boot::smp::copy_ap_boot_code": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "ValidAccessAddr"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "ValidAccessAddr"
+              },
+              "args": [
+                "`AP_BOOT_START_PA`",
+                "writing AP boot code"
+              ]
             },
-            "args": [
-              "`AP_BOOT_START_PA`",
-              "writing AP boot code"
-            ]
+            "doc": "`AP_BOOT_START_PA` should be valid for writing AP boot code.\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* ValidAccessAddr: `AP_BOOT_START_PA` should be valid for writing AP boot code.\n\n\n"
       }
     ],
     "ostd::arch::boot::smp::fill_boot_info_ptr": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "ValidAccessAddr"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "ValidAccessAddr"
+              },
+              "args": [
+                "info_ptr",
+                "writing"
+              ]
             },
-            "args": [
-              "info_ptr",
-              "writing"
-            ]
+            "doc": "info_ptr should be valid for writing.\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* ValidAccessAddr: info_ptr should be valid for writing.\n\n\n"
       }
     ],
     "ostd::arch::boot::smp::fill_boot_pt_ptr": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "ValidAccessAddr"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "ValidAccessAddr"
+              },
+              "args": [
+                "pt_ptr",
+                "writing"
+              ]
             },
-            "args": [
-              "pt_ptr",
-              "writing"
-            ]
+            "doc": "pt_ptr should be valid for writing.\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* ValidAccessAddr: pt_ptr should be valid for writing.\n\n\n"
       }
     ],
     "ostd::arch::boot::smp::wake_up_aps_via_mailbox": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "Context"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "Context"
+              },
+              "args": [
+                "BSP starts",
+                "any AP starts"
+              ]
             },
-            "args": [
-              "BSP starts",
-              "any AP starts"
-            ]
+            "doc": "This function should be executed after BSP starts before any AP starts.\n\n"
           },
           {
-            "tag": {
-              "typ": null,
-              "name": "PostToFunc"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "PostToFunc"
+              },
+              "args": [
+                "[`copy_ap_boot_code`]"
+              ]
             },
-            "args": [
-              "[`copy_ap_boot_code`]"
-            ]
+            "doc": "This function should be executed after [`copy_ap_boot_code`].\n\n"
           },
           {
-            "tag": {
-              "typ": null,
-              "name": "PostToFunc"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "PostToFunc"
+              },
+              "args": [
+                "[`fill_boot_info_ptr`]"
+              ]
             },
-            "args": [
-              "[`fill_boot_info_ptr`]"
-            ]
+            "doc": "This function should be executed after [`fill_boot_info_ptr`].\n\n"
           },
           {
-            "tag": {
-              "typ": null,
-              "name": "PostToFunc"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "PostToFunc"
+              },
+              "args": [
+                "[`fill_boot_pt_ptr`]"
+              ]
             },
-            "args": [
-              "[`fill_boot_pt_ptr`]"
-            ]
+            "doc": "This function should be executed after [`fill_boot_pt_ptr`].\n\n"
           }
         ],
-        "desc": "We've properly prepared all the resources for the application processors to boot successfully"
+        "desc": "We've properly prepared all the resources for the application processors to boot successfully",
+        "doc": "We've properly prepared all the resources for the application processors to boot successfully\n\n* Context: This function should be executed after BSP starts before any AP starts.\n\n\n* PostToFunc: This function should be executed after [`copy_ap_boot_code`].\n\n\n* PostToFunc: This function should be executed after [`fill_boot_info_ptr`].\n\n\n* PostToFunc: This function should be executed after [`fill_boot_pt_ptr`].\n\n\n"
       }
     ],
     "ostd::arch::boot::smp::send_boot_ipis": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "Context"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "Context"
+              },
+              "args": [
+                "BSP starts",
+                "any AP starts"
+              ]
             },
-            "args": [
-              "BSP starts",
-              "any AP starts"
-            ]
+            "doc": "This function should be executed after BSP starts before any AP starts.\n\n"
           },
           {
-            "tag": {
-              "typ": null,
-              "name": "PostToFunc"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "PostToFunc"
+              },
+              "args": [
+                "[`copy_ap_boot_code`]"
+              ]
             },
-            "args": [
-              "[`copy_ap_boot_code`]"
-            ]
+            "doc": "This function should be executed after [`copy_ap_boot_code`].\n\n"
           },
           {
-            "tag": {
-              "typ": null,
-              "name": "PostToFunc"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "PostToFunc"
+              },
+              "args": [
+                "[`fill_boot_info_ptr`]"
+              ]
             },
-            "args": [
-              "[`fill_boot_info_ptr`]"
-            ]
+            "doc": "This function should be executed after [`fill_boot_info_ptr`].\n\n"
           },
           {
-            "tag": {
-              "typ": null,
-              "name": "PostToFunc"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "PostToFunc"
+              },
+              "args": [
+                "[`fill_boot_pt_ptr`]"
+              ]
             },
-            "args": [
-              "[`fill_boot_pt_ptr`]"
-            ]
+            "doc": "This function should be executed after [`fill_boot_pt_ptr`].\n\n"
           }
         ],
-        "desc": "We've properly prepared all the resources for the application processors to boot successfully."
+        "desc": "We've properly prepared all the resources for the application processors to boot successfully.",
+        "doc": "We've properly prepared all the resources for the application processors to boot successfully.\n\n* Context: This function should be executed after BSP starts before any AP starts.\n\n\n* PostToFunc: This function should be executed after [`copy_ap_boot_code`].\n\n\n* PostToFunc: This function should be executed after [`fill_boot_info_ptr`].\n\n\n* PostToFunc: This function should be executed after [`fill_boot_pt_ptr`].\n\n\n"
       }
     ],
     "ostd::arch::boot::smp::send_startup_to_all_aps": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "Valid"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "Valid"
+              },
+              "args": [
+                "Sending STARTUP IPIs to all CPUs excluding self"
+              ]
             },
-            "args": [
-              "Sending STARTUP IPIs to all CPUs excluding self"
-            ]
+            "doc": "Sending STARTUP IPIs to all CPUs excluding self should be valid.\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* Valid: Sending STARTUP IPIs to all CPUs excluding self should be valid.\n\n\n"
       }
     ],
     "ostd::arch::boot::smp::send_init_to_all_aps": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "Valid"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "Valid"
+              },
+              "args": [
+                "Sending INIT IPIs to all CPUs excluding self"
+              ]
             },
-            "args": [
-              "Sending INIT IPIs to all CPUs excluding self"
-            ]
+            "doc": "Sending INIT IPIs to all CPUs excluding self should be valid.\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* Valid: Sending INIT IPIs to all CPUs excluding self should be valid.\n\n\n"
       }
     ],
     "ostd::arch::boot::smp::send_init_deassert": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "Valid"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "Valid"
+              },
+              "args": [
+                "Deasserting INIT IPIs for all CPUs excluding self"
+              ]
             },
-            "args": [
-              "Deasserting INIT IPIs for all CPUs excluding self"
-            ]
+            "doc": "Deasserting INIT IPIs for all CPUs excluding self should be valid.\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* Valid: Deasserting INIT IPIs for all CPUs excluding self should be valid.\n\n\n"
       }
     ],
     "ostd::arch::device::serial::SerialPort::new": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "Valid"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "Valid"
+              },
+              "args": [
+                "port"
+              ]
             },
-            "args": [
-              "port"
-            ]
+            "doc": "port should be valid.\n\n"
           },
           {
-            "tag": {
-              "typ": null,
-              "name": "OwnedResource"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "OwnedResource"
+              },
+              "args": [
+                "The serial ports"
+              ]
             },
-            "args": [
-              "The serial ports"
-            ]
+            "doc": "`The serial ports` must be exclusively owned by .\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* Valid: port should be valid.\n\n\n* OwnedResource: `The serial ports` must be exclusively owned by .\n\n\n"
       }
     ],
     "ostd::arch::iommu::dma_remapping::context_table::RootTable::map": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "Valid"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "Valid"
+              },
+              "args": [
+                "paddr"
+              ]
             },
-            "args": [
-              "paddr"
-            ]
+            "doc": "paddr should be valid.\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* Valid: paddr should be valid.\n\n\n"
       }
     ],
     "ostd::arch::iommu::dma_remapping::context_table::ContextTable::map": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "Valid"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "Valid"
+              },
+              "args": [
+                "paddr"
+              ]
             },
-            "args": [
-              "paddr"
-            ]
+            "doc": "paddr should be valid.\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* Valid: paddr should be valid.\n\n\n"
       }
     ],
     "ostd::arch::iommu::dma_remapping::map": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "Valid"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "Valid"
+              },
+              "args": [
+                "paddr"
+              ]
             },
-            "args": [
-              "paddr"
-            ]
+            "doc": "paddr should be valid.\n\n"
           }
         ],
-        "desc": "Mapping an incorrect address may lead to a kernel data leak."
+        "desc": "Mapping an incorrect address may lead to a kernel data leak.",
+        "doc": "Mapping an incorrect address may lead to a kernel data leak.\n\n* Valid: paddr should be valid.\n\n\n"
       }
     ],
     "ostd::arch::iommu::fault::FaultEventRegisters::new": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "ValidBaseAddr"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "ValidBaseAddr"
+              },
+              "args": [
+                "base_register_vaddr",
+                "hardware = \"IOMMU\""
+              ]
             },
-            "args": [
-              "base_register_vaddr",
-              "hardware = \"IOMMU\""
-            ]
+            "doc": "`base_register_vaddr` must be a valid base address of hardware = &quot;IOMMU&quot;.\n\n"
           },
           {
-            "tag": {
-              "typ": null,
-              "name": "OwnedResource"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "OwnedResource"
+              },
+              "args": [
+                "base_register_vaddr",
+                "owner = FaultEventRegisters"
+              ]
             },
-            "args": [
-              "base_register_vaddr",
-              "owner = FaultEventRegisters"
-            ]
+            "doc": "`base_register_vaddr` must be exclusively owned by owner = FaultEventRegisters.\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* ValidBaseAddr: `base_register_vaddr` must be a valid base address of hardware = &quot;IOMMU&quot;.\n\n\n* OwnedResource: `base_register_vaddr` must be exclusively owned by owner = FaultEventRegisters.\n\n\n"
       }
     ],
     "ostd::arch::iommu::registers::invalidation::InvalidationRegisters::new": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "ValidBaseAddr"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "ValidBaseAddr"
+              },
+              "args": [
+                "base",
+                "IOMMU"
+              ]
             },
-            "args": [
-              "base",
-              "IOMMU"
-            ]
+            "doc": "`base` must be a valid base address of IOMMU.\n\n"
           },
           {
-            "tag": {
-              "typ": null,
-              "name": "OwnedResource"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "OwnedResource"
+              },
+              "args": [
+                "The IOMMU invalidation registers"
+              ]
             },
-            "args": [
-              "The IOMMU invalidation registers"
-            ]
+            "doc": "`The IOMMU invalidation registers` must be exclusively owned by .\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* ValidBaseAddr: `base` must be a valid base address of IOMMU.\n\n\n* OwnedResource: `The IOMMU invalidation registers` must be exclusively owned by .\n\n\n"
       }
     ],
     "ostd::arch::irq::send_ipi": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "Valid"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "Valid"
+              },
+              "args": [
+                "irq_num"
+              ]
             },
-            "args": [
-              "irq_num"
-            ]
+            "doc": "irq_num should be valid.\n\n"
           },
           {
-            "tag": {
-              "typ": null,
-              "name": "Memo"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "Memo"
+              },
+              "args": [
+                "The corresponding handler is configured correctly on the remote CPU and invoking the interrupt handler must also be safe."
+              ]
             },
-            "args": [
-              "The corresponding handler is configured correctly on the remote CPU and invoking the interrupt handler must also be safe."
-            ]
+            "doc": "The corresponding handler is configured correctly on the remote CPU and invoking the interrupt handler must also be safe.\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* Valid: irq_num should be valid.\n\n\n* Memo: The corresponding handler is configured correctly on the remote CPU and invoking the interrupt handler must also be safe.\n\n\n"
       }
     ],
     "ostd::arch::kernel::acpi::get_acpi_tables": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "PostToFunc"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "PostToFunc"
+              },
+              "args": [
+                "`crate::boot::EARLY_INFO.call_once`"
+              ]
             },
-            "args": [
-              "`crate::boot::EARLY_INFO.call_once`"
-            ]
+            "doc": "This function should be executed after `crate::boot::EARLY_INFO.call_once`.\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* PostToFunc: This function should be executed after `crate::boot::EARLY_INFO.call_once`.\n\n\n"
       }
     ],
     "ostd::arch::kernel::apic::get_or_init::ForceSyncSend::<T>::get": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "Memo"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "Memo"
+              },
+              "args": [
+                "The caller must ensure that its context allows for safe access to `&T`."
+              ]
             },
-            "args": [
-              "The caller must ensure that its context allows for safe access to `&T`."
-            ]
+            "doc": "The caller must ensure that its context allows for safe access to `&amp;T`.\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* Memo: The caller must ensure that its context allows for safe access to `&amp;T`.\n\n\n"
       }
     ],
     "ostd::arch::kernel::irq::ioapic::IoApic::new": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "ValidBaseAddr"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "ValidBaseAddr"
+              },
+              "args": [
+                "base_address",
+                "I/O APIC"
+              ]
             },
-            "args": [
-              "base_address",
-              "I/O APIC"
-            ]
+            "doc": "`base_address` must be a valid base address of I/O APIC.\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* ValidBaseAddr: `base_address` must be a valid base address of I/O APIC.\n\n\n"
       }
     ],
     "ostd::arch::kernel::irq::ioapic::IoApicAccess::new": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "ValidBaseAddr"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "ValidBaseAddr"
+              },
+              "args": [
+                "base_address",
+                "I/O APIC"
+              ]
             },
-            "args": [
-              "base_address",
-              "I/O APIC"
-            ]
+            "doc": "`base_address` must be a valid base address of I/O APIC.\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* ValidBaseAddr: `base_address` must be a valid base address of I/O APIC.\n\n\n"
       }
     ],
     "ostd::arch::mm::activate_page_table": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "ValidInstanceAddr"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "ValidInstanceAddr"
+              },
+              "args": [
+                "root_paddr",
+                "page table"
+              ]
             },
-            "args": [
-              "root_paddr",
-              "page table"
-            ]
+            "doc": "root_paddr should point to a valid instance of page table.\n\n"
           }
         ],
-        "desc": "Changing the level 4 page table is unsafe, because it's possible to violate memory safety by changing the page mapping."
+        "desc": "Changing the level 4 page table is unsafe, because it's possible to violate memory safety by changing the page mapping.",
+        "doc": "Changing the level 4 page table is unsafe, because it's possible to violate memory safety by changing the page mapping.\n\n* ValidInstanceAddr: root_paddr should point to a valid instance of page table.\n\n\n"
       }
     ],
     "ostd::arch::timer::hpet::Hpet::new": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "ValidBaseAddr"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "ValidBaseAddr"
+              },
+              "args": [
+                "base_address",
+                "HPET MMIO region"
+              ]
             },
-            "args": [
-              "base_address",
-              "HPET MMIO region"
-            ]
+            "doc": "`base_address` must be a valid base address of HPET MMIO region.\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* ValidBaseAddr: `base_address` must be a valid base address of HPET MMIO region.\n\n\n"
       }
     ],
     "ostd::arch::trap::gdt::init": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "Memo"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "Memo"
+              },
+              "args": [
+                "The caller must ensure that no preemption can occur during the method, otherwise we may accidentally load a wrong GDT and TSS that actually belongs to another CPU."
+              ]
             },
-            "args": [
-              "The caller must ensure that no preemption can occur during the method, otherwise we may accidentally load a wrong GDT and TSS that actually belongs to another CPU."
-            ]
+            "doc": "The caller must ensure that no preemption can occur during the method, otherwise we may accidentally load a wrong GDT and TSS that actually belongs to another CPU.\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* Memo: The caller must ensure that no preemption can occur during the method, otherwise we may accidentally load a wrong GDT and TSS that actually belongs to another CPU.\n\n\n"
       }
     ],
     "ostd::arch::trap::syscall::init": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "PostToFunc"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "PostToFunc"
+              },
+              "args": [
+                "`gdt::init`"
+              ]
             },
-            "args": [
-              "`gdt::init`"
-            ]
+            "doc": "This function should be executed after `gdt::init`.\n\n"
           }
         ],
-        "desc": "The segment selectors used in the `syscall` and `sysret` instructions should have been properly initialized."
+        "desc": "The segment selectors used in the `syscall` and `sysret` instructions should have been properly initialized.",
+        "doc": "The segment selectors used in the `syscall` and `sysret` instructions should have been properly initialized.\n\n* PostToFunc: This function should be executed after `gdt::init`.\n\n\n"
       }
     ],
     "ostd::arch::trap::init": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "Context"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "Context"
+              },
+              "args": [
+                "boot starts",
+                "boot ends"
+              ]
             },
-            "args": [
-              "boot starts",
-              "boot ends"
-            ]
+            "doc": "This function should be executed after boot starts before boot ends.\n\n"
           },
           {
-            "tag": {
-              "typ": null,
-              "name": "CallOnce"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "CallOnce"
+              },
+              "args": [
+                "available processor"
+              ]
             },
-            "args": [
-              "available processor"
-            ]
+            "doc": "This function should be called only once per available processor.\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* Context: This function should be executed after boot starts before boot ends.\n\n\n* CallOnce: This function should be called only once per available processor.\n\n\n"
       }
     ],
     "ostd::arch::late_init_on_bsp": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "CallOnce"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "CallOnce"
+              },
+              "args": [
+                "system"
+              ]
             },
-            "args": [
-              "system"
-            ]
+            "doc": "This function should be called only once per system.\n\n"
           },
           {
-            "tag": {
-              "typ": null,
-              "name": "Context"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "Context"
+              },
+              "args": [
+                "boot starts",
+                "boot ends"
+              ]
             },
-            "args": [
-              "boot starts",
-              "boot ends"
-            ]
+            "doc": "This function should be executed after boot starts before boot ends.\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* CallOnce: This function should be called only once per system.\n\n\n* Context: This function should be executed after boot starts before boot ends.\n\n\n"
       }
     ],
     "ostd::arch::init_on_ap": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "CallOnce"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "CallOnce"
+              },
+              "args": [
+                "application processor"
+              ]
             },
-            "args": [
-              "application processor"
-            ]
+            "doc": "This function should be called only once per application processor.\n\n"
           },
           {
-            "tag": {
-              "typ": null,
-              "name": "PostToFunc"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "PostToFunc"
+              },
+              "args": [
+                "[`init_on_bsp`]"
+              ]
             },
-            "args": [
-              "[`init_on_bsp`]"
-            ]
+            "doc": "This function should be executed after [`init_on_bsp`].\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* CallOnce: This function should be called only once per application processor.\n\n\n* PostToFunc: This function should be executed after [`init_on_bsp`].\n\n\n"
       }
     ],
     "ostd::boot::smp::boot_all_aps": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "Context"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "Context"
+              },
+              "args": [
+                "BSP starts",
+                "any AP starts"
+              ]
             },
-            "args": [
-              "BSP starts",
-              "any AP starts"
-            ]
+            "doc": "This function should be executed after BSP starts before any AP starts.\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* Context: This function should be executed after BSP starts before any AP starts.\n\n\n"
       }
     ],
     "ostd::cpu::local::cell::CpuLocalCell::<T>::__new": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "Section"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "Section"
+              },
+              "args": [
+                "The object",
+                "the `.cpu_local` section"
+              ]
             },
-            "args": [
-              "The object",
-              "the `.cpu_local` section"
-            ]
+            "doc": ""
           }
         ],
-        "desc": "For the object initialized by this function"
+        "desc": "For the object initialized by this function",
+        "doc": "For the object initialized by this function\n\n* Section\n"
       }
     ],
     "ostd::cpu::local::dyn_cpu_local::<impl cpu::local::CpuLocal<T, cpu::local::dyn_cpu_local::DynamicStorage<T>>>::__new_dynamic": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "Memo"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "Memo"
+              },
+              "args": [
+                "the new per-CPU object belongs to an existing [`DynCpuLocalChunk`]."
+              ]
             },
-            "args": [
-              "the new per-CPU object belongs to an existing [`DynCpuLocalChunk`]."
-            ]
+            "doc": "the new per-CPU object belongs to an existing [`DynCpuLocalChunk`].\n\n"
           },
           {
-            "tag": {
-              "typ": null,
-              "name": "Memo"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "Memo"
+              },
+              "args": [
+                "The return value should not overlap with any existing CPU-local object"
+              ]
             },
-            "args": [
-              "The return value should not overlap with any existing CPU-local object"
-            ]
+            "doc": "The return value should not overlap with any existing CPU-local object\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* Memo: the new per-CPU object belongs to an existing [`DynCpuLocalChunk`].\n\n\n* Memo: The return value should not overlap with any existing CPU-local object\n\n\n"
       }
     ],
     "ostd::cpu::local::static_cpu_local::<impl cpu::local::CpuLocal<T, cpu::local::static_cpu_local::StaticStorage<T>>>::__new_static": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "Section"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "Section"
+              },
+              "args": [
+                "The object",
+                "the `.cpu_local` section"
+              ]
             },
-            "args": [
-              "The object",
-              "the `.cpu_local` section"
-            ]
+            "doc": ""
           }
         ],
-        "desc": "For the object initialized by this function"
+        "desc": "For the object initialized by this function",
+        "doc": "For the object initialized by this function\n\n* Section\n"
       }
     ],
     "ostd::cpu::local::copy_bsp_for_ap": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "Context"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "Context"
+              },
+              "args": [
+                "BSP starts",
+                "any AP starts"
+              ]
             },
-            "args": [
-              "BSP starts",
-              "any AP starts"
-            ]
+            "doc": "This function should be executed after BSP starts before any AP starts.\n\n"
           },
           {
-            "tag": {
-              "typ": null,
-              "name": "Unaccessed"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "Unaccessed"
+              },
+              "args": [
+                "The CPU-local data"
+              ]
             },
-            "args": [
-              "The CPU-local data"
-            ]
+            "doc": "The CPU-local data should not be accessed.\n\n"
           },
           {
-            "tag": {
-              "typ": null,
-              "name": "Valid"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "Valid"
+              },
+              "args": [
+                "num_cpus"
+              ]
             },
-            "args": [
-              "num_cpus"
-            ]
+            "doc": "num_cpus should be valid.\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* Context: This function should be executed after BSP starts before any AP starts.\n\n\n* Unaccessed: The CPU-local data should not be accessed.\n\n\n* Valid: num_cpus should be valid.\n\n\n"
       }
     ],
     "ostd::cpu::init_num_cpus": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "Context"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "Context"
+              },
+              "args": [
+                "BSP starts",
+                "any AP starts"
+              ]
             },
-            "args": [
-              "BSP starts",
-              "any AP starts"
-            ]
+            "doc": "This function should be executed after BSP starts before any AP starts.\n\n"
           },
           {
-            "tag": {
-              "typ": null,
-              "name": "Valid"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "Valid"
+              },
+              "args": [
+                "num_cpus"
+              ]
             },
-            "args": [
-              "num_cpus"
-            ]
+            "doc": "num_cpus should be valid.\n\n"
           }
         ],
-        "desc": "The argument is the correct value of the number of CPUs."
+        "desc": "The argument is the correct value of the number of CPUs.",
+        "doc": "The argument is the correct value of the number of CPUs.\n\n* Context: This function should be executed after BSP starts before any AP starts.\n\n\n* Valid: num_cpus should be valid.\n\n\n"
       }
     ],
     "ostd::cpu::set_this_cpu_id": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "Valid"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "Valid"
+              },
+              "args": [
+                "`id`"
+              ]
             },
-            "args": [
-              "`id`"
-            ]
+            "doc": "`id` should be valid.\n\n"
           }
         ],
-        "desc": "The caller must ensure that this function is called with the correct value of the CPU ID."
+        "desc": "The caller must ensure that this function is called with the correct value of the CPU ID.",
+        "doc": "The caller must ensure that this function is called with the correct value of the CPU ID.\n\n* Valid: `id` should be valid.\n\n\n"
       },
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "CallOnce"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "CallOnce"
+              },
+              "args": [
+                "processor"
+              ]
             },
-            "args": [
-              "processor"
-            ]
+            "doc": "This function should be called only once per processor.\n\n"
           }
         ],
-        "desc": "During the early boot phase"
+        "desc": "During the early boot phase",
+        "doc": "During the early boot phase\n\n* CallOnce: This function should be called only once per processor.\n\n\n"
       }
     ],
     "ostd::cpu::init_on_bsp": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "Context"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "Context"
+              },
+              "args": [
+                "BSP starts",
+                "any AP starts"
+              ]
             },
-            "args": [
-              "BSP starts",
-              "any AP starts"
-            ]
+            "doc": "This function should be executed after BSP starts before any AP starts.\n\n"
           },
           {
-            "tag": {
-              "typ": null,
-              "name": "PostToFunc"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "PostToFunc"
+              },
+              "args": [
+                "`crate::arch::kernel::apic::init`"
+              ]
             },
-            "args": [
-              "`crate::arch::kernel::apic::init`"
-            ]
+            "doc": "This function should be executed after `crate::arch::kernel::apic::init`.\n\n"
           },
           {
-            "tag": {
-              "typ": null,
-              "name": "Unaccessed"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "Unaccessed"
+              },
+              "args": [
+                "The CPU-local objects"
+              ]
             },
-            "args": [
-              "The CPU-local objects"
-            ]
+            "doc": "The CPU-local objects should not be accessed.\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* Context: This function should be executed after BSP starts before any AP starts.\n\n\n* PostToFunc: This function should be executed after `crate::arch::kernel::apic::init`.\n\n\n* Unaccessed: The CPU-local objects should not be accessed.\n\n\n"
       }
     ],
     "ostd::cpu::init_on_ap": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "Context"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "Context"
+              },
+              "args": [
+                "BSP starts",
+                "any AP starts"
+              ]
             },
-            "args": [
-              "BSP starts",
-              "any AP starts"
-            ]
+            "doc": "This function should be executed after BSP starts before any AP starts.\n\n"
           },
           {
-            "tag": {
-              "typ": null,
-              "name": "Valid"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "Valid"
+              },
+              "args": [
+                "cpu_id"
+              ]
             },
-            "args": [
-              "cpu_id"
-            ]
+            "doc": "cpu_id should be valid.\n\n"
           }
         ],
-        "desc": "The argument is the correct CPU ID of the AP."
+        "desc": "The argument is the correct CPU ID of the AP.",
+        "doc": "The argument is the correct CPU ID of the AP.\n\n* Context: This function should be executed after BSP starts before any AP starts.\n\n\n* Valid: cpu_id should be valid.\n\n\n"
       }
     ],
     "ostd::io::io_mem::allocator::IoMemAllocator::recycle": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "PostToFunc"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "PostToFunc"
+              },
+              "args": [
+                "`IoMemAllocator::get`"
+              ]
             },
-            "args": [
-              "`IoMemAllocator::get`"
-            ]
+            "doc": "This function should be executed after `IoMemAllocator::get`.\n\n"
           },
           {
-            "tag": {
-              "typ": null,
-              "name": "OwnedResource"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "OwnedResource"
+              },
+              "args": [
+                "MMIO region"
+              ]
             },
-            "args": [
-              "MMIO region"
-            ]
+            "doc": "`MMIO region` must be exclusively owned by .\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* PostToFunc: This function should be executed after `IoMemAllocator::get`.\n\n\n* OwnedResource: `MMIO region` must be exclusively owned by .\n\n\n"
       }
     ],
     "ostd::io::io_mem::allocator::init": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "PostToFunc"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "PostToFunc"
+              },
+              "args": [
+                "`IoMemAllocatorBuilder::remove`"
+              ]
             },
-            "args": [
-              "`IoMemAllocatorBuilder::remove`"
-            ]
+            "doc": "This function should be executed after `IoMemAllocatorBuilder::remove`.\n\n"
           }
         ],
-        "desc": "All the memory that belong to the system device should have been removed"
+        "desc": "All the memory that belong to the system device should have been removed",
+        "doc": "All the memory that belong to the system device should have been removed\n\n* PostToFunc: This function should be executed after `IoMemAllocatorBuilder::remove`.\n\n\n"
       }
     ],
     "ostd::io::init": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "OriginateFrom"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "OriginateFrom"
+              },
+              "args": [
+                "All the port I/O regions",
+                "the macros `sensitive_io_port` and `reserve_io_port_range`"
+              ]
             },
-            "args": [
-              "All the port I/O regions",
-              "the macros `sensitive_io_port` and `reserve_io_port_range`"
-            ]
+            "doc": "All the port I/O regions should originate from the macros `sensitive_io_port` and `reserve_io_port_range`.\n\n"
           },
           {
-            "tag": {
-              "typ": null,
-              "name": "Bounded"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "Bounded"
+              },
+              "args": [
+                "`crate::arch::io::MAX_IO_PORT`",
+                "the maximum value specified by architecture"
+              ]
             },
-            "args": [
-              "`crate::arch::io::MAX_IO_PORT`",
-              "the maximum value specified by architecture"
-            ]
+            "doc": "`crate::arch::io::MAX_IO_PORT` should be bounded by the maximum value specified by architecture.\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* OriginateFrom: All the port I/O regions should originate from the macros `sensitive_io_port` and `reserve_io_port_range`.\n\n\n* Bounded: `crate::arch::io::MAX_IO_PORT` should be bounded by the maximum value specified by architecture.\n\n\n"
       },
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "PostToFunc"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "PostToFunc"
+              },
+              "args": [
+                "`IoMemAllocatorBuilder::remove`"
+              ]
             },
-            "args": [
-              "`IoMemAllocatorBuilder::remove`"
-            ]
+            "doc": "This function should be executed after `IoMemAllocatorBuilder::remove`.\n\n"
           }
         ],
-        "desc": "All the memory that belong to the system device should have been removed"
+        "desc": "All the memory that belong to the system device should have been removed",
+        "doc": "All the memory that belong to the system device should have been removed\n\n* PostToFunc: This function should be executed after `IoMemAllocatorBuilder::remove`.\n\n\n"
       }
     ],
     "ostd::mm::frame::allocator::init": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "CallOnce"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "CallOnce"
+              },
+              "args": [
+                "system"
+              ]
             },
-            "args": [
-              "system"
-            ]
+            "doc": "This function should be called only once per system.\n\n"
           },
           {
-            "tag": {
-              "typ": null,
-              "name": "PostToFunc"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "PostToFunc"
+              },
+              "args": [
+                "`crate::boot::EARLY_INFO.call_once`"
+              ]
             },
-            "args": [
-              "`crate::boot::EARLY_INFO.call_once`"
-            ]
+            "doc": "This function should be executed after `crate::boot::EARLY_INFO.call_once`.\n\n"
           },
           {
-            "tag": {
-              "typ": null,
-              "name": "PostToFunc"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "PostToFunc"
+              },
+              "args": [
+                "[`init_early_allocator`]"
+              ]
             },
-            "args": [
-              "[`init_early_allocator`]"
-            ]
+            "doc": "This function should be executed after [`init_early_allocator`].\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* CallOnce: This function should be called only once per system.\n\n\n* PostToFunc: This function should be executed after `crate::boot::EARLY_INFO.call_once`.\n\n\n* PostToFunc: This function should be executed after [`init_early_allocator`].\n\n\n"
       }
     ],
     "ostd::mm::frame::allocator::init_early_allocator": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "CallOnce"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "CallOnce"
+              },
+              "args": [
+                "system"
+              ]
             },
-            "args": [
-              "system"
-            ]
+            "doc": "This function should be called only once per system.\n\n"
           },
           {
-            "tag": {
-              "typ": null,
-              "name": "PostToFunc"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "PostToFunc"
+              },
+              "args": [
+                "`crate::boot::EARLY_INFO.call_once`"
+              ]
             },
-            "args": [
-              "`crate::boot::EARLY_INFO.call_once`"
-            ]
+            "doc": "This function should be executed after `crate::boot::EARLY_INFO.call_once`.\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* CallOnce: This function should be called only once per system.\n\n\n* PostToFunc: This function should be executed after `crate::boot::EARLY_INFO.call_once`.\n\n\n"
       }
     ],
     "ostd::mm::frame::meta::MetaSlot::inc_ref_count": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "Ge"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "Ge"
+              },
+              "args": [
+                "self.ref_count",
+                "1"
+              ]
             },
-            "args": [
-              "self . ref_count",
-              "1"
-            ]
+            "doc": "self.ref_count should be greater than or equal to 1.\n\n"
           },
           {
-            "tag": {
-              "typ": null,
-              "name": "Ne"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "Ne"
+              },
+              "args": [
+                "self.ref_count",
+                "REF_COUNT_UNUSED"
+              ]
             },
-            "args": [
-              "self . ref_count",
-              "REF_COUNT_UNUSED"
-            ]
+            "doc": "self.ref_count should not be equal to REF_COUNT_UNUSED.\n\n"
           }
         ],
-        "desc": "Increases the frame reference count by one"
+        "desc": "Increases the frame reference count by one",
+        "doc": "Increases the frame reference count by one\n\n* Ge: self.ref_count should be greater than or equal to 1.\n\n\n* Ne: self.ref_count should not be equal to REF_COUNT_UNUSED.\n\n\n"
       }
     ],
     "ostd::mm::frame::meta::MetaSlot::dyn_meta_ptr": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "OriginateFrom"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "OriginateFrom"
+              },
+              "args": [
+                "The matadata",
+                "[`Self::write_meta`]"
+              ]
             },
-            "args": [
-              "The matadata",
-              "[`Self::write_meta`]"
-            ]
+            "doc": "The matadata should originate from [`Self::write_meta`].\n\n"
           },
           {
-            "tag": {
-              "typ": null,
-              "name": "Valid"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "Valid"
+              },
+              "args": [
+                "self.storage"
+              ]
             },
-            "args": [
-              "self . storage"
-            ]
+            "doc": "self.storage should be valid.\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* OriginateFrom: The matadata should originate from [`Self::write_meta`].\n\n\n* Valid: self.storage should be valid.\n\n\n"
       }
     ],
     "ostd::mm::frame::meta::MetaSlot::write_meta": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "MutAccess"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "MutAccess"
+              },
+              "args": [
+                "self.vtable_ptr"
+              ]
             },
-            "args": [
-              "self . vtable_ptr"
-            ]
+            "doc": "The caller should have exclusive mutable access to self.vtable_ptr.\n\n"
           },
           {
-            "tag": {
-              "typ": null,
-              "name": "MutAccess"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "MutAccess"
+              },
+              "args": [
+                "self.storage"
+              ]
             },
-            "args": [
-              "self . storage"
-            ]
+            "doc": "The caller should have exclusive mutable access to self.storage.\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* MutAccess: The caller should have exclusive mutable access to self.vtable_ptr.\n\n\n* MutAccess: The caller should have exclusive mutable access to self.storage.\n\n\n"
       }
     ],
     "ostd::mm::frame::meta::MetaSlot::drop_last_in_place": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "Eq"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "Eq"
+              },
+              "args": [
+                "self.ref_count",
+                "0"
+              ]
             },
-            "args": [
-              "self . ref_count",
-              "0"
-            ]
+            "doc": "self.ref_count should be equal to 0.\n\n"
           },
           {
-            "tag": {
-              "typ": null,
-              "name": "OriginateFrom"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "OriginateFrom"
+              },
+              "args": [
+                "The meta data",
+                "`Self::write_meta`"
+              ]
             },
-            "args": [
-              "The meta data",
-              "`Self::write_meta`"
-            ]
+            "doc": "The meta data should originate from `Self::write_meta`.\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* Eq: self.ref_count should be equal to 0.\n\n\n* OriginateFrom: The meta data should originate from `Self::write_meta`.\n\n\n"
       }
     ],
     "ostd::mm::frame::meta::MetaSlot::drop_meta_in_place": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "Eq"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "Eq"
+              },
+              "args": [
+                "self.ref_count",
+                "0"
+              ]
             },
-            "args": [
-              "self . ref_count",
-              "0"
-            ]
+            "doc": "self.ref_count should be equal to 0.\n\n"
           },
           {
-            "tag": {
-              "typ": null,
-              "name": "OriginateFrom"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "OriginateFrom"
+              },
+              "args": [
+                "The meta data",
+                "`Self::write_meta`"
+              ]
             },
-            "args": [
-              "The meta data",
-              "`Self::write_meta`"
-            ]
+            "doc": "The meta data should originate from `Self::write_meta`.\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* Eq: self.ref_count should be equal to 0.\n\n\n* OriginateFrom: The meta data should originate from `Self::write_meta`.\n\n\n"
       }
     ],
     "ostd::mm::frame::meta::init": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "CallOnce"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "CallOnce"
+              },
+              "args": [
+                "system"
+              ]
             },
-            "args": [
-              "system"
-            ]
+            "doc": "This function should be called only once per system.\n\n"
           },
           {
-            "tag": {
-              "typ": null,
-              "name": "Context"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "Context"
+              },
+              "args": [
+                "BSP starts",
+                "any AP starts"
+              ]
             },
-            "args": [
-              "BSP starts",
-              "any AP starts"
-            ]
+            "doc": "This function should be executed after BSP starts before any AP starts.\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* CallOnce: This function should be called only once per system.\n\n\n* Context: This function should be executed after BSP starts before any AP starts.\n\n\n"
       }
     ],
     "ostd::mm::frame::segment::Segment::<M>::from_raw": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "Forgotten"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "Forgotten"
+              },
+              "args": [
+                "The segment"
+              ]
             },
-            "args": [
-              "The segment"
-            ]
+            "doc": "The segment must be forgotten by [`core::mem::forget`], [`ManuallyDrop`], or [`into_raw`].\n\n"
           }
         ],
-        "desc": "For a Segment matching the type `M` derived from range"
+        "desc": "For a Segment matching the type `M` derived from range",
+        "doc": "For a Segment matching the type `M` derived from range\n\n* Forgotten: The segment must be forgotten by [`core::mem::forget`], [`ManuallyDrop`], or [`into_raw`].\n\n\n"
       }
     ],
     "ostd::mm::frame::unique::UniqueFrame::<M>::from_raw": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "Forgotten"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "Forgotten"
+              },
+              "args": [
+                "The frame"
+              ]
             },
-            "args": [
-              "The frame"
-            ]
+            "doc": "The frame must be forgotten by [`core::mem::forget`], [`ManuallyDrop`], or [`into_raw`].\n\n"
           }
         ],
-        "desc": "For the frame pointed by the addr"
+        "desc": "For the frame pointed by the addr",
+        "doc": "For the frame pointed by the addr\n\n* Forgotten: The frame must be forgotten by [`core::mem::forget`], [`ManuallyDrop`], or [`into_raw`].\n\n\n"
       }
     ],
     "ostd::mm::frame::Frame::<M>::from_raw": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "Forgotten"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "Forgotten"
+              },
+              "args": [
+                "The frame"
+              ]
             },
-            "args": [
-              "The frame"
-            ]
+            "doc": "The frame must be forgotten by [`core::mem::forget`], [`ManuallyDrop`], or [`into_raw`].\n\n"
           }
         ],
-        "desc": "For the frame pointed by paddr"
+        "desc": "For the frame pointed by paddr",
+        "doc": "For the frame pointed by paddr\n\n* Forgotten: The frame must be forgotten by [`core::mem::forget`], [`ManuallyDrop`], or [`into_raw`].\n\n\n"
       }
     ],
     "ostd::mm::frame::inc_frame_ref_count": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "ValidInstanceAddr"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "ValidInstanceAddr"
+              },
+              "args": [
+                "paddr",
+                "frame"
+              ]
             },
-            "args": [
-              "paddr",
-              "frame"
-            ]
+            "doc": "paddr should point to a valid instance of frame.\n\n"
           },
           {
-            "tag": {
-              "typ": null,
-              "name": "RefHeld"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "RefHeld"
+              },
+              "args": [
+                "The frame"
+              ]
             },
-            "args": [
-              "The frame"
-            ]
+            "doc": "A reference to The frame should have been held.\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* ValidInstanceAddr: paddr should point to a valid instance of frame.\n\n\n* RefHeld: A reference to The frame should have been held.\n\n\n"
       }
     ],
     "ostd::mm::heap::slot::HeapSlot::new": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "ValidInstanceAddr"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "ValidInstanceAddr"
+              },
+              "args": [
+                "addr",
+                "free slot in a [`super::Slab`] or [`Segment`] with corresponding size"
+              ]
             },
-            "args": [
-              "addr",
-              "free slot in a [`super::Slab`] or [`Segment`] with corresponding size"
-            ]
+            "doc": "addr should point to a valid instance of free slot in a [`super::Slab`] or [`Segment`] with corresponding size.\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* ValidInstanceAddr: addr should point to a valid instance of free slot in a [`super::Slab`] or [`Segment`] with corresponding size.\n\n\n"
       }
     ],
     "ostd::mm::io::memcpy": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "ValidAccessAddr"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "ValidAccessAddr"
+              },
+              "args": [
+                "`src`",
+                "reads of `len` bytes"
+              ]
             },
-            "args": [
-              "`src`",
-              "reads of `len` bytes"
-            ]
+            "doc": "`src` should be valid for reads of `len` bytes.\n\n"
           },
           {
-            "tag": {
-              "typ": null,
-              "name": "ValidAccessAddr"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "ValidAccessAddr"
+              },
+              "args": [
+                "`dst`",
+                "writes of `len` bytes"
+              ]
             },
-            "args": [
-              "`dst`",
-              "writes of `len` bytes"
-            ]
+            "doc": "`dst` should be valid for writes of `len` bytes.\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* ValidAccessAddr: `src` should be valid for reads of `len` bytes.\n\n\n* ValidAccessAddr: `dst` should be valid for writes of `len` bytes.\n\n\n"
       }
     ],
     "ostd::mm::io::memcpy_fallible": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "Memo"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "Memo"
+              },
+              "args": [
+                "`src` must either be [valid] for reads of `len` bytes or be in user space for `len` bytes"
+              ]
             },
-            "args": [
-              "`src` must either be [valid] for reads of `len` bytes or be in user space for `len` bytes"
-            ]
+            "doc": "`src` must either be [valid] for reads of `len` bytes or be in user space for `len` bytes\n\n"
           },
           {
-            "tag": {
-              "typ": null,
-              "name": "Memo"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "Memo"
+              },
+              "args": [
+                "`dst` must either be [valid] for writes of `len` bytes or be in user space for `len` bytes"
+              ]
             },
-            "args": [
-              "`dst` must either be [valid] for writes of `len` bytes or be in user space for `len` bytes"
-            ]
+            "doc": "`dst` must either be [valid] for writes of `len` bytes or be in user space for `len` bytes\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* Memo: `src` must either be [valid] for reads of `len` bytes or be in user space for `len` bytes\n\n\n* Memo: `dst` must either be [valid] for writes of `len` bytes or be in user space for `len` bytes\n\n\n"
       }
     ],
     "ostd::mm::io::memset_fallible": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "Memo"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "Memo"
+              },
+              "args": [
+                "`dst` must either be [valid] for writes of `len` bytes or be in user space for `len` bytes"
+              ]
             },
-            "args": [
-              "`dst` must either be [valid] for writes of `len` bytes or be in user space for `len` bytes"
-            ]
+            "doc": "`dst` must either be [valid] for writes of `len` bytes or be in user space for `len` bytes\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* Memo: `dst` must either be [valid] for writes of `len` bytes or be in user space for `len` bytes\n\n\n"
       }
     ],
     "ostd::mm::io::VmReader::<'a, mm::io::Infallible>::from_kernel_space": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "ValidAccessAddr"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "ValidAccessAddr"
+              },
+              "args": [
+                "`ptr`",
+                "reads of `len` bytes"
+              ]
             },
-            "args": [
-              "`ptr`",
-              "reads of `len` bytes"
-            ]
+            "doc": "`ptr` should be valid for reads of `len` bytes.\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* ValidAccessAddr: `ptr` should be valid for reads of `len` bytes.\n\n\n"
       }
     ],
     "ostd::mm::io::VmReader::<'_>::from_user_space": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "UserSpace"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "UserSpace"
+              },
+              "args": [
+                "ptr",
+                "ptr + len"
+              ]
             },
-            "args": [
-              "ptr",
-              "ptr + len"
-            ]
+            "doc": "ptr..ptr + len should be within user space.\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* UserSpace: ptr..ptr + len should be within user space.\n\n\n"
       }
     ],
     "ostd::mm::io::VmWriter::<'a, mm::io::Infallible>::from_kernel_space": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "ValidAccessAddr"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "ValidAccessAddr"
+              },
+              "args": [
+                "`ptr`",
+                "writes of `len` bytes"
+              ]
             },
-            "args": [
-              "`ptr`",
-              "writes of `len` bytes"
-            ]
+            "doc": "`ptr` should be valid for writes of `len` bytes.\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* ValidAccessAddr: `ptr` should be valid for writes of `len` bytes.\n\n\n"
       }
     ],
     "ostd::mm::io::VmWriter::<'_>::from_user_space": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "UserSpace"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "UserSpace"
+              },
+              "args": [
+                "ptr",
+                "ptr + len"
+              ]
             },
-            "args": [
-              "ptr",
-              "ptr + len"
-            ]
+            "doc": "ptr..ptr + len should be within user space.\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* UserSpace: ptr..ptr + len should be within user space.\n\n\n"
       }
     ],
     "ostd::mm::kspace::kvirt_area::KVirtArea::map_untracked_frames": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "Memo"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "Memo"
+              },
+              "args": [
+                "The physical addresses within pa_range should be untracked"
+              ]
             },
-            "args": [
-              "The physical addresses within pa_range should be untracked"
-            ]
+            "doc": "The physical addresses within pa_range should be untracked\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* Memo: The physical addresses within pa_range should be untracked\n\n\n"
       }
     ],
     "ostd::mm::kspace::activate_kernel_page_table": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "CallOnce"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "CallOnce"
+              },
+              "args": [
+                "processor"
+              ]
             },
-            "args": [
-              "processor"
-            ]
+            "doc": "This function should be called only once per processor.\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* CallOnce: This function should be called only once per processor.\n\n\n"
       }
     ],
     "ostd::mm::page_table::node::child::Child::<C>::from_pte": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "RefUnheld"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "RefUnheld"
+              },
+              "args": [
+                "pte"
+              ]
             },
-            "args": [
-              "pte"
-            ]
+            "doc": "Any reference to pte should not have been held.\n\n"
           }
         ],
-        "desc": "For reference created by `ChildRef`"
+        "desc": "For reference created by `ChildRef`",
+        "doc": "For reference created by `ChildRef`\n\n* RefUnheld: Any reference to pte should not have been held.\n\n\n"
       },
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "CallOnce"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "CallOnce"
+              },
+              "args": [
+                "pte"
+              ]
             },
-            "args": [
-              "pte"
-            ]
+            "doc": "This function should be called only once per pte.\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* CallOnce: This function should be called only once per pte.\n\n\n"
       }
     ],
     "ostd::mm::page_table::node::child::ChildRef::<'_, C>::from_pte": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "OriginateFrom"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "OriginateFrom"
+              },
+              "args": [
+                "pte",
+                "[`Child::into_pte`]"
+              ]
             },
-            "args": [
-              "pte",
-              "[`Child::into_pte`]"
-            ]
+            "doc": "pte should originate from [`Child::into_pte`].\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* OriginateFrom: pte should originate from [`Child::into_pte`].\n\n\n"
       }
     ],
     "ostd::mm::page_table::node::entry::Entry::<'a, 'rcu, C>::new_at": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "Bounded"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "Bounded"
+              },
+              "args": [
+                "idx",
+                "the bounds of the node"
+              ]
             },
-            "args": [
-              "idx",
-              "the bounds of the node"
-            ]
+            "doc": "idx should be bounded by the bounds of the node.\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* Bounded: idx should be bounded by the bounds of the node.\n\n\n"
       }
     ],
     "ostd::mm::page_table::node::<impl mm::frame::Frame<mm::page_table::node::PageTablePageMeta<C>>>::activate": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "Valid"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "Valid"
+              },
+              "args": [
+                "The page table"
+              ]
             },
-            "args": [
-              "The page table"
-            ]
+            "doc": "The page table should be valid.\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* Valid: The page table should be valid.\n\n\n"
       }
     ],
     "ostd::mm::page_table::node::<impl mm::frame::Frame<mm::page_table::node::PageTablePageMeta<C>>>::first_activate": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "Valid"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "Valid"
+              },
+              "args": [
+                "The page table"
+              ]
             },
-            "args": [
-              "The page table"
-            ]
+            "doc": "The page table should be valid.\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* Valid: The page table should be valid.\n\n\n"
       },
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "CallOnce"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "CallOnce"
+              },
+              "args": [
+                "system"
+              ]
             },
-            "args": [
-              "system"
-            ]
+            "doc": "This function should be called only once per system.\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* CallOnce: This function should be called only once per system.\n\n\n"
       }
     ],
     "ostd::mm::page_table::node::<impl mm::frame::frame_ref::FrameRef<'a, mm::page_table::node::PageTablePageMeta<C>>>::make_guard_unchecked": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "LockHeld"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "LockHeld"
+              },
+              "args": [
+                "The task"
+              ]
             },
-            "args": [
-              "The task"
-            ]
+            "doc": "The task should have already held the lock.\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* LockHeld: The task should have already held the lock.\n\n\n"
       }
     ],
     "ostd::mm::page_table::node::PageTableGuard::<'rcu, C>::read_pte": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "Bounded"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "Bounded"
+              },
+              "args": [
+                "idx",
+                "the bounds of the node"
+              ]
             },
-            "args": [
-              "idx",
-              "the bounds of the node"
-            ]
+            "doc": "idx should be bounded by the bounds of the node.\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* Bounded: idx should be bounded by the bounds of the node.\n\n\n"
       }
     ],
     "ostd::mm::page_table::node::PageTableGuard::<'rcu, C>::write_pte": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "Bounded"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "Bounded"
+              },
+              "args": [
+                "idx",
+                "the bound of the node"
+              ]
             },
-            "args": [
-              "idx",
-              "the bound of the node"
-            ]
+            "doc": "idx should be bounded by the bound of the node.\n\n"
           },
           {
-            "tag": {
-              "typ": null,
-              "name": "Valid"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "Valid"
+              },
+              "args": [
+                "The Child represented by pte, form the perspective of [`PageTableConfig`] and the paging level,"
+              ]
             },
-            "args": [
-              "The Child represented by pte, form the perspective of [`PageTableConfig`] and the paging level,"
-            ]
+            "doc": "The Child represented by pte, form the perspective of [`PageTableConfig`] and the paging level, should be valid.\n\n"
           },
           {
-            "tag": {
-              "typ": null,
-              "name": "Memo"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "Memo"
+              },
+              "args": [
+                "The page table node will have the ownership of the [`Child`] after this method."
+              ]
             },
-            "args": [
-              "The page table node will have the ownership of the [`Child`] after this method."
-            ]
+            "doc": "The page table node will have the ownership of the [`Child`] after this method.\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* Bounded: idx should be bounded by the bound of the node.\n\n\n* Valid: The Child represented by pte, form the perspective of [`PageTableConfig`] and the paging level, should be valid.\n\n\n* Memo: The page table node will have the ownership of the [`Child`] after this method.\n\n\n"
       }
     ],
     "ostd::mm::page_table::cursor::locking::dfs_release_lock": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "NotPostToFunc"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "NotPostToFunc"
+              },
+              "args": [
+                "dfs_mark_stray_and_unlock"
+              ]
             },
-            "args": [
-              "dfs_mark_stray_and_unlock"
-            ]
+            "doc": "This function should not be executed after dfs_mark_stray_and_unlock.\n\n"
           },
           {
-            "tag": {
-              "typ": null,
-              "name": "NotPostToFunc"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "NotPostToFunc"
+              },
+              "args": [
+                "dfs_release_lock"
+              ]
             },
-            "args": [
-              "dfs_release_lock"
-            ]
+            "doc": "This function should not be executed after dfs_release_lock.\n\n"
           },
           {
-            "tag": {
-              "typ": null,
-              "name": "Forgotten"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "Forgotten"
+              },
+              "args": [
+                "cur_node"
+              ]
             },
-            "args": [
-              "cur_node"
-            ]
+            "doc": "cur_node must be forgotten by [`core::mem::forget`], [`ManuallyDrop`], or [`into_raw`].\n\n"
           }
         ],
-        "desc": "For cur_node:"
+        "desc": "For cur_node:",
+        "doc": "For cur_node:\n\n* NotPostToFunc: This function should not be executed after dfs_mark_stray_and_unlock.\n\n\n* NotPostToFunc: This function should not be executed after dfs_release_lock.\n\n\n* Forgotten: cur_node must be forgotten by [`core::mem::forget`], [`ManuallyDrop`], or [`into_raw`].\n\n\n"
       }
     ],
     "ostd::mm::page_table::cursor::locking::dfs_mark_stray_and_unlock": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "NotPostToFunc"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "NotPostToFunc"
+              },
+              "args": [
+                "[`locking::unlock_range`]"
+              ]
             },
-            "args": [
-              "[`locking::unlock_range`]"
-            ]
+            "doc": "This function should not be executed after [`locking::unlock_range`].\n\n"
           },
           {
-            "tag": {
-              "typ": null,
-              "name": "NotPostToFunc"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "NotPostToFunc"
+              },
+              "args": [
+                "[`dfs_mark_stray_and_unlock`]"
+              ]
             },
-            "args": [
-              "[`dfs_mark_stray_and_unlock`]"
-            ]
+            "doc": "This function should not be executed after [`dfs_mark_stray_and_unlock`].\n\n"
           },
           {
-            "tag": {
-              "typ": null,
-              "name": "NotPostToFunc"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "NotPostToFunc"
+              },
+              "args": [
+                "[`dfs_release_lock`]"
+              ]
             },
-            "args": [
-              "[`dfs_release_lock`]"
-            ]
+            "doc": "This function should not be executed after [`dfs_release_lock`].\n\n"
           },
           {
-            "tag": {
-              "typ": null,
-              "name": "Forgotten"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "Forgotten"
+              },
+              "args": [
+                "sub_tree"
+              ]
             },
-            "args": [
-              "sub_tree"
-            ]
+            "doc": "sub_tree must be forgotten by [`core::mem::forget`], [`ManuallyDrop`], or [`into_raw`].\n\n"
           }
         ],
-        "desc": "For sub_tree"
+        "desc": "For sub_tree",
+        "doc": "For sub_tree\n\n* NotPostToFunc: This function should not be executed after [`locking::unlock_range`].\n\n\n* NotPostToFunc: This function should not be executed after [`dfs_mark_stray_and_unlock`].\n\n\n* NotPostToFunc: This function should not be executed after [`dfs_release_lock`].\n\n\n* Forgotten: sub_tree must be forgotten by [`core::mem::forget`], [`ManuallyDrop`], or [`into_raw`].\n\n\n"
       }
     ],
     "ostd::mm::page_table::cursor::CursorMut::<'rcu, C>::map": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "KernelMemorySafe"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "KernelMemorySafe"
+              },
+              "args": [
+                "The range being mapped"
+              ]
             },
-            "args": [
-              "The range being mapped"
-            ]
+            "doc": "The range being mapped should not affect kernel's memory safety.\n\n"
           },
           {
-            "tag": {
-              "typ": null,
-              "name": "Valid"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "Valid"
+              },
+              "args": [
+                "The physical address to be mapped"
+              ]
             },
-            "args": [
-              "The physical address to be mapped"
-            ]
+            "doc": "The physical address to be mapped should be valid.\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* KernelMemorySafe: The range being mapped should not affect kernel's memory safety.\n\n\n* Valid: The physical address to be mapped should be valid.\n\n\n"
       }
     ],
     "ostd::mm::page_table::cursor::CursorMut::<'rcu, C>::take_next": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "KernelMemorySafe"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "KernelMemorySafe"
+              },
+              "args": [
+                "The range being unmapped"
+              ]
             },
-            "args": [
-              "The range being unmapped"
-            ]
+            "doc": "The range being unmapped should not affect kernel's memory safety.\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* KernelMemorySafe: The range being unmapped should not affect kernel's memory safety.\n\n\n"
       }
     ],
     "ostd::mm::page_table::cursor::CursorMut::<'rcu, C>::protect_next": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "NonModifying"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "NonModifying"
+              },
+              "args": [
+                "The privileged flag `AVAIL1`"
+              ]
             },
-            "args": [
-              "The privileged flag `AVAIL1`"
-            ]
+            "doc": "The privileged flag `AVAIL1` should not be modified after calling the function.\n\n"
           }
         ],
-        "desc": "If in the kernel page table (the restriction may be lifted in the futures):"
+        "desc": "If in the kernel page table (the restriction may be lifted in the futures):",
+        "doc": "If in the kernel page table (the restriction may be lifted in the futures):\n\n* NonModifying: The privileged flag `AVAIL1` should not be modified after calling the function.\n\n\n"
       },
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "KernelMemorySafe"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "KernelMemorySafe"
+              },
+              "args": [
+                "The range being unmapped"
+              ]
             },
-            "args": [
-              "The range being unmapped"
-            ]
+            "doc": "The range being unmapped should not affect kernel's memory safety.\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* KernelMemorySafe: The range being unmapped should not affect kernel's memory safety.\n\n\n"
       }
     ],
     "ostd::mm::page_table::boot_pt::dismiss": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "NotPriorToFunc"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "NotPriorToFunc"
+              },
+              "args": [
+                "`with_borrow`"
+              ]
             },
-            "args": [
-              "`with_borrow`"
-            ]
+            "doc": "This function should not be executed before `with_borrow`.\n\n"
           }
         ],
-        "desc": "For this dismissal"
+        "desc": "For this dismissal",
+        "doc": "For this dismissal\n\n* NotPriorToFunc: This function should not be executed before `with_borrow`.\n\n\n"
       },
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "NotPostToFunc"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "NotPostToFunc"
+              },
+              "args": [
+                "`with_borrow`"
+              ]
             },
-            "args": [
-              "`with_borrow`"
-            ]
+            "doc": "This function should not be executed after `with_borrow`.\n\n"
           }
         ],
-        "desc": "After another page table has been activated"
+        "desc": "After another page table has been activated",
+        "doc": "After another page table has been activated\n\n* NotPostToFunc: This function should not be executed after `with_borrow`.\n\n\n"
       },
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "CallOnce"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "CallOnce"
+              },
+              "args": [
+                "processor"
+              ]
             },
-            "args": [
-              "processor"
-            ]
+            "doc": "This function should be called only once per processor.\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* CallOnce: This function should be called only once per processor.\n\n\n"
       }
     ],
     "ostd::mm::page_table::boot_pt::BootPageTable::<E, C>::from_current_pt": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "CallOnce"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "CallOnce"
+              },
+              "args": [
+                "system"
+              ]
             },
-            "args": [
-              "system"
-            ]
+            "doc": "This function should be called only once per system.\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* CallOnce: This function should be called only once per system.\n\n\n"
       }
     ],
     "ostd::mm::page_table::boot_pt::BootPageTable::<E, C>::map_base_page": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "KernelMemorySafe"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "KernelMemorySafe"
+              },
+              "args": [
+                "The mapping"
+              ]
             },
-            "args": [
-              "The mapping"
-            ]
+            "doc": "The mapping should not affect kernel's memory safety.\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* KernelMemorySafe: The mapping should not affect kernel's memory safety.\n\n\n"
       }
     ],
     "ostd::mm::page_table::boot_pt::BootPageTable::<E, C>::protect_base_page": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "KernelMemorySafe"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "KernelMemorySafe"
+              },
+              "args": [
+                "The mapping"
+              ]
             },
-            "args": [
-              "The mapping"
-            ]
+            "doc": "The mapping should not affect kernel's memory safety.\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* KernelMemorySafe: The mapping should not affect kernel's memory safety.\n\n\n"
       }
     ],
     "ostd::mm::page_table::PageTableConfig::item_from_raw": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "Memo"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "Memo"
+              },
+              "args": [
+                "Either the ownership of the item is properly transferred to the return value, or the return value is wrapped in a [`core::mem::ManuallyDrop`] that won't outlive the original item"
+              ]
             },
-            "args": [
-              "Either the ownership of the item is properly transferred to the return value, or the return value is wrapped in a [`core::mem::ManuallyDrop`] that won't outlive the original item"
-            ]
+            "doc": "Either the ownership of the item is properly transferred to the return value, or the return value is wrapped in a [`core::mem::ManuallyDrop`] that won&#39;t outlive the original item\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* Memo: Either the ownership of the item is properly transferred to the return value, or the return value is wrapped in a [`core::mem::ManuallyDrop`] that won&#39;t outlive the original item\n\n\n"
       },
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "ValidInstanceAddr"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "ValidInstanceAddr"
+              },
+              "args": [
+                "`paddr` and `level`",
+                "page table node"
+              ]
             },
-            "args": [
-              "`paddr` and `level`",
-              "page table node"
-            ]
+            "doc": "`paddr` and `level` should point to a valid instance of page table node.\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* ValidInstanceAddr: `paddr` and `level` should point to a valid instance of page table node.\n\n\n"
       }
     ],
     "ostd::mm::page_table::PageTable::<mm::kspace::KernelPtConfig>::protect_flush_tlb": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "KernelMemorySafe"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "KernelMemorySafe"
+              },
+              "args": [
+                "The protecting operation"
+              ]
             },
-            "args": [
-              "The protecting operation"
-            ]
+            "doc": "The protecting operation should not affect kernel's memory safety.\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* KernelMemorySafe: The protecting operation should not affect kernel's memory safety.\n\n\n"
       }
     ],
     "ostd::mm::page_table::PageTable::<C>::first_activate_unchecked": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "CallOnce"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "CallOnce"
+              },
+              "args": [
+                "system"
+              ]
             },
-            "args": [
-              "system"
-            ]
+            "doc": "This function should be called only once per system.\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* CallOnce: This function should be called only once per system.\n\n\n"
       }
     ],
     "ostd::mm::page_table::PageTable::<C>::shallow_copy": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "NotPostToFunc"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "NotPostToFunc"
+              },
+              "args": [
+                "copying the page table"
+              ]
             },
-            "args": [
-              "copying the page table"
-            ]
+            "doc": "This function should not be executed after copying the page table.\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* NotPostToFunc: This function should not be executed after copying the page table.\n\n\n"
       }
     ],
     "ostd::mm::page_table::load_pte": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "ReferTo"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "ReferTo"
+              },
+              "args": [
+                "[`AtomicUsize::from_ptr`]"
+              ]
             },
-            "args": [
-              "[`AtomicUsize::from_ptr`]"
-            ]
+            "doc": "This function should meet the safety requirement of [`AtomicUsize::from_ptr`].\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* ReferTo: This function should meet the safety requirement of [`AtomicUsize::from_ptr`].\n\n\n"
       }
     ],
     "ostd::mm::page_table::store_pte": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "ReferTo"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "ReferTo"
+              },
+              "args": [
+                "[`AtomicUsize::from_ptr`]"
+              ]
             },
-            "args": [
-              "[`AtomicUsize::from_ptr`]"
-            ]
+            "doc": "This function should meet the safety requirement of [`AtomicUsize::from_ptr`].\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* ReferTo: This function should meet the safety requirement of [`AtomicUsize::from_ptr`].\n\n\n"
       }
     ],
     "ostd::task::processor::after_switching_to": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "CallOnce"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "CallOnce"
+              },
+              "args": [
+                "task switching"
+              ]
             },
-            "args": [
-              "task switching"
-            ]
+            "doc": "This function should be called only once per task switching.\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* CallOnce: This function should be called only once per task switching.\n\n\n"
       }
     ],
     "ostd::task::utils::ForceSync::<T>::get": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "Sync"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "Sync"
+              },
+              "args": [
+                "data"
+              ]
             },
-            "args": [
-              "data"
-            ]
+            "doc": "If the type of data is not [`Sync`], the caller must ensure that data is not accessed concurrently.\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* Sync: If the type of data is not [`Sync`], the caller must ensure that data is not accessed concurrently.\n\n\n"
       }
     ],
     "ostd::task::CurrentTask::new": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "Valid"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "Valid"
+              },
+              "args": [
+                "task"
+              ]
             },
-            "args": [
-              "task"
-            ]
+            "doc": "task should be valid.\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* Valid: task should be valid.\n\n\n"
       }
     ],
     "ostd::init": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "CallOnce"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "CallOnce"
+              },
+              "args": [
+                "system"
+              ]
             },
-            "args": [
-              "system"
-            ]
+            "doc": "This function should be called only once per system.\n\n"
           },
           {
-            "tag": {
-              "typ": null,
-              "name": "Context"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "Context"
+              },
+              "args": [
+                "BSP starts",
+                "BSP ends"
+              ]
             },
-            "args": [
-              "BSP starts",
-              "BSP ends"
-            ]
+            "doc": "This function should be executed after BSP starts before BSP ends.\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* CallOnce: This function should be called only once per system.\n\n\n* Context: This function should be executed after BSP starts before BSP ends.\n\n\n"
       }
     ],
     "ostd::io::io_port::IoPort::<T, A>::new": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "Memo"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "Memo"
+              },
+              "args": [
+                "This function is marked unsafe as creating an I/O port is considered a privileged operation."
+              ]
             },
-            "args": [
-              "This function is marked unsafe as creating an I/O port is considered a privileged operation."
-            ]
+            "doc": "This function is marked unsafe as creating an I/O port is considered a privileged operation.\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* Memo: This function is marked unsafe as creating an I/O port is considered a privileged operation.\n\n\n"
       }
     ],
     "ostd::io::io_port::allocator::init": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "OriginateFrom"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "OriginateFrom"
+              },
+              "args": [
+                "All the port I/O regions",
+                "the macros `sensitive_io_port` and `reserve_io_port_range`"
+              ]
             },
-            "args": [
-              "All the port I/O regions",
-              "the macros `sensitive_io_port` and `reserve_io_port_range`"
-            ]
+            "doc": "All the port I/O regions should originate from the macros `sensitive_io_port` and `reserve_io_port_range`.\n\n"
           },
           {
-            "tag": {
-              "typ": null,
-              "name": "Bounded"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "Bounded"
+              },
+              "args": [
+                "`crate::arch::io::MAX_IO_PORT`",
+                "the maximum value specified by architecture"
+              ]
             },
-            "args": [
-              "`crate::arch::io::MAX_IO_PORT`",
-              "the maximum value specified by architecture"
-            ]
+            "doc": "`crate::arch::io::MAX_IO_PORT` should be bounded by the maximum value specified by architecture.\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* OriginateFrom: All the port I/O regions should originate from the macros `sensitive_io_port` and `reserve_io_port_range`.\n\n\n* Bounded: `crate::arch::io::MAX_IO_PORT` should be bounded by the maximum value specified by architecture.\n\n\n"
       }
     ],
     "ostd::io::io_port::allocator::IoPortAllocator::recycle": [
       {
         "tags": [
           {
-            "tag": {
-              "typ": null,
-              "name": "PostToFunc"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "PostToFunc"
+              },
+              "args": [
+                "`IoPortAllocator::acquire`"
+              ]
             },
-            "args": [
-              "`IoPortAllocator::acquire`"
-            ]
+            "doc": "This function should be executed after `IoPortAllocator::acquire`.\n\n"
           },
           {
-            "tag": {
-              "typ": null,
-              "name": "OwnedResource"
+            "sp": {
+              "tag": {
+                "typ": null,
+                "name": "OwnedResource"
+              },
+              "args": [
+                "PIO region"
+              ]
             },
-            "args": [
-              "PIO region"
-            ]
+            "doc": "`PIO region` must be exclusively owned by .\n\n"
           }
         ],
-        "desc": null
+        "desc": null,
+        "doc": "* PostToFunc: This function should be executed after `IoPortAllocator::acquire`.\n\n\n* OwnedResource: `PIO region` must be exclusively owned by .\n\n\n"
       }
     ]
   },

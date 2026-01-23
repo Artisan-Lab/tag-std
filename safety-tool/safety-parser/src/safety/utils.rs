@@ -1,15 +1,42 @@
 use super::PropertiesAndReason;
 use crate::configuration::env::need_check;
 use indexmap::IndexMap;
+use proc_macro2::Span;
 use serde::{Deserializer, Serializer, ser::SerializeSeq};
-use syn::{Expr, ExprLit, Lit};
+use syn::{
+    AttrStyle, Attribute, Expr, ExprLit, File, Ident, Lit, MetaNameValue, Path, PathSegment,
+    punctuated::Punctuated,
+};
 
 pub fn expr_to_string(expr: &Expr) -> String {
     if let Expr::Lit(ExprLit { lit: Lit::Str(s), .. }) = expr {
         s.value()
     } else {
-        let tokens = quote::quote! { #expr };
-        tokens.to_string()
+        // Workaroud: we can use `quote!` to format expr as string, but the result is weird
+        // such as `self.field` being `self . field`
+        let (pound_token, bracket_token, inner, eq_token) = Default::default();
+        let attr = Attribute {
+            pound_token,
+            bracket_token,
+            style: AttrStyle::Inner(inner),
+            meta: MetaNameValue {
+                path: Path {
+                    leading_colon: None,
+                    segments: Punctuated::from_iter([PathSegment::from(Ident::new(
+                        "arg",
+                        Span::call_site(),
+                    ))]),
+                },
+                eq_token,
+                value: expr.clone(),
+            }
+            .into(),
+        };
+        let file = File { shebang: None, attrs: vec![attr], items: Vec::new() };
+        let s = prettyplease::unparse(&file);
+        let s = s.strip_prefix("#![arg = ").unwrap();
+        let s = s.strip_suffix("]").unwrap();
+        s.to_owned()
     }
 }
 

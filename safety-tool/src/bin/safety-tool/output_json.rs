@@ -4,9 +4,9 @@ use rustc_middle::ty::TyCtxt;
 use rustc_session::config::CrateType;
 use safety_parser::{
     configuration,
-    safety::{PropertiesAndReason, parse_attr_and_get_properties},
+    json::{Ouput, OutputProperties},
+    safety::parse_attr_and_get_properties,
 };
-use serde::Serialize;
 use std::{env, fs, path::PathBuf};
 
 /// Emit annotatation to `$UPG_DIR/_tags/$crate.json`.
@@ -20,7 +20,7 @@ pub fn run(tcx: TyCtxt) {
 
     let fn_defs = local_crate.fn_defs();
     let mut safety_tags =
-        IndexMap::<String, Vec<PropertiesAndReason>>::with_capacity(fn_defs.len() / 3);
+        IndexMap::<String, Vec<OutputProperties>>::with_capacity(fn_defs.len() / 3);
 
     for fn_def in fn_defs {
         let fn_name = format!("{crate_name}::{}", tcx.def_path_str(internal(tcx, fn_def.def_id())));
@@ -35,7 +35,7 @@ pub fn run(tcx: TyCtxt) {
             let attr = attr.as_str();
             if attr.starts_with("#[rapx::") {
                 let v_sp = parse_attr_and_get_properties(attr);
-                tags.extend(v_sp);
+                tags.extend(v_sp.into_iter().map(OutputProperties::new));
             }
         }
         if !tags.is_empty() {
@@ -67,10 +67,4 @@ pub fn run(tcx: TyCtxt) {
         },
     };
     serde_json::to_writer_pretty(file, &output).unwrap();
-}
-
-#[derive(Serialize)]
-struct Ouput {
-    v_fn: IndexMap<String, Vec<PropertiesAndReason>>,
-    spec: IndexMap<Box<str>, configuration::Key>,
 }
