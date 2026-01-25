@@ -17,7 +17,7 @@ cargo safety-tool
 cp "$UPG_DIR" . -r
 popd
 
-pushd ../tag-asterinas/ostd/
+pushd ../target-projects/asterinas/tag-asterinas/ostd/
 cargo clean
 cargo safety-tool --target x86_64-unknown-none
 popd
