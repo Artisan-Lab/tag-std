@@ -17,6 +17,7 @@ jobs:
 
       - name: Init asterinas submodule
         # run: git submodule update --init tag-asterinas
+        working-directory: target-projects/asterinas
         run: |
           git clone https://github.com/Artisan-Lab/tag-asterinas.git
           cd tag-asterinas && git switch 2025-12
@@ -33,7 +34,7 @@ jobs:
         run: cargo install --path . --locked -Fasterinas
 
       - name: Check Asterinas
-        working-directory: tag-asterinas
+        working-directory: target-projects/asterinas/tag-asterinas
         env:
           # valid value: abort_and_emit, abort_and_no_emit, silence_and_emit, and silence_and_no_emit
           RAPX_EXIT_AND_EMIT: silence_and_emit # don't abort if discharges are missing, but still emit diagnostics
@@ -54,7 +55,7 @@ jobs:
 
       - name: Print safety-tool diagnostics
         if: always()
-        working-directory: tag-asterinas/ostd
+        working-directory: target-projects/asterinas/tag-asterinas/ostd
         run: cat rapx.err
 
   rustc-doc:
@@ -74,14 +75,14 @@ jobs:
         env:
           RUSTDOCFLAGS: -Zunstable-options --generate-link-to-definition
         run: |
-          git submodule update --init tag-asterinas
-          cd tag-asterinas/ostd
+          git submodule update --init target-projects/asterinas/tag-asterinas
+          cd target-projects/asterinas/tag-asterinas/ostd
           cargo doc --no-deps --target x86_64-unknown-none --document-private-items
 
       - name: Upload ostd rustdoc
         uses: actions/upload-artifact@v4
         with:
-          path: tag-asterinas/target/x86_64-unknown-none/doc
+          path: target-projects/asterinas/tag-asterinas/target/x86_64-unknown-none/doc
           name: doc-asterinas
 
       - name: Install rustc internal docs

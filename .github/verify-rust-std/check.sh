@@ -22,7 +22,7 @@ safety-tool-rfl --display-extra-rustc-args
 popd
 
 # Check libcore
-pushd rapx-verify-rust-std/library/core
+pushd target-projects/std/rapx-verify-rust-std/library/core
 cargo clean
 SAFETY_TOOL=safety-tool-rfl cargo safety-tool
 rm ../data.sqlite3
