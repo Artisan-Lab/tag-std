@@ -34,24 +34,34 @@ if [ ! -d "${llvm}" ]; then
   mkdir -p "${llvm}/bin" "${llvm}/lib"
   
   # Create symlinks to system LLVM tools
-  for tool in /usr/bin/llvm-*-15 /usr/bin/clang-15; do
-    if [ -x "$tool" ]; then
-      basename=$(basename "$tool" | sed 's/-15$//')
-      ln -sf "$tool" "${llvm}/bin/${basename}"
-    fi
+  # Find all llvm-*-15 executables and create symlinks without the version suffix
+  find /usr/bin -name 'llvm-*-15' -type f -executable 2>/dev/null | while read -r tool; do
+    basename=$(basename "$tool" | sed 's/-15$//')
+    ln -sf "$tool" "${llvm}/bin/${basename}"
   done
   
   # Link clang without version suffix
   ln -sf /usr/bin/clang-15 "${llvm}/bin/clang"
   ln -sf /usr/bin/clang++-15 "${llvm}/bin/clang++"
   
-  # Link libclang
-  if [ -f /usr/lib/llvm-15/lib/libclang.so ]; then
-    ln -sf /usr/lib/llvm-15/lib/libclang.so "${llvm}/lib/libclang.so"
-  elif [ -f /usr/lib/x86_64-linux-gnu/libclang-15.so.1 ]; then
-    ln -sf /usr/lib/x86_64-linux-gnu/libclang-15.so.1 "${llvm}/lib/libclang.so"
-  elif [ -f /usr/lib/aarch64-linux-gnu/libclang-15.so.1 ]; then
-    ln -sf /usr/lib/aarch64-linux-gnu/libclang-15.so.1 "${llvm}/lib/libclang.so"
+  # Link libclang - try multiple common locations
+  libclang_found=false
+  for libclang_path in \
+    /usr/lib/llvm-15/lib/libclang.so \
+    /usr/lib/x86_64-linux-gnu/libclang-15.so.1 \
+    /usr/lib/aarch64-linux-gnu/libclang-15.so.1 \
+    /usr/lib/libclang-15.so.1 \
+    /usr/lib/libclang.so.1; do
+    if [ -f "$libclang_path" ]; then
+      ln -sf "$libclang_path" "${llvm}/lib/libclang.so"
+      libclang_found=true
+      echo "Found libclang at: $libclang_path"
+      break
+    fi
+  done
+  
+  if [ "$libclang_found" = false ]; then
+    echo "Warning: libclang not found, build may fail"
   fi
   
   echo "LLVM 15 installed from system packages"
