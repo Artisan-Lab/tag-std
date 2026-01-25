@@ -74,14 +74,14 @@ jobs:
         env:
           RUSTDOCFLAGS: -Zunstable-options --generate-link-to-definition
         run: |
-          git submodule update --init tag-asterinas
-          cd tag-asterinas/ostd
+          git submodule update --init target-projects/asterinas/tag-asterinas
+          cd target-projects/asterinas/tag-asterinas/ostd
           cargo doc --no-deps --target x86_64-unknown-none --document-private-items
 
       - name: Upload ostd rustdoc
         uses: actions/upload-artifact@v4
         with:
-          path: tag-asterinas/target/x86_64-unknown-none/doc
+          path: target-projects/asterinas/tag-asterinas/target/x86_64-unknown-none/doc
           name: doc-asterinas
 
       - name: Install rustc internal docs

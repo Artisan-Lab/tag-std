@@ -16,7 +16,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Init verify-rust-std submodule
-        run: git submodule update --init rapx-verify-rust-std
+        run: git submodule update --init target-projects/std/rapx-verify-rust-std
 
       - name: Install toolchain
         working-directory: safety-tool
