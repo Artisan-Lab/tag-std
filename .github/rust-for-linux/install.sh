@@ -46,8 +46,10 @@ if [ ! -d "${llvm}" ]; then
   
   # Link libclang - try multiple common locations
   libclang_found=false
+  arch=$(uname -m)
   for libclang_path in \
     /usr/lib/llvm-15/lib/libclang.so \
+    /usr/lib/${arch}-linux-gnu/libclang-15.so.1 \
     /usr/lib/x86_64-linux-gnu/libclang-15.so.1 \
     /usr/lib/aarch64-linux-gnu/libclang-15.so.1 \
     /usr/lib/libclang-15.so.1 \
