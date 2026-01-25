@@ -36,8 +36,8 @@ if [ ! -d "${llvm}" ]; then
   # Create symlinks to system LLVM tools
   # Find all llvm-*-15 executables and create symlinks without the version suffix
   find /usr/bin -name 'llvm-*-15' -type f -executable 2>/dev/null | while read -r tool; do
-    basename=$(basename "$tool" | sed 's/-15$//')
-    ln -sf "$tool" "${llvm}/bin/${basename}"
+    tool_basename=$(basename "$tool" | sed 's/-15$//')
+    ln -sf "$tool" "${llvm}/bin/${tool_basename}"
   done
   
   # Link clang without version suffix
