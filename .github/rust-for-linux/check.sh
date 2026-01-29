@@ -40,16 +40,9 @@ safety-tool --version
 safety-tool-rfl build-dev
 popd
 
-# Add llvm to PATH, and set up libclang
-llvm=llvm-21.1.4-rust-1.91.0-$(uname -m)
-llvm_prefix=$PWD/$llvm
-export PATH=$llvm_prefix/bin:$PATH
-export LIBCLANG_PATH=$llvm_prefix/lib/libclang.so
-
-# Install bindgen-cli which must be built from the same version of
-# libclang and rustc required above.
-cargo --version
-cargo install --locked --root "$llvm_prefix" bindgen-cli
+# Install bindgen-cli using cargo instead of relying on custom LLVM bundle.
+# bindgen will use the system's libclang automatically.
+cargo install --locked bindgen-cli
 
 # Prepare Rust for Linux config
 cat <<EOF >$KCONFIG

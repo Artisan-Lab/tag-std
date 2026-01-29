@@ -22,12 +22,6 @@ else
   echo "linux source code has been downloaded"
 fi
 
-# Download LLVM and rustc toolchain required by Rust for Linux
-# see https://mirrors.edge.kernel.org/pub/tools/llvm/rust/
-llvm=llvm-21.1.4-rust-1.91.0-$(uname -m)
-if [ ! -d "${llvm}" ]; then
-  wget https://mirrors.edge.kernel.org/pub/tools/llvm/rust/files/"$llvm".tar.xz
-  tar -xvf "$llvm".tar.xz
-else
-  echo "llvm and rust toolchain have been downloaded"
-fi
+# Note: No longer downloading custom LLVM toolchain.
+# The build now uses the system's LLVM via LLVM=1 make flag.
+# bindgen-cli will be installed in check.sh using cargo.

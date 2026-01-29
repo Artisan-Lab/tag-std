@@ -20,7 +20,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install deps required by linux
-        run: sudo apt-get install libelf-dev
+        run: sudo apt-get install libelf-dev libclang-dev
 
       - name: Install safety-tool
         working-directory: safety-tool
