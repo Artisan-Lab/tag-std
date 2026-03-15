@@ -1,0 +1,275 @@
+{
+  "package": {
+    "name": "rfl"
+  },
+  "tag": {
+    "UserProperty": {},
+    "LockHold": {
+      "args": [
+        "lock",
+        "a"
+      ],
+      "desc": "The corresponding lock `{lock}` is held for the duration of lifetime '`{a}`."
+    },
+    "NonData_race": {
+      "args": [
+        "loc"
+      ],
+      "desc": "The memory block `{loc}` should not have data races."
+    },
+    "NonDropped": {
+      "args": [
+        "val",
+        "event"
+      ],
+      "desc": "The value `{val}` is not dropped when it is used in the context of `{event}`."
+    },
+    "NonMutate": {
+      "args": [
+        "ptr",
+        "val"
+      ],
+      "desc": "When value `{val}` is alive, the memory pointed at by `{ptr}` must not be mutated."
+    },
+    "NonZero": {
+      "args": [
+        "val",
+        "a"
+      ],
+      "desc": "The value `{val}` remains non-zero for the duration of the lifetime `{a}`."
+    },
+    "NonMutRef": {
+      "args": [
+        "val"
+      ],
+      "desc": "There is no mutable reference to `{val}` created."
+    },
+    "NonConcurrent": {
+      "args": [
+        "val"
+      ],
+      "desc": "The value `{val}` should not be accessed concurrently by multiple users."
+    },
+    "NonUsed": {
+      "args": [
+        "val"
+      ],
+      "desc": "This value `{val}` must not be used as an argument in any other function."
+    },
+    "NonAccessable": {
+      "args": [
+        "ptr"
+      ],
+      "desc": "The pointee of `{ptr}` must not be accessed after this call."
+    },
+    "NonInstance": {
+      "args": [
+        "val",
+        "a"
+      ],
+      "desc": "For the duration of the lifetime '{a}', there must not exist a value '{val}'."
+    },
+    "Valid": {
+      "args": [
+        "val",
+        "a"
+      ],
+      "desc": "The value `{val}` must be valid for the duration of `{a}`."
+    },
+    "ValidWrite": {
+      "args": [
+        "dst",
+        "len"
+      ],
+      "desc": "The pointer `{dst}` is valid for writing `{len}` bytes."
+    },
+    "ValidRead": {
+      "args": [
+        "src",
+        "len"
+      ],
+      "desc": "The pointer `{src}` is valid for reading `{len}` bytes."
+    },
+    "MayInvalid": {
+      "args": [
+        "v"
+      ],
+      "desc": "The value `{v}` may become invalid during later usage.",
+      "types": [
+        "hazard"
+      ]
+    },
+    "ValidVma": {
+      "args": [
+        "v",
+        "l"
+      ],
+      "desc": "The VMA `{v}` must be valid for the duration of '`{l}`."
+    },
+    "ValidFile": {
+      "args": [
+        "f"
+      ],
+      "desc": "The pointer `{f}` must point to a valid file."
+    },
+    "ValidMemory": {
+      "args": [
+        "addr",
+        "s"
+      ],
+      "desc": "The address `{addr}` is the start of a valid memory region of size `{s}`."
+    },
+    "ValidCast": {
+      "args": [
+        "U",
+        "T"
+      ],
+      "desc": "The pointer of type `{U}` can be castbale to type `{T}` ,  and any value of type `{T}` written through such a pointer must result in a valid value."
+    },
+    "ValidInstance": {
+      "args": [
+        "v"
+      ],
+      "desc": "The value`{v}` must be a valid instance for usage."
+    },
+    "CalledBy": {
+      "args": [
+        "env"
+      ],
+      "desc": "This function is only called by the specified environment `{env}`."
+    },
+    "CallOnce": {
+      "args": [],
+      "desc": "This function can only be called once."
+    },
+    "PostToFunc": {
+      "args": [
+        "fn"
+      ],
+      "desc": "The function taged by this property can only be called after `{fn}` has been called."
+    },
+    "OriginateFrom": {
+      "args": [
+        "val",
+        "fn"
+      ],
+      "desc": "The value `{val}` is returned by a call to function `{fn}`."
+    },
+    "AnyThread": {
+      "args": [
+        "fn"
+      ],
+      "desc": "Function `{fn}` can be called from any thread."
+    },
+    "CurThread": {
+      "args": [
+        "input"
+      ],
+      "desc": "The argument `{input}` can only be called or accessed on the current thread."
+    },
+    "RefTransfer": {
+      "args": [
+        "ptr",
+        "ret"
+      ],
+      "desc": "The caller must own a refcount on `{ptr}` that is transferred to the returned `{ret}`."
+    },
+    "Invariant": {
+      "args": [
+        "ptr"
+      ],
+      "desc": "The type invariants for `*{ptr}` must hold for the pointee of `{ptr}`."
+    },
+    "ActiveContext": {
+      "args": [
+        "val"
+      ],
+      "desc": "The returned object is only used to access `{val}` within the task context that was active when this function was called."
+    },
+    "Associated": {
+      "args": [
+        "val",
+        "T"
+      ],
+      "desc": "The value `{val}` is associated with a value of type `{T}`."
+    },
+    "ContainerOf": {
+      "args": [
+        "p",
+        "C",
+        "f"
+      ],
+      "desc": "The pointer `{p}` points at a field `{f}` of container `{C}`."
+    },
+    "FlagSet": {
+      "args": [
+        "flag"
+      ],
+      "desc": "The flag `{flag}` must already have been set."
+    },
+    "Empty": {
+      "args": [
+        "l"
+      ],
+      "desc": "The container `{l}` must be empty.",
+      "expr": "l.len() == 0"
+    },
+    "InList": {
+      "args": [
+        "list",
+        "val"
+      ],
+      "desc": "The value {val} must be in list `{list}`.",
+      "types": [
+        "precond"
+      ]
+    },
+    "NonInList": {
+      "args": [
+        "list",
+        "val"
+      ],
+      "desc": "The value {val} must not be in the list `{list}`.",
+      "types": [
+        "precond"
+      ]
+    },
+    "Equal": {
+      "args": [
+        "l",
+        "r"
+      ],
+      "desc": "The left val `{l}` must be equal to the right val `{r}`.",
+      "expr": "l == r"
+    },
+    "Null": {
+      "args": [
+        "p"
+      ],
+      "desc": "The pointer `{p}` must be null.",
+      "expr": "p == 0"
+    },
+    "NonExist": {
+      "args": [
+        "T",
+        "val"
+      ],
+      "desc": "An instance of type `{T}` must not exist for value '{val}'."
+    },
+    "Think_Exist": {
+      "args": [
+        "target",
+        "type"
+      ],
+      "desc": "The tracking inside `{type}` must think that there is a `{target}` reference."
+    },
+    "Access": {
+      "args": [
+        "T",
+        "ret_val",
+        "type"
+      ],
+      "desc": "The caller must have `{type}` access to `{T}` for the duration of `{ret_val}`."
+    }
+  }
+}

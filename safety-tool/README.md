@@ -1,30 +1,40 @@
 # safety-tool
 
-A demo to show how safety properties can be checked on unsafe Rust code.
+This workspace is intentionally trimmed to keep only one capability:
 
-## Install
+- define safety tags for unsafe APIs in Rust std
 
-Several projects are checked, while each project may pin own toolchain.
+The following tag-definition crates are retained:
 
-So to support them in the same tool, conditional compilation gated by `--features` is needed.
+- `safety-parser`: parse tag specs and safety attributes
+- `safety-macro`: `#[requires]` and `#[checked]` attribute macros
+- `safety-lib`: re-export helper crate for using tag macros
 
-Projects and feature names:
+All extra capabilities (cross-project adapters, compile-time checking pipeline,
+statistics emission, and LSP client/server integration) are removed from the
+default build path.
 
-| project           | `--features` (or `-F`) |
-|-------------------|------------------------|
-| [verify-rust-std] | `std`                  |
-| [Rust for Linux]  | `rfl`                  |
-| [asterinas]       | `asterinas`            |
-
-[verify-rust-std]: https://github.com/Artisan-Lab/rapx-verify-rust-std
-[Rust for Linux]: https://github.com/Artisan-Lab/tag-rust-for-linux
-[asterinas]: https://github.com/Artisan-Lab/tag-asterinas
-
-There is no default toolchain for now, so one must set up it first and then build or install it.
-
-For example, to check Rust for Linux codebase, specify `rfl` like this:
+## Build
 
 ```bash
-./gen_rust_toolchain_toml.rs rfl
-cargo build -Frfl
+cargo build
+```
+
+## Example
+
+```rust
+#![feature(register_tool)]
+#![register_tool(rapx)]
+
+use safety_lib::{checked, requires};
+
+#[requires { ValidPtr(p) }]
+unsafe fn read_raw(p: *const u8) -> u8 {
+	unsafe { *p }
+}
+
+fn demo(p: *const u8) -> u8 {
+	#[checked { ValidPtr(p): "pointer is validated by caller" }]
+	unsafe { read_raw(p) }
+}
 ```

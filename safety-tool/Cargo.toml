@@ -2,60 +2,24 @@
 name = "safety-tool"
 version = "0.4.1"
 edition = "2024"
+autobins = false
 authors = ["Artisan-Lab <xuh@fudan.edu.cn>"]
-description = "A tool for analyzing safety tags defined in tag-std"
+description = "Tag definition toolkit for unsafe APIs in Rust std"
 license = "MPL-2.0"
 repository = "https://github.com/Artisan-Lab/tag-std"
 readme = "README.md"
 
 [features]
-# Exclusive features to match its Rust toolchain.
-std = []       # verify-rust-std
-rfl = []       # Rust for Linux
-asterinas = [] # Asterinas OS
-
-[[test]]
-name = "unsafe_calls"
-required-features = ["std"]
-
-[[test]]
-name = "safety_macro"
-required-features = ["rfl"]
+default = ["std"]
+std = ["dep:safety-lib"]
 
 [dependencies]
-rusqlite = { version = "0.37.0", features = ["bundled", "jiff"] }
-serde = { version = "1", features = ["derive"] }
-serde_json = { version = "1", features = ["preserve_order"] }
-jiff = { version = "0.2", features = ["serde"] }
-annotate-snippets = "0.11.5"
-cargo_metadata = "0.21.0"
-camino = "1.1.10"
-termtree = "0.5.1"
-owo-colors = "4.2.3"
-itertools = "0.14.0"
-
-safety-parser = { path = "./safety-parser/", version = "0.4.0" }
-crossfig = "0.1.3"
-
-# error handling
-eyre = "0.6"
-color-eyre = "0.6"
-
-# logger
-tracing = "0.1"
-tracing-subscriber = { version = "0.3", features = ["env-filter"] }
-tracing-error = "0.2"
-
-toml = "0.9.2"
-indexmap = { version = "2.10.0", features = ["serde"] }
-
-[dev-dependencies]
-assert_cmd = "2.0.17"
-expect-test = "1.5.1"
+safety-lib = { path = "./safety-lib/", version = "0.4.1", optional = true, features = ["std"] }
+safety-macro = { path = "./safety-macro/", version = "0.4.1" }
+safety-parser = { path = "./safety-parser/", version = "0.4.2" }
 
 [workspace]
-members = ["safety-lib", "safety-macro", "safety-parser", "safety-lsp"]
-exclude = ["tests/demo"]
+members = ["safety-lib", "safety-macro", "safety-parser"]
 
 [package.metadata.rust-analyzer]
-rustc_private = true
+rustc_private = false

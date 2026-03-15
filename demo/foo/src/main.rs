@@ -7,7 +7,7 @@
 use std::mem::size_of;
 use safety_macro as safety;
 
-#[safety::requires(Align(p,T))]
+#[safety::requires(ValidPtr(p,T,1))]
 pub unsafe fn foo<T>(p: *const T) {
     assert!((p as usize) % size_of::<T>() == 0);
 }
