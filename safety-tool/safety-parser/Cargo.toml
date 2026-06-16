@@ -1,6 +1,6 @@
 [package]
 name = "safety-parser"
-version = "0.4.2"
+version = "0.4.3"
 edition = "2021"
 authors = ["Artisan-Lab <xuh@fudan.edu.cn>"]
 description = "A lib for parsing safety tags defined in tag-std"
