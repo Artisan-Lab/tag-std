@@ -1,4 +1,4 @@
-# Privimitive Safety Properties for Rust Contract Design (Draft)
+# Primitive Safety Properties for Rust Contract Design (Draft)
 
 This document presents a draft outlining the fundamental safety properties essential for contract definition. The current documentation on API safety descriptions in the standard library remains ad hoc. For example, the term `valid pointer` is frequently used, but the validity of a pointer depends on the context, as explained in [Rustdoc](https://doc.rust-lang.org/std/ptr/index.html), posing difficulties for developers in interpreting the exact safety requirements of an unsafe API if they are unfamiliar with the background. We hope to provide explicit and non-ambiguous safety descriptions for developers. Using pointer validity as an example, a pointer may need to satisfy several fundamental requirements (which cannot be further broken down) to be valid, such as being non-null, not dangling, and pointing to memory that is properly aligned and initialized for type T. It is worth noting that the Rust community is making progress toward standardizing contract design, as highlighted in the links below. We believe this proposal will contribute to the development and refinement of contract specifications.
 
@@ -14,11 +14,11 @@ Traditional contract enforces two types of safety invariant: precondition and po
 
 **Postcondition**: This refers to a set of properties the system must satisfy after an API call. It is mainly used as the constraint to verify the implementation correctness of the API.
 
-In Rust, most safety properties for unsafe APIs are preconditions. In comparison, postconditions are not generally required (expect when implimenting unsafe traits) because API users do not need to be concerned with the correctness of the API’s implementation. However, there are some safety properties which are not preconditions but instead highlight potential hazards of unsafe APIs. For instance, certain scenarios such as implementing a doubly linked list require temporarily violating the safety invariant of Rust, e.g., via [pointer::as_mut()](https://doc.rust-lang.org/std/primitive.pointer.html#method.as_mut). In such cases, it is crucial to document how the program state deviates from Rust's safety principles and whether these vulnerabilities are eventually resolved.
+In Rust, most safety properties for unsafe APIs are preconditions. In comparison, postconditions are not generally required (except when implementing unsafe traits) because API users do not need to be concerned with the correctness of the API’s implementation. However, there are some safety properties which are not preconditions but instead highlight potential hazards of unsafe APIs. For instance, certain scenarios such as implementing a doubly linked list require temporarily violating the safety invariant of Rust, e.g., via [pointer::as_mut()](https://doc.rust-lang.org/std/primitive.pointer.html#method.as_mut). In such cases, it is crucial to document how the program state deviates from Rust's safety principles and whether these vulnerabilities are eventually resolved.
 
 **Hazard (new)**: Invoking an unsafe API may temporarily leave the program in a vulnerable state with respect to the safety invariant of Rust. 
 
-Besides, there are also optional preconditions in Rustdoc. If these conditions are satisfied, the Rust compiler can guarantee that the safety invariant will hold. However, meeting these optional requirements is not mandatory. For example, [ptr::read()](https://doc.rust-lang.org/std/ptr/fn.read.html) specifies that the parameter implements the Copy trait can help avoid undefined behaviors related to exclusive mutability. By meeting this optional precondition, developers can ensure safe use of the API while still having the flexibility to omit it when not needed. Optional preconditions exist because exist because enumerating all possible safe usages can be difficult, and they can provide a shortcut for safety assurance.
+Besides, there are also optional preconditions in Rustdoc. If these conditions are satisfied, the Rust compiler can guarantee that the safety invariant will hold. However, meeting these optional requirements is not mandatory. For example, [ptr::read()](https://doc.rust-lang.org/std/ptr/fn.read.html) specifies that the parameter implements the Copy trait can help avoid undefined behaviors related to exclusive mutability. By meeting this optional precondition, developers can ensure safe use of the API while still having the flexibility to omit it when not needed. Optional preconditions exist because enumerating all possible safe usages can be difficult, and they can provide a shortcut for safety assurance.
 
 **Option (new)**: Optional preconditions for an unsafe API. If such conditions are satisfied, they can ensure the safety invariant of Rust.
 
@@ -44,17 +44,17 @@ In practice, a safety property may correspond to a precondition, an optional pre
 | III.2  | ValidString(arange) | mem(arange) $\in$ utf-8 |  precond | [String::from_utf8_unchecked()](https://doc.rust-lang.org/std/string/struct.String.html#method.from_utf8_unchecked) |
 |        | ValidString(arange) | - | hazard | [String::as_bytes_mut()](https://doc.rust-lang.org/std/string/struct.String.html#method.as_bytes_mut) |
 | III.3  | ValidCStr(p, len) | mem(p+len, p+len+1) = '\0' | precond|  [CStr::from_bytes_with_nul_unchecked()](https://doc.rust-lang.org/std/ffi/struct.CStr.html#method.from_bytes_with_nul_unchecked)  |
-| III.4  | Init(p, T, len)  | $\forall$ i $\in$ 0..len, mem(p + sizeof(T) * i, p + sizeof(T) * (i+1)) = valid(T) | precond | [MaybeUninit::slice_assume_init_mut()](https://doc.rust-lang.org/std/mem/union.MaybeUninit.html#method.slice_assume_init_mut) |
+| III.4  | Init(p, T, len)  | $\forall$ i $\in$ 0..len, mem(p + sizeof(T) * i, p + sizeof(T) * (i+1)) = valid(T) (⇒ Typed) | precond | [MaybeUninit::slice_assume_init_mut()](https://doc.rust-lang.org/std/mem/union.MaybeUninit.html#method.slice_assume_init_mut) |
 |         | -  | - | hazard | [ptr::copy()](https://doc.rust-lang.org/std/ptr/fn.copy.html) |
 |         | -  | - | option | [ptr::copy()](https://doc.rust-lang.org/std/ptr/fn.copy.html) |
 | III.5  | Unwrap(x, T) | unwrap(x) = T | precond | [Option::unwrap_unchecked()](https://doc.rust-lang.org/std/option/enum.Option.html#method.unwrap_unchecked)  |
-| III.6  | Typed(p, T) | typeof(*p) = T | precond | [Rc::from_raw()](https://doc.rust-lang.org/beta/std/rc/struct.Rc.html#method.from_raw) |
+| III.6  | Typed(p, T) | *p $\models$ TypeInvariant(T) | precond | [Rc::from_raw()](https://doc.rust-lang.org/beta/std/rc/struct.Rc.html#method.from_raw) |
 | IV.1  | !Owned(p) | ownership(*p) = none | precond | [Box::from_raw()](https://doc.rust-lang.org/std/boxed/struct.Box.html#method.from_raw)  |
 | IV.2  | Alias(p1, p2) | p1 = p2 | hazard | [pointer::as_mut()](https://doc.rust-lang.org/std/primitive.pointer.html#method.as_mut) |
 | IV.3  | Alive(p, l) | lifetime(*p) $\ge$ l | precond | [AtomicPtr::from_ptr()](https://doc.rust-lang.org/std/sync/atomic/struct.AtomicPtr.html#method.from_ptr)  |
 | V.1  | Pinned(p, l) | $$\forall t \in 0..l, \\&(*p)_0 = p_t$$ | hazard | [Pin::new_unchecked()](https://doc.rust-lang.org/std/pin/struct.Pin.html#method.new_unchecked)  |
-| V.2  | !Volatile(p, T, len) | $$\nexists$$ another thread tid, tid.write(p, p+sizeof(T)*len) | precond | [ptr::read()](https://doc.rust-lang.org/std/ptr/fn.read.html) |
-| V.3  | Opened(fd) | $$\exists$$ openfile()->fd && $$\nexists$$ closefile(fd) | precond | [fd::from_raw_fd()](https://doc.rust-lang.org/std/os/fd/trait.FromRawFd.html#tymethod.from_raw_fd) |
+| V.2  | !Volatile(p, T, len) | $$\nexists \text{ another thread } tid, tid.\text{write}(p, p+\text{sizeof}(T)*\text{len})$$ | precond | [ptr::read()](https://doc.rust-lang.org/std/ptr/fn.read.html) |
+| V.3  | Opened(fd) | $$\exists \text{openfile}() \to \text{fd} \land \nexists \text{closefile}(\text{fd})$$ | precond | [fd::from_raw_fd()](https://doc.rust-lang.org/std/os/fd/trait.FromRawFd.html#tymethod.from_raw_fd) |
 | V.4  | Trait(T, trait) | trait $\in$ traitimpl(T) | option | [ptr::read()](https://doc.rust-lang.org/std/ptr/fn.read.html)  |
 | V.5  | !Reachable() | sat(cond()) = false | precondition | [intrinsics::read()](https://doc.rust-lang.org/nightly/std/intrinsics/fn.unreachable.html) |
 
@@ -96,9 +96,9 @@ The size of a value is the offset in bytes between successive elements in an a
 
 **psp I.2 Size(T, c)**:
 
-$$sizeof(T) = c\ \\&\\&\ c \in \{num, unknown, any\}$$
+$$\text{sizeof}(T) = c \land c \in \{\text{num}, \text{unknown}, \text{any}\}$$
 
-For example, not all types are statically sized, such as slices and trait objects. Therefore, a safety property may require the size of a type `T` can be determined during compiling time. We can represent the property as `Size(T, any)`. This is generally emplopyed as an optional property.
+For example, not all types are statically sized, such as slices and trait objects. Therefore, a safety property may require the size of a type `T` can be determined during compiling time. We can represent the property as `Size(T, any)`. This is generally employed as an optional property.
 
 Example API: [Layout::for_value_raw()](https://doc.rust-lang.org/nightly/std/alloc/struct.Layout.html#method.for_value_raw)
 
@@ -147,7 +147,7 @@ If the allocator `A` is unspecified, it typically defaults to the global allocat
 
 Example APIs: [Arc::from_raw()](https://doc.rust-lang.org/std/sync/struct.Arc.html#method.from_raw), [Box::from_raw()](https://doc.rust-lang.org/std/boxed/struct.Box.html#method.from_raw), [ptr::offset()](https://doc.rust-lang.org/beta/std/primitive.pointer.html#method.offset), [Box::from_raw()](https://doc.rust-lang.org/beta/std/boxed/struct.Box.html#method.from_raw)
 
-Bounded access requires that the pointer access with respet to an offset stays within the bound of the same allocated object. This ensures that dereferencing the pointer yields a value (which may not yet be initialized) of the expected type T. 
+Bounded access requires that the pointer access with respect to an offset stays within the bound of the same allocated object. This ensures that dereferencing the pointer yields a value (which may not yet be initialized) of the expected type T. 
 
 **psp II.3 InBound(p, T, len, arange)**: 
 
@@ -167,7 +167,7 @@ Example APIs: [ptr::copy_from()](https://doc.rust-lang.org/std/ptr/fn.copy.html)
 
 #### 3.3.1 Integer
 
-When converting a value `x` to an interger or performing integer arithmetic, the result should not be greater than the max or less the min value that can be represented by the integer type `T`.
+When converting a value `x` to an integer or performing integer arithmetic, the result should not be greater than the max or less the min value that can be represented by the integer type `T`.
 
 **psp III.1 ValidNum(exp, vrange)**: 
 
@@ -176,7 +176,7 @@ The first parameter `exp` stands for an arithmetic expression in the form of `(b
 Example APIs: [f32.to_int_unchecked()](https://doc.rust-lang.org/std/primitive.f32.html#method.to_int_unchecked), [SimdFloat.to_int_unchecked()](https://doc.rust-lang.org/std/simd/num/trait.SimdFloat.html#tymethod.to_int_unchecked), [NonZero::from_mut_unchecked()](https://doc.rust-lang.org/beta/std/num/struct.NonZero.html#tymethod.from_mut_unchecked), [isize.unchecked_div()](https://doc.rust-lang.org/nightly/core/intrinsics/fn.unchecked_div.html), [u32::unchecked_shl()](https://doc.rust-lang.org/nightly/core/intrinsics/fn.unchecked_shl.html), [u32::unchecked_shr()](https://doc.rust-lang.org/nightly/core/intrinsics/fn.unchecked_shr.html), [isize.unchecked_neg()](https://doc.rust-lang.org/nightly/core/primitive.isize.html#method.unchecked_neg), [isize.add()](https://doc.rust-lang.org/std/primitive.isize.html#method.unchecked_add), [usize.add()](https://doc.rust-lang.org/std/primitive.usize.html#method.unchecked_add), [pointer.add(usize.add())](https://doc.rust-lang.org/std/primitive.pointer.html#method.add), [slice::from_raw_parts()](https://doc.rust-lang.org/nightly/std/slice/fn.from_raw_parts.html) 
 
 #### 3.3.2 String
-There are two types of string in Rust, [String](https://doc.rust-lang.org/std/string/struct.String.htm) which requires valid utf-8 format, and [CStr](https://doc.rust-lang.org/std/ffi/struct.CStr.html) for interacting with foreign functions.
+There are two types of string in Rust, [String](https://doc.rust-lang.org/std/string/struct.String.html) which requires valid utf-8 format, and [CStr](https://doc.rust-lang.org/std/ffi/struct.CStr.html) for interacting with foreign functions.
 
 The safety properties of String requires the bytes contained in a vector `v` should be a valid utf-8.
 
@@ -184,7 +184,7 @@ The safety properties of String requires the bytes contained in a vector `v` sho
 
 $$\text{mem}(arange)\in \text{utf-8}$$
 
-The parameter `arange` specifies an address range. For different APIs, the address range can be specified with `(pointer, T, length)' or a vector `v`, etc.
+The parameter `arange` specifies an address range. For different APIs, the address range can be specified with `(pointer, T, length)` or a vector `v`, etc.
 
 Example APIs: [String::from_utf8_unchecked()](https://doc.rust-lang.org/std/string/struct.String.html#method.from_utf8_unchecked), [String::as_bytes_mut()](https://doc.rust-lang.org/std/string/struct.String.html#method.as_bytes_mut), [String::as_mut_vec()](https://doc.rust-lang.org/std/string/struct.String.html#method.as_mut_vec), [String::from_raw_parts()](https://doc.rust-lang.org/std/string/struct.String.html#method.from_raw_parts), [String::get_unchecked()](https://doc.rust-lang.org/std/string/struct.String.html#method.get_unchecked), [String::get_unchecked_mut()](https://doc.rust-lang.org/std/string/struct.String.html#method.get_unchecked_mut), [String::slice_unchecked()](https://doc.rust-lang.org/std/string/struct.String.html#method.slice_unchecked), [String::slice_mut_unchecked()](https://doc.rust-lang.org/std/string/struct.String.html#method.slice_mut_unchecked)
 
@@ -192,16 +192,16 @@ We have to label the hazard of the APIs [String::as_bytes_mut()](https://doc.rus
 
 **psp III.3 ValidCStr(p, len)**:
 
-$$\text{mem}(p+len, p+len+1) =$$ '\0'
+$$\text{mem}(p+len, p+len+1) = \text{'}\backslash 0\text{'}$$
 
 Example APIs: [CStr::from_bytes_with_nul_unchecked()](https://doc.rust-lang.org/std/ffi/struct.CStr.html#method.from_bytes_with_nul_unchecked), [CStr::from_ptr()](https://doc.rust-lang.org/std/ffi/struct.CStr.html#method.from_ptr)
 
 #### 3.3.3 Initialization
-A safety property may require a range of memory pointed by a pointer `p` is initialized. This range of memory can be independent of type T.
+A safety property may require a range of memory pointed by a pointer `p` to be initialized. **Init(p, T, len) implies Typed(p, T)** — the memory must not only be of type `T` (type invariant), but also contain bit patterns that represent valid values of `T`. In contrast, a `MaybeUninit<T>` may satisfy Typed(p, T) yet fail Init(p, T, len) because its content is not yet initialized. In other words, Init is a strictly stronger condition than Typed: Typed requires only the *type invariant*, while Init additionally requires the memory content to be *valid for T*.
 
 **psp III.4 Init(p, T, len)**:
 
-$$\forall i \in 0..len, \text{men}(p + \text{sizeof}(T) * i, p + \text{sizeof}(T) * (i+1)) = \text{valid}(T) $$
+$$\forall i \in 0..len, \text{mem}(p + \text{sizeof}(T) * i, p + \text{sizeof}(T) * (i+1)) = \text{valid}(T) $$
 
 Note that this property may serve as either preconditions (e.g., [MaybeUninit::slice_assume_init_mut()](https://doc.rust-lang.org/std/mem/union.MaybeUninit.html#method.slice_assume_init_mut)) or optional requirements and hazards (e.g., [ptr::copy()](https://doc.rust-lang.org/std/ptr/fn.copy.html).
 
@@ -209,7 +209,7 @@ Example APIs: [BorrowedBuf::set_init()](https://doc.rust-lang.org/nightly/std/io
 
 #### 3.3.4 Unwrap
 
-Such safety properties relate to the monadic types, including [Option](https://doc.rust-lang.org/std/option/enum.Option.html) and [Result](https://doc.rust-lang.org/std/result/enum.Result.html), and they require the value after unwarpping should be of a particular type.
+Such safety properties relate to the monadic types, including [Option](https://doc.rust-lang.org/std/option/enum.Option.html) and [Result](https://doc.rust-lang.org/std/result/enum.Result.html), and they require the value after unwrapping should be of a particular type.
 
 **psp III.5 Unwrap(x, T)**:
 
@@ -217,11 +217,13 @@ $$\text{unwrap}(x) = T $$
 
 Example APIs: [Option::unwrap_unchecked()](https://doc.rust-lang.org/std/option/enum.Option.html#method.unwrap_unchecked), [Result::unwrap_unchecked()](https://doc.rust-lang.org/core/result/enum.Result.html#method.unwrap_unchecked), [Result::unwrap_err_unchecked()](https://doc.rust-lang.org/core/result/enum.Result.html#method.unwrap_err_unchecked)
 
-Besides, some APIs accepts a raw pointer as the input and requires the raw pointer must have been previously returned by a call of `into_raw` from the same module.
+#### 3.3.5 Typed
+
+**Typed(p, T) requires that `*p` satisfies TypeInvariant(T)** — the allocation underlying `*p` was created as type `T` (e.g., via `into_raw` from a smart pointer, or directly as a `T` value), and has not been invalidated by type punning or reallocation as a different type. Typed does **not** require the memory content to be initialized as a valid `T` value (that is the role of Init). For instance, a `MaybeUninit<T>` satisfies TypeInvariant(T) and thus Typed(p, T), even though its content is uninitialized. In summary, $\text{Init} \Rightarrow \text{Typed}$ but the converse does not hold.
 
 **psp III.6 Typed(p, T)**: 
 
-$$\text{typeof}(*p) = T $$
+$$*p \models \text{TypeInvariant}(T) \quad \text{i.e.} \quad \text{typeof}(*p) = T $$
 
 Note that this may also concern the memory space ahead of p.
 
@@ -230,8 +232,8 @@ Example APIs: [Rc::from_raw()](https://doc.rust-lang.org/beta/std/rc/struct.Rc.h
 ### 3.4 Alias
 This category relates to the core mechanism of Rust which aims to avoid shared mutable aliases and achieve automated memory deallocation. 
 
-#### 3.4.1 Onwership
-Let one value has two owners at the same program point is vulnerable to double free. Refer to the traidional vulnerbility of [mem::forget()](https://doc.rust-lang.org/std/mem/fn.forget.html) compared to [ManuallyDrop](https://doc.rust-lang.org/std/mem/struct.ManuallyDrop.html). The property generally relates to convert a raw pointer to an ownership, and it can be represented as:
+#### 3.4.1 Ownership
+Let one value has two owners at the same program point is vulnerable to double free. Refer to the traditional vulnerability of [mem::forget()](https://doc.rust-lang.org/std/mem/fn.forget.html) compared to [ManuallyDrop](https://doc.rust-lang.org/std/mem/struct.ManuallyDrop.html). The property generally relates to convert a raw pointer to an ownership, and it can be represented as:
 
 **psp IV.1 !Owned(p)**:
 
@@ -240,7 +242,7 @@ $$\text{ownership}(*p) = none $$
 Example APIs: [Box::from_raw()](https://doc.rust-lang.org/std/boxed/struct.Box.html#method.from_raw), [ptr::read()](https://doc.rust-lang.org/std/ptr/fn.read.html), [ptr::read_volatile()](https://doc.rust-lang.org/std/ptr/fn.read_volatile.html), [FromRawFd::from_raw_fd()](https://doc.rust-lang.org/std/os/fd/trait.FromRawFd.html#tymethod.from_raw_fd), [UdpSocket::from_raw_socket()](https://doc.rust-lang.org/std/net/struct.UdpSocket.html#method.from_raw_socket)
 
 #### 3.4.2 Alias
-There are six types of pointers to a value x, depending on the mutabality and ownership, i.e., owner, mutable owner, reference, mutable reference, raw pointer, mutable raw pointer. The exclusive mutability principle of Rust requires that if a value has a mutable alias at one program point, it must not have other aliases at that program point. Otherwise, it may incur unsafe status. We need to track the particular unsafe status and avoid unsafe behaviors.
+There are six types of pointers to a value x, depending on the mutability and ownership, i.e., owner, mutable owner, reference, mutable reference, raw pointer, mutable raw pointer. The exclusive mutability principle of Rust requires that if a value has a mutable alias at one program point, it must not have other aliases at that program point. Otherwise, it may incur unsafe status. We need to track the particular unsafe status and avoid unsafe behaviors.
 
 **psp IV.2 Alias(p1, p2)**:
 
@@ -283,7 +285,7 @@ Example APIs: [ptr::read()](https://doc.rust-lang.org/std/ptr/fn.read.html), [pt
 
 Some file operations require the file is opened.
 
-$$\exists openfile()->fd\ \\&\\&\ \nexists closefile(fd)$$
+$$\exists \text{openfile}() \to \text{fd} \land \nexists \text{closefile}(\text{fd})$$
 
 Example APIs: [fd::from_raw_fd()](https://doc.rust-lang.org/std/os/fd/trait.FromRawFd.html#tymethod.from_raw_fd)
 
@@ -305,7 +307,7 @@ The current program point should not be reachable during execution.
 
 **psp V.5 !Reachable()**:
 
-$$\text{sat(cond}()\text{)} = false$$
+$$\text{sat}(\text{cond}()) = \text{false}$$
 
 Example APIs: [intrinsics::unreachable()](https://doc.rust-lang.org/nightly/std/intrinsics/fn.unreachable.html), [hint::unreachable_unchecked()](https://doc.rust-lang.org/nightly/std/hint/fn.unreachable_unchecked.html)
 
