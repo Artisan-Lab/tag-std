@@ -219,7 +219,7 @@ Example APIs: [Option::unwrap_unchecked()](https://doc.rust-lang.org/std/option/
 
 #### 3.3.5 Typed
 
-**Typed(p, T) requires that `*p` satisfies TypeInvariant(T)** — the allocation underlying `*p` was created as type `T` (e.g., via `into_raw` from a smart pointer, or directly as a `T` value), and has not been invalidated by type punning or reallocation as a different type. Typed does **not** require the memory content to be initialized as a valid `T` value (that is the role of Init). For instance, a `MaybeUninit<T>` satisfies TypeInvariant(T) and thus Typed(p, T), even though its content is uninitialized. In summary, $\text{Init} \Rightarrow \text{Typed}$ but the converse does not hold.
+Typed(p, T) requires that `*p` satisfies TypeInvariant(T): the allocation underlying `*p` was created as type `T` (e.g., via `into_raw` from a smart pointer, or directly as a `T` value), and has not been invalidated by type punning or reallocation as a different type. Typed does not require the memory content to be initialized as a valid `T` value (that is the role of Init). For instance, a `MaybeUninit<T>` satisfies TypeInvariant(T) and thus Typed(p, T), even though its content is uninitialized. In summary, $\text{Init} \Rightarrow \text{Typed}$ but the converse does not hold.
 
 **psp III.6 Typed(p, T)**: 
 
