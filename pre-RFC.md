@@ -134,7 +134,7 @@ We can extract safety requirements above into propeties below:
 | Precond | Aligned  | src, T    | `src` must be properly aligned (with T).                                                                                                            |
 | Precond | Init     | src, T, 1 | `src` must point to a properly initialized value of type `T`.                                                                                       |
 | Option  | Trait    | T, Copy   | If `T` is not [`Copy`], using both the returned value and the value at `*src` can violate memory safety.                                            |
-| Precond | NotOwned | src       | Further clarification: The memory pointed by src must not be owned if T is not copy, or the object hold by *src should not be automatically dropped |
+| Precond | Owning | src       | Further clarification: The memory pointed by src must not be owned if T is not copy, or the object hold by *src should not be automatically dropped |
 | Hazard  | Alias    | src, ret  | Further clarification: The return value may incur aliases between src and the return value                                                          |
 
 [valid]: https://doc.rust-lang.org/std/ptr/index.html#safety
@@ -146,7 +146,7 @@ We can represent these safety requirements using safety tags as shown below.
 ```rust
 #[safety {
     ValidPtr, Aligned, Init, Alias,
-    any { NotOwned, Trait(T, Copy) }, 
+    any { Owning, Trait(T, Copy) }, 
 }]
 pub const unsafe fn read<T>(src: *const T) -> T { ... }
 ```
@@ -197,7 +197,7 @@ We also support SPs with arguments, which are required in verification scenarios
 ```rust
 #[safety {
     ValidPtr(src, T, 1), Aligned(src, T), Init(src, T, 1), Alias(src, ret),
-    any{ NotOwned(src), Trait(T, Copy) }
+    any{ Owning(src), Trait(T, Copy) }
 }]
 pub const unsafe fn read<T>(src: *const T) -> T { ... }
 ```
@@ -261,7 +261,7 @@ The example above demonstrates several issues:
 
 * **Lack of clarity on safety requirements**: It is unclear whether the developer has considered all
 safety requirements for `ptr::read` and ensured they are satisfied. From the comments, we can see
-that only the `NotOwned` safety property is explicitly addressed.
+that only the `Owning` safety property is explicitly addressed.
 
 * **Comment dependence and maintenance burden**: When a piece of safety documentation is modified,
 all places that reference it must be reconsidered and updated accordingly. In this example,
@@ -286,7 +286,7 @@ fn try_fold<B, F, R>(&mut self, mut init: B, mut f: F) -> R {
 
         #[safety {
             ValidPtr, Aligned, Init, Alias,
-            NotOwned: "Because we incremented `guard.consumed`, the deque \
+            Owning: "Because we incremented `guard.consumed`, the deque \
               effectively forgot the element, so we can take ownership."
         }]
         unsafe { ptr::read(elem) }
@@ -541,7 +541,7 @@ fn try_fold<B, F, R>(&mut self, mut init: B, mut f: F) -> R
         #[ref(try_fold)] // 💡
         #[safety {
             ValidPtr, Aligned, Init, Alias,
-            NotOwned: "Because we incremented `guard.consumed`, the deque \
+            Owning: "Because we incremented `guard.consumed`, the deque \
               effectively forgot the element, so we can take ownership."
         }]
         unsafe { ptr::read(elem) }
