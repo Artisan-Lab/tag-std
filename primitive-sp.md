@@ -66,7 +66,7 @@ In practice, a safety property may correspond to a precondition, an optional pre
 |---|---|---|---|---|   
 | [Valid pointer](https://doc.rust-lang.org/nightly/std/ptr/index.html) | ValidPtr(p, T, len) | Size(T, 0) \|\| (!Size(T,0) && Deref(p, T, len) ) | precond | [ptr::read<T>()](https://doc.rust-lang.org/nightly/std/ptr/fn.read.html)  |       
 | Dereferenceable | Deref(p, T, len) | Allocated(p, T, len, *) && InBound(p, T, len) | precond | only used to define valid pointers |
-| Valid pointer to reference conversion | Ptr2Ref(p, T) | Init(p, T, 1) && Align(p, T) && Alias(p, 0) | precond, hazard | [ptr::as_uninit_ref()](https://doc.rust-lang.org/nightly/std/ptr/struct.NonNull.html#method.as_uninit_ref) |
+| Valid pointer to reference conversion | Ptr2Ref(p, T) | Init(p, T, 1) && Align(p, T) && Alias(p, ret) | precond, hazard | [ptr::as_uninit_ref()](https://doc.rust-lang.org/nightly/std/ptr/struct.NonNull.html#method.as_uninit_ref) |
 | Layout Consistency | Layout(p, layout) | ValidNum(rem(p, layout.align), 0) && Allocated(p, u8, layout.size, heap) | precond | [GlobalAlloc::realloc()](https://doc.rust-lang.org/nightly/std/alloc/trait.GlobalAlloc.html#method.realloc) | 
 
 ### 2.3 Synonymous SPs used in Rustdoc
@@ -253,6 +253,8 @@ Example APIs: [Box::from_raw()](https://doc.rust-lang.org/std/boxed/struct.Box.h
 There are six types of pointers to a value x, depending on the mutability and ownership, i.e., owner, mutable owner, reference, mutable reference, raw pointer, mutable raw pointer. The exclusive mutability principle of Rust requires that if a value has a mutable alias at one program point, it must not have other aliases at that program point. Otherwise, it may incur unsafe status. We need to track the particular unsafe status and avoid unsafe behaviors.
 
 **psp IV.2 Alias(p1, p2)**:
+
+p1 and p2 are **aliases of each other** — i.e., they refer to the same memory. When used as a hazard annotation on an unsafe API, this declares that calling the API creates or exposes an aliasing relationship between the two specified places (e.g., between a raw pointer argument and the returned reference, as in `ptr::as_mut`). Incautious use of this aliasing may violate Rust's exclusive mutability principle and lead to undefined behavior.
 
 $$p1 = p2 $$
 

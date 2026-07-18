@@ -2,7 +2,7 @@ package.name = "core"
 
 [tag.Alias]
 args = [ "p1", "p2" ]
-desc = "`{p1}` must not have other alias"
+desc = "`{p1}` and `{p2}` alias each other"
 expr = "p1 = p2"
 types = [ "hazard" ]
 url = "https://github.com/Artisan-Lab/tag-std/blob/main/primitive-sp.md#342-alias"
@@ -101,7 +101,7 @@ url = "https://github.com/Artisan-Lab/tag-std/blob/main/primitive-sp.md#351-pin"
 [tag.Ptr2Ref]
 args = [ "p", "T" ]
 desc = "the reference conversion of the pointer `{p}` must be valid"
-expr = "Init(p, T, 1) && Align(p, T) && Alias(p, 0)"
+expr = "Init(p, T, 1) && Align(p, T) && Alias(p, ret)"
 url = "https://github.com/Artisan-Lab/tag-std/blob/main/primitive-sp.md#22-compound-sps-used-in-rustdoc"
 
 [tag.Size]
