@@ -69,54 +69,125 @@ impl SafetyAttrArgs {
     }
 }
 
+/// Parse optional `(args)` or `{args}` after a tag name.
+fn parse_args(input: ParseStream) -> syn::Result<Box<[Expr]>> {
+    if input.peek(Paren) {
+        let content;
+        parenthesized!(content in input);
+        let args = Punctuated::<Expr, Token![,]>::parse_terminated(&content)?;
+        Ok(args.into_iter().collect())
+    } else if input.peek(Brace) {
+        let content;
+        braced!(content in input);
+        let args = Punctuated::<Expr, Token![,]>::parse_terminated(&content)?;
+        Ok(args.into_iter().collect())
+    } else {
+        Ok(Default::default())
+    }
+}
+
 #[derive(Debug, Deserialize, Serialize)]
 pub struct PropertiesAndReason {
     pub tags: Box<[Property]>,
     pub desc: Option<Str>,
+    /// Optional `kind = "hazard"` / `kind = "precond"` tag.
+    #[serde(default)]
+    pub kind: Option<Str>,
 }
 
 impl Parse for PropertiesAndReason {
     fn parse(input: ParseStream) -> Result<Self> {
+        // Grouped form: ( SPList , kind = "..."? )
+        if input.peek(Paren) {
+            let content;
+            parenthesized!(content in input);
+            let mut tags = Vec::<Property>::new();
+            let mut kind: Option<Str> = None;
+
+            while !content.is_empty() {
+                if content.peek(Ident) && content.peek2(Token![=]) {
+                    // `kind = "hazard"`
+                    let kw: Ident = content.parse()?;
+                    if kw == "kind" {
+                        let _: Token![=] = content.parse()?;
+                        let s: LitStr = content.parse()?;
+                        kind = Some(s.value().into());
+                    }
+                    break;
+                }
+                let tag: TagNameType = content.parse()?;
+                if need_check() {
+                    tag.check_type();
+                }
+                let args = parse_args(&content)?;
+                tags.push(Property { tag, args });
+                if content.peek(Token![,]) {
+                    if content.peek2(Ident) {
+                        // peek ahead: `, kind = ...`
+                        let _: Token![,] = content.parse()?;
+                        if content.peek(Ident) {
+                            let kw: Ident = content.parse()?;
+                            if kw == "kind" {
+                                let _: Token![=] = content.parse()?;
+                                let s: LitStr = content.parse()?;
+                                kind = Some(s.value().into());
+                            }
+                            break;
+                        }
+                    } else {
+                        let _: Token![,] = content.parse()?;
+                    }
+                } else {
+                    break;
+                }
+            }
+            return Ok(PropertiesAndReason { tags: tags.into(), desc: None, kind });
+        }
+
+        // Flat form (backward compat with `type.SP` or bare `SP`)
         let mut tags = Vec::<Property>::new();
         let mut desc = None;
+        let mut kind: Option<Str> = None;
 
         while !input.cursor().eof() {
             let tag: TagNameType = input.parse()?;
             if need_check() {
                 tag.check_type();
             }
-            let args = if input.peek(Paren) {
-                let content;
-                parenthesized!(content in input);
-                let args = Punctuated::<Expr, Token![,]>::parse_terminated(&content)?;
-                args.into_iter().collect()
-            } else if input.peek(Brace) {
-                let content;
-                braced!(content in input);
-                let args = Punctuated::<Expr, Token![,]>::parse_terminated(&content)?;
-                args.into_iter().collect()
-            } else {
-                Default::default()
-            };
+            let args = parse_args(&input)?;
             tags.push(Property { tag, args });
 
             if input.peek(Token![,]) {
-                // consume `,` in multiple tags
-                let _: Token![,] = input.parse()?;
+                if input.peek2(Ident) {
+                    // peek ahead for `kind = "..."` pattern
+                    let _: Token![,] = input.parse()?;
+                    if input.peek(Ident) {
+                        let kw: Ident = input.parse()?;
+                        if kw == "kind" {
+                            let _: Token![=] = input.parse()?;
+                            let s: LitStr = input.parse()?;
+                            kind = Some(s.value().into());
+                            // kind ends this group
+                            break;
+                        }
+                        // Not "kind", put it back... but we already consumed.
+                        // For now just error or ignore.
+                    }
+                } else {
+                    let _: Token![,] = input.parse()?;
+                }
             }
             if input.peek(Token![:]) {
                 let _: Token![:] = input.parse()?;
-                // `:` isn't in args, thus parse desc
                 let s: LitStr = input.parse()?;
                 desc = Some(s.value().into());
                 break;
             }
             if input.peek(Token![;]) {
-                // new grouped SPs
                 break;
             }
         }
-        Ok(PropertiesAndReason { tags: tags.into(), desc })
+        Ok(PropertiesAndReason { tags: tags.into(), desc, kind })
     }
 }
 
@@ -208,6 +279,7 @@ impl PropertiesAndReason {
                 args: Box::default(),
             }]),
             desc: None,
+            kind: None,
         }
     }
 

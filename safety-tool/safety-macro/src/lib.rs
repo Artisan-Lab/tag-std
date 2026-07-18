@@ -8,13 +8,14 @@ use safety_parser::{
 ///
 /// When `#[safety]` is removed, this function should be put into `#[requires]`
 /// or renamed `requires_inner`.
-fn tag(attr: TokenStream, item: TokenStream) -> TokenStream {
+fn tag(attr: TokenStream, item: TokenStream, tool_attr_name: &str) -> TokenStream {
     let mut ts = TokenStream2::new();
 
     // add registered tool attr
     let tool_attr = {
         let attr = TokenStream2::from(attr.clone());
-        quote! { #[rapx::requires(#attr)] }
+        let name = syn::Ident::new(tool_attr_name, proc_macro2::Span::call_site());
+        quote! { #[rapx::#name(#attr)] }
     };
     ts.extend(tool_attr);
 
@@ -54,22 +55,28 @@ fn tag(attr: TokenStream, item: TokenStream) -> TokenStream {
 /// # use safety_macro::safety;
 ///
 /// // Tag SPs:
-/// #[safety { SP1 }] unsafe fn foo() {}
-/// #[safety { SP1, SP2 }] unsafe fn bar() {}
+/// #[safety(SP1)] unsafe fn foo() {}
+/// #[safety(SP1, SP2)] unsafe fn bar() {}
+///
+/// // With kind tag:
+/// #[safety((SP1, kind = "hazard"))] unsafe fn baz() {}
 ///
 /// // Discharge SPs:
-/// #[safety { SP1 }] unsafe { foo() };
-/// #[safety { SP1: "reason" }] unsafe { foo() };
-/// #[safety { SP1, SP2: "shared reason" }] unsafe { bar() };
-/// #[safety { SP1: "reason1"; SP2: "reason2" }] unsafe { bar() };
+/// #[safety(SP1)] unsafe { foo() };
+/// #[safety(SP1: "reason")] unsafe { foo() };
+/// #[safety(SP1, SP2: "shared reason")] unsafe { bar() };
+/// #[safety(SP1: "reason1"; SP2: "reason2")] unsafe { bar() };
 /// ```
 #[proc_macro_attribute]
 #[deprecated = "Use `#[requires]` instead."]
 pub fn safety(attr: TokenStream, item: TokenStream) -> TokenStream {
-    tag(attr, item)
+    tag(attr, item, "requires")
 }
 
-/// Tag SPs on an unsafe function item.
+/// Tag SP preconditions on an unsafe function item.
+///
+/// By default all properties are preconditions; use `kind = "hazard"` groups
+/// for informational hazard warnings.
 ///
 /// # Syntax Example
 ///
@@ -81,12 +88,49 @@ pub fn safety(attr: TokenStream, item: TokenStream) -> TokenStream {
 /// # use safety_macro::requires;
 ///
 /// // Tag SPs:
-/// #[requires { SP1 }] unsafe fn foo() {}
-/// #[requires { SP1, SP2 }] unsafe fn bar() {}
+/// #[requires(SP1)] unsafe fn foo() {}
+/// #[requires(SP1, SP2)] unsafe fn bar() {}
+///
+/// // With kind:
+/// #[requires((SP1, kind = "hazard"), SP2)] unsafe fn baz() {}
 /// ```
 #[proc_macro_attribute]
 pub fn requires(attr: TokenStream, item: TokenStream) -> TokenStream {
-    tag(attr, item)
+    tag(attr, item, "requires")
+}
+
+/// Tag struct invariants.
+///
+/// # Syntax Example
+///
+/// ```
+/// #![feature(register_tool)]
+/// #![register_tool(rapx)]
+/// # use safety_macro::invariant;
+///
+/// #[invariant(ValidPtr(self.ptr, T, self.cap), Align(self.ptr, T))]
+/// pub struct MyBuf<T> { ptr: *mut T, len: usize, cap: usize }
+/// ```
+#[proc_macro_attribute]
+pub fn invariant(attr: TokenStream, item: TokenStream) -> TokenStream {
+    tag(attr, item, "invariant")
+}
+
+/// Tag postconditions.
+///
+/// # Syntax Example
+///
+/// ```
+/// #![feature(register_tool)]
+/// #![register_tool(rapx)]
+/// # use safety_macro::ensures;
+///
+/// #[ensures(ValidPtr(return, T, 1))]
+/// pub unsafe fn alloc<T>() -> *mut T { ... }
+/// ```
+#[proc_macro_attribute]
+pub fn ensures(attr: TokenStream, item: TokenStream) -> TokenStream {
+    tag(attr, item, "ensures")
 }
 
 /// Discharge SPs.
@@ -103,14 +147,14 @@ pub fn requires(attr: TokenStream, item: TokenStream) -> TokenStream {
 /// # use safety_macro::{checked, requires};
 ///
 /// // Tag SPs:
-/// #[requires { SP1 }] unsafe fn foo() {}
-/// #[requires { SP1, SP2 }] unsafe fn bar() {}
+/// #[requires(SP1)] unsafe fn foo() {}
+/// #[requires(SP1, SP2)] unsafe fn bar() {}
 ///
 /// // Discharge SPs:
-/// #[checked { SP1 }] unsafe { foo() };
-/// #[checked { SP1: "reason" }] unsafe { foo() };
-/// #[checked { SP1, SP2: "shared reason" }] unsafe { bar() };
-/// #[checked { SP1: "reason1"; SP2: "reason2" }] unsafe { bar() };
+/// #[checked(SP1)] unsafe { foo() };
+/// #[checked(SP1: "reason")] unsafe { foo() };
+/// #[checked(SP1, SP2: "shared reason")] unsafe { bar() };
+/// #[checked(SP1: "reason1"; SP2: "reason2")] unsafe { bar() };
 /// ```
 #[proc_macro_attribute]
 pub fn checked(attr: TokenStream, item: TokenStream) -> TokenStream {
