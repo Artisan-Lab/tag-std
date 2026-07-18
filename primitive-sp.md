@@ -56,7 +56,7 @@ In practice, a safety property may correspond to a precondition, an optional pre
 | V.2  | !Volatile(p, T, len) | $$\nexists \text{ another thread } tid, tid.\text{write}(p, p+\text{sizeof}(T)*\text{len})$$ | precond | [ptr::read()](https://doc.rust-lang.org/std/ptr/fn.read.html) |
 | V.3  | Opened(fd) | $$\exists \text{openfile}() \to \text{fd} \land \nexists \text{closefile}(\text{fd})$$ | precond | [fd::from_raw_fd()](https://doc.rust-lang.org/std/os/fd/trait.FromRawFd.html#tymethod.from_raw_fd) |
 | V.4  | Trait(T, trait) | trait $\in$ traitimpl(T) | option | [ptr::read()](https://doc.rust-lang.org/std/ptr/fn.read.html)  |
-| V.5  | !Reachable() | sat(cond()) = false | precondition | [intrinsics::read()](https://doc.rust-lang.org/nightly/std/intrinsics/fn.unreachable.html) |
+| V.5  | Unreachable | sat(cond()) = false | precondition | [intrinsics::read()](https://doc.rust-lang.org/nightly/std/intrinsics/fn.unreachable.html) |
 
 **Note**: These primitives are not yet complete. New proposals are always welcome. 
 
