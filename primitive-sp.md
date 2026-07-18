@@ -315,7 +315,7 @@ Example APIs: [ptr::read()](https://doc.rust-lang.org/std/ptr/fn.read.html), [pt
 
 The current program point should not be reachable during execution.
 
-**psp V.5 !Reachable()**:
+**psp V.5 Unreachable()**:
 
 $$\text{sat}(\text{cond}()) = \text{false}$$
 
