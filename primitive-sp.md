@@ -35,11 +35,11 @@ In practice, a safety property may correspond to a precondition, an optional pre
 | I.1  | Align(p, T) | p \% alignment(T) = 0 | precond | [ptr::read()](https://doc.rust-lang.org/nightly/std/ptr/fn.read.html) | 
 | I.2  | Size(T, c) | sizeof(T) = c, c $\in$ \{num, unknown, any\} | option | [Layout::for_value_raw()](https://doc.rust-lang.org/nightly/std/alloc/struct.Layout.html#method.for_value_raw)  | 
 |      | - | - | precond | [NonNull::offset_from](https://doc.rust-lang.org/core/ptr/struct.NonNull.html#method.offset_from)  | 
-| I.3  | !Padding(T)  | padding(T) = 0 | precond  | [intrinsics::raw_eq()](https://doc.rust-lang.org/std/intrinsics/fn.raw_eq.html) |
-| II.1  | !Null(p) | p!= 0 | precond  | [NonNull::new_unchecked()](https://doc.rust-lang.org/std/ptr/struct.NonNull.html#method.new_unchecked) |
+| I.3  | NoPadding(ptr)  | padding(T) = 0 | precond  | [intrinsics::raw_eq()](https://doc.rust-lang.org/std/intrinsics/fn.raw_eq.html) |
+| II.1  | NonNull(p) | p!= 0 | precond  | [NonNull::new_unchecked()](https://doc.rust-lang.org/std/ptr/struct.NonNull.html#method.new_unchecked) |
 | II.2 | Allocated(p, T, len, A) | $\forall$ i $\in$ 0..sizeof(T)*len, allocator(p+i) = A | precond | [Box::from_raw_in()](https://doc.rust-lang.org/std/boxed/struct.Box.html#method.from_raw_in) |
 | II.3  | InBound(p, T, len) | mem(p, p+ sizeof(T) * len) $\in$ single allocated object  | precond | [ptr::offset()](https://doc.rust-lang.org/std/primitive.pointer.html#method.offset)  |
-| II.4  | !Overlap(dst, src, T, len) | \|dst - src\| $\ge$ sizeof(T) * len | precond | [ptr::copy_nonoverlapping()](https://doc.rust-lang.org/std/ptr/fn.copy_nonoverlapping.html)  |
+| II.4  | NonOverlap(a, b, ...) | pairwise memory ranges are disjoint | precond | [ptr::copy_nonoverlapping()](https://doc.rust-lang.org/std/ptr/fn.copy_nonoverlapping.html)  |
 | III.1  | ValidNum(exp, vrange)  | exp $\in$ vrange | precond | [usize::add()](https://doc.rust-lang.org/std/primitive.usize.html#method.unchecked_add)  |
 | III.2  | ValidString(arange) | mem(arange) $\in$ utf-8 |  precond | [String::from_utf8_unchecked()](https://doc.rust-lang.org/std/string/struct.String.html#method.from_utf8_unchecked) |
 |        | ValidString(arange) | - | hazard | [String::as_bytes_mut()](https://doc.rust-lang.org/std/string/struct.String.html#method.as_bytes_mut) |
@@ -115,9 +115,11 @@ mem::size_of::<MyStruct>(); // size: 4
 
 A safety property may require the type `T` has no padding. We can formulate the requirement as 
 
-**psp I.3 Padding(T, false)**:
+**psp I.3 NoPadding(ptr)**:
 
 $$\text{padding}(T) = 0$$
+
+where `T` is the type pointed to by `ptr`.
 
 Example API: [intrinsics::raw_eq()](https://doc.rust-lang.org/std/intrinsics/fn.raw_eq.html)
 
@@ -128,7 +130,7 @@ Referring to the [pointer validity](https://doc.rust-lang.org/std/ptr/index.html
 #### Address
 The memory address that the pointer refers to is critical. A safety property may require the pointer `p` to be non-null, as the behavior of dereferencing a null pointer is undefined. This property can be formalized as:
 
-**psp II.1 !Null(p)**:
+**psp II.1 NonNull(p)**:
 
 $$p != 0$$
 
@@ -157,9 +159,13 @@ Example APIs: [ptr::offset()](https://doc.rust-lang.org/std/primitive.pointer.ht
 
 A safety property may require the two pointers do not overlap with respect to `T` or  $T*count$:
 
-**psp II.4 !Overlap(dst, src, T, len)**: 
+**psp II.4 NonOverlap(a, b, ...)**:
+
+The specified memory ranges must be pairwise disjoint. For two pointers `src` and `dst` with element count `len` and element size `sizeof(T)`:
 
 $$|dst - src| > \text{sizeof}(T) * len $$
+
+When no type parameters are given, the verifier determines the accessed ranges from pointer provenance tracking and SMT alias analysis.
 
 Example APIs: [ptr::copy_from()](https://doc.rust-lang.org/std/ptr/fn.copy.html), [ptr::copy()](https://doc.rust-lang.org/std/ptr/fn.copy_from.html), [ptr::copy_nonoverlapping()](https://doc.rust-lang.org/std/ptr/fn.copy_nonoverlapping.html), [ptr::copy_from_nonoverlapping](https://doc.rust-lang.org/core/primitive.pointer.html#method.copy_from_nonoverlapping)
 

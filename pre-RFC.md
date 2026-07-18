@@ -49,46 +49,109 @@ descriptions of safety properties or safety requirements that must be satisfied 
 when using an unsafe API. This is the current form of safety descriptions used in Rust.
 
 In contrast, **safety tags** represent safety properties using a formal language, i.e., a
-[tool attribute] written in the form `#[safety { Prop: "reason" }]` where
-- `safety` is proc-macro,
-- `type` is one of `{precond, hazard, option}`,
-    - precond denotes a safety requirement that must be satisfied before invoking an unsafe API.
-      Most unsafe APIs carry at least one precondition.
-    - hazard denotes invoking the unsafe API may temporarily leave the program in a vulnerable
-      state; e.g. [`String::as_bytes_mut`].
-    - option denotes an optional precondition for an unsafe API—conditions that are sufficient but
-      not necessary to uphold the safety invariant. 
-- `Prop` is a safety property (SP) instance. For safety propeties in libcore and libstd,
+[tool attribute] namespace `safety` with sub-attributes for each contract category:
+
+- `#[safety::requires(Prop1, Prop2, ...)]` — **preconditions**: safety requirements that must be
+  satisfied before invoking an unsafe API. Most unsafe APIs carry at least one precondition.
+  By default, every property in `requires` is a precondition. A property tagged with
+  `kind = "hazard"` denotes that invoking the unsafe API may temporarily leave the program
+  in a vulnerable state with respect to Rust's safety invariants (e.g. [`String::as_bytes_mut`]).
+- `#[safety::invariant(Prop)]` — **struct invariants**: properties that must hold for every instance
+  of a struct at all observable points.
+- `#[safety::verify]` — marks a function as a verification entry point.
+- `#[safety::ensures(Prop)]` — **postconditions**: properties guaranteed after the function returns
+  (reserved for future use).
+- A property group can carry an optional `kind = "..."` tag for fine-grained categorization:
+  ```rust
+  #[safety::requires(
+    (ValidPtr(ptr, T, 1), Align(ptr, T), kind = "precond"),
+    (Alias(ptr, ret), kind = "hazard"),
+  )]
+  ```
+  When `kind` is omitted, `"precond"` is the default for `requires`, `"hazard"` for `hazard`.
+- `/ *Prop */` — **inline discharge** on a callsite, discharging specific safety properties of the
+  callee (see [Discharge Safety Properties](#discharge-safety-properties)).
+- When multiple properties share the same kind, they are grouped with commas inside a single
+  attribute rather than repeated:
+  ```rust
+  // Preferred (merged)
+  #[safety::requires(ValidPtr(ptr, T, 1), Align(ptr, T), Init(ptr, T, 1))]
+  // Equivalent but verbose
+  // #[safety::requires(ValidPtr(ptr, T, 1))]
+  // #[safety::requires(Align(ptr, T))]
+  // #[safety::requires(Init(ptr, T, 1))]
+  ```
+- `Prop` is a safety property (SP) instance. For safety properties in libcore and libstd,
   refer to [this document][primitive-sp] and our ongoing [paper].
-    - multiple SPs can be grouped together by separating them with commas, such as `SP1, SP2`.
-- `: "reason"` is an *optional* string to clarify what SP means in the context.
-    -  when a reason string appears, use `;` to separate props like `SP1: ""; Sp2: ""`.
 
 Here are some basic syntax examples:
 
 ```rust
-#[safety { SP }]
-#[safety { SP1, SP2 }]
+#[safety::requires(SP)]
+#[safety::requires(SP1, SP2)]
+#[safety::requires((SP1, kind = "precond"), (SP2, kind = "hazard"))]
+#[safety::invariant(SP1, SP2)]
+#[safety::invariant(any(Null(p), (ValidPtr(p, T, 1), Align(p, T))))]
+#[safety::verify]
+#[safety::ensures(SP)]
+```
 
-#[safety { SP1: "reason" }]
-#[safety { SP1: "reason"; SP2: "reason" }]
+### The `any(...)` Combinator
 
-#[safety { SP1, SP2: "shared reason for the two SPs" }]
-#[safety { SP1, SP2: "shared reason for the two SPs"; SP3 }]
-#[safety { SP3; SP1, SP2: "shared reason for the two SPs" }]
+For properties that admit alternative states, the `any(...)` combinator expresses a logical OR
+between disjuncts, where commas inside each parenthesized disjunct mean logical AND:
+
+```text
+any(D1, D2)
+any(Null(p), (P1(p, ...), P2(p, ...)))
+```
+
+The primary use case is a **null guard**: when a pointer may legally be null, `any(Null(p), ...)`
+declares that the conjunct properties only need to hold when `p` is non-null. This is the
+raw-pointer counterpart of `Option` invariants:
+
+```rust
+// A linked list node whose `next` field may be null
+#[safety::invariant(any(
+    Null(self.next),
+    (ValidPtr(self.next, Node, 1), Align(self.next, Node))
+))]
+pub struct Node {
+    value: u32,
+    next: *mut Node,
+}
+```
+
+In the `ptr::read` example, the `Owning` precondition and `Trait(T, Copy)` advisory can be grouped
+under `any` because either `T: Copy` or `Owning(src)` must hold — non-Copy types require ownership
+transfer:
+
+```rust
+#[safety::requires(
+    ValidPtr(src, T, 1),
+    Aligned(src, T),
+    Init(src, T, 1),
+    Alias(src, ret),
+    any(Owning(src), Trait(T, Copy)),
+)]
+pub const unsafe fn read<T>(src: *const T) -> T { ... }
 ```
 
 We can define the annotation language with context-free grammar as follows:
 
 ```text
-SafetyAnnotation => '#' '[' 'safety' '{' SPUnits '}' ']'
-SPUnits => SPUnit (';' SPUnit)*
-SPUnit => SPItem (',' SPItem)* (':' Reasons)?
-SPItem => ID (Args)?
-ID => ([a-z][A-Z])+
-Args => '(' Arg (, Arg)* ')'
-Arg => expression
-Reasons => '"' Text '"'
+SafetyAnnotation => '#' '[' 'safety' '::' attr '(' SPGroups ')' ']'
+attr      => 'requires' | 'invariant' | 'ensures' | 'verify'
+SPGroups  => SPGroup (',' SPGroup)*
+SPGroup   => '(' SPList (',' 'kind' '=' STRING)? ')'
+           | SPList
+SPList    => SPItem (',' SPItem)*
+SPItem    => ID ('(' Arg (',' Arg)* ')')?
+           | 'any' '(' Disjunct (',' Disjunct)* ')'
+Disjunct  => SPItem
+           | '(' SPList ')'
+ID        => [A-Z][A-Za-z]*
+Arg       => expression | type
 ```
 
 See the following usage of `ptr::read` as a full example.
@@ -128,14 +191,13 @@ pub const unsafe fn read<T>(src: *const T) -> T { ... }
 
 We can extract safety requirements above into propeties below:
 
-| Type    | Property | Arguments | Description                                                                                                                                         |
-|---------|----------|-----------|-----------------------------------------------------------------------------------------------------------------------------------------------------|
-| Precond | ValidPtr | src, T, 1 | `src` must be [valid] for reads (for 1 * sizeof(T) bytes).                                                                                          |
-| Precond | Aligned  | src, T    | `src` must be properly aligned (with T).                                                                                                            |
-| Precond | Init     | src, T, 1 | `src` must point to a properly initialized value of type `T`.                                                                                       |
-| Option  | Trait    | T, Copy   | If `T` is not [`Copy`], using both the returned value and the value at `*src` can violate memory safety.                                            |
-| Precond | Owning | src       | Further clarification: The memory pointed by src must not be owned if T is not copy, or the object hold by *src should not be automatically dropped |
-| Hazard  | Alias    | src, ret  | Further clarification: The return value may incur aliases between src and the return value                                                          |
+| Category      | Property | Arguments   | Description                                                                                                                                         |
+|---------------|----------|-------------|-----------------------------------------------------------------------------------------------------------------------------------------------------|
+| `requires`    | ValidPtr | src, T, 1   | `src` must be [valid] for reads (for 1 * sizeof(T) bytes).                                                                                          |
+| `requires`    | Aligned  | src, T      | `src` must be properly aligned (with T).                                                                                                            |
+| `requires`    | Init     | src, T, 1   | `src` must point to a properly initialized value of type `T`.                                                                                       |
+| `requires`    | Alias    | src, ret    | The return value may incur aliases between src and the return value (informational).                                                                 |
+| `requires`    | any      | Owning, Trait(T, Copy) | Either `src` must be uniquely owned (non-Copy types), or `T: Copy` must hold.                                                            |
 
 [valid]: https://doc.rust-lang.org/std/ptr/index.html#safety
 [alignment]: https://doc.rust-lang.org/std/ptr/index.html#alignment
@@ -144,10 +206,13 @@ We can extract safety requirements above into propeties below:
 We can represent these safety requirements using safety tags as shown below.
 
 ```rust
-#[safety {
-    ValidPtr, Aligned, Init, Alias,
-    any { Owning, Trait(T, Copy) }, 
-}]
+#[safety::requires(
+    ValidPtr(src, T, 1),
+    Aligned(src, T),
+    Init(src, T, 1),
+    Alias(src, ret),
+    any(Owning(src), Trait(T, Copy)),
+)]
 pub const unsafe fn read<T>(src: *const T) -> T { ... }
 ```
 
@@ -178,7 +243,7 @@ url = "https://doc.rust-lang.org/nightly/std/ptr/index.html#alignment"
 We defined a property called `Aligned`, which includes two arguments, a dynamic description derived
 from user input and some other fields. All fields are optional.
 
-When `#[safety { Aligned(src, T) }]` is used, a corresponding doc comment is generated:
+When `#[safety::requires(Aligned(src, T))]` is used, a corresponding doc comment is generated:
 
 ```rust
 #[doc = "pointer `src` must be properly aligned for type `T`"]
@@ -195,10 +260,13 @@ For detailed usage and examples, refer to [tag-std#35].
 We also support SPs with arguments, which are required in verification scenarios.
 
 ```rust
-#[safety {
-    ValidPtr(src, T, 1), Aligned(src, T), Init(src, T, 1), Alias(src, ret),
-    any{ Owning(src), Trait(T, Copy) }
-}]
+#[safety::requires(
+    ValidPtr(src, T, 1),
+    Aligned(src, T),
+    Init(src, T, 1),
+    Alias(src, ret),
+    any(Owning(src), Trait(T, Copy)),
+)]
 pub const unsafe fn read<T>(src: *const T) -> T { ... }
 ```
 
@@ -275,7 +343,8 @@ depends on the behavior of Guard's Drop implementation. If `try_fold::Guard::dro
 developers must check whether the associated safety comments still hold. (This RFC does not address
 this problem, but see [Entity Reference System](#reference-entity) for our thought.)
 
-To address the first issue, we propose a solution based on annotating `#[safety {}]` on callsites.
+To address the first issue, we propose a solution based on annotating safety tags on callsites using
+inline `/* property */` discharge comments or `#[safety::verify]` for automated verification.
 
 ```rust
 fn try_fold<B, F, R>(&mut self, mut init: B, mut f: F) -> R {
@@ -284,11 +353,9 @@ fn try_fold<B, F, R>(&mut self, mut init: B, mut f: F) -> R {
     init = head.iter().map(|elem| {
         guard.consumed += 1;
 
-        #[safety {
-            ValidPtr, Aligned, Init, Alias,
-            Owning: "Because we incremented `guard.consumed`, the deque \
-              effectively forgot the element, so we can take ownership."
-        }]
+        // SAFETY: Because we incremented `guard.consumed`, the deque
+        //         effectively forgot the element, so we can take ownership.
+        /* ValidPtr(elem, T, 1), Aligned(elem, T), Init(elem, T, 1), Owning(elem) */
         unsafe { ptr::read(elem) }
     })
     .try_fold(init, &mut f)?;
@@ -319,62 +386,52 @@ LLL | unsafe { ptr::read(elem) }
 Since this RFC does not require significant changes to the Rust compiler or language, the
 implementation details discussed in this section are tool-specific and primarily focus on syntax.
 
-Take one of safety tag on `ptr::read` as an example:
+Take one safety tag on `ptr::read` as an example:
 
 ```rust
-use safety::safety;
+// The `safety` tool attribute is registered via
+// #![feature(register_tool)]
+// #![register_tool(safety)]
+//
+// or injected through RUSTFLAGS:
+// RUSTFLAGS="--cfg=safety -Zcrate-attr=feature(register_tool) -Zcrate-attr=register_tool(safety)"
 
-#[safety { ValidPtr }]
+#[safety::requires(ValidPtr(src, T, 1), Aligned(src, T), Init(src, T, 1))]
 ```
 
-#[safety] is a procedural macro imported into scope by a crate named `safety-macro`.
-
-Since we don’t have permissions to the `safety` crate, users can rename our crate in their
-Cargo.toml file as follows:
-
-```toml
-# This renames the dependency `safety-macro` as `safety` within your crate.
-safety = { version = "0.3.0", package = "safety-macro" }
-```
-
-Proc-macros can be directly used in `no_std` projects and even in non-Cargo environments, such as
-Rust for Linux, by passing the compiled `libsafety_macro.so` as a direct dependency.
-
-The proc macro expands to three attributes:
+The attribute can expand to multiple downstream annotations for different tools. For example,
+`#[safety::requires(ValidPtr(src, T, 1), Aligned(src, T), Init(src, T, 1))]` on `ptr::read` could
+generate:
 
 ```rust
 #[doc = "`src` must be [valid] for reads.\n\n[valid]: https://doc.rust-lang.org/std/ptr/index.html#safety"]
-#[safety_tool::...]
+#[rapx::requires(ValidPtr(src, T, 1), Aligned(src, T), Init(src, T, 1))]
 #[kani::requires(kani::mem::can_dereference(src))]
 ```
 
-* `#[doc]` is a safety comment, possibly with extra argument infomation interpolated into the text.
-* `#[kani]` is a [contract]. If the safety property has a countepart of external verification macro
-  such as kani, we hope to support this feature in the future.
-* `#[safety_tool]` is a [tool attribute] registered by our linter. `register_tool` feature needs to
-  be stabilized, so developers must enable the following features in the root module: 
+* `#[doc]` is a safety comment, possibly with extra argument information interpolated into the text.
+* `#[kani]` is a [contract]. If the safety property has a counterpart in an external verification
+  tool such as kani, we hope to support this feature in the future.
+* `#[rapx::requires(...)]` is a [tool attribute] processed by the RAPx verifier. The
+  `register_tool` feature is needed, which can be provided via source annotation or compiler
+  flags: 
 
 [contract]: https://model-checking.github.io/kani/reference/experimental/contracts.html
 [register_tool]: https://github.com/rust-lang/rfcs/pull/3808
 
 ```rust
 #![feature(register_tool)]
-#![register_tool(safety_tool)]
+#![register_tool(safety)]
 ```
 
 or add them to [`--crate-attr`](https://github.com/rust-lang/rfcs/pull/3791) compiler flag:
 
 ```bash
-rustc --crate-attr="feature(register_tool)" --crate="register_tool(safety_tool)"
+rustc --crate-attr="feature(register_tool)" --crate-attr="register_tool(safety)"
 ```
 
-To support `#[discharges]`, additional unstable features are required to allow attributes on
-statements and expressions:
-
-```rust
-#![feature(proc_macro_hygiene)]
-#![feature(stmt_expr_attributes)]
-```
+To support inline `/* property */` discharge comments, the RAPx driver parses comments
+adjacent to unsafe call sites without requiring additional unstable features.
 
 Details of implementation on reference entity system belongs to the linter tool.
 
@@ -539,11 +596,9 @@ fn try_fold<B, F, R>(&mut self, mut init: B, mut f: F) -> R
         guard.consumed += 1;
 
         #[ref(try_fold)] // 💡
-        #[safety {
-            ValidPtr, Aligned, Init, Alias,
-            Owning: "Because we incremented `guard.consumed`, the deque \
-              effectively forgot the element, so we can take ownership."
-        }]
+        // SAFETY: Because we incremented `guard.consumed`, the deque
+        //         effectively forgot the element, so we can take ownership.
+        /* ValidPtr(elem, T, 1), Aligned(elem, T), Init(elem, T, 1), Owning(elem) */
         unsafe { ptr::read(elem) }
     })
     .try_fold(init, &mut f)?;
@@ -592,18 +647,16 @@ Arguments in a property can be any expression, and sometimes the type of argumen
 analysis and doc comments:
 
 ```rust
-// Syntax1: we don't need to query type if user is asked to provide it.
-//          But we're responsible to check the given type is valid!
-//          So this means we have to reach type systems anyway.
-#[safety::precond::Aligned(p, T)]
-// Syntax2: we must get type info from rustc.
-#[safety::precond::Aligned(p)]
+// Syntax1: type provided explicitly — verifier can check the given type is valid
+#[safety::requires(Aligned(p, T))]
+// Syntax2: type inferred from the function signature — simpler for the annotator
+#[safety::requires(Aligned(p))]
 unsafe fn read<T>(src: *const T) {}
 ```
 
 The generic type `T` will be rendered in `#[doc]`, so it'd be tricky if the type needs
 [normalization] or trait bounds analysis. It happens to be the case that `ptr::read` has a safety
-property `#[option::Trait(T, Copy)]`.
+property `Trait(T, Copy)` (informational, not a hard precondition).
 
 [normalization]: https://rustc-dev-guide.rust-lang.org/normalization.html
 
