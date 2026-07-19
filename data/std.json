@@ -408,7 +408,7 @@
         "0": [
             "ValidPtr",
             "Aligned",
-            "!Volatile",
+            "NonVolatile",
             "Alias",
             "CopyTrait"
         ]
@@ -417,14 +417,14 @@
         "0": [
             "ValidPtr",
             "Aligned",
-            "!Volatile",
+            "NonVolatile",
             "Alias",
             "CopyTrait"
         ],
         "1": [
             "ValidPtr",
             "Aligned",
-            "!Volatile",
+            "NonVolatile",
             "Alias",
             "CopyTrait"
         ]
@@ -434,7 +434,7 @@
             "ValidPtr",
             "Aligned",
             "NonOverlap",
-            "!Volatile",
+            "NonVolatile",
             "Alias",
             "CopyTrait"
         ],
@@ -442,7 +442,7 @@
             "ValidPtr",
             "Aligned",
             "NonOverlap",
-            "!Volatile",
+            "NonVolatile",
             "Alias",
             "CopyTrait"
         ]
@@ -576,7 +576,7 @@
         "0": [
             "ValidPtr",
             "Aligned",
-            "!Volatile",
+            "NonVolatile",
             "Alias",
             "CopyTrait"
         ]
@@ -586,7 +586,7 @@
             "ValidPtr",
             "Aligned",
             "NonOverlap",
-            "!Volatile",
+            "NonVolatile",
             "CopyTrait",
             "Alias"
         ]
@@ -595,7 +595,7 @@
         "0": [
             "ValidPtr",
             "Aligned",
-            "!Volatile",
+            "NonVolatile",
             "CopyTrait",
             "Alias"
         ]
@@ -605,7 +605,7 @@
             "ValidPtr",
             "Aligned",
             "NonOverlap",
-            "!Volatile",
+            "NonVolatile",
             "CopyTrait",
             "Alias"
         ]
@@ -788,7 +788,7 @@
         "0": [
             "ValidPtr",
             "Aligned",
-            "!Volatile",
+            "NonVolatile",
             "Alias",
             "CopyTrait"
         ]
@@ -798,7 +798,7 @@
             "ValidPtr",
             "Aligned",
             "NonOverlap",
-            "!Volatile",
+            "NonVolatile",
             "CopyTrait",
             "Alias"
         ]
@@ -938,7 +938,7 @@
         "0": [
             "ValidPtr",
             "Aligned",
-            "!Volatile",
+            "NonVolatile",
             "Alias",
             "CopyTrait"
         ]
@@ -948,7 +948,7 @@
             "ValidPtr",
             "Aligned",
             "NonOverlap",
-            "!Volatile",
+            "NonVolatile",
             "CopyTrait",
             "Alias"
         ]
@@ -957,7 +957,7 @@
         "0": [
             "ValidPtr",
             "Aligned",
-            "!Volatile",
+            "NonVolatile",
             "CopyTrait",
             "Alias"
         ]
@@ -967,7 +967,7 @@
             "ValidPtr",
             "Aligned",
             "NonOverlap",
-            "!Volatile",
+            "NonVolatile",
             "CopyTrait",
             "Alias"
         ]

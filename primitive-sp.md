@@ -53,7 +53,7 @@ In practice, a safety property may correspond to a precondition, an optional pre
 | IV.2  | Alias(p1, p2) | p1 = p2 | hazard | [pointer::as_mut()](https://doc.rust-lang.org/std/primitive.pointer.html#method.as_mut) |
 | IV.3  | Alive(p, l) | lifetime(*p) $\ge$ l | precond | [AtomicPtr::from_ptr()](https://doc.rust-lang.org/std/sync/atomic/struct.AtomicPtr.html#method.from_ptr)  |
 | V.1  | Pinned(p, l) | $$\forall t \in 0..l, \\&(*p)_0 = p_t$$ | hazard | [Pin::new_unchecked()](https://doc.rust-lang.org/std/pin/struct.Pin.html#method.new_unchecked)  |
-| V.2  | !Volatile(p, T, len) | $$\nexists \text{ another thread } tid, tid.\text{write}(p, p+\text{sizeof}(T)*\text{len})$$ | precond | [ptr::read()](https://doc.rust-lang.org/std/ptr/fn.read.html) |
+| V.2  | NonVolatile(p, T, len) | $$\nexists \text{ another thread } tid, tid.\text{write}(p, p+\text{sizeof}(T)*\text{len})$$ | precond | [ptr::read()](https://doc.rust-lang.org/std/ptr/fn.read.html) |
 | V.3  | Opened(fd) | $$\exists \text{openfile}() \to \text{fd} \land \nexists \text{closefile}(\text{fd})$$ | precond | [fd::from_raw_fd()](https://doc.rust-lang.org/std/os/fd/trait.FromRawFd.html#tymethod.from_raw_fd) |
 | V.4  | Trait(T, trait) | trait $\in$ traitimpl(T) | option | [ptr::read()](https://doc.rust-lang.org/std/ptr/fn.read.html)  |
 | V.5  | Unreachable | sat(cond()) = false | precondition | [intrinsics::read()](https://doc.rust-lang.org/nightly/std/intrinsics/fn.unreachable.html) |
@@ -285,7 +285,7 @@ Example APIs: [Pin::new_unchecked()](https://doc.rust-lang.org/std/pin/struct.Pi
 
 There are specific APIs for volatile memory access in std-lib, like [ptr::read_volatile()](https://doc.rust-lang.org/std/ptr/fn.read_volatile.html) and [ptr::write_volatile()](https://doc.rust-lang.org/std/ptr/fn.write_volatile.html). Other memory operations should require non-volatile by default.
 
-**psp V.2 !Volatile(p, T, len)**:
+**psp V.2 NonVolatile(p, T, len)**:
 
 $$\nexists \text{another thread}\ tid,\ tid.\text{write}(p, p+sizeof(T)*len)$$
 
