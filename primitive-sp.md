@@ -35,7 +35,7 @@ In practice, a safety property may correspond to a precondition, an optional pre
 | I.1  | Align(p, T) | p \% alignment(T) = 0 | precond | [ptr::read()](https://doc.rust-lang.org/nightly/std/ptr/fn.read.html) | 
 | I.2  | Size(T, c) | sizeof(T) = c, c $\in$ \{num, unknown, any\} | option | [Layout::for_value_raw()](https://doc.rust-lang.org/nightly/std/alloc/struct.Layout.html#method.for_value_raw)  | 
 |      | - | - | precond | [NonNull::offset_from](https://doc.rust-lang.org/core/ptr/struct.NonNull.html#method.offset_from)  | 
-| I.3  | NoPadding(ptr)  | padding(T) = 0 | precond  | [intrinsics::raw_eq()](https://doc.rust-lang.org/std/intrinsics/fn.raw_eq.html) |
+| I.3  | NoPadding(T)  | padding(T) = 0 | precond  | [intrinsics::raw_eq()](https://doc.rust-lang.org/std/intrinsics/fn.raw_eq.html) |
 | II.1  | NonNull(p) | p!= 0 | precond  | [NonNull::new_unchecked()](https://doc.rust-lang.org/std/ptr/struct.NonNull.html#method.new_unchecked) |
 | II.2 | Allocated(p, T, len, A) | $\forall$ i $\in$ 0..sizeof(T)*len, allocator(p+i) = A | precond | [Box::from_raw_in()](https://doc.rust-lang.org/std/boxed/struct.Box.html#method.from_raw_in) |
 | II.3  | InBound(p, T, len) | mem(p, p+ sizeof(T) * len) $\in$ single allocated object  | precond | [ptr::offset()](https://doc.rust-lang.org/std/primitive.pointer.html#method.offset)  |
@@ -115,7 +115,7 @@ mem::size_of::<MyStruct>(); // size: 4
 
 A safety property may require the type `T` has no padding. We can formulate the requirement as 
 
-**psp I.3 NoPadding(ptr)**:
+**psp I.3 NoPadding(T)**:
 
 $$\text{padding}(T) = 0$$
 
