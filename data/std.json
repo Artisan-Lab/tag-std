@@ -469,13 +469,13 @@
     "core::ptr::non_null::as_uninit_ref": {
         "0": [
             "!Null | ",
-            "ValidPtr2Ref"
+            "Ptr2Ref"
         ]
     },
     "core::ptr::non_null::as_uninit_mut": {
         "0": [
             "!Null | ",
-            "ValidPtr2Ref"
+            "Ptr2Ref"
         ]
     },
     "core::ptr::non_null::new_unchecked": {
@@ -485,12 +485,12 @@
     },
     "core::ptr::non_null::as_ref": {
         "0": [
-            "ValidPtr2Ref"
+            "Ptr2Ref"
         ]
     },
     "core::ptr::non_null::as_mut": {
         "0": [
-            "ValidPtr2Ref"
+            "Ptr2Ref"
         ]
     },
     "core::ptr::non_null::offset": {
@@ -685,18 +685,18 @@
     "core::ptr::const_ptr::as_ref": {
         "0": [
             "Null | ",
-            "ValidPtr2Ref"
+            "Ptr2Ref"
         ]
     },
     "core::ptr::const_ptr::as_ref_unchecked": {
         "0": [
-            "ValidPtr2Ref"
+            "Ptr2Ref"
         ]
     },
     "core::ptr::const_ptr::as_uninit_ref": {
         "0": [
             "Null | ",
-            "ValidPtr2Ref"
+            "Ptr2Ref"
         ]
     },
     "core::ptr::const_ptr::offset": {
@@ -825,18 +825,18 @@
     "core::ptr::mut_ptr::as_ref": {
         "0": [
             "Null | ",
-            "ValidPtr2Ref"
+            "Ptr2Ref"
         ]
     },
     "core::ptr::mut_ptr::as_ref_unchecked": {
         "0": [
-            "ValidPtr2Ref"
+            "Ptr2Ref"
         ]
     },
     "core::ptr::mut_ptr::as_uninit_ref": {
         "0": [
             "!Null | ",
-            "ValidPtr2Ref"
+            "Ptr2Ref"
         ]
     },
     "core::ptr::mut_ptr::offset": {
@@ -847,18 +847,18 @@
     },
     "core::ptr::mut_ptr::as_mut": {
         "0": [
-            "ValidPtr2Ref"
+            "Ptr2Ref"
         ]
     },
     "core::ptr::mut_ptr::as_mut_unchecked": {
         "0": [
-            "ValidPtr2Ref"
+            "Ptr2Ref"
         ]
     },
     "core::ptr::mut_ptr::as_uninit_mut": {
         "0": [
             "!Null | ",
-            "ValidPtr2Ref"
+            "Ptr2Ref"
         ]
     },
     "core::ptr::mut_ptr::add": {
